@@ -10,6 +10,6 @@ One line per decision: date, what, why. Newest at the bottom.
 - 2026-11-10: Mobile and desktop are equally important.
 - 2026-11-10: No customer accounts. Customers check out as guests, and see their order status on the order confirmation page.
 - 2026-11-10: An item whose expiry is before the delivery date plus a margin (the margin is a setting) blocks checkout. The customer removes the item or changes the delivery date.
-- 2026-11-10: The ordering budget covers the goods only, not the shipping fee. (Assumption, to be confirmed.)
+- 2026-11-10: The ordering budget covers the goods only, not the shipping fee.
 - 2026-11-10: Checkout is delivery only for now, paid by ZaloPay or cash on delivery.
 - 2026-11-10: Not building a point-of-sale page, an SEO admin page or a campaigns page. The blog stays.
