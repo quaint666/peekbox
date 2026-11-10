@@ -12,4 +12,8 @@ One line per decision: date, what, why. Newest at the bottom.
 - 2026-11-10: An item whose expiry is before the delivery date plus a margin (the margin is a setting) blocks checkout. The customer removes the item or changes the delivery date.
 - 2026-11-10: The ordering budget covers the goods only, not the shipping fee.
 - 2026-11-10: Checkout is delivery only for now, paid by ZaloPay or cash on delivery.
-- 2026-11-10: Not building a point-of-sale page, an SEO admin page or a campaigns page. The blog stays.
+- 2026-11-10: Not building a point-of-sale page or an SEO admin page. The blog stays.
+- 2026-11-10: Campaigns are in, as a light version. Each occasion (Tết, 20/11, 8/3) has active dates, a banner in Vietnamese and English, a last delivery date, and a few starter boxes (pre-filled hampers with a suggested budget). The shelf-life check still applies to starter boxes. This replaces the earlier decision to drop a campaigns page.
+- 2026-11-10: The site has a Vietnamese/English switch and a light/dark mode from the start. Page text lives in dictionaries; item, category, campaign and blog text has a Vietnamese and an English field; if the English text is missing, the Vietnamese shows. Dark mode uses colour variables, follows the device by default, and remembers the visitor's choice. English content for the whole catalogue can arrive as a later slice.
+- 2026-11-10: An order stores the customer's language, so the confirmation page and email come in that language.
+- 2026-11-10: The seed catalogue is 24 products in 5 categories (biscuits and cakes; tea and coffee; nuts and dried fruit; preserves and sweets; honey and specialities), each with a Vietnamese and an English name, a placeholder brand, weight, origin, expiry date, price and stock. Alcohol is left out to avoid age checks. Product photos are AI-generated placeholders with plain labels; a real shop needs real packshots.
