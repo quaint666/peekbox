@@ -1,0 +1,21 @@
+# Secrets and local config: never commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies and build output
+node_modules/
+dist/
+build/
+coverage/
+
+# Logs and editor/OS files
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Add the compiled-output rules for the chosen stack here once step 4
+# (architecture) in docs/project-pipeline.md is decided.
