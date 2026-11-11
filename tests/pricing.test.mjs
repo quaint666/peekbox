@@ -1,20 +1,40 @@
 // Tests for src/lib/pricing.ts (run on the compiled file, so `npm test` builds first).
+// The rule cases live in tests/vectors/pricing.json, shared with any future backend.
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { test } from 'node:test';
-import { formatVnd, goodsTotal, isInDate, itemStatus, overBy, qtyOf, quote } from '../public/js/lib/pricing.js';
+import { formatVnd, isInDate, itemStatus, overBy, qtyOf, quote } from '../public/js/lib/pricing.js';
 
-const product = (slug, price, expiry, stock = 10) => ({ slug, price_vnd: price, expiry_date: expiry, stock });
-const products = new Map([
-  ['a', product('a', 180_000, '2027-12-31')],
-  ['b', product('b', 150_000, '2027-01-10')],
-  ['c', product('c', 90_000, '2027-12-31', 0)],
-]);
-const packaging = [
-  { id: 'kraft', fee_vnd: 0 },
-  { id: 'hard-bow', fee_vnd: 40_000 },
-];
-const hamper = (lines, extra = {}) => ({ budget_vnd: 500_000, delivery_date: '2027-01-15', packaging_id: 'kraft', lines, ...extra });
+const vectors = JSON.parse(readFileSync(join(import.meta.dirname, 'vectors', 'pricing.json'), 'utf8'));
+const products = new Map(Object.values(vectors.products).map((p) => [p.slug, p]));
 
+for (const c of vectors.isInDate) {
+  test(`isInDate: ${c.name}`, () => {
+    assert.equal(isInDate(c.expiry, c.delivery, c.margin_days), c.expected);
+  });
+}
+
+for (const c of vectors.quote) {
+  test(`quote: ${c.name}`, () => {
+    const q = quote(c.hamper, products, vectors.packaging);
+    for (const [key, value] of Object.entries(c.expected)) assert.deepEqual(q[key], value, key);
+  });
+}
+
+for (const c of vectors.itemStatus) {
+  test(`itemStatus: ${c.name}`, () => {
+    assert.equal(itemStatus(products.get(c.slug), c.hamper, products), c.expected);
+  });
+}
+
+// The default margin comes from config.ts (7 days): it is not part of the shared cases.
+test('isInDate uses the default margin from config (7 days)', () => {
+  assert.equal(isInDate('2027-01-23', '2027-01-15'), true);
+  assert.equal(isInDate('2027-01-22', '2027-01-15'), false);
+});
+
+// Display and helper functions: front end only, so they are not in the shared file.
 test('formatVnd uses dots and the đ sign', () => {
   assert.equal(formatVnd(180_000), '180.000đ');
   assert.equal(formatVnd(0), '0đ');
@@ -22,58 +42,10 @@ test('formatVnd uses dots and the đ sign', () => {
   assert.equal(formatVnd(-35_000), '-35.000đ');
 });
 
-test('isInDate: expiry must be LATER than delivery plus the margin', () => {
-  assert.equal(isInDate('2027-01-23', '2027-01-15', 7), true); // 8 days after
-  assert.equal(isInDate('2027-01-22', '2027-01-15', 7), false); // exactly 7 days: not later
-  assert.equal(isInDate('2027-01-10', '2027-01-15', 7), false); // already expired
-});
-
-test('isInDate: a date we cannot read is never in date', () => {
-  assert.equal(isInDate('', '2027-01-15'), false);
-  assert.equal(isInDate('2027-01-23', 'tomorrow'), false);
-});
-
-test('isInDate uses the default margin from config (7 days)', () => {
-  assert.equal(isInDate('2027-01-23', '2027-01-15'), true);
-  assert.equal(isInDate('2027-01-22', '2027-01-15'), false);
-});
-
-test('goodsTotal adds price x quantity and reports unknown items', () => {
-  const result = goodsTotal(hamper([{ slug: 'a', qty: 2 }, { slug: 'zzz', qty: 1 }]), products);
-  assert.equal(result.total, 360_000);
-  assert.deepEqual(result.missing, ['zzz']);
-});
-
-test('quote: the budget covers goods only, packaging is on top', () => {
-  const q = quote(hamper([{ slug: 'a', qty: 1 }], { packaging_id: 'hard-bow' }), products, packaging);
-  assert.equal(q.goods_vnd, 180_000);
-  assert.equal(q.packaging_vnd, 40_000);
-  assert.equal(q.total_vnd, 220_000);
-  assert.equal(q.remaining_vnd, 320_000); // 500.000 - 180.000, packaging not subtracted
-  assert.equal(q.over_budget, false);
-});
-
-test('quote flags a hamper over budget', () => {
-  const q = quote(hamper([{ slug: 'a', qty: 3 }]), products, packaging);
-  assert.equal(q.remaining_vnd, -40_000);
-  assert.equal(q.over_budget, true);
-});
-
-test('itemStatus: sold out, expired for the date, over budget, ok', () => {
-  const empty = hamper([]);
-  assert.equal(itemStatus(products.get('c'), empty, products), 'sold_out');
-  assert.equal(itemStatus(products.get('b'), empty, products), 'expired_for_date');
-  assert.equal(itemStatus(products.get('a'), hamper([{ slug: 'a', qty: 2 }]), products), 'over_budget'); // 140.000 left, 180.000 needed
-  assert.equal(itemStatus(products.get('a'), empty, products), 'ok');
-});
-
-test('itemStatus ignores the expiry rule until a delivery date is chosen', () => {
-  assert.equal(itemStatus(products.get('b'), hamper([], { delivery_date: null }), products), 'ok');
-});
-
 test('overBy and qtyOf', () => {
+  const hamper = { budget_vnd: 500_000, delivery_date: null, packaging_id: 'kraft', lines: [{ slug: 'a', qty: 2 }] };
   assert.equal(overBy(products.get('a'), 145_000), 35_000);
   assert.equal(overBy(products.get('a'), 500_000), 0);
-  assert.equal(qtyOf(hamper([{ slug: 'a', qty: 2 }]), 'a'), 2);
-  assert.equal(qtyOf(hamper([]), 'a'), 0);
+  assert.equal(qtyOf(hamper, 'a'), 2);
+  assert.equal(qtyOf(hamper, 'zzz'), 0);
 });
