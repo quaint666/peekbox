@@ -12,6 +12,7 @@ The customer sets a budget first, then picks items. Every item shows its brand, 
 - [`docs/decisions.md`](docs/decisions.md): what we decided and why.
 - [`docs/functions.md`](docs/functions.md), [`docs/sitemap.md`](docs/sitemap.md), [`docs/use-cases.md`](docs/use-cases.md): what the site does, its pages, and who does what with it.
 - [`docs/frontend-plan.md`](docs/frontend-plan.md): how the front end is built and reviewed.
+- [`docs/api-contract.md`](docs/api-contract.md): the draft agreement between the front end and any backend.
 - [`design/`](design/README.md): the screen mockups (141 images) and design notes. Start with `design/mockups/customer/`.
 - [`content/`](content/README.md): blog posts, terms and privacy text, and sample product data.
 - [`public/images/`](public/images/): product photos, packaging, hero and the logo.

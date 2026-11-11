@@ -1,0 +1,106 @@
+{
+  "_note": "SHARED TEST CASES for the price, budget and expiry rules. The front-end tests (tests/pricing.test.mjs) read this file today. Whatever backend is built (TypeScript or C#) must read the SAME file and pass the SAME cases, so the rules cannot drift apart. Money is whole dong. Dates are YYYY-MM-DD. Change a case only together with docs/decisions.md.",
+
+  "products": {
+    "a": { "slug": "a", "price_vnd": 180000, "expiry_date": "2027-12-31", "stock": 10 },
+    "b": { "slug": "b", "price_vnd": 150000, "expiry_date": "2027-01-10", "stock": 10 },
+    "c": { "slug": "c", "price_vnd": 90000, "expiry_date": "2027-12-31", "stock": 0 },
+    "d": { "slug": "d", "price_vnd": 140000, "expiry_date": "2027-12-31", "stock": 2 }
+  },
+
+  "packaging": [
+    { "id": "kraft", "fee_vnd": 0 },
+    { "id": "hard-bow", "fee_vnd": 40000 }
+  ],
+
+  "isInDate": [
+    { "name": "8 days after delivery is in date", "expiry": "2027-01-23", "delivery": "2027-01-15", "margin_days": 7, "expected": true },
+    { "name": "exactly the margin is NOT in date (must be later)", "expiry": "2027-01-22", "delivery": "2027-01-15", "margin_days": 7, "expected": false },
+    { "name": "already expired", "expiry": "2027-01-10", "delivery": "2027-01-15", "margin_days": 7, "expected": false },
+    { "name": "margin 0: same day is not later", "expiry": "2027-01-15", "delivery": "2027-01-15", "margin_days": 0, "expected": false },
+    { "name": "margin 0: next day is in date", "expiry": "2027-01-16", "delivery": "2027-01-15", "margin_days": 0, "expected": true },
+    { "name": "across a month end, exactly the margin", "expiry": "2027-02-07", "delivery": "2027-01-31", "margin_days": 7, "expected": false },
+    { "name": "non-leap February: 22 Feb + 7 days is 1 March", "expiry": "2027-03-01", "delivery": "2027-02-22", "margin_days": 7, "expected": false },
+    { "name": "leap year February: 22 Feb + 7 days is 29 Feb", "expiry": "2028-03-01", "delivery": "2028-02-22", "margin_days": 7, "expected": true },
+    { "name": "empty expiry is never in date", "expiry": "", "delivery": "2027-01-15", "margin_days": 7, "expected": false },
+    { "name": "unreadable delivery is never in date", "expiry": "2027-12-31", "delivery": "tomorrow", "margin_days": 7, "expected": false },
+    { "name": "impossible date 30 February is unreadable", "expiry": "2027-12-31", "delivery": "2027-02-30", "margin_days": 7, "expected": false },
+    { "name": "impossible month 13 is unreadable", "expiry": "2027-13-01", "delivery": "2027-01-15", "margin_days": 7, "expected": false }
+  ],
+
+  "quote": [
+    {
+      "name": "the budget covers goods only; packaging is on top",
+      "hamper": { "budget_vnd": 500000, "delivery_date": "2027-01-15", "packaging_id": "hard-bow", "lines": [{ "slug": "a", "qty": 1 }] },
+      "expected": { "goods_vnd": 180000, "packaging_vnd": 40000, "total_vnd": 220000, "remaining_vnd": 320000, "over_budget": false, "missing_slugs": [] }
+    },
+    {
+      "name": "quantity multiplies the price",
+      "hamper": { "budget_vnd": 500000, "delivery_date": null, "packaging_id": "kraft", "lines": [{ "slug": "a", "qty": 2 }] },
+      "expected": { "goods_vnd": 360000, "packaging_vnd": 0, "total_vnd": 360000, "remaining_vnd": 140000, "over_budget": false, "missing_slugs": [] }
+    },
+    {
+      "name": "over budget is flagged, remaining goes negative",
+      "hamper": { "budget_vnd": 500000, "delivery_date": null, "packaging_id": "kraft", "lines": [{ "slug": "a", "qty": 3 }] },
+      "expected": { "goods_vnd": 540000, "packaging_vnd": 0, "total_vnd": 540000, "remaining_vnd": -40000, "over_budget": true, "missing_slugs": [] }
+    },
+    {
+      "name": "spending exactly the budget is not over budget",
+      "hamper": { "budget_vnd": 360000, "delivery_date": null, "packaging_id": "kraft", "lines": [{ "slug": "a", "qty": 2 }] },
+      "expected": { "goods_vnd": 360000, "packaging_vnd": 0, "total_vnd": 360000, "remaining_vnd": 0, "over_budget": false, "missing_slugs": [] }
+    },
+    {
+      "name": "an unknown item is skipped and reported",
+      "hamper": { "budget_vnd": 500000, "delivery_date": null, "packaging_id": "kraft", "lines": [{ "slug": "a", "qty": 1 }, { "slug": "zzz", "qty": 1 }] },
+      "expected": { "goods_vnd": 180000, "packaging_vnd": 0, "total_vnd": 180000, "remaining_vnd": 320000, "over_budget": false, "missing_slugs": ["zzz"] }
+    },
+    {
+      "name": "an empty hamper costs nothing",
+      "hamper": { "budget_vnd": 500000, "delivery_date": null, "packaging_id": "kraft", "lines": [] },
+      "expected": { "goods_vnd": 0, "packaging_vnd": 0, "total_vnd": 0, "remaining_vnd": 500000, "over_budget": false, "missing_slugs": [] }
+    }
+  ],
+
+  "itemStatus": [
+    {
+      "name": "stock 0 is sold out",
+      "hamper": { "budget_vnd": 500000, "delivery_date": "2027-01-15", "packaging_id": "kraft", "lines": [] },
+      "slug": "c", "expected": "sold_out"
+    },
+    {
+      "name": "all the stock is already in the hamper: sold out",
+      "hamper": { "budget_vnd": 500000, "delivery_date": "2027-01-15", "packaging_id": "kraft", "lines": [{ "slug": "d", "qty": 2 }] },
+      "slug": "d", "expected": "sold_out"
+    },
+    {
+      "name": "expires before delivery plus margin",
+      "hamper": { "budget_vnd": 500000, "delivery_date": "2027-01-15", "packaging_id": "kraft", "lines": [] },
+      "slug": "b", "expected": "expired_for_date"
+    },
+    {
+      "name": "the expiry rule waits until a delivery date is chosen",
+      "hamper": { "budget_vnd": 500000, "delivery_date": null, "packaging_id": "kraft", "lines": [] },
+      "slug": "b", "expected": "ok"
+    },
+    {
+      "name": "costs more than what is left: over budget",
+      "hamper": { "budget_vnd": 500000, "delivery_date": "2027-01-15", "packaging_id": "kraft", "lines": [{ "slug": "a", "qty": 2 }] },
+      "slug": "a", "expected": "over_budget"
+    },
+    {
+      "name": "costs exactly what is left: ok",
+      "hamper": { "budget_vnd": 500000, "delivery_date": "2027-01-15", "packaging_id": "kraft", "lines": [{ "slug": "a", "qty": 2 }] },
+      "slug": "d", "expected": "ok"
+    },
+    {
+      "name": "fits an empty hamper: ok",
+      "hamper": { "budget_vnd": 500000, "delivery_date": "2027-01-15", "packaging_id": "kraft", "lines": [] },
+      "slug": "a", "expected": "ok"
+    },
+    {
+      "name": "sold out wins over expired",
+      "hamper": { "budget_vnd": 500000, "delivery_date": "2028-01-15", "packaging_id": "kraft", "lines": [] },
+      "slug": "c", "expected": "sold_out"
+    }
+  ]
+}
