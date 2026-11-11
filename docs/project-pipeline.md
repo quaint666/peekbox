@@ -42,7 +42,7 @@ Bloomy took 199 commits from 2026-09-04 to 2026-11-10, after three weeks of fram
 
 - Settled, no longer unknowns: payment is ZaloPay; hosting is our own infra.
 - The riskiest unknown is the product's core: the budget-first hamper builder, with per-item expiry and origin and a shelf-life rule. Prove it on a small item set before the architecture.
-- Step 5 is mostly reuse from Bloomy (Dockerfile, CI build, schema pipeline, test setup); decide in step 4 what to copy and what to rewrite.
+- Step 5 is not mostly reuse any more: the backend is ASP.NET Core, so the Dockerfile, CI build and tests are written new, with EF Core migrations instead of Bloomy's schema pipeline. Decide in step 4 what, if anything, still carries over.
 
 ## Defaults
 

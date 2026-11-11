@@ -3,13 +3,13 @@
 What each part of the site does. The IDs (F01 and so on) are reused in the sitemap, the use cases and the front-end plan.
 
 **Priority:** **M** must have, **S** should have, **C** could have.
-**Sim** means simulated in the front-end-only version: sample data from `content/data/`, no server.
+**Sim** means a stand-in with no real behaviour yet. Which ones become real is decided in `docs/decisions.md`.
 
 | ID | Function | Where | Pri |
 |---|---|---|---|
 | **Whole site** | | | |
 | F01 | Header: logo, menu (Trang chủ, Tạo hộp quà, Giới thiệu, Cam kết, Blog), cart link with item count | all | M |
-| F02 | Language switch VI/EN: all text and item names change; the choice is remembered; English falls back to Vietnamese when missing | all | M |
+| F02 | Dropped (2026-11-11): the site is Vietnamese only, so there is no language switch. The number is kept so the other F-numbers do not change | all | – |
 | F03 | Light/dark button; follows the system by default; the choice is remembered | all | M |
 | F04 | Footer: About, Commitments, Terms, Privacy, Blog, contact [placeholders] | all | M |
 | F05 | Campaign banner (Tết 2027, 20/11, 8/3) shown within its dates | Home, Builder | S |
@@ -61,7 +61,7 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F45 | "I need a company invoice" checkbox | Checkout | C |
 | F46 | Field checks with an error summary and messages; keeps what was typed | Checkout | M |
 | F47 | Order summary with the delivery fee by ward | Checkout | M |
-| F48 | Place the order (Sim: makes an order number and saves the order in the browser) | Checkout | M |
+| F48 | Place the order: makes an order number and saves the order in the database | Checkout | M |
 | F49 | Payment-failed page: retry or switch to cash on delivery (Sim: reachable by a test switch) | Checkout | S |
 | F50 | "An item sold out meanwhile" notice: item removed, pick a replacement | Checkout | C |
 | **Confirmation** | | | |
@@ -71,8 +71,8 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F53 | Blog post with related posts and a call to action | Blog post | S |
 | F54 | About and Commitments, including how the safe expiry rule works | About | M |
 | F55 | Terms and Privacy with a table of contents | Legal | M |
-| **Admin (in scope, simulated: fake login, data kept in the browser; milestone M6)** | | | |
-| F56 | Login with username, password and a 2-step code (all simulated) | Admin | S |
+| **Admin (built after the front end is done; not in the first report)** | | | |
+| F56 | Login with username, password and a 2-step code (to be built later) | Admin | S |
 | F57 | Orders: filter by date, status and search; open an order and change its status. Shows the orders placed on the customer side | Admin | S |
 | F58 | Items and stock: search and status filter, edit form | Admin | S |
 | F59 | Campaigns, delivery cut-offs, coupons, reviews, settings, stats, users, account | Admin | S |

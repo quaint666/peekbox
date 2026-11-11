@@ -1,6 +1,6 @@
 # Peekbox: design mockups
 
-Written 2026-11-11. 177 screens, drawn for desktop (1440 px wide) and mobile (390 px wide).
+Written 2026-11-11. The screens are drawn for desktop (1440 px wide) and mobile (390 px wide).
 
 ## The easiest way to look
 Open the images in `mockups/` (lossless WebP; any browser or GitHub shows them). They are exports of the design, cropped to the content.
@@ -15,7 +15,6 @@ The live, editable design is on the Claude Design canvas: https://claude.ai/arti
 | `mockups/admin/` | The 11 admin screens, desktop and mobile: login, orders, items and stock, campaigns, settings, delivery cutoffs, coupons, reviews, stats, users, account |
 | `mockups/states/` | Pages that appear only after something happens, or small features, desktop and mobile: empty cart, checkout errors, ZaloPay payment failed, builder cards (chosen, sold out, expires before the delivery date, would exceed the budget) with a no-results box, 404, cart coupon error, an item sold out during checkout, search suggestions, added-to-hamper toast, share menu, floating contact and back-to-top buttons, loading skeleton, resume an unfinished hamper; admin: empty orders day, login locked, empty items, coupons and reviews |
 | `mockups/dark/` | Dark mode of all 11 customer pages and of the customer states (`states/`), desktop and mobile |
-| `mockups/english/` | English version of the same set |
 | `mockups/foundations/` | The palette and type board, and the logo as SVG (also in `public/images/logo/`). The logo is a traced vector, so a designer may want to redraw it with sharper corners. |
 | `source/` | The design source files (`.dc.html`) and `canvas.json` (the board layout). They only render inside the Claude Design canvas; the photos in them point to files stored in that canvas. Keep them as a backup, or to publish again. They are not a usable frontend (see below). |
 | `design-notes.md` | Colours (light and dark), type, shapes, and the product rules the screens assume |
@@ -23,9 +22,7 @@ The live, editable design is on the Claude Design canvas: https://claude.ai/arti
 The photos are in `public/images/` and the written content (blog posts, legal text, product data) is in `content/`.
 
 ## Not drawn yet
-- Dark and English versions of the admin screens (the admin is Vietnamese and light for now).
-- Dark and English versions of the admin states.
-- Dark mode combined with English (each variant changes one thing).
+- Dark versions of the admin screens and the admin states (the admin is light for now).
 
 ## Placeholders
 Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu A" to "H"), prices, stock, reviews and statistics are samples. All photos are AI-generated placeholders.
