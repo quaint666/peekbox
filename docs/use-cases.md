@@ -1,6 +1,6 @@
 # Use cases
 
-Actors: **Customer** (anyone building a hamper; no account), **Visitor** (only reading), **Staff** (admin, simulated in the front-end version).
+Actors: **Customer** (anyone building a hamper; no account), **Visitor** (only reading), **Staff** (admin, built after the front end).
 
 | ID | Use case | Actor | Main steps | Alternatives and errors | Functions |
 |---|---|---|---|---|---|
@@ -15,8 +15,8 @@ Actors: **Customer** (anyone building a hamper; no account), **Visitor** (only r
 | UC09 | Pay, or recover from a failed payment | Customer | Choose ZaloPay or cash on delivery; place the order | Payment fails: order and box kept; retry or switch to cash on delivery | F44, F49 |
 | UC10 | See the order and its status | Customer | Land on the confirmation page; read the order number, items and status | — | F51 |
 | UC11 | An item sells out during checkout | Customer | A notice lists the removed item; pick a replacement or continue with fewer items | Nothing is charged | F50 |
-| UC12 | Switch language or theme | Anyone | Press VI/EN or the theme button; the page changes; the choice is remembered | English text missing: Vietnamese shows | F02, F03 |
+| UC12 | Switch theme | Anyone | Press the theme button; the page changes; the choice is remembered | – | F03 |
 | UC13 | Resume an unfinished hamper | Customer | Return to the site; read the banner; continue or start over | Browser data cleared: no banner | F13, F25 |
 | UC14 | Get help or recover from a bad link | Anyone | Open the contact button (Zalo, phone, email, hours); or land on 404 and follow the links | — | F06, F09 |
 | UC15 | Read content | Visitor | Open Blog, a post, About, Commitments, Terms or Privacy | — | F52–F55 |
-| UC16 | Run the shop (simulated) | Staff | Log in; view the orders placed by customers and change their status; edit items and stock; manage campaigns and coupons | Wrong password or lockout: an error message | F56–F59 |
+| UC16 | Run the shop (later) | Staff | Log in; view the orders placed by customers and change their status; edit items and stock; manage campaigns and coupons | Wrong password or lockout: an error message | F56–F59 |
