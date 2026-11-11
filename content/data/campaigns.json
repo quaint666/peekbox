@@ -1,0 +1,114 @@
+{
+  "_note": "Dates are placeholders. Banners and starter boxes are drafts. Starter boxes are pre-filled hampers; the shelf-life check still applies to them.",
+  "campaigns": [
+    {
+      "id": "tet-2027",
+      "name_vi": "Tết 2027",
+      "name_en": "Tết 2027",
+      "accent": "#B3382A",
+      "starts": "[DATE]",
+      "ends": "[DATE]",
+      "last_delivery": "[DATE]",
+      "banner_vi": "Mùa Tết 2027: chọn hộp quà và ngày giao sớm để còn nhiều lựa chọn",
+      "banner_en": "Tết 2027: pick your hamper and delivery date early for the best choice",
+      "starter_boxes": [
+        {
+          "name_vi": "Hộp biếu gia đình",
+          "name_en": "Family hamper",
+          "budget_vnd": 500000,
+          "items": [
+            "tra-sen",
+            "hat-dieu-rang-muoi",
+            "mut-gung",
+            "banh-dau-xanh"
+          ],
+          "goods_total_vnd": 485000,
+          "note_vi": "Biếu gia đình",
+          "note_en": "For family"
+        },
+        {
+          "name_vi": "Hộp biếu đối tác",
+          "name_en": "Partner hamper",
+          "budget_vnd": 800000,
+          "items": [
+            "tra-shan-tuyet",
+            "hat-macca",
+            "mat-ong-hoa-nhan",
+            "banh-pia",
+            "tieu-den-phu-quoc"
+          ],
+          "goods_total_vnd": 775000,
+          "note_vi": "Biếu đối tác",
+          "note_en": "For business partners"
+        },
+        {
+          "name_vi": "Hộp biếu đồng nghiệp",
+          "name_en": "Colleague hamper",
+          "budget_vnd": 300000,
+          "items": [
+            "ca-phe-phin-giay",
+            "keo-dua",
+            "mit-say",
+            "banh-gung"
+          ],
+          "goods_total_vnd": 300000,
+          "note_vi": "Biếu đồng nghiệp",
+          "note_en": "For colleagues"
+        }
+      ]
+    },
+    {
+      "id": "20-11",
+      "name_vi": "20/11",
+      "name_en": "20/11 (Teachers' Day)",
+      "accent": "#5F4A7A",
+      "starts": "[DATE]",
+      "ends": "[DATE]",
+      "last_delivery": "[DATE]",
+      "banner_vi": "20/11: gửi lời tri ân đến thầy cô bằng một hộp quà nhỏ chu đáo",
+      "banner_en": "20/11: thank your teachers with a small, thoughtful hamper",
+      "starter_boxes": [
+        {
+          "name_vi": "Hộp tri ân nhẹ nhàng",
+          "name_en": "Gentle thank-you hamper",
+          "budget_vnd": 300000,
+          "items": [
+            "tra-o-long",
+            "banh-quy-yen-mach",
+            "keo-dua"
+          ],
+          "goods_total_vnd": 300000,
+          "note_vi": "Quà chung của cả lớp",
+          "note_en": "A shared class gift"
+        }
+      ]
+    },
+    {
+      "id": "8-3",
+      "name_vi": "8/3",
+      "name_en": "8/3 (Women's Day)",
+      "accent": "#A8345E",
+      "starts": "[DATE]",
+      "ends": "[DATE]",
+      "last_delivery": "[DATE]",
+      "banner_vi": "8/3: chọn món quà ý nghĩa cho mẹ, vợ, bạn gái và đồng nghiệp",
+      "banner_en": "8/3: choose a meaningful gift for mothers, wives, girlfriends and colleagues",
+      "starter_boxes": [
+        {
+          "name_vi": "Hộp quà cho mẹ",
+          "name_en": "Hamper for mum",
+          "budget_vnd": 500000,
+          "items": [
+            "tra-sen",
+            "mut-dau",
+            "mat-ong-hoa-ca-phe",
+            "keo-dua"
+          ],
+          "goods_total_vnd": 490000,
+          "note_vi": "Quà cho mẹ",
+          "note_en": "A gift for mum"
+        }
+      ]
+    }
+  ]
+}

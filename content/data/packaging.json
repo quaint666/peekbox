@@ -1,0 +1,32 @@
+{
+  "_note": "SAMPLE fees.",
+  "packaging": [
+    {
+      "id": "kraft",
+      "name_vi": "Hộp giấy kraft",
+      "name_en": "Kraft paper box",
+      "desc_vi": "Giấy tái chế, buộc dây gai. Hợp quà công ty.",
+      "desc_en": "Recycled paper tied with jute twine. Suits corporate gifts.",
+      "fee_vnd": 0,
+      "image": "/images/packaging/box-kraft.webp"
+    },
+    {
+      "id": "hard-bow",
+      "name_vi": "Hộp cứng có nơ",
+      "name_en": "Hard box with bow",
+      "desc_vi": "Hộp cứng, lót giấy, nơ vải. Hợp quà Tết.",
+      "desc_en": "Rigid box, paper lining, fabric bow. Suits Tết gifts.",
+      "fee_vnd": 40000,
+      "image": "/images/packaging/box-hard.webp"
+    },
+    {
+      "id": "rattan",
+      "name_vi": "Giỏ mây",
+      "name_en": "Rattan basket",
+      "desc_vi": "Giỏ mây phủ màng trong, có quai xách.",
+      "desc_en": "Rattan basket under clear wrap, with a handle.",
+      "fee_vnd": 70000,
+      "image": "/images/packaging/basket.webp"
+    }
+  ]
+}
