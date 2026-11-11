@@ -1,0 +1,25 @@
+﻿id,slug,category,name_vi,name_en,brand,weight_g,origin,expiry_date,price_vnd,stock,description_vi,description_en,image
+1,banh-quy-bo,banh,Bánh quy bơ,Butter cookies,Thương hiệu D,180,Đồng Nai,2027-01-10,75000,40,"Bánh quy bơ giòn, đóng hộp giấy.",Crisp butter cookies in a paper box.,/images/products/banh-quy-bo.webp
+2,banh-quy-yen-mach,banh,Bánh quy yến mạch,Oat cookies,Thương hiệu D,200,TP.HCM,2027-06-30,85000,60,"Bánh quy yến mạch, hộp giấy có cửa sổ.",Oat cookies in a paper box with a window.,/images/products/banh-quy-yen-mach.webp
+3,banh-pia,banh,Bánh pía mini,Mini pía pastry,Thương hiệu G,300,Sóc Trăng,2027-04-30,120000,45,"Bánh pía cỡ nhỏ, nhiều lớp vỏ.",Small pía pastries with a flaky crust.,/images/products/banh-pia.webp
+4,banh-gung,banh,Bánh gừng,Ginger biscuits,Thương hiệu H,150,Hà Nội,2027-05-31,70000,50,"Bánh quy gừng hình người, hộp có cửa sổ.",Gingerbread-man biscuits in a window box.,/images/products/banh-gung.webp
+5,banh-dau-xanh,banh,Bánh đậu xanh,Mung bean cake,Thương hiệu H,200,Hải Dương,2027-01-25,65000,70,Bánh đậu xanh dạng viên vuông.,Square mung bean cakes.,/images/products/banh-dau-xanh.webp
+6,tra-sen,tra-ca-phe,Trà sen,Lotus tea,Thương hiệu A,100,Hà Nội,2027-12-31,180000,120,Trà sen đóng hộp giấy tròn.,Lotus tea in a round paper tin.,/images/products/tra-sen.webp
+7,tra-o-long,tra-ca-phe,Trà ô long,Oolong tea,Thương hiệu A,100,Lâm Đồng,2027-11-30,160000,90,"Trà ô long cuộn, đóng hộp thiếc.",Rolled oolong tea in a tin.,/images/products/tra-o-long.webp
+8,tra-shan-tuyet,tra-ca-phe,Trà shan tuyết,Snow shan tea,Thương hiệu A,100,Hà Giang,2027-12-31,220000,55,"Trà shan tuyết búp trắng, hộp giấy.",White-bud snow shan tea in a paper tube.,/images/products/tra-shan-tuyet.webp
+9,ca-phe-rang-xay,tra-ca-phe,Cà phê rang xay,Ground coffee,Thương hiệu E,250,Đắk Lắk,2028-02-29,120000,110,"Cà phê rang xay, túi có van một chiều.",Ground coffee in a bag with a one-way valve.,/images/products/ca-phe.webp
+10,ca-phe-phin-giay,tra-ca-phe,Cà phê phin giấy,Drip coffee bags,Thương hiệu E,150,Lâm Đồng,2028-01-31,95000,80,Túi cà phê lọc pha nhanh.,Quick-brew drip coffee bags.,/images/products/ca-phe-phin-giay.webp
+11,hat-dieu-rang-muoi,hat-trai-cay-say,Hạt điều rang muối,Salted cashews,Thương hiệu B,250,Bình Phước,2027-08-31,150000,85,"Hạt điều rang muối, túi có cửa sổ.",Salted roasted cashews in a window pouch.,/images/products/hat-dieu.webp
+12,hat-macca,hat-trai-cay-say,Hạt macca,Macadamia nuts,Thương hiệu B,200,Đắk Lắk,2027-09-30,190000,65,"Hạt macca, túi có cửa sổ.",Macadamia nuts in a window pouch.,/images/products/hat-macca.webp
+13,mit-say,hat-trai-cay-say,Mít sấy,Dried jackfruit,Thương hiệu F,150,Tiền Giang,2027-07-31,80000,75,"Mít sấy giòn, túi trong.",Crunchy dried jackfruit in a clear bag.,/images/products/mit-say.webp
+14,xoai-say-deo,hat-trai-cay-say,Xoài sấy dẻo,Soft dried mango,Thương hiệu F,200,Đồng Tháp,2027-06-30,95000,70,"Xoài sấy dẻo cắt dải, túi trong.",Soft dried mango strips in a clear pouch.,/images/products/xoai-say.webp
+15,hong-treo-gio,hat-trai-cay-say,Hồng treo gió,Air-dried persimmon,Thương hiệu F,200,Lâm Đồng,2027-02-28,140000,35,"Hồng treo gió, hộp có cửa sổ.",Air-dried persimmons in a window box.,/images/products/hong-treo-gio.webp
+16,mut-gung,mut-keo,Mứt gừng,Candied ginger,Thương hiệu C,200,Huế,2027-03-31,90000,60,"Mứt gừng sợi, hũ thủy tinh.",Candied ginger strips in a glass jar.,/images/products/mut-gung.webp
+17,keo-dua,mut-keo,Kẹo dừa,Coconut candy,Thương hiệu F,150,Bến Tre,2027-06-30,55000,5,"Kẹo dừa viên vuông, hộp giấy.",Square coconut candies in a paper box.,/images/products/keo-dua.webp
+18,mut-dau,mut-keo,Mứt dâu,Strawberry jam,Thương hiệu C,250,Lâm Đồng,2027-05-31,105000,40,"Mứt dâu, hũ thủy tinh.",Strawberry jam in a glass jar.,/images/products/mut-dau.webp
+19,mut-hat-sen,mut-keo,Mứt hạt sen,Candied lotus seeds,Thương hiệu C,250,Đồng Tháp,2027-02-28,130000,30,"Hạt sen ngâm đường, hũ thủy tinh.",Lotus seeds in syrup in a glass jar.,/images/products/mut-hat-sen.webp
+20,keo-lac,mut-keo,Kẹo lạc,Peanut brittle,Thương hiệu H,200,Hà Nội,2027-01-18,45000,90,"Kẹo lạc giòn, hộp giấy.",Crunchy peanut brittle in a paper box.,/images/products/keo-lac.webp
+21,mat-ong-hoa-nhan,mat-ong-dac-san,Mật ong hoa nhãn,Longan honey,Thương hiệu G,250,Hưng Yên,2028-12-31,160000,100,"Mật ong hoa nhãn, hũ nắp gỗ.",Longan honey in a jar with a wooden lid.,/images/products/mat-ong-nhan.webp
+22,mat-ong-hoa-ca-phe,mat-ong-dac-san,Mật ong hoa cà phê,Coffee-blossom honey,Thương hiệu G,250,Đắk Lắk,2028-10-31,150000,80,"Mật ong hoa cà phê, hũ nắp gỗ.",Coffee-blossom honey in a jar with a wooden lid.,/images/products/mat-ong-ca-phe.webp
+23,muoi-tom-tay-ninh,mat-ong-dac-san,Muối tôm Tây Ninh,Tây Ninh shrimp salt,Thương hiệu H,100,Tây Ninh,2027-08-31,50000,120,"Muối tôm, hũ thủy tinh.",Shrimp salt in a glass jar.,/images/products/muoi-tom.webp
+24,tieu-den-phu-quoc,mat-ong-dac-san,Tiêu đen Phú Quốc,Phú Quốc black pepper,Thương hiệu G,100,Phú Quốc,2027-10-31,85000,95,"Hạt tiêu đen, hũ thủy tinh.",Black peppercorns in a glass jar.,/images/products/tieu-den.webp
