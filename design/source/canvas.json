@@ -1128,6 +1128,294 @@
       "w": 390,
       "x": 2250,
       "y": 126270
+    },
+    "StateBuilderSearch.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: search suggestions · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 129810
+    },
+    "StateBuilderSearch-m.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: search suggestions · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 129810
+    },
+    "StateToast.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Builder: item added toast · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 131030
+    },
+    "StateToast-m.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Builder: item added toast · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 131030
+    },
+    "StateShare.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Item: share menu · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 132150
+    },
+    "StateShare-m.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Item: share menu · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 132150
+    },
+    "StateFloating.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Floating contact and back-to-top · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 133170
+    },
+    "StateFloating-m.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "title": "Floating contact and back-to-top · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 133170
+    },
+    "StateLoading.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: loading skeleton · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 134590
+    },
+    "StateLoading-m.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "title": "Builder: loading skeleton · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 134590
+    },
+    "StateResume.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "title": "Resume an unfinished hamper · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 136010
+    },
+    "StateResume-m.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Resume an unfinished hamper · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 136010
+    },
+    "StateBuilderSearchDark.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: search suggestions · dark · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 137450
+    },
+    "StateBuilderSearchDark-m.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: search suggestions · dark · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 137450
+    },
+    "StateToastDark.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Builder: item added toast · dark · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 138670
+    },
+    "StateToastDark-m.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Builder: item added toast · dark · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 138670
+    },
+    "StateShareDark.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Item: share menu · dark · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 139790
+    },
+    "StateShareDark-m.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Item: share menu · dark · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 139790
+    },
+    "StateFloatingDark.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Floating contact and back-to-top · dark · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 140810
+    },
+    "StateFloatingDark-m.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "title": "Floating contact and back-to-top · dark · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 140810
+    },
+    "StateLoadingDark.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: loading skeleton · dark · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 142230
+    },
+    "StateLoadingDark-m.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "title": "Builder: loading skeleton · dark · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 142230
+    },
+    "StateResumeDark.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "title": "Resume an unfinished hamper · dark · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 143650
+    },
+    "StateResumeDark-m.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Resume an unfinished hamper · dark · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 143650
+    },
+    "StateBuilderSearchEn.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: search suggestions · English · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 145210
+    },
+    "StateBuilderSearchEn-m.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: search suggestions · English · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 145210
+    },
+    "StateToastEn.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Builder: item added toast · English · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 146430
+    },
+    "StateToastEn-m.dc.html": {
+      "expand": "fill",
+      "h": 1000,
+      "title": "Builder: item added toast · English · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 146430
+    },
+    "StateShareEn.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Item: share menu · English · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 147550
+    },
+    "StateShareEn-m.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Item: share menu · English · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 147550
+    },
+    "StateFloatingEn.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Floating contact and back-to-top · English · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 148570
+    },
+    "StateFloatingEn-m.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "title": "Floating contact and back-to-top · English · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 148570
+    },
+    "StateLoadingEn.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "title": "Builder: loading skeleton · English · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 149990
+    },
+    "StateLoadingEn-m.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "title": "Builder: loading skeleton · English · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 149990
+    },
+    "StateResumeEn.dc.html": {
+      "expand": "fill",
+      "h": 800,
+      "title": "Resume an unfinished hamper · English · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 151410
+    },
+    "StateResumeEn-m.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "title": "Resume an unfinished hamper · English · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 151410
     }
   },
   "createdOnFiles": {
@@ -1166,7 +1454,11 @@
     "n16",
     "t20",
     "t21",
-    "t22"
+    "t22",
+    "t30",
+    "n30",
+    "t31",
+    "t32"
   ],
   "notes": {
     "n1": {
@@ -1392,6 +1684,38 @@
       "w": 240,
       "x": 0,
       "y": 126030
+    },
+    "t30": {
+      "kind": "title1",
+      "maxW": 1910,
+      "text": "Quality-of-life additions: search, toast, share, floating buttons, loading, resume",
+      "w": 240,
+      "x": 0,
+      "y": 129570
+    },
+    "n30": {
+      "fill": "orange",
+      "size": 24,
+      "w": 360,
+      "x": 1960,
+      "y": 129810,
+      "text": "New after comparing Bloomy and live shops. Search must ignore accents: typing \"mut\" should find \"Mứt\". The \"only items in date\" filter is on by default and the page says how many items it hides. Contact numbers, hours and the Zalo account are placeholders."
+    },
+    "t31": {
+      "kind": "title1",
+      "maxW": 1910,
+      "text": "Quality-of-life additions: dark mode",
+      "w": 240,
+      "x": 0,
+      "y": 137210
+    },
+    "t32": {
+      "kind": "title1",
+      "maxW": 1910,
+      "text": "Quality-of-life additions: English",
+      "w": 240,
+      "x": 0,
+      "y": 144970
     }
   },
   "order": [
@@ -1535,7 +1859,43 @@
     "BuilderDark-m.dc.html",
     "BuilderEn-m.dc.html",
     "CheckoutDark-m.dc.html",
-    "CheckoutEn-m.dc.html"
+    "CheckoutEn-m.dc.html",
+    "StateBuilderSearch.dc.html",
+    "StateBuilderSearch-m.dc.html",
+    "StateToast.dc.html",
+    "StateToast-m.dc.html",
+    "StateShare.dc.html",
+    "StateShare-m.dc.html",
+    "StateFloating.dc.html",
+    "StateFloating-m.dc.html",
+    "StateLoading.dc.html",
+    "StateLoading-m.dc.html",
+    "StateResume.dc.html",
+    "StateResume-m.dc.html",
+    "StateBuilderSearchDark.dc.html",
+    "StateBuilderSearchDark-m.dc.html",
+    "StateToastDark.dc.html",
+    "StateToastDark-m.dc.html",
+    "StateShareDark.dc.html",
+    "StateShareDark-m.dc.html",
+    "StateFloatingDark.dc.html",
+    "StateFloatingDark-m.dc.html",
+    "StateLoadingDark.dc.html",
+    "StateLoadingDark-m.dc.html",
+    "StateResumeDark.dc.html",
+    "StateResumeDark-m.dc.html",
+    "StateBuilderSearchEn.dc.html",
+    "StateBuilderSearchEn-m.dc.html",
+    "StateToastEn.dc.html",
+    "StateToastEn-m.dc.html",
+    "StateShareEn.dc.html",
+    "StateShareEn-m.dc.html",
+    "StateFloatingEn.dc.html",
+    "StateFloatingEn-m.dc.html",
+    "StateLoadingEn.dc.html",
+    "StateLoadingEn-m.dc.html",
+    "StateResumeEn.dc.html",
+    "StateResumeEn-m.dc.html"
   ],
   "pages": [],
   "title": "Peekbox UI mockups"

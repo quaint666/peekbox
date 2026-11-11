@@ -14,7 +14,7 @@ body{margin:0}
 a{color:#8CC4A8}a:hover{color:#BFE3CF}
 </style>
 </helmet>
-<div style="width:100%;min-height:1240px;box-sizing:border-box;background:#0E0F10;color-scheme:dark;font-family:'Be Vietnam Pro',sans-serif;color:#F2F4F5">
+<div style="width:100%;min-height:1240px;box-sizing:border-box;background:#0E0F10;font-family:'Be Vietnam Pro',sans-serif;color:#F2F4F5">
 
 <!-- header -->
 <div style="background:#1A1C1E;border-bottom:1px solid #3A3E42;border-top:3px solid #5E9A7E">
@@ -74,7 +74,7 @@ a{color:#8CC4A8}a:hover{color:#BFE3CF}
 <div style="display:flex;gap:12px;overflow-x:auto;padding:2px 2px 8px">
 <sc-for list="{{starters}}" as="b" hint-placeholder-count="3">
 <div style="flex:none;width:250px;background:#1A1C1E;border:1px solid #3A3E42;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.45);padding:14px;display:flex;flex-direction:column;gap:8px">
-<div style="display:flex;gap:6px"><img src="{{b.i1}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#DBDFD3"><img src="{{b.i2}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#DBDFD3"><img src="{{b.i3}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#DBDFD3"></div>
+<div style="display:flex;gap:6px"><img src="{{b.i1}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#26292C"><img src="{{b.i2}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#26292C"><img src="{{b.i3}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#26292C"></div>
 <div style="font-size:15px;font-weight:600">{{b.name}}</div>
 <div style="font-size:13px;color:#ABB1B5">{{b.budget}} · {{b.count}}</div>
 <button style="min-height:44px;border:1px solid #5E9A7E;border-radius:10px;background:transparent;color:#8CC4A8;font-family:inherit;font-size:14px;font-weight:600">Dùng hộp này</button>
@@ -82,16 +82,18 @@ a{color:#8CC4A8}a:hover{color:#BFE3CF}
 </sc-for>
 </div>
 </div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end"><div style="flex:1 1 280px;display:flex;flex-direction:column;gap:6px;min-width:0"><label for="q" style="font-size:13px;font-weight:600">Tìm món</label><div style="position:relative"><span style="position:absolute;left:14px;top:15px;pointer-events:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ABB1B5" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><input id="q" type="search" placeholder="Tên món, thương hiệu, xuất xứ"  style="box-sizing:border-box;width:100%;min-height:48px;padding:0 14px 0 42px;border:1px solid #6B7378;border-radius:10px;font-family:inherit;font-size:16px;background:#1A1C1E;color:#F2F4F5"></div></div><div style="display:flex;flex-direction:column;gap:6px"><label for="sort" style="font-size:13px;font-weight:600">Sắp xếp</label><select id="sort" style="box-sizing:border-box;min-height:48px;padding:0 12px;border:1px solid #6B7378;border-radius:10px;font-family:inherit;font-size:15px;background:#1A1C1E;color:#F2F4F5"><option>Mặc định</option><option>Giá thấp đến cao</option><option>Giá cao đến thấp</option><option>Hạn dùng xa nhất</option><option>Tên A đến Z</option></select></div><label style="display:flex;align-items:center;gap:10px;min-height:48px;font-size:14px;line-height:1.4"><input type="checkbox" checked style="flex:none;width:20px;height:20px;accent-color:#8CC4A8"><span>Chỉ món đủ hạn cho ngày giao <strong>15/01/2027</strong></span></label></div>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
 <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
 <button style="min-height:44px;padding:0 16px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:600;border:1px solid #5E9A7E;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button>
 </sc-for>
 </div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:14px;color:#ABB1B5;line-height:1.5"><span>Hiện 6 món. 2 món hết hạn trước ngày giao đang được ẩn.</span><button style="min-height:44px;padding:0 4px;border:0;background:none;color:#8CC4A8;font-family:inherit;font-size:14px;font-weight:600;text-decoration:underline">Hiện cả 2 món</button></div>
 
 <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
 <sc-for list="{{items}}" as="it" hint-placeholder-count="6">
 <div style="background:#1A1C1E;border:1px solid #3A3E42;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.45);overflow:hidden;display:flex;flex-direction:column">
-<img src="{{it.img}}" alt="{{it.name}}" style="display:block;width:100%;aspect-ratio:1 / 1;object-fit:cover;background:#DBDFD3">
+<img src="{{it.img}}" alt="{{it.name}}" style="display:block;width:100%;aspect-ratio:1 / 1;object-fit:cover;background:#26292C">
 <div style="padding:16px;display:flex;flex-direction:column;gap:8px;flex:1">
 <div style="font-size:17px;font-weight:600;line-height:1.3">{{it.name}}</div>
 <div style="font-size:13px;color:#ABB1B5;line-height:1.5">{{it.brand}} · {{it.weight}}<br>Xuất xứ: {{it.origin}}</div>

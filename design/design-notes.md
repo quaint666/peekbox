@@ -64,3 +64,16 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - An item that sells out during checkout is removed from the box with a notice and nothing is charged; the customer picks a replacement or continues with fewer items.
 - Admin login is locked after repeated wrong attempts: [5] attempts and [15 phút] are placeholders for the team to set.
 - Dark mode: unchosen options (payment, packaging, status chips) are black `#000000`; the chosen one keeps the sage tint.
+
+## Quality-of-life features (added after comparing Bloomy and live shops)
+- **Search on the builder.** A search box above the category chips with suggestions grouped as items and categories. Search must ignore accents and case: typing "mut" finds "Mứt". Pressing Enter shows all results. A sort menu (default, price low to high, price high to low, expiry latest first, name A to Z) sits beside it.
+- **"Only items in date for the delivery date"** is a checkbox, on by default. The page says how many items it hides and offers to show them.
+- **Added-to-hamper toast** at the bottom: what was added, what is left of the budget, and a link to the hamper.
+- **Share** on the item page: copy link, Facebook, and the phone's share sheet. No Zalo button, because it needs a third-party script.
+- **Floating contact button** (Zalo, phone, email, support hours) and a **back-to-top button** that appears after scrolling. Numbers and hours are placeholders.
+- **Loading skeletons** on the builder instead of a spinner.
+- **Resume banner**: a hamper that was left unfinished is remembered in the browser (there are no accounts), and the start page offers to continue or start over.
+- **Hide prices inside the hamper** is a checkbox at checkout: the slip in the box lists names only; the confirmation email to the buyer still shows prices.
+- **Ingredients, allergens and storage** on the item page, with a "last reviewed" date. Contents are placeholders; whether Vietnamese rules require specific wording was not checked.
+- **Recently viewed** strip on the item page.
+- **Admin:** search and a status filter on the items and coupons lists.
