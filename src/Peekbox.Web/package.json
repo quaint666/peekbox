@@ -1,0 +1,17 @@
+{
+  "name": "peekbox-web-scripts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The TypeScript of the Peekbox pages, compiled to wwwroot/js.",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
