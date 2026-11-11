@@ -7,7 +7,7 @@ For the teammate who builds the pages, and for the people who review them. How t
 The Peekbox website. It is one ASP.NET Core MVC app, and each page is a **Razor view** (HTML with a little C#), styled with plain CSS, with a little TypeScript for small behaviours in the browser. The site is **Vietnamese only**.
 
 - **Tools:** Razor views, plain CSS, strict TypeScript. **Do not add libraries** (including CSS or JavaScript ones) without asking.
-- **Look:** the mockups in `design/mockups/` (start with `customer/`). Read `design/design-notes.md` for colours and rules. Ignore the `english/` mockups: the site has no English version.
+- **Look:** the mockups in `design/mockups/` (start with `customer/`). Read `design/design-notes.md` for colours and rules.
 - **What each page must do:** `docs/functions.md` (the F-numbers), `docs/use-cases.md`, `docs/sitemap.md`.
 - **Decisions already made:** `docs/decisions.md`. If a mockup and that file disagree, ask.
 

@@ -3,7 +3,7 @@
 Written 2026-11-11. This is the visual language the mockups use, and the rules the screens assume.
 
 ## Look
-Minimal and calm all year, with a small seasonal accent. Mobile and desktop matter equally. The interface is Vietnamese first. An English version and a dark mode are part of the plan from the start (decisions in the project's `docs/decisions.md`).
+Minimal and calm all year, with a small seasonal accent. Mobile and desktop matter equally. The interface is Vietnamese only. A dark mode is part of the plan from the start (decisions in the project's `docs/decisions.md`).
 
 ## Colour: light mode (palette A, sage and cream)
 | Role | Hex |
@@ -48,7 +48,7 @@ Be Vietnam Pro (400, 600, 700). It supports Vietnamese diacritics well. Body tex
 2. **Safe expiry.** An item whose expiry is before the delivery date plus a margin (a setting, 7 days in the examples) cannot be ordered. The customer removes it or changes the delivery date. Where it shows: amber badge on a card, red banner and a disabled button on the review page, a check under the date field at checkout.
 3. **Guest checkout.** No customer accounts. Order status is on the order confirmation page.
 4. **Delivery only** for now. Payment by ZaloPay or cash on delivery.
-5. **Two languages.** A VI/EN switch and a light/dark button sit in every header. If an English text is missing, show the Vietnamese.
+5. **Vietnamese only.** A light/dark button sits in every header. There is no language switch.
 6. **Admin** has 11 screens (login, orders, items and stock, campaigns, settings, delivery cutoffs, coupons, reviews, stats, users, account). On mobile the menu becomes a scrolling row of tabs and tables become cards.
 
 ## Placeholders in the mockups
@@ -72,7 +72,7 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - **Share** on the item page: copy link, Facebook, and the phone's share sheet. No Zalo button, because it needs a third-party script.
 - **Floating contact button** (Zalo, phone, email, support hours) and a **back-to-top button** that appears after scrolling. Numbers and hours are placeholders.
 - **Loading skeletons** on the builder instead of a spinner.
-- **Resume banner**: a hamper that was left unfinished is remembered in the browser (there are no accounts), and the start page offers to continue or start over.
+- **Resume banner**: a hamper that was left unfinished is remembered by the site (a cookie and a database row; there are no accounts), and the start page offers to continue or start over.
 - **Hide prices inside the hamper** is a checkbox at checkout: the slip in the box lists names only; the confirmation email to the buyer still shows prices.
 - **Ingredients, allergens and storage** on the item page, with a "last reviewed" date. Contents are placeholders; whether Vietnamese rules require specific wording was not checked.
 - **Recently viewed** strip on the item page.

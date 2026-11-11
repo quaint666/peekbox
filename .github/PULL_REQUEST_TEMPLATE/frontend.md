@@ -11,10 +11,10 @@
 <!-- What should the reviewer open or click, and what should they see? -->
 
 ## Checklist
-- [ ] `npm test` passes
-- [ ] No inline styles, no inline scripts, no `innerHTML`
-- [ ] No value or colour typed twice (config.ts, tokens.css, dictionaries, data)
-- [ ] All visible text exists in Vietnamese and English
+- [ ] The tests pass
+- [ ] No inline styles or scripts, no `Html.Raw`, no `innerHTML`
+- [ ] No value, colour or text typed twice (a service, a constant, tokens.css, a shared partial, the data)
+- [ ] All visible text is in Vietnamese
 - [ ] Checked at 1440 px and 390 px, light and dark
 - [ ] Works with the keyboard; no errors in the browser console
 - [ ] No passwords, keys or personal data
