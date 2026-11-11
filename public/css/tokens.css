@@ -1,0 +1,113 @@
+/* DESIGN TOKENS: every colour, size and font in one place.
+   Never type a colour or a font size directly in another CSS file; use a
+   variable from here, e.g. color: var(--color-text).
+   The values come from design/design-notes.md.
+
+   Dark mode: with nothing saved the site follows the system setting (the
+   @media block). Once the visitor presses the theme button, <html> gets
+   data-theme="dark" or "light", which wins. CSS cannot share one block between
+   the two, so the dark values are written twice. Change BOTH. */
+
+@font-face { font-family: 'Be Vietnam Pro'; font-weight: 400; font-style: normal; font-display: swap; src: url('/fonts/BeVietnamPro-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'Be Vietnam Pro'; font-weight: 600; font-style: normal; font-display: swap; src: url('/fonts/BeVietnamPro-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'Be Vietnam Pro'; font-weight: 700; font-style: normal; font-display: swap; src: url('/fonts/BeVietnamPro-Bold.woff2') format('woff2'); }
+
+:root {
+  color-scheme: light;
+
+  /* Colour: light mode (palette A, sage and cream) */
+  --color-bg: #F7F5EF;
+  --color-surface: #FFFFFF;
+  --color-text: #1F2A24;
+  --color-muted: #4A5650;
+  --color-border: #DAD6C9;
+  --color-border-soft: #E6E2D6;
+  --color-input-border: #8A948E;
+  --color-primary: #3F6B57;        /* filled buttons */
+  --color-on-primary: #FFFFFF;
+  --color-primary-text: #3F6B57;   /* links, outlines, text on the page */
+  --color-tint: #E3EFE7;           /* chosen state */
+  --color-on-tint: #25513E;
+  --color-warn-bg: #FFF1CC;
+  --color-warn-text: #7A4F00;
+  --color-danger-bg: #FBE4E0;
+  --color-danger-text: #7A1F14;
+  --color-danger: #A32A1E;         /* error text and filled danger buttons */
+  --color-option-off: #FFFFFF;     /* an unchosen option in a choice list */
+  --color-focus: #3F6B57;
+  --shadow-card: 0 1px 3px rgba(31, 42, 36, 0.07);
+  --shadow-pop: 0 8px 24px rgba(31, 42, 36, 0.16);
+
+  /* Seasonal accents: Tết, 20/11, 8/3 */
+  --accent-tet: #B3382A;
+  --accent-teachers: #5F4A7A;
+  --accent-women: #A8345E;
+
+  /* Type */
+  --font-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.125rem;
+
+  /* Shape and space */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --tap-min: 44px;                 /* smallest height of anything you tap */
+  --container-max: 1200px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --color-bg: #0E0F10;
+    --color-surface: #1A1C1E;
+    --color-text: #F2F4F5;
+    --color-muted: #ABB1B5;
+    --color-border: #3A3E42;
+    --color-border-soft: #2E3235;
+    --color-input-border: #6B7378;
+    --color-primary-text: #8CC4A8;
+    --color-tint: #1D2B24;
+    --color-on-tint: #BFE3CF;
+    --color-warn-bg: #3A3016;
+    --color-warn-text: #F2D98A;
+    --color-danger-bg: #3B1F1B;
+    --color-danger-text: #F4B8AF;
+    --color-option-off: #000000;
+    --color-focus: #8CC4A8;
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
+    --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #0E0F10;
+  --color-surface: #1A1C1E;
+  --color-text: #F2F4F5;
+  --color-muted: #ABB1B5;
+  --color-border: #3A3E42;
+  --color-border-soft: #2E3235;
+  --color-input-border: #6B7378;
+  --color-primary-text: #8CC4A8;
+  --color-tint: #1D2B24;
+  --color-on-tint: #BFE3CF;
+  --color-warn-bg: #3A3016;
+  --color-warn-text: #F2D98A;
+  --color-danger-bg: #3B1F1B;
+  --color-danger-text: #F4B8AF;
+  --color-option-off: #000000;
+  --color-focus: #8CC4A8;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+}

@@ -17,5 +17,7 @@ coverage/
 .vscode/
 .idea/
 
-# Add the compiled-output rules for the chosen stack here once step 4
-# (architecture) in docs/project-pipeline.md is decided.
+# Front end: files that `npm run build` generates (see docs/frontend-plan.md)
+public/js/
+public/data/
+*.tsbuildinfo
