@@ -82,11 +82,13 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 </sc-for>
 </div>
 </div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end"><div style="flex:1 1 280px;display:flex;flex-direction:column;gap:6px;min-width:0"><label for="q" style="font-size:13px;font-weight:600">Search items</label><div style="position:relative"><span style="position:absolute;left:14px;top:15px;pointer-events:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5650" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><input id="q" type="search" placeholder="Name, brand or origin"  style="box-sizing:border-box;width:100%;min-height:48px;padding:0 14px 0 42px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:16px;background:#FFFFFF;color:#1F2A24"></div></div><div style="display:flex;flex-direction:column;gap:6px"><label for="sort" style="font-size:13px;font-weight:600">Sort by</label><select id="sort" style="box-sizing:border-box;min-height:48px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><option>Default</option><option>Price: low to high</option><option>Price: high to low</option><option>Expiry: latest first</option><option>Name: A to Z</option></select></div><label style="display:flex;align-items:center;gap:10px;min-height:48px;font-size:14px;line-height:1.4"><input type="checkbox" checked style="flex:none;width:20px;height:20px;accent-color:#3F6B57"><span>Only items in date for the delivery date <strong>15/01/2027</strong></span></label></div>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
 <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
 <button style="min-height:44px;padding:0 16px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:600;border:1px solid #3F6B57;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button>
 </sc-for>
 </div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:14px;color:#4A5650;line-height:1.5"><span>Showing 6 items. 2 items that expire before the delivery date are hidden.</span><button style="min-height:44px;padding:0 4px;border:0;background:none;color:#3F6B57;font-family:inherit;font-size:14px;font-weight:600;text-decoration:underline">Show all 2 items</button></div>
 
 <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
 <sc-for list="{{items}}" as="it" hint-placeholder-count="6">
@@ -96,10 +98,10 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 <div style="font-size:17px;font-weight:600;line-height:1.3">{{it.name}}</div>
 <div style="font-size:13px;color:#4A5650;line-height:1.5">{{it.brand}} · {{it.weight}}<br>Origin: {{it.origin}}</div>
 <sc-if value="{{it.warn}}" hint-placeholder-val="{{false}}">
-<div style="align-self:flex-start;padding:5px 10px;border-radius:999px;background:#FFF1CC;color:#7A4F00;font-size:12px;font-weight:600">HSD {{it.expiry}}, before delivery</div>
+<div style="align-self:flex-start;padding:5px 10px;border-radius:999px;background:#FFF1CC;color:#7A4F00;font-size:12px;font-weight:600">Exp {{it.expiry}}, before delivery</div>
 </sc-if>
 <sc-if value="{{it.fresh}}" hint-placeholder-val="{{true}}">
-<div style="align-self:flex-start;padding:5px 10px;border-radius:999px;background:#E3EFE7;color:#25513E;font-size:12px;font-weight:600">HSD {{it.expiry}} · in date</div>
+<div style="align-self:flex-start;padding:5px 10px;border-radius:999px;background:#E3EFE7;color:#25513E;font-size:12px;font-weight:600">Exp {{it.expiry}} · in date</div>
 </sc-if>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px">
 <strong style="font-size:16px">{{it.price}}</strong>
@@ -127,7 +129,7 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:1px solid #E6E2D6">
 <div style="display:flex;justify-content:space-between;gap:12px;font-size:15px"><span style="font-weight:600">{{l.name}}</span><span>{{l.price}}</span></div>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:#4A5650">
-<span>{{l.weight}} · HSD {{l.expiry}}</span>
+<span>{{l.weight}} · Exp {{l.expiry}}</span>
 <span style="display:inline-flex;align-items:center;gap:6px">
 <button aria-label="Decrease quantity" style="width:44px;height:44px;border:1px solid #8A948E;border-radius:10px;background:#FFFFFF;color:#1F2A24;font-family:inherit;font-size:18px">−</button>
 <span style="min-width:20px;text-align:center;color:#1F2A24;font-weight:600">1</span>
