@@ -30,3 +30,8 @@ One line per decision: date, what, why. Newest at the bottom.
 - 2026-11-11: An unfinished hamper is remembered in the browser (no accounts) and the start page offers to continue or start over.
 - 2026-11-11: At checkout the buyer can hide prices inside the hamper: the slip in the box lists item names only, and the confirmation email to the buyer still shows prices.
 - 2026-11-11: An item page has ingredients, allergens, storage and a "last reviewed" date. The wording Vietnamese rules require has not been checked and must be confirmed before launch.
+- 2026-11-11: The front-end deliverable is plain HTML, CSS and strict TypeScript (ES modules, compiled by `tsc`), with no framework and no backend. All data goes through one file, `src/lib/data.ts`, so a server can replace the JSON files later without changing the pages.
+- 2026-11-11: In the front-end-only version the browser works out prices, in one file (`src/lib/pricing.ts`), as a stand-in for the server. In the real shop the server prices everything, as in Bloomy.
+- 2026-11-11: The admin screens are in scope and simulated: a fake login and data kept in the browser, so an order placed on the customer side shows up in the admin. The report says plainly that the login and 2-step code are simulated.
+- 2026-11-11: The front end is built by a teammate in milestones M0 to M7, one small pull request at a time, and reviewed by the owner and the assistant against the mockups at 1440 and 390 px. The M0 base (tooling, helpers, styles, tests) is written for them. See `docs/frontend-plan.md`.
+- 2026-11-11: There is no live demo: the lecturer runs the site on localhost or reads the report. The final zip carries the compiled `public/` folder and one line to start it, so no install is needed.
