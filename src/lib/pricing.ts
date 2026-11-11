@@ -25,7 +25,13 @@ const DAY_MS = 86_400_000;
 function parseDay(iso: string): number {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!match) return Number.NaN;
-  return Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  const [year, month, day] = [Number(match[1]), Number(match[2]), Number(match[3])];
+  const ms = Date.UTC(year, month - 1, day);
+  // Date.UTC quietly turns 2027-02-30 into 2 March. An impossible date must be
+  // "unreadable", so check the day came back unchanged.
+  const back = new Date(ms);
+  if (back.getUTCFullYear() !== year || back.getUTCMonth() !== month - 1 || back.getUTCDate() !== day) return Number.NaN;
+  return ms;
 }
 
 // THE SAFE-EXPIRY RULE: an item can be ordered only if its expiry date is
