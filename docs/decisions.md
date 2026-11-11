@@ -20,3 +20,8 @@ One line per decision: date, what, why. Newest at the bottom.
 - 2026-11-10: The English terms of use are approved by the owner (a template, not legal advice). Business facts (company name, address, refund window) are left in [BRACKETS] to fill in before launch.
 - 2026-11-11: The English privacy policy is approved by the owner (same status). Vietnamese versions of both are drafts that need a Vietnamese-speaking review.
 - 2026-11-11: Dark mode uses neutral near-black and grey surfaces with a light sage accent; the unchosen option in a choice list is black. Product photos stay as light tiles.
+- 2026-11-11: The budget is a hard cap: an item that would go over what is left cannot be added. The budget covers goods only.
+- 2026-11-11: A failed ZaloPay payment keeps the order and the box; the customer can retry or switch to cash on delivery. How long items are held for an unpaid order is a setting to decide.
+- 2026-11-11: An item that sells out while the customer is checking out is removed from the box with a notice. Nothing is charged, and the customer picks a replacement or continues with fewer items.
+- 2026-11-11: The logo is an open box with an eye peeking out, with the name set in Be Vietnam Pro Bold. The mockup set (141 screens) covers all customer pages in light, dark and English, plus empty and error states. The admin screens have no dark or English version.
+- 2026-11-11: Design files, written content and images live in this repository, as Bloomy's do: mockups and design notes in `design/`, blog, legal text and sample data in `content/`, and the pictures the site uses in `public/images/` (WebP).
