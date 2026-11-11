@@ -1,14 +1,15 @@
 using System.Net;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Peekbox.Web.Data;
 
 namespace Peekbox.Tests;
 
-public class HomePageTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+[Collection(DatabaseCollection.Name)]
+public class HomePageTests(PeekboxFixture fixture)
 {
     private async Task<string> GetHomeAsync()
     {
-        var response = await factory.CreateClient().GetAsync("/");
+        var response = await fixture.Factory.CreateClient().GetAsync("/");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         // Razor encodes Vietnamese letters as entities; decode them to compare text.
         return WebUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
@@ -23,6 +24,15 @@ public class HomePageTests(WebApplicationFactory<Program> factory) : IClassFixtu
         Assert.Contains("<header class=\"site-header\">", html);
         Assert.Contains("<footer class=\"site-footer\">", html);
         Assert.Contains("<h1>Peekbox</h1>", html);
+    }
+
+    [Fact]
+    public async Task Home_shows_how_many_items_are_in_the_database()
+    {
+        var html = await GetHomeAsync();
+
+        var expected = SeedData.Load(SeedData.FilePath).Products.Count;
+        Assert.Contains($"{expected} món mẫu", html);
     }
 
     [Fact]
