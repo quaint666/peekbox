@@ -45,7 +45,7 @@ The builder starts as plain form posts, with no JavaScript. The live budget bar 
 
 ## 4. Where the code goes (proposal)
 
-Settled in M0 (the layout below is what exists; `Data/` arrives with the database slice).
+Settled in M0 (the layout below is what exists).
 
 ```
 src/Peekbox.Web/
@@ -69,6 +69,9 @@ The existing `design/`, `content/` and `docs/` folders stay as they are.
 - **Applying migrations:** on a developer machine, `dotnet ef database update`. In production the docs recommend a migration bundle for automated deployment, or an idempotent SQL script when the SQL must be reviewed. They advise against casually running migrations at app startup. We decide which one when we deploy.
 - **Seed data** (the 24 sample products and the rest of `content/data/`) is loaded by EF Core's `UseSeeding`, which the docs recommend for larger data. `HasData` is not used for the catalogue.
 - Text fields are Vietnamese only. The `_en` fields in `content/data/` are not mapped.
+- **The tool** is `dotnet ef`, listed in `dotnet-tools.json`; `dotnet tool restore` installs it.
+- **The connection string** is the secret `ConnectionStrings:Default`: user secrets in development, the environment elsewhere (written `ConnectionStrings__Default`). It is never in a file of the project.
+- **Tests** create a temporary database on that server, fill it with the real migrations and seed, and drop it at the end.
 
 ## 6. Money and expiry
 

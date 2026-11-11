@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Mvc.Testing;
 using Peekbox.Web.Security;
 
 namespace Peekbox.Tests;
 
-public class SecurityHeaderTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+[Collection(DatabaseCollection.Name)]
+public class SecurityHeaderTests(PeekboxFixture fixture)
 {
     [Theory]
     [InlineData("/")]
@@ -11,7 +11,7 @@ public class SecurityHeaderTests(WebApplicationFactory<Program> factory) : IClas
     [InlineData("/this-page-does-not-exist")]
     public async Task Every_response_carries_the_content_security_policy(string path)
     {
-        var response = await factory.CreateClient().GetAsync(path);
+        var response = await fixture.Factory.CreateClient().GetAsync(path);
 
         Assert.True(response.Headers.TryGetValues(ContentSecurityPolicy.HeaderName, out var values), $"{path}: no policy header");
         Assert.Equal(ContentSecurityPolicy.Value, Assert.Single(values));

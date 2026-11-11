@@ -1,8 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using Peekbox.Web.Data;
 using Peekbox.Web.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+// The connection string is a secret, so it is never written in a file of the
+// project. See docs/frontend-plan.md, section 2, for how to set it.
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? throw new InvalidOperationException("The connection string 'Default' is missing. See docs/frontend-plan.md, section 2.");
+
+// UseSeeding runs when the database is created or updated (dotnet ef database
+// update, a migration bundle). The tools only call this synchronous version.
+builder.Services.AddDbContext<PeekboxDbContext>(options => options
+    .UseNpgsql(connectionString)
+    .UseSeeding((context, _) => SeedData.Run(context)));
 
 var app = builder.Build();
 
