@@ -15,6 +15,19 @@ The customer sets a budget first, then picks items. Every item shows its brand, 
 - [`public/images/`](public/images/): product photos, packaging, hero and the logo.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md): how to propose a change (no installs needed).
 
+## Run the front end
+
+You need Node 22 or newer. From the project folder:
+
+```
+npm install      # once: installs TypeScript
+npm run build    # compiles src/ to public/js/ and copies the sample data
+npm run dev      # starts the site at http://localhost:3000 (stop with Ctrl+C)
+npm test         # builds, then runs the checks
+```
+
+The pages are plain HTML and CSS in `public/`; the code is TypeScript in `src/`. There is no framework.
+
 ## License
 
 [MIT](LICENSE).
