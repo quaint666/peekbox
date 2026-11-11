@@ -45,7 +45,7 @@ The builder starts as plain form posts, with no JavaScript. The live budget bar 
 
 ## 4. Where the code goes (proposal)
 
-To be settled in the scaffold pull request.
+Settled in M0 (the layout below is what exists; `Data/` arrives with the database slice).
 
 ```
 src/Peekbox.Web/
@@ -54,6 +54,9 @@ src/Peekbox.Web/
   Services/         the rules: pricing, budget, expiry (one place, no copies)
   Data/             the database context, entity classes, Migrations/, seed code
   Views/            Shared/_Layout (header, footer), one folder per controller
+  Security/         the content security policy, written once
+  Navigation/       the header and footer links and the icons, written once
+  Scripts/          the TypeScript source (npm run build compiles it to wwwroot/js)
   wwwroot/          css, fonts, images, and the compiled TypeScript
 tests/              C# tests that load tests/vectors/pricing.json
 ```

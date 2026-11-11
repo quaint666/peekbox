@@ -1,0 +1,26 @@
+@{
+    var title = ViewData["Title"] as string;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@(string.IsNullOrEmpty(title) ? "Peekbox" : $"{title} · Peekbox")</title>
+    <link rel="icon" type="image/svg+xml" href="~/images/logo/peekbox-mark-sage.svg">
+    <link rel="stylesheet" href="~/css/tokens.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/base.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/components.css" asp-append-version="true">
+    <script src="~/theme-init.js" asp-append-version="true"></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">Bỏ qua và vào nội dung</a>
+    <partial name="_Header" />
+    <main id="main" class="container page">
+        @RenderBody()
+    </main>
+    <partial name="_Footer" />
+    <script type="module" src="~/js/layout.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -17,7 +17,9 @@ coverage/
 .vscode/
 .idea/
 
-# Front end: files that `npm run build` generates (see docs/frontend-plan.md)
-public/js/
-public/data/
+# Build output
+bin/
+obj/
+# The TypeScript build output (npm run build in src/Peekbox.Web)
+src/Peekbox.Web/wwwroot/js/
 *.tsbuildinfo
