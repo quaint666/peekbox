@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Peekbox foundations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Nunito:wght@400;600;800&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width:1440px;height:1180px;box-sizing:border-box;padding:56px;background:#FFFFFF;font-family:'Be Vietnam Pro',sans-serif;color:#1F2A24;display:flex;flex-direction:column;gap:40px">
+
+<div style="display:flex;flex-direction:column;gap:8px">
+<h1 style="margin:0;font-size:40px;font-weight:700">Peekbox: màu sắc và chữ</h1>
+<p style="margin:0;font-size:18px;color:#4A5650">Ba bảng màu điềm tĩnh, dùng quanh năm. Mỗi bảng có một màu nhấn theo mùa (Tết, 20/11, 8/3).</p>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px">
+
+<!-- Palette A -->
+<div style="background:#F7F5EF;border:1px solid #DAD6C9;border-radius:16px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:28px;display:flex;flex-direction:column;gap:20px">
+<div style="font-size:14px;font-weight:600;color:#3F6B57">A · Xanh lá dịu và kem</div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+<div><div style="height:56px;border-radius:8px;background:#F7F5EF;border:1px solid #DAD6C9"></div><div style="font-size:12px;margin-top:6px;color:#1F2A24">Nền<br>#F7F5EF</div></div>
+<div><div style="height:56px;border-radius:8px;background:#1F2A24"></div><div style="font-size:12px;margin-top:6px;color:#1F2A24">Chữ<br>#1F2A24</div></div>
+<div><div style="height:56px;border-radius:8px;background:#3F6B57"></div><div style="font-size:12px;margin-top:6px;color:#1F2A24">Chính<br>#3F6B57</div></div>
+<div><div style="height:56px;border-radius:8px;background:#B3382A"></div><div style="font-size:12px;margin-top:6px;color:#1F2A24">Mùa Tết<br>#B3382A</div></div>
+</div>
+<div style="background:#FFFFFF;border:1px solid #DAD6C9;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;font-size:14px;color:#1F2A24"><span>Ngân sách 500.000đ</span><strong>Đã chọn 380.000đ</strong></div>
+<div style="height:10px;border-radius:5px;background:#E6E2D6"><div style="width:76%;height:10px;border-radius:5px;background:#3F6B57"></div></div>
+<div style="display:inline-flex;align-self:flex-start;padding:6px 10px;border-radius:999px;background:#FFF1CC;color:#7A4F00;font-size:13px;font-weight:600">Hạn dùng 10/01, trước ngày giao 15/01</div>
+<div style="display:flex;gap:10px">
+<button style="min-height:44px;padding:0 20px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600">Thêm vào hộp</button>
+<button style="min-height:44px;padding:0 20px;border:1px solid #3F6B57;border-radius:10px;background:transparent;color:#3F6B57;font-family:inherit;font-size:15px;font-weight:600">Xem chi tiết</button>
+</div>
+</div>
+</div>
+
+<!-- Palette B -->
+<div style="background:#F6F7F9;border:1px solid #D5D9E0;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:20px">
+<div style="font-size:14px;font-weight:600;color:#2F5D8A">B · Xanh dương xám</div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+<div><div style="height:56px;border-radius:8px;background:#F6F7F9;border:1px solid #D5D9E0"></div><div style="font-size:12px;margin-top:6px;color:#1B2430">Nền<br>#F6F7F9</div></div>
+<div><div style="height:56px;border-radius:8px;background:#1B2430"></div><div style="font-size:12px;margin-top:6px;color:#1B2430">Chữ<br>#1B2430</div></div>
+<div><div style="height:56px;border-radius:8px;background:#2F5D8A"></div><div style="font-size:12px;margin-top:6px;color:#1B2430">Chính<br>#2F5D8A</div></div>
+<div><div style="height:56px;border-radius:8px;background:#A8561A"></div><div style="font-size:12px;margin-top:6px;color:#1B2430">Mùa Tết<br>#A8561A</div></div>
+</div>
+<div style="background:#FFFFFF;border:1px solid #D5D9E0;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;font-size:14px;color:#1B2430"><span>Ngân sách 500.000đ</span><strong>Đã chọn 380.000đ</strong></div>
+<div style="height:10px;border-radius:5px;background:#DEE2E9"><div style="width:76%;height:10px;border-radius:5px;background:#2F5D8A"></div></div>
+<div style="display:inline-flex;align-self:flex-start;padding:6px 10px;border-radius:999px;background:#FFF1CC;color:#7A4F00;font-size:13px;font-weight:600">Hạn dùng 10/01, trước ngày giao 15/01</div>
+<div style="display:flex;gap:10px">
+<button style="min-height:44px;padding:0 20px;border:0;border-radius:10px;background:#2F5D8A;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600">Thêm vào hộp</button>
+<button style="min-height:44px;padding:0 20px;border:1px solid #2F5D8A;border-radius:10px;background:transparent;color:#2F5D8A;font-family:inherit;font-size:15px;font-weight:600">Xem chi tiết</button>
+</div>
+</div>
+</div>
+
+<!-- Palette C -->
+<div style="background:#FAF6F1;border:1px solid #E2D8CC;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:20px">
+<div style="font-size:14px;font-weight:600;color:#8A4B38">C · Đất nung ấm và mực</div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+<div><div style="height:56px;border-radius:8px;background:#FAF6F1;border:1px solid #E2D8CC"></div><div style="font-size:12px;margin-top:6px;color:#2A2320">Nền<br>#FAF6F1</div></div>
+<div><div style="height:56px;border-radius:8px;background:#2A2320"></div><div style="font-size:12px;margin-top:6px;color:#2A2320">Chữ<br>#2A2320</div></div>
+<div><div style="height:56px;border-radius:8px;background:#8A4B38"></div><div style="font-size:12px;margin-top:6px;color:#2A2320">Chính<br>#8A4B38</div></div>
+<div><div style="height:56px;border-radius:8px;background:#8F6A12"></div><div style="font-size:12px;margin-top:6px;color:#2A2320">Mùa Tết<br>#8F6A12</div></div>
+</div>
+<div style="background:#FFFFFF;border:1px solid #E2D8CC;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;font-size:14px;color:#2A2320"><span>Ngân sách 500.000đ</span><strong>Đã chọn 380.000đ</strong></div>
+<div style="height:10px;border-radius:5px;background:#EADFD3"><div style="width:76%;height:10px;border-radius:5px;background:#8A4B38"></div></div>
+<div style="display:inline-flex;align-self:flex-start;padding:6px 10px;border-radius:999px;background:#FFF1CC;color:#7A4F00;font-size:13px;font-weight:600">Hạn dùng 10/01, trước ngày giao 15/01</div>
+<div style="display:flex;gap:10px">
+<button style="min-height:44px;padding:0 20px;border:0;border-radius:10px;background:#8A4B38;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600">Thêm vào hộp</button>
+<button style="min-height:44px;padding:0 20px;border:1px solid #8A4B38;border-radius:10px;background:transparent;color:#8A4B38;font-family:inherit;font-size:15px;font-weight:600">Xem chi tiết</button>
+</div>
+</div>
+</div>
+
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px">
+<div style="border:1px solid #DAD6C9;border-radius:16px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:28px;display:flex;flex-direction:column;gap:10px;font-family:'Be Vietnam Pro',sans-serif">
+<div style="font-size:14px;font-weight:600;color:#4A5650">Chữ 1 · Be Vietnam Pro</div>
+<div style="font-size:34px;font-weight:700;line-height:1.25">Hộp quà Tết, chọn từng món</div>
+<div style="font-size:17px;line-height:1.6">Xuất xứ: Đà Lạt. Trọng lượng 250 g. Hạn sử dụng đến ngày 10/01/2027. Tổng cộng 1.250.000đ.</div>
+<div style="font-size:14px;color:#4A5650">Ắ ẳ ẫ Ế ể Ộ Ớ Ữ Ỷ Ỹ Đ đ · 0123456789</div>
+</div>
+<div style="border:1px solid #DAD6C9;border-radius:16px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:28px;display:flex;flex-direction:column;gap:10px;font-family:'Nunito',sans-serif">
+<div style="font-size:14px;font-weight:600;color:#4A5650">Chữ 2 · Nunito</div>
+<div style="font-size:34px;font-weight:800;line-height:1.25">Hộp quà Tết, chọn từng món</div>
+<div style="font-size:17px;line-height:1.6">Xuất xứ: Đà Lạt. Trọng lượng 250 g. Hạn sử dụng đến ngày 10/01/2027. Tổng cộng 1.250.000đ.</div>
+<div style="font-size:14px;color:#4A5650">Ắ ẳ ẫ Ế ể Ộ Ớ Ữ Ỷ Ỹ Đ đ · 0123456789</div>
+</div>
+</div>
+
+<div style="display:flex;gap:16px;align-items:center;font-size:14px;color:#4A5650">
+<span>Màu nhấn theo mùa:</span>
+<span style="padding:8px 14px;border-radius:999px;background:#B3382A;color:#FFFFFF;font-weight:600">Tết</span>
+<span style="padding:8px 14px;border-radius:999px;background:#5F4A7A;color:#FFFFFF;font-weight:600">20/11</span>
+<span style="padding:8px 14px;border-radius:999px;background:#A8345E;color:#FFFFFF;font-weight:600">8/3</span>
+<span>Chỉ dùng cho một dải nhỏ trên trang chủ và nhãn dịp, không đổi cả giao diện.</span>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
