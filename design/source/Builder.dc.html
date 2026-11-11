@@ -82,11 +82,13 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 </sc-for>
 </div>
 </div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end"><div style="flex:1 1 280px;display:flex;flex-direction:column;gap:6px;min-width:0"><label for="q" style="font-size:13px;font-weight:600">Tìm món</label><div style="position:relative"><span style="position:absolute;left:14px;top:15px;pointer-events:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5650" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><input id="q" type="search" placeholder="Tên món, thương hiệu, xuất xứ"  style="box-sizing:border-box;width:100%;min-height:48px;padding:0 14px 0 42px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:16px;background:#FFFFFF;color:#1F2A24"></div></div><div style="display:flex;flex-direction:column;gap:6px"><label for="sort" style="font-size:13px;font-weight:600">Sắp xếp</label><select id="sort" style="box-sizing:border-box;min-height:48px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><option>Mặc định</option><option>Giá thấp đến cao</option><option>Giá cao đến thấp</option><option>Hạn dùng xa nhất</option><option>Tên A đến Z</option></select></div><label style="display:flex;align-items:center;gap:10px;min-height:48px;font-size:14px;line-height:1.4"><input type="checkbox" checked style="flex:none;width:20px;height:20px;accent-color:#3F6B57"><span>Chỉ món đủ hạn cho ngày giao <strong>15/01/2027</strong></span></label></div>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
 <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
 <button style="min-height:44px;padding:0 16px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:600;border:1px solid #3F6B57;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button>
 </sc-for>
 </div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:14px;color:#4A5650;line-height:1.5"><span>Hiện 6 món. 2 món hết hạn trước ngày giao đang được ẩn.</span><button style="min-height:44px;padding:0 4px;border:0;background:none;color:#3F6B57;font-family:inherit;font-size:14px;font-weight:600;text-decoration:underline">Hiện cả 2 món</button></div>
 
 <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
 <sc-for list="{{items}}" as="it" hint-placeholder-count="6">
