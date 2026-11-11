@@ -1,0 +1,31 @@
+@{
+    var active = ViewData["Nav"] as string;
+}
+<header class="site-header">
+    <div class="site-header__inner container">
+        <a class="site-header__brand" href="@SiteLinks.Home.Href">
+            <img class="logo logo--light" src="~/images/logo/peekbox-logo-sage.svg" alt="Peekbox" height="34">
+            <img class="logo logo--dark" src="~/images/logo/peekbox-logo-dark.svg" alt="" height="34">
+        </a>
+        <nav class="site-nav" id="site-nav" aria-label="Menu chính">
+            @foreach (var link in SiteLinks.Header)
+            {
+                <a href="@link.Href" aria-current="@(link.Key == active ? "page" : null)">@link.Label</a>
+            }
+        </nav>
+        <div class="site-header__tools">
+            <button type="button" class="icon-btn" data-action="toggle-theme" aria-label="Đổi giao diện sáng hoặc tối">
+                <partial name="_Icon" model='"moon"' />
+                <partial name="_Icon" model='"sun"' />
+            </button>
+            <a class="cart-link" href="@SiteLinks.Cart.Href" aria-label="@SiteLinks.Cart.Label">
+                <partial name="_Icon" model='"cart"' />
+                <span class="cart-link__text">@SiteLinks.Cart.Label</span>
+            </a>
+            <button type="button" class="icon-btn menu-btn" data-action="toggle-menu" aria-expanded="false" aria-controls="site-nav" aria-label="Mở menu" data-label-open="Mở menu" data-label-close="Đóng menu">
+                <partial name="_Icon" model='"menu"' />
+                <partial name="_Icon" model='"close"' />
+            </button>
+        </div>
+    </div>
+</header>

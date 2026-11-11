@@ -1,0 +1,15 @@
+<footer class="site-footer">
+    <div class="site-footer__inner container">
+        <div class="site-footer__about">
+            <strong>Peekbox</strong>
+            <p>Hộp quà cho Tết, 20/11 và 8/3.</p>
+            <p class="muted">[SỐ ĐIỆN THOẠI] · [EMAIL]</p>
+        </div>
+        <nav class="site-footer__links" aria-label="Chân trang">
+            @foreach (var link in SiteLinks.Footer)
+            {
+                <a href="@link.Href">@link.Label</a>
+            }
+        </nav>
+    </div>
+</footer>

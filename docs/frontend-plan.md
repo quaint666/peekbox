@@ -24,15 +24,23 @@ Install these (you use Linux):
 
 Then clone the project: `git clone https://github.com/quaint666/peekbox.git`.
 
-**The exact commands to create the database, build, test and run the site are added here when M0 is merged.** Until then there is nothing to run.
+Then, from the project folder:
+
+```
+(cd src/Peekbox.Web && npm install && npm run build)   # compiles the TypeScript to wwwroot/js
+dotnet test                                            # builds everything, then runs the checks
+dotnet run --project src/Peekbox.Web                   # starts the site; the address is printed
+```
+
+Run `npm run build` again after you change a `.ts` file, or run `npm run watch` in `src/Peekbox.Web` to do it on every save. The database comes with the next slice of M0; until then the site needs none.
 
 ## 3. How the project is organised
 
-The folder layout is in `docs/architecture.md`, section 4, and is settled in the M0 pull request. In short, **you work in**:
+The folder layout is in `docs/architecture.md`, section 4. In short, **you work in**, inside `src/Peekbox.Web/`:
 
 - `Views/`: one folder per area, one `.cshtml` file per page. The header and footer are in `Views/Shared/`.
 - `wwwroot/css/`: the styles. `tokens.css` has all the design values.
-- The TypeScript source (its folder is set in M0), compiled to `wwwroot/js/`.
+- `Scripts/`: the TypeScript source, compiled to `wwwroot/js/` by `npm run build`.
 
 **You do not edit:** the compiled JavaScript, the database `Migrations/` folder by hand, or `tokens.css` values without asking. The `Controllers/`, `Services/` and `Data/` folders are shared: change them in small steps with the owner and the assistant.
 
@@ -59,7 +67,7 @@ Each rule exists because breaking it cost us time in an earlier project (Bloomy)
 
 ## 5. How to build a page
 
-The exact file names and commands are added when M0 is merged. The steps are always:
+The steps are always:
 
 1. Add an action to the area's controller and a view model with exactly what the page needs.
 2. Add the view in `Views/<Area>/`, using the shared layout.
@@ -102,7 +110,7 @@ F02 (language switch) was dropped. Live search suggestions and the live budget b
 |---|---|
 | "Content Security Policy" in the console | An inline style, script or event attribute was used. Use a class and `addEventListener` |
 | "Element not found: #something" | The view does not contain that id, or the script runs on the wrong page |
-| The page shows no data | The database is not running or not set up. The steps come with M0 |
+| The page shows no data | The database is not running or not set up. The steps come with the database slice of M0 |
 | A style or script change does not show | Hard reload (Ctrl+Shift+R); make sure the TypeScript was rebuilt |
 
 This table grows once the project exists. Ask early: a 5-minute question is cheaper than a day in the wrong direction.
