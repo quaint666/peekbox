@@ -6,6 +6,22 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <!-- A possible null is a build error, like strict null checks in TypeScript. -->
     <WarningsAsErrors>nullable</WarningsAsErrors>
+    <UserSecretsId>ef905cbf-d062-4a03-9299-f83a648eb140</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.15">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.15" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The sample catalogue stays in content/data/ (one copy); it is copied next to the app to seed the database. -->
+    <None Include="..\..\content\data\products.json" Link="Seed\products.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>

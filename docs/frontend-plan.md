@@ -24,15 +24,36 @@ Install these (you use Linux):
 
 Then clone the project: `git clone https://github.com/quaint666/peekbox.git`.
 
-Then, from the project folder:
+Then, from the project folder, once:
 
 ```
 (cd src/Peekbox.Web && npm install && npm run build)   # compiles the TypeScript to wwwroot/js
+dotnet tool restore                                    # installs the EF Core command line tool the project lists
+```
+
+**The database.** The site and the tests need a PostgreSQL server (start it first; for Arch, the Arch Wiki page "PostgreSQL" explains the one-time setup) and a login that can create databases: the tests make and drop their own temporary database on the same server, so your own data is never touched. Then:
+
+```
+sudo -u postgres createuser --createdb --pwprompt peekbox   # you choose a password
+sudo -u postgres createdb --owner peekbox peekbox
+dotnet user-secrets set "ConnectionStrings:Default" "Host=localhost;Database=peekbox;Username=peekbox;Password=YOUR_PASSWORD" --project src/Peekbox.Web
+dotnet ef database update --project src/Peekbox.Web         # creates the tables and loads the 24 sample items
+```
+
+The password stays on your computer (user secrets) and never goes into a file of the project. With Docker you can replace the first two lines with one command that starts a ready server (use `Port=5434;Password=dev` in the connection string):
+
+```
+docker run -d --name peekbox-pg -p 127.0.0.1:5434:5432 -e POSTGRES_USER=peekbox -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=peekbox postgres:18
+```
+
+Now you can run the checks and the site:
+
+```
 dotnet test                                            # builds everything, then runs the checks
 dotnet run --project src/Peekbox.Web                   # starts the site; the address is printed
 ```
 
-Run `npm run build` again after you change a `.ts` file, or run `npm run watch` in `src/Peekbox.Web` to do it on every save. The database comes with the next slice of M0; until then the site needs none.
+Run `npm run build` again after you change a `.ts` file, or run `npm run watch` in `src/Peekbox.Web` to do it on every save. When someone changes the database model, run `dotnet ef database update --project src/Peekbox.Web` again.
 
 ## 3. How the project is organised
 
@@ -110,7 +131,7 @@ F02 (language switch) was dropped. Live search suggestions and the live budget b
 |---|---|
 | "Content Security Policy" in the console | An inline style, script or event attribute was used. Use a class and `addEventListener` |
 | "Element not found: #something" | The view does not contain that id, or the script runs on the wrong page |
-| The page shows no data | The database is not running or not set up. The steps come with the database slice of M0 |
+| The site stops at start with "connection string 'Default' is missing", or the tests cannot connect | PostgreSQL is not running, or the user secret from section 2 was not set |
 | A style or script change does not show | Hard reload (Ctrl+Shift+R); make sure the TypeScript was rebuilt |
 
 This table grows once the project exists. Ask early: a 5-minute question is cheaper than a day in the wrong direction.

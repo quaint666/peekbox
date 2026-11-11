@@ -1,6 +1,7 @@
+@model HomeViewModel
 @{
     ViewData["Nav"] = SiteLinks.Home.Key;
 }
 
 <h1>Peekbox</h1>
-<p class="muted">Khung dự án đã sẵn sàng. Trang chủ được xây ở mốc M1.</p>
+<p class="muted">Khung dự án đã sẵn sàng: @Model.ProductCount món mẫu trong cơ sở dữ liệu. Trang chủ được xây ở mốc M1.</p>

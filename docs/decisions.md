@@ -50,3 +50,5 @@ One line per decision: date, what, why. Newest at the bottom.
 - 2026-11-11: An unfinished hamper is remembered in a PostgreSQL row under a long-lived cookie, not in browser storage. This supersedes the line on remembering it in the browser.
 - 2026-11-11: Real admin code is written after the front end is done, and the first report covers the front end only. This supersedes the line that the admin is in scope and simulated.
 - 2026-11-11: Placing an order is real from the first version: the order and its items are saved in the database, with a public token and an order number. ZaloPay and the other payment and email integrations stay stand-ins until they are decided.
+- 2026-11-11: PostgreSQL 18 is the version for Peekbox in development and deployment, because Arch ships it. EF Core and the Npgsql provider are pinned to the 10.0 line, matching .NET 10.
+- 2026-11-11: The database connection string is a secret: it lives in the user secrets (development) or in the environment, as `ConnectionStrings:Default`, and never in a file of the project. The tests create and drop their own temporary database on that server.
