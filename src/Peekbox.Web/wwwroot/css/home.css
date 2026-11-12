@@ -1,0 +1,32 @@
+/* HOME: layout of the home page only. */
+.home-banner {
+    background: var(--accent-tet);
+    color: var(--color-on-primary);
+    text-align: center;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: var(--space-2) var(--space-4);
+    margin: 0;
+}
+
+.hero {
+    background: linear-gradient(var(--color-tint), var(--color-bg));
+    padding-block: var(--space-6);
+}
+.hero__inner { display: grid; gap: var(--space-5); }
+.hero__badge { display: inline-flex; align-items: center; gap: var(--space-2); }
+.hero__dot { width: var(--space-2); height: var(--space-2); border-radius: 50%; }
+.hero__dot--tet { background: var(--accent-tet); }
+.hero__dot--teachers { background: var(--accent-teachers); }
+.hero__dot--women { background: var(--accent-women); }
+.hero__title { margin: var(--space-4) 0; }
+.hero__lead { font-size: var(--text-lg); margin: 0 0 var(--space-5); }
+.hero__actions { display: flex; flex-direction: column; gap: var(--space-3); }
+.hero__image { width: 100%; height: auto; border-radius: var(--radius-lg); }
+
+@media (min-width: 900px) {
+    .hero { padding-block: calc(var(--space-6) * 2); }
+    .hero__inner { grid-template-columns: 1fr 1fr; align-items: center; gap: var(--space-6); }
+    .hero__title { font-size: calc(var(--text-3xl) * 1.5); }
+    .hero__actions { flex-direction: row; }
+}

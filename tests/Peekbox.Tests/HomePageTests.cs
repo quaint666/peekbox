@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text.RegularExpressions;
-using Peekbox.Web.Data;
 
 namespace Peekbox.Tests;
 
@@ -23,16 +22,16 @@ public class HomePageTests(PeekboxFixture fixture)
         Assert.Contains("<html lang=\"vi\">", html);
         Assert.Contains("<header class=\"site-header\">", html);
         Assert.Contains("<footer class=\"site-footer\">", html);
-        Assert.Contains("<h1>Peekbox</h1>", html);
+        Assert.Contains("<h1 class=\"hero__title\">Hộp quà mà bạn nhìn thấy từng món bên trong</h1>", html);
     }
 
     [Fact]
-    public async Task Home_shows_how_many_items_are_in_the_database()
+    public async Task Home_has_the_season_banner_above_the_header()
     {
         var html = await GetHomeAsync();
 
-        var expected = SeedData.Load(SeedData.FilePath).Products.Count;
-        Assert.Contains($"{expected} món mẫu", html);
+        var banner = html.IndexOf("<p class=\"home-banner\">", StringComparison.Ordinal);
+        Assert.InRange(banner, 0, html.IndexOf("<header class=\"site-header\">", StringComparison.Ordinal));
     }
 
     [Fact]

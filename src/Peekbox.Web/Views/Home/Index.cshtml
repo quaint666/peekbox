@@ -1,7 +1,36 @@
 @model HomeViewModel
 @{
     ViewData["Nav"] = SiteLinks.Home.Key;
+    ViewData["FullWidth"] = true;
 }
 
-<h1>Peekbox</h1>
-<p class="muted">Khung dự án đã sẵn sàng: @Model.ProductCount món mẫu trong cơ sở dữ liệu. Trang chủ được xây ở mốc M1.</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true">
+}
+
+@section Banner {
+    @* TODO(F05, M5): the banner text should come from the active campaign, not be typed here. *@
+    <p class="home-banner">Mùa Tết 2027: chọn hộp quà và ngày giao sớm để còn nhiều lựa chọn</p>
+}
+
+<section class="hero">
+    <div class="container hero__inner">
+        <div>
+            <p class="badge hero__badge">
+                <span class="hero__dot hero__dot--tet" aria-hidden="true"></span>
+                <span class="hero__dot hero__dot--teachers" aria-hidden="true"></span>
+                <span class="hero__dot hero__dot--women" aria-hidden="true"></span>
+                Tết · 20/11 · 8/3
+            </p>
+            <h1 class="hero__title">Hộp quà mà bạn nhìn thấy từng món bên trong</h1>
+            <p class="hero__lead">Đặt ngân sách, chọn món, xem thương hiệu, trọng lượng, xuất xứ và hạn sử dụng của từng món. Hệ thống tự tính tổng tiền và kiểm tra hạn dùng so với ngày giao.</p>
+            <div class="hero__actions">
+                <a class="btn btn--primary" href="@SiteLinks.Builder.Href">Tạo hộp quà của bạn</a>
+                <a class="btn btn--outline" href="@SiteLinks.Commitments.Href">Xem cam kết</a>
+            </div>
+        </div>
+        <img class="hero__image" src="~/images/hero.webp" asp-append-version="true"
+             width="1200" height="896"
+             alt="Hộp giấy kraft mở nắp, bên trong có túi hạt điều, hũ thủy tinh, hộp nhỏ và hộp trụ">
+    </div>
+</section>
