@@ -38,7 +38,11 @@ public sealed class PeekboxFixture : IAsyncLifetime
             builder.UseSetting("ConnectionStrings:Default", _testConnection));
 
         using var scope = Factory.Services.CreateScope();
+        // Migrate, not MigrateAsync: the seed is registered with UseSeeding, which is what the dotnet ef tools and
+        // migration bundles run, so the tests exercise the same seed. MigrateAsync would need a second seed (UseAsyncSeeding).
+#pragma warning disable CA1849
         scope.ServiceProvider.GetRequiredService<PeekboxDbContext>().Database.Migrate(); // also runs the seed
+#pragma warning restore CA1849
     }
 
     public async Task DisposeAsync()
