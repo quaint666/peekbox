@@ -117,3 +117,19 @@ The existing `design/`, `content/` and `docs/` folders stay as they are.
 - How to enable PostgreSQL's `unaccent` for accent-free search. The Npgsql docs map `EF.Functions.Unaccent`, but the docs I read do not show how to enable the extension.
 - Whether Fedora 45 and the Linux Docker image behave (ICU is needed for culture data; we have no `vi` culture to register now, but number and date formats still use ICU).
 - That the existing front-end tests port as expected (the data-shape and CSS-colour checks stay; pricing becomes C# tests; the language-key check goes away).
+- The ASP.NET Core analyzers (`ASP0###`), warnings inside Razor views, and the rule against interpolated log messages (`CA2254`): not tried, so none of them is in the list in section 12.
+
+## 12. Writing C#: the compiler and habits
+
+The compiler and the analyzers are there so that we do not meet surprises later. `Directory.Build.props` turns the warnings that mean wrong behaviour into build errors (a possible null, a call not awaited, a blocking call inside async code, a switch that misses a case, code that cannot run, SQL built from strings, and the others listed there). Every other warning stays a warning, and we keep the build at zero warnings, so a new one is always about the last change.
+
+- **Read each warning as a code review and fix its cause.** If a warning must stay, suppress it narrowly: a `#pragma warning disable` for that one ID, with the reason on the line above.
+- **Obsolete APIs** (`CS0618`, `SYSLIB####`): a security-related one is fixed at once; the others are migrated on our schedule, usually in the pull request that upgrades the package.
+- **Null:** make a property `required`, or use `?? throw`. The `!` operator needs a written reason. In a `switch` over an enum, avoid a catch-all `_` arm, so that a new member is flagged.
+- **async all the way:** `await` every call, never `.Result`, `.Wait()` or `Thread.Sleep`. With EF always use the `...Async` methods (`ToListAsync`, `CountAsync`, `FirstOrDefaultAsync`). No rule catches a synchronous EF call inside an async method, so this one is a habit.
+- **CancellationToken:** a controller action takes a `CancellationToken` and passes it to EF's async calls.
+- **Not found is normal:** use `FirstOrDefaultAsync` and answer `NotFound()` for a null, never `First` and a catch.
+- **Rethrow with `throw;`**, never `throw ex;`.
+- **Order tokens and anything secret** come from `RandomNumberGenerator`, not `Random`. Do not use `MD5` or `SHA1` for security.
+- **Logging** uses named placeholders (`log.LogInformation("Order {Id}", id)`), not interpolated strings.
+- **Records** for data we pass on and do not change (view models); **classes** for EF entities; **`sealed`** on types not meant to be inherited.

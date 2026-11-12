@@ -4,8 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <!-- A possible null is a build error, like strict null checks in TypeScript. -->
-    <WarningsAsErrors>nullable</WarningsAsErrors>
     <UserSecretsId>ef905cbf-d062-4a03-9299-f83a648eb140</UserSecretsId>
   </PropertyGroup>
 
