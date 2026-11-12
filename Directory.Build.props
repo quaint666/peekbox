@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <!-- Warnings that mean the program would misbehave stop the build, in the app and in the tests;
+         every other warning stays a warning. Group by group:
+         nullable            a possible null is a build error, like strict null checks in TypeScript
+         CS4014 CA1849 CA2016   a call not awaited; a blocking call in async code; a CancellationToken not passed on
+         CS8509 CS8524       a switch that misses a case
+         CS0162 CS1717 CS0472 CS0642 CS0183 CS0252 CS0253 CS0649   code that cannot do what it says
+         CS0108 CS0114 CS0659 CS0660 CS0661                         class design slips
+         CA2200 CA2208 CA2017 CA2021 CA2013                         misused exceptions, logging and APIs
+         EF1002 CA5351 CA5394    SQL built from strings, a weak hash, Random where it must be random -->
+    <WarningsAsErrors>$(WarningsAsErrors);nullable;CS4014;CS8509;CS8524;CS0162;CS1717;CS0472;CS0642;CS0183;CS0252;CS0253;CS0108;CS0114;CS0659;CS0660;CS0661;CS0649;EF1002;CA2200;CA2208;CA2017;CA2021;CA2013;CA2016;CA1849;CA5351;CA5394</WarningsAsErrors>
+  </PropertyGroup>
+</Project>
