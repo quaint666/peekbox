@@ -12,13 +12,17 @@ public static class SeedData
     {
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         RespectNullableAnnotations = true,
+        // Without this a key missing from the file is not an error: text becomes null and numbers become 0.
+        RespectRequiredConstructorParameters = true,
     };
 
     public static string FilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "products.json");
 
     public static SeedFile Load(string path) =>
-        JsonSerializer.Deserialize<SeedFile>(File.ReadAllText(path), JsonOptions)
-            ?? throw new InvalidOperationException($"{path} is empty.");
+        Parse(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
+
+    // Throws JsonException if the JSON is broken or a key is missing.
+    public static SeedFile? Parse(string json) => JsonSerializer.Deserialize<SeedFile>(json, JsonOptions);
 
     // Safe to run again: a table that already has rows is left alone.
     public static void Run(DbContext context)
