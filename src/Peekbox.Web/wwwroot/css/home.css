@@ -75,6 +75,7 @@
     overflow: hidden;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
+    border-top: 0;   /* the coloured bar is the top edge, as in the mockup */
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-card);
 }
