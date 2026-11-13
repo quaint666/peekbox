@@ -18,6 +18,7 @@
   text-decoration: none;
   cursor: pointer;
 }
+.btn--lg { min-height: 52px; padding: 0 28px; font-size: 17px; }  /* main call-to-action buttons, as in the mockups */
 .btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
 .btn--outline { background: transparent; color: var(--color-primary-text); border-color: var(--color-primary-text); }
 .btn--danger { background: var(--color-danger); color: #FFFFFF; }
