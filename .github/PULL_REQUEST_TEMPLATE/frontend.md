@@ -10,6 +10,12 @@
 ## How to check it
 <!-- What should the reviewer open or click, and what should they see? -->
 
+## Explain it in your own words
+<!-- Short is fine, but write it yourself, not copied from a chat. The reviewer reads this before merging and may ask a question about it. -->
+1. **Pick one word or number on the page** and say where it comes from (the view, the view model, the controller, the data).
+2. **What did you try that did not work**, or what surprised you?
+3. **What would break** if the most important line of this change were removed?
+
 ## Checklist
 - [ ] The tests pass
 - [ ] No inline styles or scripts, no `Html.Raw`, no `innerHTML`
