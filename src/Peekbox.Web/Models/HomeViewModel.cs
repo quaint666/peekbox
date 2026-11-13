@@ -1,3 +1,4 @@
 namespace Peekbox.Web.Models;
 
-public sealed record HomeViewModel(int ProductCount);
+// TODO(F05, M5): add the active campaign (banner text, dates) here.
+public sealed record HomeViewModel;

@@ -28,6 +28,7 @@
   --color-primary-text: #3F6B57;   /* links, outlines, text on the page */
   --color-tint: #E3EFE7;           /* chosen state */
   --color-on-tint: #25513E;
+  --color-hero-top: #EAF0E4;       /* top of the home hero gradient */
   --color-warn-bg: #FFF1CC;
   --color-warn-text: #7A4F00;
   --color-danger-bg: #FBE4E0;
@@ -51,6 +52,8 @@
   --text-xl: 1.25rem;
   --text-2xl: 1.75rem;
   --text-3xl: 2.125rem;
+  --text-hero: 3rem;               /* home page title, wide screens */
+  --text-hero-sm: 2rem;            /* home page title, phones */
 
   /* Shape and space */
   --radius-sm: 10px;
@@ -79,6 +82,7 @@
     --color-primary-text: #8CC4A8;
     --color-tint: #1D2B24;
     --color-on-tint: #BFE3CF;
+    --color-hero-top: #141516;
     --color-warn-bg: #3A3016;
     --color-warn-text: #F2D98A;
     --color-danger-bg: #3B1F1B;
@@ -102,6 +106,7 @@
   --color-primary-text: #8CC4A8;
   --color-tint: #1D2B24;
   --color-on-tint: #BFE3CF;
+  --color-hero-top: #141516;
   --color-warn-bg: #3A3016;
   --color-warn-text: #F2D98A;
   --color-danger-bg: #3B1F1B;

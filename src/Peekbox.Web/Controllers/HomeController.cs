@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Peekbox.Web.Data;
 using Peekbox.Web.Models;
 
 namespace Peekbox.Web.Controllers;
 
-public class HomeController(PeekboxDbContext db) : Controller
+public class HomeController : Controller
 {
-    public async Task<IActionResult> Index() => View(new HomeViewModel(await db.Products.CountAsync()));
+    public IActionResult Index() => View(new HomeViewModel());
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View();
