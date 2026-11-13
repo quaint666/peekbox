@@ -26,13 +26,17 @@ public sealed record HomeContent(
     {
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         RespectNullableAnnotations = true,
+        // Without this a key missing from the file is not an error: the text just becomes null.
+        RespectRequiredConstructorParameters = true,
     };
 
     public static string FilePath => Path.Combine(AppContext.BaseDirectory, "Content", "home.json");
 
     public static HomeContent Load(string path) =>
-        JsonSerializer.Deserialize<HomeContent>(File.ReadAllText(path), JsonOptions)
-            ?? throw new InvalidOperationException($"{path} is empty.");
+        Parse(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
+
+    // Throws JsonException if the JSON is broken or a key is missing.
+    public static HomeContent? Parse(string json) => JsonSerializer.Deserialize<HomeContent>(json, JsonOptions);
 }
 
 // A title with a short text: a benefit tile or a step.

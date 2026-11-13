@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Peekbox.Web.Content;
 
 namespace Peekbox.Tests;
@@ -31,5 +33,38 @@ public class HomeContentTests
             Assert.False(string.IsNullOrWhiteSpace(text));
             Assert.DoesNotContain("[", text);
         });
+    }
+
+    [Fact]
+    public void A_missing_key_stops_the_load_instead_of_leaving_a_null()
+    {
+        var original = File.ReadAllText(HomeContent.FilePath);
+        var keys = JsonNode.Parse(original)!.AsObject().Select(pair => pair.Key).Where(key => !key.StartsWith('_')).ToList();
+        Assert.NotEmpty(keys);
+
+        foreach (var key in keys)
+        {
+            var node = JsonNode.Parse(original)!.AsObject();
+            node.Remove(key);
+            Assert.Throws<JsonException>(() => HomeContent.Parse(node.ToJsonString()));
+        }
+    }
+
+    [Theory]
+    [InlineData("promises")]
+    [InlineData("steps")]
+    [InlineData("occasions")]
+    public void A_missing_key_inside_a_card_stops_the_load(string list)
+    {
+        var node = JsonNode.Parse(File.ReadAllText(HomeContent.FilePath))!.AsObject();
+        var firstCard = node[list]!.AsArray()[0]!.AsObject();
+        var keys = firstCard.Select(pair => pair.Key).ToList();
+
+        foreach (var key in keys)
+        {
+            var copy = JsonNode.Parse(node.ToJsonString())!.AsObject();
+            copy[list]!.AsArray()[0]!.AsObject().Remove(key);
+            Assert.Throws<JsonException>(() => HomeContent.Parse(copy.ToJsonString()));
+        }
     }
 }
