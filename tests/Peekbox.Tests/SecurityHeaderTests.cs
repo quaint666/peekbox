@@ -25,4 +25,10 @@ public class SecurityHeaderTests(PeekboxFixture fixture)
         Assert.Contains("script-src 'self'", ContentSecurityPolicy.Value);
         Assert.Contains("style-src 'self'", ContentSecurityPolicy.Value);
     }
+
+    [Fact]
+    public void The_policy_stops_other_sites_from_framing_the_page()
+    {
+        Assert.Contains("frame-ancestors 'none'", ContentSecurityPolicy.Value);
+    }
 }
