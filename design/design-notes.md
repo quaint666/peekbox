@@ -49,7 +49,7 @@ Be Vietnam Pro (400, 600, 700). It supports Vietnamese diacritics well. Body tex
 3. **Guest checkout.** No customer accounts. Order status is on the order confirmation page.
 4. **Delivery only** for now. Payment by ZaloPay or cash on delivery.
 5. **Vietnamese only.** A light/dark button sits in every customer header, directly to the left of the cart. There is no language switch.
-6. **Admin** has 11 screens (login, orders, items and stock, campaigns, settings, delivery cutoffs, coupons, reviews, stats, users, account). On mobile the menu becomes a scrolling row of tabs and tables become cards.
+6. **Admin** has 11 screens (login, orders, items and stock, campaigns, settings, delivery cutoffs, coupons, reviews, stats, users, account). On mobile the menu becomes a scrolling row of tabs and tables become cards. The season banner is edited on the campaigns screen only: ignore the "Dải thông báo theo mùa" block in the settings mockup (`admin/05-settings`), which is superseded.
 
 ## Placeholders in the mockups
 Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu A"), prices, stock, reviews and statistics are samples.
