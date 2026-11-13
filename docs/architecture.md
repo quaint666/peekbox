@@ -171,3 +171,10 @@ The compiler and the analyzers are there so that we do not meet surprises later.
 - **Order tokens and anything secret** come from `RandomNumberGenerator`, not `Random`. Do not use `MD5` or `SHA1` for security.
 - **Logging** uses named placeholders (`log.LogInformation("Order {Id}", id)`), not interpolated strings.
 - **Records** for data we pass on and do not change (view models); **classes** for EF entities; **`sealed`** on types not meant to be inherited.
+
+**How we found out (so the rules are not just rules).** Each of these was run, not read:
+- **Null:** the strict list makes a possible null a build error, in a `.cshtml` view as well as in `.cs` files. A property without `required` or a check stops the build instead of failing on a visitor.
+- **async:** an un-awaited call swallows its exception; the request still answers 200 and the error appears nowhere. That is why `CS4014` is an error.
+- **Synchronous EF in a test fixture:** `MigrateAsync()` throws when the context has no `UseAsyncSeeding`, so the fixture keeps `Migrate()` with one narrow `#pragma` and a reason.
+- **Lost update:** two requests that read a stock of 5 and each write 4 leave 4 (should be 3). `ExecuteUpdate` with `SET "Stock" = "Stock" - 1 WHERE … AND "Stock" >= 1` changed one row, then zero. That is why a stock change is a raw or set-based update.
+- **SQL from strings:** `EF1002` flags SQL built from a joined or interpolated string passed to the unsafe methods, and it is a build error here; the interpolated `FromSql($"…")` makes each `{value}` a parameter instead.
