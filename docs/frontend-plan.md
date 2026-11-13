@@ -18,9 +18,9 @@ The Peekbox website. It is one ASP.NET Core MVC app, and each page is a **Razor 
 Install these (you use Linux):
 
 1. **Git.**
-2. **The .NET 10 SDK and the ASP.NET Core runtime.** On Arch Linux: `sudo pacman -S dotnet-sdk-10.0 aspnet-runtime-10.0` (these are the package names in the official repositories; the exact set is confirmed when M0 is merged, so tell us if a build complains about something missing).
+2. **The .NET 10 SDK and the ASP.NET Core runtime.** On Arch Linux: `sudo pacman -S dotnet-sdk-10.0 aspnet-runtime-10.0`. On Fedora: `sudo dnf install dotnet-sdk-10.0 aspnetcore-runtime-10.0`. (These are the package names in the official repositories; the exact set is confirmed when M0 is merged, so tell us if a build complains about something missing).
 3. **Node 22 or newer** (it builds the TypeScript).
-4. **PostgreSQL**, from your distribution's packages (Arch currently ships version 18). We use the same major version when we deploy. Docker is only for the final deployment, not for working.
+4. **PostgreSQL**, from your distribution's packages (Arch and Fedora 45 currently ship version 18). We use the same major version when we deploy. Docker is only for the final deployment, not for working.
 
 Then clone the project: `git clone https://github.com/quaint666/peekbox.git`.
 
@@ -31,7 +31,17 @@ Then, from the project folder, once:
 dotnet tool restore                                    # installs the EF Core command line tool the project lists
 ```
 
-**The database.** The site and the tests need a PostgreSQL server (start it first; for Arch, the Arch Wiki page "PostgreSQL" explains the one-time setup) and a login that can create databases: the tests make and drop their own temporary database on the same server, so your own data is never touched. Then:
+**PostgreSQL on Fedora, once.** Fedora does not start a server by itself:
+
+```
+sudo dnf install postgresql-server
+sudo postgresql-setup --initdb --unit postgresql
+sudo systemctl enable --now postgresql
+```
+
+Fedora then allows password logins on `localhost` only after one edit, or the connection fails with an "ident" error. Run `sudo sed -i 's/ident$/scram-sha-256/' /var/lib/pgsql/data/pg_hba.conf` (it changes the `ident` word on the four `host` lines) and `sudo systemctl restart postgresql`. The Fedora documentation says `md5` there; PostgreSQL 18 marks `md5` as deprecated, so we use `scram-sha-256`. Then carry on with the `createuser` lines below.
+
+**The database.** The site and the tests need a PostgreSQL server (start it first; for Arch, the Arch Wiki page "PostgreSQL" explains the one-time setup, and for Fedora the steps are in the paragraph just above) and a login that can create databases: the tests make and drop their own temporary database on the same server, so your own data is never touched. Then:
 
 ```
 sudo -u postgres createuser --createdb --pwprompt peekbox   # you choose a password
