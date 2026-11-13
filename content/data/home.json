@@ -13,6 +13,7 @@
     { "icon": "shield", "title": "Hạn dùng an toàn", "text": "Món nào hết hạn trước ngày giao (cộng thêm một khoảng dự phòng) sẽ không đặt được." }
   ],
   "steps_title": "Cách hoạt động",
+  "step_label": "Bước",
   "steps": [
     { "title": "Đặt ngân sách", "text": "Nhập số tiền và ngày giao." },
     { "title": "Chọn món", "text": "Xem thông tin từng món rồi thêm vào hộp." },
