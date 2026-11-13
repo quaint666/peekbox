@@ -37,8 +37,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: var(--tap-min);
-    height: var(--tap-min);
+    width: var(--icon-box);
+    height: var(--icon-box);
     border-radius: 12px;
     background: var(--color-tint);
     color: var(--color-on-tint);
