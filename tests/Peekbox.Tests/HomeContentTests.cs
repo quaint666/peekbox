@@ -29,7 +29,7 @@ public class HomeContentTests
         var texts = new List<string>
         {
             Content.Pill, Content.Title, Content.Lead, Content.PrimaryButton, Content.SecondaryButton, Content.ImageAlt,
-            Content.StepsTitle, Content.OccasionsTitle, Content.OccasionsLink, Content.ClosingText, Content.ClosingButton,
+            Content.PromisesLabel, Content.StepsTitle, Content.OccasionsTitle, Content.OccasionsLink, Content.ClosingText, Content.ClosingButton,
         };
         texts.AddRange(Content.Promises.SelectMany(c => new[] { c.Icon, c.Title, c.Text }));
         texts.AddRange(Content.Steps.SelectMany(c => new[] { c.Title, c.Text }));

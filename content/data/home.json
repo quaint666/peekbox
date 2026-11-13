@@ -6,6 +6,7 @@
   "primary_button": "Tạo hộp quà của bạn",
   "secondary_button": "Xem cam kết",
   "image_alt": "Hộp giấy kraft mở nắp, bên trong có túi hạt điều, hũ thủy tinh, hộp nhỏ và hộp trụ",
+  "promises_label": "Ba cam kết của Peekbox",
   "promises": [
     { "icon": "eye", "title": "Thấy rõ từng món", "text": "Mỗi món có thương hiệu, trọng lượng, xuất xứ và hạn sử dụng. Giỏ hàng, đơn hàng và email đều ghi đủ." },
     { "icon": "wallet", "title": "Ngân sách trong tay", "text": "Bạn đặt số tiền trước. Thanh ngân sách cho biết còn lại bao nhiêu, bạn không phải tự cộng." },

@@ -13,6 +13,7 @@ public sealed record HomeContent(
     string PrimaryButton,
     string SecondaryButton,
     string ImageAlt,
+    string PromisesLabel,
     IReadOnlyList<HomePromise> Promises,
     string StepsTitle,
     IReadOnlyList<HomeCard> Steps,
