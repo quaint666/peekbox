@@ -16,6 +16,7 @@ public sealed record HomeContent(
     string PromisesLabel,
     IReadOnlyList<HomePromise> Promises,
     string StepsTitle,
+    string StepLabel,
     IReadOnlyList<HomeCard> Steps,
     string OccasionsTitle,
     string OccasionsLink,

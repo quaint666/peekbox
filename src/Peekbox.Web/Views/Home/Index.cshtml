@@ -49,3 +49,20 @@
         }
     </div>
 </section>
+
+<section class="steps">
+    <div class="container steps__inner">
+        <h2 class="steps__title">@Model.Content.StepsTitle</h2>
+        <ol class="steps__list">
+            @for (var i = 0; i < Model.Content.Steps.Count; i++)
+            {
+                var step = Model.Content.Steps[i];
+                <li class="step">
+                    <span class="step__label">@Model.Content.StepLabel @(i + 1)</span>
+                    <strong class="step__title">@step.Title</strong>
+                    <span class="step__text">@step.Text</span>
+                </li>
+            }
+        </ol>
+    </div>
+</section>
