@@ -68,11 +68,30 @@ The existing `design/`, `content/` and `docs/` folders stay as they are.
 - **The entity classes are the source of the schema.** We use EF Core code-first **migrations**: `dotnet ef migrations add` creates a migration, and the migration files are kept in the repository.
 - **Applying migrations:** on a developer machine, `dotnet ef database update`. In production the docs recommend a migration bundle for automated deployment, or an idempotent SQL script when the SQL must be reviewed. They advise against casually running migrations at app startup. We decide which one when we deploy.
 - **Seed data** (the 24 sample products and the rest of `content/data/`) is loaded by EF Core's `UseSeeding`, which the docs recommend for larger data. `HasData` is not used for the catalogue.
-- **Reading and writing data:** controllers take the `PeekboxDbContext` directly (no repository classes on top) and use LINQ, which EF Core turns into SQL. Raw SQL is the exception, used only where we can name the need: a query LINQ cannot express, a measured slow query, or a write that must be one atomic step (for example reducing stock without overselling). Use the interpolated `FromSql($"...")` and `ExecuteSql($"...")`, where each `{value}` becomes a parameter; never build the SQL text by joining strings. Raw SQL names tables and columns as EF created them (quoted, for example `"Products"."PriceVnd"`), and a rename in C# will not update it, so each one is a short, commented line in the pull request that adds it.
+- **Reading and writing data:** controllers take the `PeekboxDbContext` directly (no repository classes on top) and use LINQ, which EF Core turns into SQL. Raw SQL is the exception, used only where we can name the need: a query LINQ cannot express, a measured slow query, or a write that must be one atomic step (for example reducing stock without overselling). Use the interpolated `FromSql($"...")` and `ExecuteSql($"...")`, where each `{value}` becomes a parameter; never build the SQL text by joining strings. Raw SQL names tables and columns as EF created them (quoted, for example `"Products"."PriceVnd"`), and a rename in C# will not update it, so each one is a short, commented line in the pull request that adds it. For a result that is not an entity (a report with totals, say) use `Database.SqlQuery<T>($"...")`, which maps raw SQL onto a plain record and parameterises each `{value}` the same way. We do not add Dapper: EF's own calls cover it.
 - Text fields are Vietnamese only. The `_en` fields in `content/data/` are not mapped.
 - **The tool** is `dotnet ef`, listed in `dotnet-tools.json`; `dotnet tool restore` installs it.
 - **The connection string** is the secret `ConnectionStrings:Default`: user secrets in development, the environment elsewhere (written `ConnectionStrings__Default`). It is never in a file of the project.
 - **Tests** create a temporary database on that server, fill it with the real migrations and seed, and drop it at the end.
+
+### How EF Core and PostgreSQL talk
+
+EF Core does not hold the data or enforce the rules. It writes SQL at three moments, and PostgreSQL does the rest over an ordinary connection (the Npgsql driver, the counterpart of Node's `pg`):
+
+```
+ classes + OnModelCreating  (the "model": what the schema should be)
+      │  dotnet ef migrations add: model vs snapshot file (no database needed)
+      ▼
+ migration file ──► dotnet ef database update ──► SQL: ALTER TABLE ...         (migration time)
+ LINQ query     ──► EF translates the expression ──► SELECT ...                (query time)
+ changed object ──► SaveChanges diffs the tracked objects ──► INSERT / UPDATE  (save time)
+      │
+      ▼
+ Npgsql (a pooled connection: SQL text + parameters) ──► PostgreSQL runs it and enforces
+                                                          NOT NULL, UNIQUE, foreign keys, CHECK
+```
+
+Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches EF as data (an expression), and `ToQueryString()` shows the SQL without running it. Constants stay inline in the SQL while variables become parameters. Adding an optional property to a class produced `ADD COLUMN ... nullable` with no database present. Every rule violation we sent (price 0, stock -1, a duplicate slug, a missing category, a 300-character name, a null by raw SQL) was rejected by PostgreSQL with its own error code, not by EF. Two `SaveChanges` calls that each read a stock of 5 and wrote 4 lost an update (5 → 4, not 3), which is why a stock change is an atomic `ExecuteUpdate` or uses a concurrency token.
 
 ## 6. Money and expiry
 
@@ -85,7 +104,7 @@ The existing `design/`, `content/` and `docs/` folders stay as they are.
 - No accounts. A visitor gets a long-lived cookie with a random token, and the unfinished hamper is a row in PostgreSQL under that token. It survives a restart.
 - We do **not** use the framework's session for this. This is the one place we differ from the framework's own tool: its default idle timeout is 20 minutes and its in-memory store is lost when the server restarts.
 - An order is identified publicly by an unguessable token, never a counting number. Placing an order is safe to repeat (the Back button must not create a second one).
-- Forms carry an anti-forgery token (the form tag helper adds it).
+- Forms carry an anti-forgery token (the form tag helper adds it). The server checks the token only on an action marked `[ValidateAntiForgeryToken]`, or on every unsafe request if a global filter is added; the filter is not set yet (see section 11).
 - Forms are validated on the server with data annotations, always. The framework's own browser-side validation scripts may be added, served from our own site.
 
 ## 8. Language
@@ -110,14 +129,33 @@ The existing `design/`, `content/` and `docs/` folders stay as they are.
 - The email sender, and the rate limit on order endpoints.
 - How the project is run for the lecturer; the deployed site via Docker comes later.
 
-## 11. Not checked yet
+## 11. Checked, and not checked yet
 
-- Setting the policy header in MVC. Microsoft's Blazor pages show it as a middleware that adds the header; using the same in MVC is our inference.
-- Whether the default MVC template and the framework's validation scripts are free of inline scripts and styles under our policy. The docs do not say; the scaffold will show it in the browser console.
-- How to enable PostgreSQL's `unaccent` for accent-free search. The Npgsql docs map `EF.Functions.Unaccent`, but the docs I read do not show how to enable the extension.
-- Whether Fedora 45 and the Linux Docker image behave (ICU is needed for culture data; we have no `vi` culture to register now, but number and date formats still use ICU).
-- That the existing front-end tests port as expected (the data-shape and CSS-colour checks stay; pricing becomes C# tests; the language-key check goes away).
-- The ASP.NET Core analyzers (`ASP0###`), warnings inside Razor views, and the rule against interpolated log messages (`CA2254`): not tried, so none of them is in the list in section 12.
+### Checked on 2026-11-13 (scratch apps, PostgreSQL 18, .NET SDK 10.0.113 on Fedora 45)
+
+- **The policy header in MVC** is a middleware that adds it to every response, and `SecurityHeaderTests` check it on a page, on a 404 and on a static file. The build, the tests and the app all run on Fedora 45 with SDK 10.0.113.
+- **The framework's browser-side validation scripts under our policy.** With jQuery 3.7.1, jquery-validation 1.22.1 and jquery-validation-unobtrusive 4.0.0, served from our own site under the strict policy, headless Chromium showed the Vietnamese messages on an invalid form with 0 policy violations and 0 script errors. With jQuery 4.0.0 the same scripts did not validate (one script error, not examined), so use jQuery 3.x if we add them. The `data-val-*` markup in the probe was written by hand, not produced by a tag helper, so a real form is still to be tried.
+- **Accent-free search (`unaccent`).** `modelBuilder.HasPostgresExtension("unaccent")` produces a migration that runs `CREATE EXTENSION IF NOT EXISTS unaccent;` (the extension ships with the official PostgreSQL image, no extra install). `EF.Functions.ILike(EF.Functions.Unaccent(p.Name), EF.Functions.Unaccent(pattern))` found "Bánh…" for `banh` and `BANH`, and "Cà phê…" for `ca phe`; `unaccent` also folds `đ`, `ơ`, `ư`, `ă`, `â`, `ê` and `ô`. The SQL is `unaccent(p."Name") ILIKE unaccent(@pattern)`, which cannot use an ordinary index: fine for 24 items.
+- **Culture and time zone in a Linux container.** On Fedora `vi-VN` works (`1.234.567 ₫`, "Thứ Sáu, 13 tháng 11, 2026"). In `mcr.microsoft.com/dotnet/runtime:10.0-alpine` the image sets `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true`, so `new CultureInfo("vi-VN")` throws and `Asia/Ho_Chi_Minh` is not found; switching invariant mode off without ICU aborts the process. Installing `icu-libs` and `tzdata` makes the culture exist but with English data (`₫1,234,567` and an English date), a silent error; adding `icu-data-full` gives the right output and the time zone (UTC+7). Any Alpine-based image of ours needs `icu-libs`, `icu-data-full` and `tzdata`, and invariant mode switched off.
+- **Reverse proxy headers.** With the client on loopback sending `X-Forwarded-For: 1.2.3.4, 5.6.7.8`, `X-Forwarded-Proto: https` and `X-Forwarded-Host: shop.example.vn`:
+  - no middleware: the app sees `127.0.0.1` and `http`, and ignores the headers;
+  - `UseForwardedHeaders` with `ForwardedHeaders = XForwardedFor | XForwardedProto`: `5.6.7.8` (the rightmost entry) and `https`;
+  - `ForwardLimit = 2` alone: still `5.6.7.8`, because the next hop is read only if the previous one is a trusted proxy; with `5.6.7.8` added to the trusted proxies it gives `1.2.3.4`. So Bloomy's `trust proxy 2` needs both the limit and the trusted proxy addresses;
+  - a caller that is not a trusted proxy: the headers are ignored;
+  - `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` with no code: applied;
+  - the host from `X-Forwarded-Host` is used only when `XForwardedHost` is enabled.
+  In .NET 10 `ForwardedHeadersOptions.KnownNetworks` is obsolete (ASPDEPR005); use `KnownIPNetworks`. Nothing is configured in Peekbox yet.
+- **Razor views and analyzers.** Views are compiled under the same rules as C#: in a `.cshtml`, an un-awaited call (CS4014) and a null dereference (CS8602) were build errors and an unused variable (CS0219) a warning. Of four ASP.NET analyzer probes only ASP0019 (`Headers.Add` instead of `Append`) fired, as a warning; ASP0000, ASP0001 and ASP0015 did not fire for our code shapes. CA2254 can be promoted to an error (it caught an interpolated log message); none of these is in the list in section 12.
+- **Logging in production.** The `Default: Information` level in `appsettings.json` also prints EF's SQL when the environment is Production (the home page's `SELECT count(*)` appeared).
+- **The front-end tests port.** The data-shape checks (unique slugs, known category, whole-dong price, image paths, seed equals the file) and the CSS-colour check are C# tests already; the language-key check went away with the English text; `tests/vectors/pricing.json` waits for the pricing code (M1).
+- **Defaults seen but not set in Peekbox** (to be decided with the front end, not before): (1) anti-forgery is checked only where asked; a global `AutoValidateAntiforgeryTokenAttribute` filter returns 400 for any POST without a token and `[IgnoreAntiforgeryToken]` exempts a callback such as a payment webhook. (2) Dependency-injection scope checks run only in Development; `UseDefaultServiceProvider(o => { o.ValidateScopes = true; o.ValidateOnBuild = true; })` makes Production refuse to start on the same mistake instead of quietly sharing one object between requests. (3) In a plain `Controller` a failed model binding still runs the action (`id` is 0 and `ModelState.IsValid` is false); check `ModelState.IsValid`, constrain the route (`{id:int}` gives a 404), or use `[ApiController]` on a JSON controller (400 automatically). (4) EF refuses to apply a migration when the model has changes that no migration covers (`PendingModelChangesWarning` is an error in EF 10).
+
+### Not checked yet
+
+- A real form produced by the tag helpers, with the validation scripts and the policy, in a browser.
+- The Arch build (the Arch packages are runtime 10.0.14, our EF packages are pinned at 10.0.15): for the teammate to confirm on Arch.
+- A Docker image for Peekbox (base image names, pinning, health check), and the production setup of forwarded headers: both belong to deployment, which comes later.
+- A normal index for accent-free search once the catalogue is large (`unaccent` is not an immutable function, so it needs a wrapper before it can be indexed): not tried.
 
 ## 12. Writing C#: the compiler and habits
 
