@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Peekbox.Web.Content;
+using Peekbox.Web.Navigation;
 
 namespace Peekbox.Tests;
 
@@ -17,14 +18,20 @@ public class HomeContentTests
     }
 
     [Fact]
+    public void Every_promise_names_an_icon_that_exists()
+    {
+        Assert.All(Content.Promises, promise => Assert.False(string.IsNullOrEmpty(Icons.Path(promise.Icon))));
+    }
+
+    [Fact]
     public void No_home_text_is_empty_or_an_unfilled_placeholder()
     {
         var texts = new List<string>
         {
             Content.Pill, Content.Title, Content.Lead, Content.PrimaryButton, Content.SecondaryButton, Content.ImageAlt,
-            Content.StepsTitle, Content.OccasionsTitle, Content.OccasionsLink, Content.ClosingText, Content.ClosingButton,
+            Content.PromisesLabel, Content.StepsTitle, Content.OccasionsTitle, Content.OccasionsLink, Content.ClosingText, Content.ClosingButton,
         };
-        texts.AddRange(Content.Promises.SelectMany(c => new[] { c.Title, c.Text }));
+        texts.AddRange(Content.Promises.SelectMany(c => new[] { c.Icon, c.Title, c.Text }));
         texts.AddRange(Content.Steps.SelectMany(c => new[] { c.Title, c.Text }));
         texts.AddRange(Content.Occasions.SelectMany(o => new[] { o.Name, o.Text }));
 

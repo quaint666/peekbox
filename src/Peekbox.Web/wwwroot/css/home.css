@@ -25,10 +25,37 @@
 .hero__actions { display: flex; flex-direction: column; gap: var(--space-3); }
 .hero__image { width: 100%; height: auto; border-radius: var(--radius-lg); }
 
+.promises {
+    background: var(--color-surface);
+    border-block: 1px solid var(--color-border);
+    padding-block: var(--space-5);
+}
+.promises__inner { display: flex; flex-direction: column; gap: var(--space-5); }
+.promise { display: flex; gap: var(--space-3); }
+.promise__icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;   /* not --tap-min: this box is decoration and is not tapped */
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: var(--color-tint);
+    color: var(--color-on-tint);
+}
+.promise__icon .icon { width: 24px; height: 24px; }
+.promise__title { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+.promise__text { margin: 0; font-size: var(--text-sm); line-height: 1.65; color: var(--color-muted); }
+
 @media (min-width: 900px) {
     .hero { padding-block: calc(var(--space-6) + var(--space-5)); }
     .hero__inner { grid-template-columns: 1.25fr 1fr; align-items: center; gap: var(--space-6); }
     .hero__title { font-size: clamp(var(--text-3xl), 4vw, var(--text-hero)); }
     .hero__lead { font-size: var(--text-lg); }
     .hero__actions { flex-direction: row; }
+    .promises { padding-block: calc(var(--space-6) + var(--space-4)); }
+    .promises__inner { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+    .promise { flex-direction: column; gap: var(--space-2); }
+    .promise__title { font-size: var(--text-xl); }
+    .promise__text { font-size: 0.9375rem; }  /* 15px, from the mockup */
 }

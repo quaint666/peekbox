@@ -13,7 +13,8 @@ public sealed record HomeContent(
     string PrimaryButton,
     string SecondaryButton,
     string ImageAlt,
-    IReadOnlyList<HomeCard> Promises,
+    string PromisesLabel,
+    IReadOnlyList<HomePromise> Promises,
     string StepsTitle,
     IReadOnlyList<HomeCard> Steps,
     string OccasionsTitle,
@@ -39,7 +40,10 @@ public sealed record HomeContent(
     public static HomeContent? Parse(string json) => JsonSerializer.Deserialize<HomeContent>(json, JsonOptions);
 }
 
-// A title with a short text: a benefit tile or a step.
+// A benefit tile: the name of an icon (see Navigation/Icons.cs), a title and a short text.
+public sealed record HomePromise(string Icon, string Title, string Text);
+
+// A title with a short text: a step.
 public sealed record HomeCard(string Title, string Text);
 
 public sealed record HomeOccasion(string Name, string Text);
