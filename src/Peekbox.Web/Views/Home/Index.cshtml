@@ -34,3 +34,18 @@
              alt="@Model.Content.ImageAlt">
     </div>
 </section>
+
+<section class="promises" aria-label="@Model.Content.PromisesLabel">
+    <div class="container promises__inner">
+        @foreach (var promise in Model.Content.Promises)
+        {
+            <div class="promise">
+                <span class="promise__icon"><partial name="_Icon" model="promise.Icon" /></span>
+                <div>
+                    <h2 class="promise__title">@promise.Title</h2>
+                    <p class="promise__text">@promise.Text</p>
+                </div>
+            </div>
+        }
+    </div>
+</section>
