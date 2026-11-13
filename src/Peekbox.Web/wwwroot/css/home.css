@@ -37,8 +37,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: var(--icon-box);
-    height: var(--icon-box);
+    width: 44px;   /* not --tap-min: this box is decoration and is not tapped */
+    height: 44px;
     border-radius: var(--radius-md);
     background: var(--color-tint);
     color: var(--color-on-tint);
