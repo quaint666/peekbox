@@ -28,10 +28,10 @@
 .promises {
     background: var(--color-surface);
     border-block: 1px solid var(--color-border);
-    padding-block: 28px;
+    padding-block: var(--space-5);
 }
 .promises__inner { display: flex; flex-direction: column; gap: var(--space-5); }
-.promise { display: flex; gap: 14px; }
+.promise { display: flex; gap: var(--space-3); }
 .promise__icon {
     flex: none;
     display: inline-flex;
@@ -39,7 +39,7 @@
     justify-content: center;
     width: var(--icon-box);
     height: var(--icon-box);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     background: var(--color-tint);
     color: var(--color-on-tint);
 }
@@ -55,7 +55,7 @@
     .hero__actions { flex-direction: row; }
     .promises { padding-block: calc(var(--space-6) + var(--space-4)); }
     .promises__inner { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
-    .promise { flex-direction: column; gap: 10px; }
+    .promise { flex-direction: column; gap: var(--space-2); }
     .promise__title { font-size: var(--text-xl); }
     .promise__text { font-size: 0.9375rem; }  /* 15px, from the mockup */
 }
