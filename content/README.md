@@ -10,9 +10,10 @@ The site is **Vietnamese only** (decided 2026-11-11). The English text in these 
 |---|---|---|
 | `blog/` | 6 blog posts, each in Vietnamese then English, in one file | Draft for review |
 | `legal/` | Terms of use and privacy policy, English and Vietnamese | English APPROVED by the owner; Vietnamese is a draft translation, and it is now the only version, so it needs a Vietnamese-speaking review before launch |
-| `pages/` | Copy for the home page and for the About and commitments page, Vietnamese and English | Draft, taken from the design |
+| `pages/` | Copy for the About and commitments page, Vietnamese and English. The home page's Vietnamese text moved to `data/home.json`; its English text stays here, unused | Draft, taken from the design |
 | `data/products.json` and `products.csv` | 24 sample products (names in both languages, brand, weight, origin, expiry date, price, stock, short description, image) | Sample data |
 | `data/packaging.json` | The 3 packaging options and their sample fees | Sample data |
+| `data/home.json` | The Vietnamese text of the home page, read by the site | Draft |
 | `data/campaigns.json` | Tết 2027, 20/11 and 8/3: banners in both languages, accent colour, starter boxes | Draft, dates are placeholders |
 
 `products.csv` opens in a spreadsheet (UTF-8; if the Vietnamese letters look wrong, import it as UTF-8).

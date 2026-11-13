@@ -6,33 +6,7 @@ hero_image: ../images/hero.png
 
 # Tiếng Việt
 
-**Dải thông báo theo mùa (đặt trong phần Chiến dịch):** Mùa Tết 2027: chọn hộp quà và ngày giao sớm để còn nhiều lựa chọn
-
-**Nhãn nhỏ phía trên tiêu đề:** Tết · 20/11 · 8/3
-
-**Tiêu đề:** Hộp quà mà bạn nhìn thấy từng món bên trong
-
-**Mô tả:** Đặt ngân sách, chọn món, xem thương hiệu, trọng lượng, xuất xứ và hạn sử dụng của từng món. Hệ thống tự tính tổng tiền và kiểm tra hạn dùng so với ngày giao.
-
-**Nút:** Tạo hộp quà của bạn | Xem cam kết
-
-## Ba cam kết
-1. **Thấy rõ từng món.** Mỗi món có thương hiệu, trọng lượng, xuất xứ và hạn sử dụng. Giỏ hàng, đơn hàng và email đều ghi đủ.
-2. **Ngân sách trong tay.** Bạn đặt số tiền trước. Thanh ngân sách cho biết còn lại bao nhiêu, bạn không phải tự cộng.
-3. **Hạn dùng an toàn.** Món nào hết hạn trước ngày giao (cộng thêm một khoảng dự phòng) sẽ không đặt được.
-
-## Cách hoạt động
-1. Đặt ngân sách: Nhập số tiền và ngày giao.
-2. Chọn món: Xem thông tin từng món rồi thêm vào hộp.
-3. Chọn đóng gói: Hộp giấy, hộp cứng hoặc giỏ mây.
-4. Đặt hàng: Thanh toán bằng ZaloPay hoặc khi nhận hàng.
-
-## Cho từng dịp
-- **Tết:** Hộp quà biếu gia đình, đối tác và đồng nghiệp dịp đầu năm.
-- **20/11:** Hộp quà tri ân thầy cô, gọn và dễ chia theo ngân sách lớp.
-- **8/3:** Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ.
-
-**Khối kêu gọi cuối trang:** Biết rõ hộp quà chứa gì trước khi bạn trả tiền | Bắt đầu tạo hộp
+The Vietnamese text of the home page now lives in one place: `content/data/home.json`, which the site reads. Edit it there. The season banner comes from the campaign in `content/data/campaigns.json`. The English text below is not used by the site.
 
 # English
 
