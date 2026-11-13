@@ -20,17 +20,17 @@
                 <span class="hero__dot hero__dot--tet" aria-hidden="true"></span>
                 <span class="hero__dot hero__dot--teachers" aria-hidden="true"></span>
                 <span class="hero__dot hero__dot--women" aria-hidden="true"></span>
-                Tết · 20/11 · 8/3
+                @Model.Content.Pill
             </p>
-            <h1 class="hero__title">Hộp quà mà bạn nhìn thấy từng món bên trong</h1>
-            <p class="hero__lead">Đặt ngân sách, chọn món, xem thương hiệu, trọng lượng, xuất xứ và hạn sử dụng của từng món. Hệ thống tự tính tổng tiền và kiểm tra hạn dùng so với ngày giao.</p>
+            <h1 class="hero__title">@Model.Content.Title</h1>
+            <p class="hero__lead">@Model.Content.Lead</p>
             <div class="hero__actions">
-                <a class="btn btn--lg btn--primary" href="@SiteLinks.Builder.Href">Tạo hộp quà của bạn</a>
-                <a class="btn btn--lg btn--outline" href="@SiteLinks.Commitments.Href">Xem cam kết</a>
+                <a class="btn btn--lg btn--primary" href="@SiteLinks.Builder.Href">@Model.Content.PrimaryButton</a>
+                <a class="btn btn--lg btn--outline" href="@SiteLinks.Commitments.Href">@Model.Content.SecondaryButton</a>
             </div>
         </div>
         <img class="hero__image" src="~/images/hero.webp" asp-append-version="true"
              width="1200" height="896"
-             alt="Hộp giấy kraft mở nắp, bên trong có túi hạt điều, hũ thủy tinh, hộp nhỏ và hộp trụ">
+             alt="@Model.Content.ImageAlt">
     </div>
 </section>

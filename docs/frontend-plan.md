@@ -77,7 +77,7 @@ Each rule exists because breaking it cost us time in an earlier project (Bloomy)
 6. **Data only through controllers and services.** A view never reads the database; it only draws the view model it was given.
 7. **To hide something, use the `hidden` attribute.** The rule in `base.css` makes it really hide. Do not remove that rule.
 8. **Colours and sizes come from `tokens.css` variables**, for example `var(--color-text)`. No new hex colours in other files.
-9. **Vietnamese only.** Text is written in the views and shared partials. Text used in more than one place lives in one shared place.
+9. **Vietnamese only.** Text is written in the views and shared partials, except a page that has a content file in `content/data/` (the home page: `home.json`): its text lives only in that file, and the view prints it from the view model. Text used in more than one place lives in one shared place.
 10. **Check every page at 1440 px and 390 px wide, in light and dark.**
 11. **Do not animate from invisible.** Start at 40% opacity or more, never 0.
 12. **Orders: once placed, clear the hamper and disable the button.** The Back button must never place a second order; the server checks this too.

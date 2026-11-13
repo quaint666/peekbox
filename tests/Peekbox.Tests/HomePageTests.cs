@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.RegularExpressions;
+using Peekbox.Web.Content;
 
 namespace Peekbox.Tests;
 
@@ -22,7 +23,9 @@ public class HomePageTests(PeekboxFixture fixture)
         Assert.Contains("<html lang=\"vi\">", html);
         Assert.Contains("<header class=\"site-header\">", html);
         Assert.Contains("<footer class=\"site-footer\">", html);
-        Assert.Contains("<h1 class=\"hero__title\">Hộp quà mà bạn nhìn thấy từng món bên trong</h1>", html);
+        var content = HomeContent.Load(HomeContent.FilePath);
+        Assert.Contains($"<h1 class=\"hero__title\">{content.Title}</h1>", html);
+        Assert.Contains(content.Lead, html);
     }
 
     [Fact]

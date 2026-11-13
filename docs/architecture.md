@@ -51,6 +51,7 @@ Settled in M0 (the layout below is what exists).
 src/Peekbox.Web/
   Controllers/      one per area: Home, Builder, Cart, Checkout, Orders
   Models/           view models
+  Content/          page text read from content/data/ (for example home.json), loaded once at start; read-only
   Services/         the rules: pricing, budget, expiry (one place, no copies)
   Data/             the database context, entity classes, Migrations/, seed code
   Views/            Shared/_Layout (header, footer), one folder per controller
@@ -109,10 +110,10 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
 
 ## 8. Language
 
-- **Vietnamese only.** All text is written in the views and shared partials, and `<html lang="vi">` is fixed.
+- **Vietnamese only.** Text is written in the views and shared partials, and `<html lang="vi">` is fixed. The exception is a page with a content file in `content/data/` (the home page: `home.json`): its text is only in that file, is read once at start (section 4, `Content/`), and the view prints it from the view model. A change to that text needs a restart.
 - Item, category, campaign and blog text is one Vietnamese field each.
 - Text used in more than one place lives in one shared place (a partial or a constant). Never type the same text twice, and never put HTML inside a text constant.
-- English is not planned. Adding it later would mean moving the text out of the views.
+- English is not planned. Adding it later would mean moving any text still written in the views into data files.
 
 ## 9. Rules that carry over from Bloomy
 
@@ -171,6 +172,7 @@ The compiler and the analyzers are there so that we do not meet surprises later.
 - **Order tokens and anything secret** come from `RandomNumberGenerator`, not `Random`. Do not use `MD5` or `SHA1` for security.
 - **Logging** uses named placeholders (`log.LogInformation("Order {Id}", id)`), not interpolated strings.
 - **Records** for data we pass on and do not change (view models); **classes** for EF entities; **`sealed`** on types not meant to be inherited.
+- **A singleton is shared by every request at the same time.** Register one (`AddSingleton`) only if it is read-only (a record, `IReadOnlyList`, no setters that code calls later) and it does not take a scoped service such as the `DbContext`. Anything that changes per visitor or per request is scoped, not a singleton. The home page text is the example: a record read once at start.
 
 **How we found out (so the rules are not just rules).** Each of these was run, not read:
 - **Null:** the strict list makes a possible null a build error, in a `.cshtml` view as well as in `.cs` files. A property without `required` or a check stops the build instead of failing on a visitor.

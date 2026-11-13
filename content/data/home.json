@@ -1,0 +1,30 @@
+{
+  "_note": "The Vietnamese text of the home page, one copy. The season banner is not here: it comes from the campaign (campaigns.json, F05).",
+  "pill": "Tết · 20/11 · 8/3",
+  "title": "Hộp quà mà bạn nhìn thấy từng món bên trong",
+  "lead": "Đặt ngân sách, chọn món, xem thương hiệu, trọng lượng, xuất xứ và hạn sử dụng của từng món. Hệ thống tự tính tổng tiền và kiểm tra hạn dùng so với ngày giao.",
+  "primary_button": "Tạo hộp quà của bạn",
+  "secondary_button": "Xem cam kết",
+  "image_alt": "Hộp giấy kraft mở nắp, bên trong có túi hạt điều, hũ thủy tinh, hộp nhỏ và hộp trụ",
+  "promises": [
+    { "title": "Thấy rõ từng món", "text": "Mỗi món có thương hiệu, trọng lượng, xuất xứ và hạn sử dụng. Giỏ hàng, đơn hàng và email đều ghi đủ." },
+    { "title": "Ngân sách trong tay", "text": "Bạn đặt số tiền trước. Thanh ngân sách cho biết còn lại bao nhiêu, bạn không phải tự cộng." },
+    { "title": "Hạn dùng an toàn", "text": "Món nào hết hạn trước ngày giao (cộng thêm một khoảng dự phòng) sẽ không đặt được." }
+  ],
+  "steps_title": "Cách hoạt động",
+  "steps": [
+    { "title": "Đặt ngân sách", "text": "Nhập số tiền và ngày giao." },
+    { "title": "Chọn món", "text": "Xem thông tin từng món rồi thêm vào hộp." },
+    { "title": "Chọn đóng gói", "text": "Hộp giấy, hộp cứng hoặc giỏ mây." },
+    { "title": "Đặt hàng", "text": "Thanh toán bằng ZaloPay hoặc khi nhận hàng." }
+  ],
+  "occasions_title": "Cho từng dịp",
+  "occasions_link": "Tạo hộp cho dịp này",
+  "occasions": [
+    { "name": "Tết", "text": "Hộp quà biếu gia đình, đối tác và đồng nghiệp dịp đầu năm." },
+    { "name": "20/11", "text": "Hộp quà tri ân thầy cô, gọn và dễ chia theo ngân sách lớp." },
+    { "name": "8/3", "text": "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ." }
+  ],
+  "closing_text": "Biết rõ hộp quà chứa gì trước khi bạn trả tiền",
+  "closing_button": "Bắt đầu tạo hộp"
+}
