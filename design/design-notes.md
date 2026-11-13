@@ -48,7 +48,7 @@ Be Vietnam Pro (400, 600, 700). It supports Vietnamese diacritics well. Body tex
 2. **Safe expiry.** An item whose expiry is before the delivery date plus a margin (a setting, 7 days in the examples) cannot be ordered. The customer removes it or changes the delivery date. Where it shows: amber badge on a card, red banner and a disabled button on the review page, a check under the date field at checkout.
 3. **Guest checkout.** No customer accounts. Order status is on the order confirmation page.
 4. **Delivery only** for now. Payment by ZaloPay or cash on delivery.
-5. **Vietnamese only.** A light/dark button sits in every header. There is no language switch.
+5. **Vietnamese only.** A light/dark button sits in every customer header, directly to the left of the cart. There is no language switch.
 6. **Admin** has 11 screens (login, orders, items and stock, campaigns, settings, delivery cutoffs, coupons, reviews, stats, users, account). On mobile the menu becomes a scrolling row of tabs and tables become cards.
 
 ## Placeholders in the mockups
