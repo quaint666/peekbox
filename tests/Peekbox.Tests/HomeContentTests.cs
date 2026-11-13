@@ -24,6 +24,13 @@ public class HomeContentTests
     }
 
     [Fact]
+    public void Every_occasion_accent_is_one_the_page_has_a_colour_for()
+    {
+        // The page turns the accent into a CSS class (.occasion--tet and so on); an unknown key would show no colour.
+        Assert.All(Content.Occasions, o => Assert.Contains(o.Accent, new[] { "tet", "teachers", "women" }));
+    }
+
+    [Fact]
     public void No_home_text_is_empty_or_an_unfilled_placeholder()
     {
         var texts = new List<string>
@@ -33,7 +40,7 @@ public class HomeContentTests
         };
         texts.AddRange(Content.Promises.SelectMany(c => new[] { c.Icon, c.Title, c.Text }));
         texts.AddRange(Content.Steps.SelectMany(c => new[] { c.Title, c.Text }));
-        texts.AddRange(Content.Occasions.SelectMany(o => new[] { o.Name, o.Text }));
+        texts.AddRange(Content.Occasions.SelectMany(o => new[] { o.Name, o.Accent, o.Text }));
 
         Assert.All(texts, text =>
         {
