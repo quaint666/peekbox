@@ -250,14 +250,6 @@
       "x": 0,
       "y": 45760
     },
-    "BuilderEn.dc.html": {
-      "expand": "fill",
-      "h": 1240,
-      "title": "Builder · English · desktop",
-      "w": 1440,
-      "x": 1520,
-      "y": 45760
-    },
     "Cart-m.dc.html": {
       "expand": "fill",
       "h": 1300,
@@ -298,14 +290,6 @@
       "x": 0,
       "y": 47120
     },
-    "CheckoutEn.dc.html": {
-      "expand": "fill",
-      "h": 1800,
-      "title": "Checkout · English · desktop",
-      "w": 1440,
-      "x": 1520,
-      "y": 47120
-    },
     "Confirmation-m.dc.html": {
       "expand": "fill",
       "h": 1500,
@@ -344,14 +328,6 @@
       "title": "Home · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 43540
-    },
-    "HomeEn.dc.html": {
-      "expand": "fill",
-      "h": 2100,
-      "title": "Home · English · desktop",
-      "w": 1440,
-      "x": 1520,
       "y": 43540
     },
     "Item-m.dc.html": {
@@ -841,260 +817,12 @@
       "x": 1520,
       "y": 94990
     },
-    "ItemEn.dc.html": {
-      "expand": "fill",
-      "h": 1300,
-      "title": "Item detail · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 96950
-    },
-    "ItemEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1900,
-      "title": "Item detail · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 96950
-    },
-    "ReviewEn.dc.html": {
-      "expand": "fill",
-      "h": 1380,
-      "title": "Packaging and review · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 98970
-    },
-    "ReviewEn-m.dc.html": {
-      "expand": "fill",
-      "h": 2200,
-      "title": "Packaging and review · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 98970
-    },
-    "CartEn.dc.html": {
-      "expand": "fill",
-      "h": 1000,
-      "title": "Cart · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 101290
-    },
-    "CartEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1300,
-      "title": "Cart · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 101290
-    },
-    "ConfirmationEn.dc.html": {
-      "expand": "fill",
-      "h": 1240,
-      "title": "Order confirmation · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 102710
-    },
-    "ConfirmationEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1500,
-      "title": "Order confirmation · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 102710
-    },
-    "BlogEn.dc.html": {
-      "expand": "fill",
-      "h": 1500,
-      "title": "Blog list · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 104330
-    },
-    "BlogEn-m.dc.html": {
-      "expand": "fill",
-      "h": 2200,
-      "title": "Blog list · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 104330
-    },
-    "BlogPostEn.dc.html": {
-      "expand": "fill",
-      "h": 1700,
-      "title": "Blog post · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 106650
-    },
-    "BlogPostEn-m.dc.html": {
-      "expand": "fill",
-      "h": 2700,
-      "title": "Blog post · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 106650
-    },
-    "AboutEn.dc.html": {
-      "expand": "fill",
-      "h": 1600,
-      "title": "About and commitments · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 109470
-    },
-    "AboutEn-m.dc.html": {
-      "expand": "fill",
-      "h": 2500,
-      "title": "About and commitments · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 109470
-    },
-    "LegalEn.dc.html": {
-      "expand": "fill",
-      "h": 1500,
-      "title": "Terms and privacy · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 112090
-    },
-    "LegalEn-m.dc.html": {
-      "expand": "fill",
-      "h": 2600,
-      "title": "Terms and privacy · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 112090
-    },
-    "StateCartEmptyEn.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "title": "Cart empty · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 114810
-    },
-    "StateCartEmptyEn-m.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "title": "Cart empty · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 114810
-    },
-    "StateCheckoutErrorEn.dc.html": {
-      "expand": "fill",
-      "h": 1000,
-      "title": "Checkout errors · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 115830
-    },
-    "StateCheckoutErrorEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1750,
-      "title": "Checkout errors · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 115830
-    },
-    "StatePayFailEn.dc.html": {
-      "expand": "fill",
-      "h": 1000,
-      "title": "Payment failed · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 117700
-    },
-    "StatePayFailEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1250,
-      "title": "Payment failed · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 117700
-    },
-    "StateBuilderEn.dc.html": {
-      "expand": "fill",
-      "h": 1100,
-      "title": "Builder states · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 119070
-    },
-    "StateBuilderEn-m.dc.html": {
-      "expand": "fill",
-      "h": 2700,
-      "title": "Builder states · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 119070
-    },
-    "StateNotFoundEn.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "title": "Not found · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 121890
-    },
-    "StateNotFoundEn-m.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "title": "Not found · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 121890
-    },
-    "StateCartCouponEn.dc.html": {
-      "expand": "fill",
-      "h": 1000,
-      "title": "Cart coupon error · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 122910
-    },
-    "StateCartCouponEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1300,
-      "title": "Cart coupon error · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 122910
-    },
-    "StateCheckoutStockEn.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "title": "Checkout stock changed · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 124330
-    },
-    "StateCheckoutStockEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1300,
-      "title": "Checkout stock changed · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 124330
-    },
     "HomeDark-m.dc.html": {
       "expand": "fill",
       "h": 2900,
       "title": "Home · dark · mobile",
       "w": 390,
       "x": 0,
-      "y": 126270
-    },
-    "HomeEn-m.dc.html": {
-      "expand": "fill",
-      "h": 2900,
-      "title": "Home · English · mobile",
-      "w": 390,
-      "x": 450,
       "y": 126270
     },
     "BuilderDark-m.dc.html": {
@@ -1105,28 +833,12 @@
       "x": 900,
       "y": 126270
     },
-    "BuilderEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1900,
-      "title": "Builder · English · mobile",
-      "w": 390,
-      "x": 1350,
-      "y": 126270
-    },
     "CheckoutDark-m.dc.html": {
       "expand": "fill",
       "h": 2500,
       "title": "Checkout · dark · mobile",
       "w": 390,
       "x": 1800,
-      "y": 126270
-    },
-    "CheckoutEn-m.dc.html": {
-      "expand": "fill",
-      "h": 2500,
-      "title": "Checkout · English · mobile",
-      "w": 390,
-      "x": 2250,
       "y": 126270
     },
     "StateBuilderSearch.dc.html": {
@@ -1320,102 +1032,6 @@
       "w": 390,
       "x": 1520,
       "y": 143650
-    },
-    "StateBuilderSearchEn.dc.html": {
-      "expand": "fill",
-      "h": 1100,
-      "title": "Builder: search suggestions · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 145210
-    },
-    "StateBuilderSearchEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1100,
-      "title": "Builder: search suggestions · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 145210
-    },
-    "StateToastEn.dc.html": {
-      "expand": "fill",
-      "h": 1000,
-      "title": "Builder: item added toast · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 146430
-    },
-    "StateToastEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1000,
-      "title": "Builder: item added toast · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 146430
-    },
-    "StateShareEn.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "title": "Item: share menu · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 147550
-    },
-    "StateShareEn-m.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "title": "Item: share menu · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 147550
-    },
-    "StateFloatingEn.dc.html": {
-      "expand": "fill",
-      "h": 1100,
-      "title": "Floating contact and back-to-top · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 148570
-    },
-    "StateFloatingEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1300,
-      "title": "Floating contact and back-to-top · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 148570
-    },
-    "StateLoadingEn.dc.html": {
-      "expand": "fill",
-      "h": 1100,
-      "title": "Builder: loading skeleton · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 149990
-    },
-    "StateLoadingEn-m.dc.html": {
-      "expand": "fill",
-      "h": 1300,
-      "title": "Builder: loading skeleton · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 149990
-    },
-    "StateResumeEn.dc.html": {
-      "expand": "fill",
-      "h": 800,
-      "title": "Resume an unfinished hamper · English · desktop",
-      "w": 1440,
-      "x": 0,
-      "y": 151410
-    },
-    "StateResumeEn-m.dc.html": {
-      "expand": "fill",
-      "h": 900,
-      "title": "Resume an unfinished hamper · English · mobile",
-      "w": 390,
-      "x": 1520,
-      "y": 151410
     }
   },
   "createdOnFiles": {
@@ -1754,11 +1370,8 @@
     "AdminAccount.dc.html",
     "AdminCampaigns.dc.html",
     "HomeDark.dc.html",
-    "HomeEn.dc.html",
     "BuilderDark.dc.html",
-    "BuilderEn.dc.html",
     "CheckoutDark.dc.html",
-    "CheckoutEn.dc.html",
     "AdminOrders-m.dc.html",
     "AdminItems-m.dc.html",
     "AdminCampaigns-m.dc.html",
@@ -1824,42 +1437,9 @@
     "StateCartCouponDark-m.dc.html",
     "StateCheckoutStockDark.dc.html",
     "StateCheckoutStockDark-m.dc.html",
-    "ItemEn.dc.html",
-    "ItemEn-m.dc.html",
-    "ReviewEn.dc.html",
-    "ReviewEn-m.dc.html",
-    "CartEn.dc.html",
-    "CartEn-m.dc.html",
-    "ConfirmationEn.dc.html",
-    "ConfirmationEn-m.dc.html",
-    "BlogEn.dc.html",
-    "BlogEn-m.dc.html",
-    "BlogPostEn.dc.html",
-    "BlogPostEn-m.dc.html",
-    "AboutEn.dc.html",
-    "AboutEn-m.dc.html",
-    "LegalEn.dc.html",
-    "LegalEn-m.dc.html",
-    "StateCartEmptyEn.dc.html",
-    "StateCartEmptyEn-m.dc.html",
-    "StateCheckoutErrorEn.dc.html",
-    "StateCheckoutErrorEn-m.dc.html",
-    "StatePayFailEn.dc.html",
-    "StatePayFailEn-m.dc.html",
-    "StateBuilderEn.dc.html",
-    "StateBuilderEn-m.dc.html",
-    "StateNotFoundEn.dc.html",
-    "StateNotFoundEn-m.dc.html",
-    "StateCartCouponEn.dc.html",
-    "StateCartCouponEn-m.dc.html",
-    "StateCheckoutStockEn.dc.html",
-    "StateCheckoutStockEn-m.dc.html",
     "HomeDark-m.dc.html",
-    "HomeEn-m.dc.html",
     "BuilderDark-m.dc.html",
-    "BuilderEn-m.dc.html",
     "CheckoutDark-m.dc.html",
-    "CheckoutEn-m.dc.html",
     "StateBuilderSearch.dc.html",
     "StateBuilderSearch-m.dc.html",
     "StateToast.dc.html",
@@ -1883,19 +1463,7 @@
     "StateLoadingDark.dc.html",
     "StateLoadingDark-m.dc.html",
     "StateResumeDark.dc.html",
-    "StateResumeDark-m.dc.html",
-    "StateBuilderSearchEn.dc.html",
-    "StateBuilderSearchEn-m.dc.html",
-    "StateToastEn.dc.html",
-    "StateToastEn-m.dc.html",
-    "StateShareEn.dc.html",
-    "StateShareEn-m.dc.html",
-    "StateFloatingEn.dc.html",
-    "StateFloatingEn-m.dc.html",
-    "StateLoadingEn.dc.html",
-    "StateLoadingEn-m.dc.html",
-    "StateResumeEn.dc.html",
-    "StateResumeEn-m.dc.html"
+    "StateResumeDark-m.dc.html"
   ],
   "pages": [],
   "title": "Peekbox UI mockups"
