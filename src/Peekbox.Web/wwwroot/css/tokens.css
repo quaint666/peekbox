@@ -53,6 +53,7 @@
   --text-2xl: 1.75rem;
   --text-3xl: 2.125rem;
   --text-hero: 3rem;               /* home page title, wide screens */
+  --text-hero-sm: 2rem;            /* home page title, phones */
 
   /* Shape and space */
   --radius-sm: 10px;
