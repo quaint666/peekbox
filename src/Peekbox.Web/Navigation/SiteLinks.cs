@@ -16,5 +16,6 @@ public static class SiteLinks
     public static readonly SiteLink Cart = new("cart", "/cart", "Giỏ hàng");
 
     public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, About, Commitments, Blog];
-    public static readonly IReadOnlyList<SiteLink> Footer = [About, Commitments, Blog, Terms, Privacy];
+    public static readonly IReadOnlyList<SiteLink> FooterExplore = [About, Commitments, Blog];
+    public static readonly IReadOnlyList<SiteLink> FooterLegal = [Terms, Privacy];
 }
