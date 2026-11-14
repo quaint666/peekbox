@@ -31,7 +31,7 @@ a{color:#3F6B57}
 <div style="display:flex;flex-direction:column;gap:8px"><h1 style="margin:0;font-size:24px;font-weight:700">Thống kê</h1>
 <div style="display:flex;flex-direction:column;gap:4px"><label for="range" style="font-size:13px;font-weight:600">Khoảng thời gian</label><select id="range" style="box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><option>30 ngày gần nhất</option></select></div></div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
 <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
 <div style="background:#FFFFFF;border:1px solid #DAD6C9;border-radius:14px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:14px;display:flex;flex-direction:column;gap:4px">
 <span style="font-size:12px;color:#4A5650;line-height:1.4">{{k.label}}</span>
