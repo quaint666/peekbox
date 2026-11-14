@@ -60,7 +60,7 @@ a{color:#3F6B57}
 <div role="cell" style="display:table-cell;padding:12px 14px">{{o.n}}</div>
 <div role="cell" style="display:table-cell;padding:12px 14px;text-align:right">{{o.total}}</div>
 <div role="cell" style="display:table-cell;padding:12px 14px">{{o.pay}}</div>
-<div role="cell" style="display:table-cell;padding:12px 14px"><span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;background:{{o.sbg}};color:{{o.sfg}}">{{o.status}}</span></div>
+<div role="cell" style="display:table-cell;padding:12px 14px"><span style="display:inline-block;white-space:nowrap;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;background:{{o.sbg}};color:{{o.sfg}}">{{o.status}}</span></div>
 </div>
 </sc-for>
 </div>
@@ -81,8 +81,8 @@ a{color:#3F6B57}
 <div style="padding:10px 0;display:flex;justify-content:space-between;font-size:14px"><span>Tổng (gồm giao hàng 25.000đ)</span><strong>445.000đ</strong></div>
 </div>
 <div style="display:flex;flex-direction:column;gap:6px"><label for="st" style="font-size:13px;font-weight:600">Cập nhật trạng thái</label>
-<div style="display:flex;gap:8px"><select id="st" style="flex:1;min-width:0;box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><option>Đang giao</option></select><button style="min-height:44px;padding:0 18px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:14px;font-weight:600">Lưu</button></div>
-<span style="font-size:12px;color:#4A5650">Chỉ chuyển được: Mới, Đang giao, Đã giao hoặc Hủy theo thứ tự.</span></div>
+<div style="display:flex;gap:8px"><select id="st" style="flex:1;min-width:0;box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><option>Đang chuẩn bị</option></select><button style="min-height:44px;padding:0 18px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:14px;font-weight:600">Lưu</button></div>
+<span style="font-size:12px;color:#4A5650">Chuyển lần lượt: Mới, Đang chuẩn bị, Đang giao, Đã giao. Đã huỷ chọn được khi đơn đang Mới, Đang chuẩn bị hoặc Đang giao.</span></div>
 <div style="display:flex;flex-direction:column;gap:6px"><label for="tc" style="font-size:13px;font-weight:600">Mã vận đơn (không bắt buộc)</label><input id="tc" style="box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"></div>
 <div style="display:flex;flex-direction:column;gap:6px"><label for="an" style="font-size:13px;font-weight:600">Ghi chú nội bộ</label><textarea id="an" rows="2" style="box-sizing:border-box;padding:10px 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:14px;background:#FFFFFF;color:#1F2A24"></textarea></div>
 </div>
@@ -100,14 +100,16 @@ const labels = ["Đơn hàng", "Món và tồn kho", "Chiến dịch", "Cài đ�
 const news = { sbg: "#E3EFE7", sfg: "#25513E" };
 const go = { sbg: "#FFF1CC", sfg: "#7A4F00" };
 const done = { sbg: "#E6E2D6", sfg: "#1F2A24" };
+const prep = { sbg: "#E1EAF6", sfg: "#1E3D66" };
+const cancel = { sbg: "#FBE4E0", sfg: "#7A1F14" };
 return {
 nav: labels.map((label, i) => ({ label, ...(i === 0 ? on : off) })),
 orders: [
 { code: "PEEK000123", who: "Trần Thị B", n: "3", total: "445.000đ", pay: "ZaloPay, đã trả", status: "Mới", bg: "#F1F6F2", ...news },
-{ code: "PEEK000122", who: "[TÊN NGƯỜI NHẬN]", n: "5", total: "[TỔNG]", pay: "Khi nhận hàng", status: "Đang giao", bg: "transparent", ...go },
+{ code: "PEEK000122", who: "[TÊN NGƯỜI NHẬN]", n: "5", total: "[TỔNG]", pay: "Khi nhận hàng", status: "Đang chuẩn bị", bg: "transparent", ...prep },
 { code: "PEEK000121", who: "[TÊN NGƯỜI NHẬN]", n: "4", total: "[TỔNG]", pay: "ZaloPay, đã trả", status: "Đang giao", bg: "transparent", ...go },
 { code: "PEEK000120", who: "[TÊN NGƯỜI NHẬN]", n: "6", total: "[TỔNG]", pay: "ZaloPay, đã trả", status: "Đã giao", bg: "transparent", ...done },
-{ code: "PEEK000119", who: "[TÊN NGƯỜI NHẬN]", n: "3", total: "[TỔNG]", pay: "ZaloPay, chờ trả", status: "Mới", bg: "transparent", ...news }
+{ code: "PEEK000119", who: "[TÊN NGƯỜI NHẬN]", n: "3", total: "[TỔNG]", pay: "ZaloPay, chờ trả", status: "Đã huỷ", bg: "transparent", ...cancel }
 ],
 lines: [
 { name: "Trà sen", brand: "Thương hiệu A", weight: "100 g", origin: "Hà Nội", expiry: "12/2027", price: "180.000đ" },
