@@ -23,9 +23,9 @@
   "occasions_title": "Cho từng dịp",
   "occasions_link": "Tạo hộp cho dịp này",
   "occasions": [
-    { "name": "Tết", "text": "Hộp quà biếu gia đình, đối tác và đồng nghiệp dịp đầu năm." },
-    { "name": "20/11", "text": "Hộp quà tri ân thầy cô, gọn và dễ chia theo ngân sách lớp." },
-    { "name": "8/3", "text": "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ." }
+    { "name": "Tết", "accent": "tet", "text": "Hộp quà biếu gia đình, đối tác và đồng nghiệp dịp đầu năm." },
+    { "name": "20/11", "accent": "teachers", "text": "Hộp quà tri ân thầy cô, gọn và dễ chia theo ngân sách lớp." },
+    { "name": "8/3", "accent": "women", "text": "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ." }
   ],
   "closing_text": "Biết rõ hộp quà chứa gì trước khi bạn trả tiền",
   "closing_button": "Bắt đầu tạo hộp"
