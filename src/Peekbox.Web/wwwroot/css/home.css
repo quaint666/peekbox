@@ -88,6 +88,13 @@
 .occasion__text { margin: 0; font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
 .occasion__link { display: inline-flex; align-items: center; min-height: var(--tap-min); font-size: var(--text-base); font-weight: 600; }
 
+.cta { background: var(--color-primary); color: var(--color-on-primary); padding-block: var(--space-6); }
+.cta__inner { display: flex; flex-direction: column; gap: var(--space-4); }
+.cta__text { margin: 0; font-size: var(--text-xl); font-weight: 700; line-height: 1.35; }
+.cta__button { background: var(--color-surface); color: var(--color-on-tint); }
+.cta__button:focus-visible { outline-color: var(--color-on-primary); }   /* --color-focus is the same green as the strip in light mode */
+#main + .site-footer { margin-top: 0; }   /* the green strip touches the footer, as in the mockup; other pages keep the gap */
+
 @media (min-width: 900px) {
     .hero { padding-block: calc(var(--space-6) + var(--space-5)); }
     .hero__inner { grid-template-columns: 1.25fr 1fr; align-items: center; gap: var(--space-6); }
@@ -108,4 +115,7 @@
     .occasions__title { font-size: var(--text-2xl); }
     .occasions__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
     .occasion__name { font-size: var(--text-xl); }
+    .cta { padding-block: calc(var(--space-6) + var(--space-4)); }
+    .cta__inner { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-5); }
+    .cta__text { font-size: var(--text-2xl); line-height: 1.3; }
 }
