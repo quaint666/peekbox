@@ -30,7 +30,7 @@ a{color:#3F6B57}
 <div style="padding:16px;display:flex;flex-direction:column;gap:16px">
 <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h1 style="margin:0;font-size:24px;font-weight:700">Món và tồn kho</h1><button style="min-height:44px;padding:0 16px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:14px;font-weight:600">Thêm món</button></div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
 <div style="background:#FFFFFF;border:1px solid #DAD6C9;border-radius:12px;padding:12px;font-size:13px"><div style="color:#4A5650">Tổng số món</div><strong style="font-size:20px">24</strong></div>
 <div style="background:#FBE4E0;border:1px solid #D9877D;border-radius:12px;padding:12px;font-size:13px;color:#7A1F14"><div>Đã hết hạn</div><strong style="font-size:20px">1</strong></div>
 <div style="background:#FFF1CC;border:1px solid #E0B84A;border-radius:12px;padding:12px;font-size:13px;color:#5E3C00"><div>Hết hạn trong 30 ngày</div><strong style="font-size:20px">2</strong></div>
@@ -54,7 +54,7 @@ a{color:#3F6B57}
 
 <form style="background:#FFFFFF;border:1px solid #DAD6C9;border-radius:14px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:16px;display:flex;flex-direction:column;gap:12px">
 <h2 style="margin:0;font-size:18px;font-weight:700">Sửa món: Bánh quy bơ</h2>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
 <div style="display:flex;flex-direction:column;gap:4px;grid-column:1 / span 2"><label for="n" style="font-size:13px;font-weight:600">Tên món</label><input id="n" value="Bánh quy bơ" style="box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"></div>
 <div style="display:flex;flex-direction:column;gap:4px"><label for="b" style="font-size:13px;font-weight:600">Thương hiệu</label><input id="b" value="Thương hiệu D" style="box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"></div>
 <div style="display:flex;flex-direction:column;gap:4px"><label for="w" style="font-size:13px;font-weight:600">Trọng lượng</label><input id="w" value="180 g" style="box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"></div>
@@ -82,10 +82,10 @@ const bad = { sbg: "#F8D3CE", sfg: "#7A1F14" };
 return {
 nav: labels.map((label, i) => ({ label, ...(i === 1 ? on : off) })),
 items: [
-{ name: "Trà sen", img: "/_blob/1186c228cc9c480f4df6379c8091f125", weight: "100 g", brand: "Thương hiệu A", origin: "Hà Nội", expiry: "12/2027", price: "180.000đ", stock: "120", status: "Còn hạn", bg: "#FFFFFF", ...ok },
-{ name: "Bánh quy bơ", img: "/_blob/1f0c5b32abac093e0775bc819cdb5ca3", weight: "180 g", brand: "Thương hiệu D", origin: "Đồng Nai", expiry: "10/01/2027", price: "75.000đ", stock: "40", status: "Sắp hết hạn", bg: "#FFF8E1", ...warn },
-{ name: "Kẹo dừa", img: "/_blob/69a86f7195b2d8676ab5214005e8fa50", weight: "150 g", brand: "Thương hiệu F", origin: "Bến Tre", expiry: "06/2027", price: "55.000đ", stock: "5", status: "Sắp hết hàng", bg: "#FFFFFF", ...warn },
-{ name: "[MÓN ĐÃ HẾT HẠN]", weight: "[g]", brand: "[THƯƠNG HIỆU]", origin: "[XUẤT XỨ]", expiry: "[NGÀY QUÁ KHỨ]", price: "[GIÁ]", stock: "12", status: "Hết hạn", bg: "#FDF0EE", ...bad }
+{ name: "Trà sen", img: "../../src/Peekbox.Web/wwwroot/images/products/tra-sen.webp", weight: "100 g", brand: "Thương hiệu A", origin: "Hà Nội", expiry: "12/2027", price: "180.000đ", stock: "120", status: "Còn hạn", bg: "#FFFFFF", ...ok },
+{ name: "Bánh quy bơ", img: "../../src/Peekbox.Web/wwwroot/images/products/banh-quy-bo.webp", weight: "180 g", brand: "Thương hiệu D", origin: "Đồng Nai", expiry: "10/01/2027", price: "75.000đ", stock: "40", status: "Sắp hết hạn", bg: "#FFF8E1", ...warn },
+{ name: "Kẹo dừa", img: "../../src/Peekbox.Web/wwwroot/images/products/keo-dua.webp", weight: "150 g", brand: "Thương hiệu F", origin: "Bến Tre", expiry: "06/2027", price: "55.000đ", stock: "5", status: "Sắp hết hàng", bg: "#FFFFFF", ...warn },
+{ name: "[MÓN ĐÃ HẾT HẠN]", img: "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==", weight: "[g]", brand: "[THƯƠNG HIỆU]", origin: "[XUẤT XỨ]", expiry: "[NGÀY QUÁ KHỨ]", price: "[GIÁ]", stock: "12", status: "Hết hạn", bg: "#FDF0EE", ...bad }
 ]
 };
 }
