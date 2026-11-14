@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using Peekbox.Web.Content;
 using Peekbox.Web.Navigation;
 
@@ -24,10 +25,16 @@ public class HomeContentTests
     }
 
     [Fact]
-    public void Every_occasion_accent_is_one_the_page_has_a_colour_for()
+    public void Every_occasion_accent_has_a_css_rule_that_sets_its_colour()
     {
-        // The page turns the accent into a CSS class (.occasion--tet and so on); an unknown key would show no colour.
-        Assert.All(Content.Occasions, o => Assert.Contains(o.Accent, new[] { "tet", "teachers", "women" }));
+        // The page turns the accent into a CSS class (.occasion--tet and so on). home.css is the one place that
+        // says which accents exist; an accent without a rule would show a bar with no colour.
+        var css = File.ReadAllText(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "home.css"));
+
+        Assert.All(Content.Occasions, o =>
+            Assert.True(
+                Regex.IsMatch(css, $@"\.occasion--{Regex.Escape(o.Accent)}\s*\{{[^}}]*--occasion-color\s*:"),
+                $"home.json has the accent \"{o.Accent}\" but home.css has no .occasion--{o.Accent} rule that sets --occasion-color"));
     }
 
     [Fact]
