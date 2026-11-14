@@ -36,6 +36,14 @@
   --color-danger: #A32A1E;         /* error text and filled danger buttons */
   --color-option-off: #FFFFFF;     /* an unchosen option in a choice list */
   --color-focus: #3F6B57;
+
+  /* Site footer: dark in light mode so it stands out from the cream page */
+  --footer-bg: #1F2A24;
+  --footer-text: #B6B8B2;
+  --footer-brand: #F7F5EF;
+  --footer-label: #9DA19B;
+  --footer-line: #3C463F;
+  --footer-top-width: 0px;
   --shadow-card: 0 1px 3px rgba(31, 42, 36, 0.07);
   --shadow-pop: 0 8px 24px rgba(31, 42, 36, 0.16);
 
@@ -89,6 +97,12 @@
     --color-danger-text: #F4B8AF;
     --color-option-off: #000000;
     --color-focus: #8CC4A8;
+    --footer-bg: #1D2B24;
+    --footer-text: #ABB1B5;
+    --footer-brand: #8CC4A8;
+    --footer-label: #929A9E;
+    --footer-line: #34443B;
+    --footer-top-width: 1px;
     --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
     --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
   }
@@ -113,6 +127,12 @@
   --color-danger-text: #F4B8AF;
   --color-option-off: #000000;
   --color-focus: #8CC4A8;
+  --footer-bg: #1D2B24;
+  --footer-text: #ABB1B5;
+  --footer-brand: #8CC4A8;
+  --footer-label: #929A9E;
+  --footer-line: #34443B;
+  --footer-top-width: 1px;
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
   --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
 }

@@ -57,6 +57,15 @@ public class HomePageTests(PeekboxFixture fixture)
             .Select(m => (m.Groups[1].Value, m.Groups[2].Value)).ToList();
     }
 
+    // The footer has its links in two columns (two <nav> elements with the same class); this joins them in page order.
+    private static List<(string Href, string Label)> LinksInAll(string html, string navClass)
+    {
+        var navs = Regex.Matches(html, $@"<nav class=""{navClass}""[^>]*>([\s\S]*?)</nav>");
+        Assert.True(navs.Count > 0, $"no <nav class=\"{navClass}\"> on the page");
+        return navs.SelectMany(nav => Regex.Matches(nav.Groups[1].Value, @"<a href=""([^""]*)""[^>]*>([^<]*)</a>")
+            .Select(m => (m.Groups[1].Value, m.Groups[2].Value))).ToList();
+    }
+
     [Fact]
     public async Task The_header_has_the_five_menu_links_in_order_and_marks_the_current_page()
     {
@@ -72,7 +81,7 @@ public class HomePageTests(PeekboxFixture fixture)
     {
         var html = await GetHomeAsync();
 
-        Assert.Equal(FooterLinks, LinksIn(html, "site-footer__links"));
+        Assert.Equal(FooterLinks, LinksInAll(html, "site-footer__links"));
     }
 
     [Fact]
