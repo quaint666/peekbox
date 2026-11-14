@@ -86,18 +86,11 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 
 <!-- occasions -->
 <div style="max-width:1200px;margin:0 auto;padding:0 32px 56px;display:flex;flex-direction:column;gap:28px">
-<h2 style="margin:0;font-size:30px;font-weight:700">Cho từng dịp</h2>
-<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
-<sc-for list="{{occasions}}" as="o" hint-placeholder-count="3">
-<div style="background:#FFFFFF;border:1px solid #DAD6C9;border-radius:14px;box-shadow:0 1px 3px rgba(31,42,36,0.07);overflow:hidden;display:flex;flex-direction:column">
-<div style="height:8px;background:{{o.color}}"></div>
-<div style="padding:20px;display:flex;flex-direction:column;gap:8px">
-<h3 style="margin:0;font-size:20px;font-weight:700">{{o.name}}</h3>
-<p style="margin:0;font-size:14px;line-height:1.6;color:#4A5650">{{o.text}}</p>
-<a href="Home.dc.html" style="display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:600">Tạo hộp cho dịp này</a>
-</div>
-</div>
-</sc-for>
+<div><h2 style="margin:0;font-size:30px;font-weight:700">Cho từng dịp</h2><p style="margin:8px 0 0;font-size:16px;line-height:1.6;color:#4A5650">Chọn một dịp để bắt đầu. Bạn vẫn tự chọn từng món và ngân sách.</p></div>
+<div style="display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:20px">
+<a href="Home.dc.html" style="position:relative;grid-row:span 2;display:flex;flex-direction:column;justify-content:flex-end;min-height:520px;border-radius:20px;overflow:hidden;text-decoration:none;color:#FFFFFF;border:1px solid #DAD6C9;box-shadow:0 8px 24px rgba(31,42,36,0.14)"><img src="/_blob/dcb74e70250eb5823b7650258b712681" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(110,26,18,0) 0%,rgba(110,26,18,0.86) 52%,rgba(110,26,18,0.97) 100%)"></div><div style="position:relative;padding:32px;display:flex;flex-direction:column;gap:12px"><span style="align-self:flex-start;padding:4px 12px;border-radius:999px;background:#FFFFFF;color:#B3382A;font-size:13px;font-weight:700">Mùa Tết 2027</span><h3 style="margin:0;font-size:30px;font-weight:700;line-height:1.2">Tết</h3><p style="margin:0;font-size:16px;line-height:1.6;max-width:460px">Hộp quà biếu gia đình, đối tác và đồng nghiệp dịp đầu năm.</p><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#1F2A24;font-size:15px;font-weight:700">Tạo hộp cho Tết<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
+<a href="Home.dc.html" style="position:relative;display:flex;flex-direction:column;justify-content:center;min-height:250px;background:rgb(54,40,74);border-radius:16px;overflow:hidden;text-decoration:none;color:#FFFFFF;border:1px solid #DAD6C9;box-shadow:0 8px 24px rgba(31,42,36,0.14)"><img src="/_blob/1186c228cc9c480f4df6379c8091f125" alt="" style="position:absolute;top:0;right:0;bottom:0;width:48%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(90deg,rgb(54,40,74) 50%,rgba(54,40,74,0) 80%)"></div><div style="position:relative;max-width:58%;padding:24px;display:flex;flex-direction:column;gap:8px"><span style="align-self:flex-start;padding:4px 12px;border-radius:999px;background:#FFFFFF;color:#5F4A7A;font-size:13px;font-weight:700">Ngày Nhà giáo Việt Nam</span><h3 style="margin:0;font-size:22px;font-weight:700;line-height:1.2">20/11</h3><p style="margin:0;font-size:14px;line-height:1.6">Hộp quà tri ân thầy cô, gọn và dễ chia theo ngân sách lớp.</p><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#1F2A24;font-size:15px;font-weight:700">Tạo hộp cho 20/11<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
+<a href="Home.dc.html" style="position:relative;display:flex;flex-direction:column;justify-content:center;min-height:250px;background:rgb(100,24,54);border-radius:16px;overflow:hidden;text-decoration:none;color:#FFFFFF;border:1px solid #DAD6C9;box-shadow:0 8px 24px rgba(31,42,36,0.14)"><img src="/_blob/1f0c5b32abac093e0775bc819cdb5ca3" alt="" style="position:absolute;top:0;right:0;bottom:0;width:48%;height:100%;object-fit:cover"><div style="position:absolute;inset:0;background:linear-gradient(90deg,rgb(100,24,54) 50%,rgba(100,24,54,0) 80%)"></div><div style="position:relative;max-width:58%;padding:24px;display:flex;flex-direction:column;gap:8px"><span style="align-self:flex-start;padding:4px 12px;border-radius:999px;background:#FFFFFF;color:#A8345E;font-size:13px;font-weight:700">Ngày Quốc tế Phụ nữ</span><h3 style="margin:0;font-size:22px;font-weight:700;line-height:1.2">8/3</h3><p style="margin:0;font-size:14px;line-height:1.6">Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ.</p><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;background:#FFFFFF;color:#1F2A24;font-size:15px;font-weight:700">Tạo hộp cho 8/3<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>
 </div>
 </div>
 
@@ -128,11 +121,6 @@ steps: [
 { n: "2", title: "Chọn món", text: "Xem thông tin từng món rồi thêm vào hộp." },
 { n: "3", title: "Chọn đóng gói", text: "Hộp giấy, hộp cứng hoặc giỏ mây." },
 { n: "4", title: "Đặt hàng", text: "Thanh toán bằng ZaloPay hoặc khi nhận hàng." }
-],
-occasions: [
-{ name: "Tết", color: "#B3382A", text: "Hộp quà biếu gia đình, đối tác và đồng nghiệp dịp đầu năm." },
-{ name: "20/11", color: "#5F4A7A", text: "Hộp quà tri ân thầy cô, gọn và dễ chia theo ngân sách lớp." },
-{ name: "8/3", color: "#A8345E", text: "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ." }
 ]
 };
 }

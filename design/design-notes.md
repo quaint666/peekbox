@@ -77,3 +77,29 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - **Ingredients, allergens and storage** on the item page, with a "last reviewed" date. Contents are placeholders; whether Vietnamese rules require specific wording was not checked.
 - **Recently viewed** strip on the item page.
 - **Admin:** search and a status filter on the items and coupons lists.
+
+## Header and footer on every page
+Every customer page and every state starts with the same header (logo, Trang chủ, Tạo hộp quà, Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng, light/dark button, cart) and ends with the same footer. The page you are on is bold and green in the header. A page shorter than the screen keeps the footer at the bottom of the screen. The only drawn exception is the phone share sheet, which shows the screen with the sheet open. On a phone the header links are in the menu (state 21) and the footer is the same footer, stacked.
+
+## Interaction states
+Every control has five looks: default, hover, keyboard focus, pressed, disabled. They are drawn once on the "Interaction states" board (light and dark, in `mockups/foundations/`) and are the same on every page.
+- **Hover** only where a mouse exists (`@media (hover: hover)`). A phone shows pressed, never hover.
+- **Colour changes take 150 ms, movement 200 ms.** With "reduce motion" on, movement is dropped and the colour change stays.
+- **Focus ring**: 3 px, offset 2 px, `#3F6B57` in light mode and `#8CC4A8` in dark mode. It is shown for the keyboard only and never removed.
+- **Primary button**: hover `#2C4D3E` (dark mode: `#4A7A64`), pressed `#25513E` (dark mode: `#2C4D3E`) and 1 px down. **Secondary button**: the sage tint fills in on hover.
+- **Header link**: hover turns it green and adds a 2 px underline 8 px below the text.
+- **Text field**: the border darkens on hover, gets 2 px green plus the ring on focus, 2 px red `#A32A1E` (dark mode `#F4B8AF`) on error with a message.
+- **Clickable card**: rises 2 px and gets a deeper shadow and a green border; a sold-out card is greyed and does not react.
+- **Table row (admin)**: hover tint `#F1F6F2` (dark mode `#202428`); the open row keeps the chosen tint. These two tints are the only new colours here.
+- **Occasion cards on the home page** rise 4 px, the photo zooms to 105 % and the arrow moves 4 px right.
+- **Pressed** on a phone: the same pressed colour, no movement.
+
+## Home: Cho từng dịp
+The second highlight of the home page, after the hero. A large Tết card on the left (520 px high, photo with a gradient in the occasion colour) and two smaller cards (20/11 and 8/3) on the right, where the occasion colour fills the left side and the photo sits on the right; on a phone they stack, with Tết taller. Each card is one link with a white date chip ("Mùa Tết 2027", "Ngày Nhà giáo Việt Nam", "Ngày Quốc tế Phụ nữ"), the name, one sentence and a white button with an arrow. The text sits on the opaque part of the colour (measured on the Tết card: white text at 7 to 1 or better; the two other colours are darker). The photos are placeholders.
+
+## Item page
+Left: a main photo with four thumbnails (the first is chosen). Right: a category chip, the name, brand and rating, the price and share button, a short description, three fact chips (expiry, origin, weight), the in-date notice, an amber allergen line, the budget card (bar, quantity stepper, "Thêm vào hộp", what is left after adding) and three small promises (expiry checked, delivery on the chosen date, ZaloPay or cash). Under it: tabs (Mô tả, Thông tin chi tiết, Giao hàng và đổi trả), then the always-visible ingredients, allergens and storage box, the reviews with an average and a bar per star count, "Hay đi cùng món này" (4 items; 2 columns on a phone) and "Món bạn vừa xem". On a phone the add bar (budget, stepper, add button) stays at the bottom of the screen. The other two tabs are drawn as states 24 (Thông tin chi tiết: the facts table with category, packaging and producer) and 25 (Giao hàng và đổi trả: delivery, fee shown before paying, payment, the expiry rule and the return period; the fee rule and the number of days are placeholders).
+
+## Admin account
+The bottom of the admin sidebar shows a chip: initials in a green circle, the name, the role, and a bordered "Đăng xuất" button with an icon. On a phone the header has an initials button (44 px) that opens a menu with the name, Tài khoản and Đăng xuất (state 23). The name and role are placeholders.
+
