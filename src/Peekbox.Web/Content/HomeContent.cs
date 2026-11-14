@@ -47,4 +47,4 @@ public sealed record HomePromise(string Icon, string Title, string Text);
 // A title with a short text: a step.
 public sealed record HomeCard(string Title, string Text);
 
-public sealed record HomeOccasion(string Name, string Text);
+public sealed record HomeOccasion(string Name, string Accent, string Text);

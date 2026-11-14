@@ -66,3 +66,22 @@
         </ol>
     </div>
 </section>
+
+<section class="occasions">
+    <div class="container occasions__inner">
+        <h2 class="occasions__title">@Model.Content.OccasionsTitle</h2>
+        <ul class="occasions__list">
+            @foreach (var occasion in Model.Content.Occasions)
+            {
+                <li class="occasion occasion--@occasion.Accent">
+                    <div class="occasion__bar"></div>
+                    <div class="occasion__body">
+                        <h3 class="occasion__name">@occasion.Name</h3>
+                        <p class="occasion__text">@occasion.Text</p>
+                        <a class="occasion__link" href="@SiteLinks.Builder.Href">@Model.Content.OccasionsLink</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</section>
