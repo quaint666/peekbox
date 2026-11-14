@@ -11,10 +11,11 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F01 | Header: logo, menu (Trang chủ, Tạo hộp quà, Giới thiệu, Cam kết, Blog), cart link with item count | all | M |
 | F02 | Dropped (2026-11-11): the site is Vietnamese only, so there is no language switch. The number is kept so the other F-numbers do not change | all | – |
 | F03 | Light/dark button; follows the system by default; the choice is remembered | all | M |
-| F04 | Footer: About, Commitments, Terms, Privacy, Blog, contact [placeholders] | all | M |
+| F04 | Footer on every customer page and every state: brand line, Khám phá (Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng), Pháp lý (Điều khoản, Chính sách bảo mật), contact [placeholders]. The one exception is the phone share sheet, which shows only the screen | all | M |
 | F05 | Campaign banner (Tết 2027, 20/11, 8/3) shown within its dates | Home, Builder | S |
 | F06 | Floating contact button: Zalo, phone, email, support hours [placeholders] | all | S |
 | F07 | Back-to-top button after scrolling | all | C |
+| F67 | Hover, keyboard-focus, pressed and disabled looks for buttons, links, fields, cards and table rows; hover only where a mouse exists; movement is dropped for "reduce motion" (see the Interaction states board) | all | M |
 | F08 | Toast messages ("added to hamper", "link copied") | all | S |
 | F09 | Not-found page with links home and to the builder, and support hours | 404 | S |
 | F10 | Loading skeletons while data loads | Builder, Item | C |
@@ -43,6 +44,11 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F30 | Reviews (sample text only, no invented reviews) | Item | C |
 | F31 | Share: copy link, Facebook, system share sheet | Item | S |
 | F32 | "Recently viewed" strip | Item | C |
+| F62 | Gallery: a main photo and up to 4 thumbnails; a tap or click shows that photo (on a phone, swipe) | Item | S |
+| F63 | Rating summary under the name (average and count, a link to the reviews) and, in the reviews box, the average with a bar for each star count | Item | S |
+| F64 | Quantity stepper beside "Thêm vào hộp"; the card says what is left of the budget after adding; on a phone the add bar stays at the bottom of the screen | Item | M |
+| F65 | "Hay đi cùng món này": up to 4 other items with an add button; items that would exceed the budget or expire before the delivery date are disabled as in the builder | Item | C |
+| F66 | Tabs for Mô tả, Thông tin chi tiết, Giao hàng và đổi trả. Ingredients, allergens and storage are NOT in a tab: they stay visible, and an allergen line sits next to the price | Item | S |
 | **Packaging and review** | | | |
 | F33 | Packaging choice: kraft box 0đ, hard box with bow +40.000đ, rattan basket +70.000đ [sample fees] | Review | M |
 | F34 | List of the items in the hamper; remove an item | Review | M |
@@ -78,3 +84,4 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F57 | Orders: filter by date, status and search; open an order and change its status. Shows the orders placed on the customer side | Admin | S |
 | F58 | Items and stock: search and status filter, edit form | Admin | S |
 | F59 | Campaigns, delivery cut-offs, coupons, reviews, settings, stats, users, account | Admin | S |
+| F68 | Account chip at the bottom of the admin sidebar (initials, name, role, a bordered "Đăng xuất" button). On a phone it is an initials button in the header that opens a small menu with Tài khoản and Đăng xuất | Admin | S |

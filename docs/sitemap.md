@@ -23,6 +23,6 @@ Peekbox
     └── orders, items, campaigns, settings, cutoffs, coupons, reviews, stats, users, account
 ```
 
-**Menus.** Header: Trang chủ, Tạo hộp quà, Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng, plus cart and theme. On a phone the same links open as a column under the header from the menu button (mockup state 21). Footer: Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng, Điều khoản, Chính sách bảo mật. "Cam kết" and the privacy link jump to a section of `about.html` and `legal.html`.
+**Menus.** Header: Trang chủ, Tạo hộp quà, Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng, plus cart and theme. On a phone the same links open as a column under the header from the menu button (mockup state 21). Footer: Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng, Điều khoản, Chính sách bảo mật. "Cam kết" and the privacy link jump to a section of `about.html` and `legal.html`. In the admin, the sidebar ends with an account chip with the logout button; on a phone it is an initials button that opens a small menu (mockup state 23).
 
 **Main customer path.** Home → Builder → (Item) → Review → Cart → Checkout → Confirmation. There are back links at every step.

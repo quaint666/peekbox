@@ -8,15 +8,15 @@
       "title": "About and commitments · mobile",
       "w": 390,
       "x": 1520,
-      "y": 24360
+      "y": 28768
     },
     "About.dc.html": {
       "expand": "fill",
-      "h": 1600,
+      "h": 1647,
       "title": "About and commitments · desktop",
       "w": 1440,
       "x": 0,
-      "y": 24360
+      "y": 28768
     },
     "AdminAccount-m.dc.html": {
       "expand": "fill",
@@ -24,7 +24,7 @@
       "title": "Admin: account · mobile",
       "w": 390,
       "x": 1520,
-      "y": 40640
+      "y": 48291
     },
     "AdminAccount.dc.html": {
       "expand": "fill",
@@ -32,7 +32,7 @@
       "title": "Admin: account",
       "w": 1440,
       "x": 0,
-      "y": 40640
+      "y": 48291
     },
     "AdminCampaigns-m.dc.html": {
       "expand": "fill",
@@ -40,7 +40,7 @@
       "title": "Admin: campaigns · mobile",
       "w": 390,
       "x": 1520,
-      "y": 41760
+      "y": 49811
     },
     "AdminCampaigns.dc.html": {
       "expand": "fill",
@@ -48,7 +48,7 @@
       "title": "Admin: campaigns (occasions)",
       "w": 1440,
       "x": 0,
-      "y": 41760
+      "y": 49811
     },
     "AdminCoupons-m.dc.html": {
       "expand": "fill",
@@ -56,7 +56,7 @@
       "title": "Admin: coupons · mobile",
       "w": 390,
       "x": 1520,
-      "y": 36260
+      "y": 42411
     },
     "AdminCoupons.dc.html": {
       "expand": "fill",
@@ -64,7 +64,7 @@
       "title": "Admin: coupons",
       "w": 1440,
       "x": 0,
-      "y": 36260
+      "y": 42411
     },
     "AdminCutoffs-m.dc.html": {
       "expand": "fill",
@@ -72,7 +72,7 @@
       "title": "Admin: delivery cutoffs · mobile",
       "w": 390,
       "x": 1520,
-      "y": 35140
+      "y": 40991
     },
     "AdminCutoffs.dc.html": {
       "expand": "fill",
@@ -80,7 +80,7 @@
       "title": "Admin: delivery cutoffs",
       "w": 1440,
       "x": 0,
-      "y": 35140
+      "y": 40991
     },
     "AdminItems-m.dc.html": {
       "expand": "fill",
@@ -88,7 +88,7 @@
       "title": "Admin: items and stock · mobile",
       "w": 390,
       "x": 1520,
-      "y": 32400
+      "y": 37251
     },
     "AdminItems.dc.html": {
       "expand": "fill",
@@ -96,7 +96,7 @@
       "title": "Admin: items and stock",
       "w": 1440,
       "x": 0,
-      "y": 32400
+      "y": 37251
     },
     "AdminLogin-m.dc.html": {
       "expand": "fill",
@@ -104,7 +104,7 @@
       "title": "Admin: login · mobile",
       "w": 390,
       "x": 1520,
-      "y": 30300
+      "y": 34708
     },
     "AdminLogin.dc.html": {
       "expand": "fill",
@@ -112,15 +112,15 @@
       "title": "Admin: login",
       "w": 1440,
       "x": 0,
-      "y": 30300
+      "y": 34708
     },
     "AdminOrders-m.dc.html": {
       "expand": "fill",
-      "h": 1500,
+      "h": 1543,
       "title": "Admin: orders · mobile",
       "w": 390,
       "x": 1520,
-      "y": 31180
+      "y": 35588
     },
     "AdminOrders.dc.html": {
       "expand": "fill",
@@ -128,7 +128,7 @@
       "title": "Admin: orders",
       "w": 1440,
       "x": 0,
-      "y": 31180
+      "y": 35588
     },
     "AdminReviews-m.dc.html": {
       "expand": "fill",
@@ -136,7 +136,7 @@
       "title": "Admin: reviews · mobile",
       "w": 390,
       "x": 1520,
-      "y": 37380
+      "y": 44131
     },
     "AdminReviews.dc.html": {
       "expand": "fill",
@@ -144,7 +144,7 @@
       "title": "Admin: reviews",
       "w": 1440,
       "x": 0,
-      "y": 37380
+      "y": 44131
     },
     "AdminSettings-m.dc.html": {
       "expand": "fill",
@@ -152,7 +152,7 @@
       "title": "Admin: settings · mobile",
       "w": 390,
       "x": 1520,
-      "y": 33720
+      "y": 39071
     },
     "AdminSettings.dc.html": {
       "expand": "fill",
@@ -160,7 +160,7 @@
       "title": "Admin: settings",
       "w": 1440,
       "x": 0,
-      "y": 33720
+      "y": 39071
     },
     "AdminStats-m.dc.html": {
       "expand": "fill",
@@ -168,7 +168,7 @@
       "title": "Admin: stats · mobile",
       "w": 390,
       "x": 1520,
-      "y": 38400
+      "y": 45351
     },
     "AdminStats.dc.html": {
       "expand": "fill",
@@ -176,7 +176,7 @@
       "title": "Admin: stats",
       "w": 1440,
       "x": 0,
-      "y": 38400
+      "y": 45351
     },
     "AdminUsers-m.dc.html": {
       "expand": "fill",
@@ -184,7 +184,7 @@
       "title": "Admin: users · mobile",
       "w": 390,
       "x": 1520,
-      "y": 39620
+      "y": 46971
     },
     "AdminUsers.dc.html": {
       "expand": "fill",
@@ -192,15 +192,15 @@
       "title": "Admin: users",
       "w": 1440,
       "x": 0,
-      "y": 39620
+      "y": 46971
     },
     "Blog-m.dc.html": {
       "expand": "fill",
-      "h": 2200,
+      "h": 2784,
       "title": "Blog list · mobile",
       "w": 390,
       "x": 1520,
-      "y": 18740
+      "y": 22564
     },
     "Blog.dc.html": {
       "expand": "fill",
@@ -208,7 +208,7 @@
       "title": "Blog list · desktop",
       "w": 1440,
       "x": 0,
-      "y": 18740
+      "y": 22564
     },
     "BlogPost-m.dc.html": {
       "expand": "fill",
@@ -216,7 +216,7 @@
       "title": "Blog post · mobile",
       "w": 390,
       "x": 1520,
-      "y": 21300
+      "y": 25708
     },
     "BlogPost.dc.html": {
       "expand": "fill",
@@ -224,11 +224,11 @@
       "title": "Blog post · desktop",
       "w": 1440,
       "x": 0,
-      "y": 21300
+      "y": 25708
     },
     "Builder-m.dc.html": {
       "expand": "fill",
-      "h": 1900,
+      "h": 2935,
       "title": "Box builder · mobile",
       "w": 390,
       "x": 1520,
@@ -236,7 +236,7 @@
     },
     "Builder.dc.html": {
       "expand": "fill",
-      "h": 1240,
+      "h": 2333,
       "title": "Box builder · desktop",
       "w": 1440,
       "x": 0,
@@ -244,35 +244,35 @@
     },
     "BuilderDark.dc.html": {
       "expand": "fill",
-      "h": 1240,
+      "h": 2334,
       "title": "Builder · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 45760
+      "y": 54357
     },
     "Cart-m.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 1578,
       "title": "Cart · mobile",
       "w": 390,
       "x": 1520,
-      "y": 6440
+      "y": 7235
     },
     "Cart.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1021,
       "title": "Cart · desktop",
       "w": 1440,
       "x": 0,
-      "y": 6440
+      "y": 7235
     },
     "Checkout-m.dc.html": {
       "expand": "fill",
-      "h": 2500,
+      "h": 2674,
       "title": "Checkout · mobile",
       "w": 390,
       "x": 1520,
-      "y": 8180
+      "y": 9253
     },
     "Checkout.dc.html": {
       "expand": "fill",
@@ -280,71 +280,71 @@
       "title": "Checkout · desktop",
       "w": 1440,
       "x": 0,
-      "y": 8180
+      "y": 9253
     },
     "CheckoutDark.dc.html": {
       "expand": "fill",
-      "h": 1800,
+      "h": 1801,
       "title": "Checkout · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 47120
+      "y": 56811
     },
     "Confirmation-m.dc.html": {
       "expand": "fill",
-      "h": 1500,
+      "h": 1827,
       "title": "Order confirmation · mobile",
       "w": 390,
       "x": 1520,
-      "y": 11160
+      "y": 12407
     },
     "Confirmation.dc.html": {
       "expand": "fill",
-      "h": 1240,
+      "h": 1294,
       "title": "Order confirmation · desktop",
       "w": 1440,
       "x": 0,
-      "y": 11160
+      "y": 12407
     },
     "Home-m.dc.html": {
       "expand": "fill",
-      "h": 2900,
+      "h": 3611,
       "title": "Home · mobile",
       "w": 390,
       "x": 1520,
-      "y": 13140
+      "y": 14714
     },
     "Home.dc.html": {
       "expand": "fill",
-      "h": 2100,
+      "h": 2405,
       "title": "Home · desktop",
       "w": 1440,
       "x": 0,
-      "y": 13140
+      "y": 14714
     },
     "HomeDark.dc.html": {
       "expand": "fill",
-      "h": 2100,
+      "h": 2406,
       "title": "Home · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 43540
+      "y": 51831
     },
     "Item-m.dc.html": {
       "expand": "fill",
-      "h": 1900,
+      "h": 3846,
       "title": "Item detail · mobile",
       "w": 390,
       "x": 1520,
-      "y": 16360
+      "y": 18445
     },
     "Item.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 2972,
       "title": "Item detail · desktop",
       "w": 1440,
       "x": 0,
-      "y": 16360
+      "y": 18445
     },
     "Legal-m.dc.html": {
       "expand": "fill",
@@ -352,7 +352,7 @@
       "title": "Terms and privacy · mobile",
       "w": 390,
       "x": 1520,
-      "y": 27220
+      "y": 31628
     },
     "Legal.dc.html": {
       "expand": "fill",
@@ -360,7 +360,7 @@
       "title": "Terms and privacy · desktop",
       "w": 1440,
       "x": 0,
-      "y": 27220
+      "y": 31628
     },
     "Main.dc.html": {
       "h": 1180,
@@ -375,99 +375,99 @@
       "title": "Packaging and review · mobile",
       "w": 390,
       "x": 1520,
-      "y": 3760
+      "y": 4555
     },
     "Review.dc.html": {
       "expand": "fill",
-      "h": 1380,
+      "h": 1668,
       "title": "Packaging and review · desktop",
       "w": 1440,
       "x": 0,
-      "y": 3760
+      "y": 4555
     },
     "StateCartEmpty.dc.html": {
       "x": 0,
-      "y": 49540,
+      "y": 59232,
       "w": 1440,
-      "h": 900,
+      "h": 953,
       "expand": "fill",
       "title": "Cart empty · desktop"
     },
     "StateCartEmpty-m.dc.html": {
       "x": 1520,
-      "y": 49540,
+      "y": 59232,
       "w": 390,
-      "h": 900,
+      "h": 1118,
       "expand": "fill",
       "title": "Cart empty · mobile"
     },
     "StateCheckoutError.dc.html": {
       "x": 0,
-      "y": 50560,
+      "y": 60470,
       "w": 1440,
-      "h": 1000,
+      "h": 1319,
       "expand": "fill",
       "title": "Checkout errors · desktop"
     },
     "StateCheckoutError-m.dc.html": {
       "x": 1520,
-      "y": 50560,
+      "y": 60470,
       "w": 390,
-      "h": 1750,
+      "h": 1862,
       "expand": "fill",
       "title": "Checkout errors · mobile"
     },
     "StatePayFail.dc.html": {
       "x": 0,
-      "y": 52580,
+      "y": 62602,
       "w": 1440,
-      "h": 1000,
+      "h": 1126,
       "expand": "fill",
       "title": "Payment failed (ZaloPay) · desktop"
     },
     "StatePayFail-m.dc.html": {
       "x": 1520,
-      "y": 52580,
+      "y": 62602,
       "w": 390,
-      "h": 1250,
+      "h": 1314,
       "expand": "fill",
       "title": "Payment failed (ZaloPay) · mobile"
     },
     "StateBuilder.dc.html": {
       "x": 0,
-      "y": 53950,
+      "y": 64036,
       "w": 1440,
-      "h": 1100,
+      "h": 1296,
       "expand": "fill",
       "title": "Builder: sold out, expired, over budget, no results · desktop"
     },
     "StateBuilder-m.dc.html": {
       "x": 1520,
-      "y": 53950,
+      "y": 64036,
       "w": 390,
-      "h": 2700,
+      "h": 2912,
       "expand": "fill",
       "title": "Builder: sold out, expired, over budget, no results · mobile"
     },
     "StateNotFound.dc.html": {
       "x": 0,
-      "y": 57070,
+      "y": 67368,
       "w": 1440,
-      "h": 900,
+      "h": 921,
       "expand": "fill",
       "title": "Not found (404) · desktop"
     },
     "StateNotFound-m.dc.html": {
       "x": 1520,
-      "y": 57070,
+      "y": 67368,
       "w": 390,
-      "h": 900,
+      "h": 1097,
       "expand": "fill",
       "title": "Not found (404) · mobile"
     },
     "StateAdminEmpty.dc.html": {
       "x": 0,
-      "y": 58090,
+      "y": 68585,
       "w": 1440,
       "h": 1100,
       "expand": "fill",
@@ -475,7 +475,7 @@
     },
     "StateAdminEmpty-m.dc.html": {
       "x": 1520,
-      "y": 58090,
+      "y": 68585,
       "w": 390,
       "h": 1500,
       "expand": "fill",
@@ -487,7 +487,7 @@
       "title": "Admin login: locked after wrong attempts · desktop",
       "w": 1440,
       "x": 0,
-      "y": 59710
+      "y": 70205
     },
     "StateAdminLogin-m.dc.html": {
       "expand": "fill",
@@ -495,7 +495,7 @@
       "title": "Admin login: locked after wrong attempts · mobile",
       "w": 390,
       "x": 1520,
-      "y": 59710
+      "y": 70205
     },
     "StateAdminItems.dc.html": {
       "expand": "fill",
@@ -503,7 +503,7 @@
       "title": "Admin items: empty · desktop",
       "w": 1440,
       "x": 0,
-      "y": 60590
+      "y": 71085
     },
     "StateAdminItems-m.dc.html": {
       "expand": "fill",
@@ -511,7 +511,7 @@
       "title": "Admin items: empty · mobile",
       "w": 390,
       "x": 1520,
-      "y": 60590
+      "y": 71085
     },
     "StateAdminCoupons.dc.html": {
       "expand": "fill",
@@ -519,7 +519,7 @@
       "title": "Admin coupons: empty · desktop",
       "w": 1440,
       "x": 0,
-      "y": 61810
+      "y": 72305
     },
     "StateAdminCoupons-m.dc.html": {
       "expand": "fill",
@@ -527,7 +527,7 @@
       "title": "Admin coupons: empty · mobile",
       "w": 390,
       "x": 1520,
-      "y": 61810
+      "y": 72305
     },
     "StateAdminReviews.dc.html": {
       "expand": "fill",
@@ -535,7 +535,7 @@
       "title": "Admin reviews: empty · desktop",
       "w": 1440,
       "x": 0,
-      "y": 63030
+      "y": 73525
     },
     "StateAdminReviews-m.dc.html": {
       "expand": "fill",
@@ -543,31 +543,31 @@
       "title": "Admin reviews: empty · mobile",
       "w": 390,
       "x": 1520,
-      "y": 63030
+      "y": 73525
     },
     "StateCartCoupon.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1035,
       "title": "Cart: coupon error · desktop",
       "w": 1440,
       "x": 0,
-      "y": 64250
+      "y": 74745
     },
     "StateCartCoupon-m.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 1629,
       "title": "Cart: coupon error · mobile",
       "w": 390,
       "x": 1520,
-      "y": 64250
+      "y": 74745
     },
     "StateCheckoutStock.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1114,
       "title": "Checkout: an item sold out meanwhile · desktop",
       "w": 1440,
       "x": 0,
-      "y": 65670
+      "y": 76494
     },
     "StateCheckoutStock-m.dc.html": {
       "expand": "fill",
@@ -575,31 +575,31 @@
       "title": "Checkout: an item sold out meanwhile · mobile",
       "w": 390,
       "x": 1520,
-      "y": 65670
+      "y": 76494
     },
     "ItemDark.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 2973,
       "title": "Item detail · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 67610
+      "y": 78434
     },
     "ItemDark-m.dc.html": {
       "expand": "fill",
-      "h": 1900,
+      "h": 3847,
       "title": "Item detail · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 67610
+      "y": 78434
     },
     "ReviewDark.dc.html": {
       "expand": "fill",
-      "h": 1380,
+      "h": 1669,
       "title": "Packaging and review · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 69630
+      "y": 82401
     },
     "ReviewDark-m.dc.html": {
       "expand": "fill",
@@ -607,39 +607,39 @@
       "title": "Packaging and review · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 69630
+      "y": 82401
     },
     "CartDark.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1022,
       "title": "Cart · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 71950
+      "y": 84721
     },
     "CartDark-m.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 1579,
       "title": "Cart · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 71950
+      "y": 84721
     },
     "ConfirmationDark.dc.html": {
       "expand": "fill",
-      "h": 1240,
+      "h": 1295,
       "title": "Order confirmation · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 73370
+      "y": 86420
     },
     "ConfirmationDark-m.dc.html": {
       "expand": "fill",
-      "h": 1500,
+      "h": 1828,
       "title": "Order confirmation · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 73370
+      "y": 86420
     },
     "BlogDark.dc.html": {
       "expand": "fill",
@@ -647,15 +647,15 @@
       "title": "Blog list · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 74990
+      "y": 88368
     },
     "BlogDark-m.dc.html": {
       "expand": "fill",
-      "h": 2200,
+      "h": 2785,
       "title": "Blog list · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 74990
+      "y": 88368
     },
     "BlogPostDark.dc.html": {
       "expand": "fill",
@@ -663,151 +663,151 @@
       "title": "Blog post · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 77310
+      "y": 91273
     },
     "BlogPostDark-m.dc.html": {
       "expand": "fill",
-      "h": 2700,
+      "h": 2701,
       "title": "Blog post · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 77310
+      "y": 91273
     },
     "AboutDark.dc.html": {
       "expand": "fill",
-      "h": 1600,
+      "h": 1648,
       "title": "About and commitments · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 80130
+      "y": 94094
     },
     "AboutDark-m.dc.html": {
       "expand": "fill",
-      "h": 2500,
+      "h": 2501,
       "title": "About and commitments · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 80130
+      "y": 94094
     },
     "LegalDark.dc.html": {
       "expand": "fill",
-      "h": 1500,
+      "h": 1501,
       "title": "Terms and privacy · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 82750
+      "y": 96715
     },
     "LegalDark-m.dc.html": {
       "expand": "fill",
-      "h": 2600,
+      "h": 2601,
       "title": "Terms and privacy · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 82750
+      "y": 96715
     },
     "StateCartEmptyDark.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 954,
       "title": "Cart empty · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 85470
+      "y": 99436
     },
     "StateCartEmptyDark-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1119,
       "title": "Cart empty · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 85470
+      "y": 99436
     },
     "StateCheckoutErrorDark.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1320,
       "title": "Checkout errors · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 86490
+      "y": 100675
     },
     "StateCheckoutErrorDark-m.dc.html": {
       "expand": "fill",
-      "h": 1750,
+      "h": 1863,
       "title": "Checkout errors · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 86490
+      "y": 100675
     },
     "StatePayFailDark.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1127,
       "title": "Payment failed · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 88360
+      "y": 102658
     },
     "StatePayFailDark-m.dc.html": {
       "expand": "fill",
-      "h": 1250,
+      "h": 1315,
       "title": "Payment failed · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 88360
+      "y": 102658
     },
     "StateBuilderDark.dc.html": {
       "expand": "fill",
-      "h": 1100,
+      "h": 1297,
       "title": "Builder states · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 89730
+      "y": 104093
     },
     "StateBuilderDark-m.dc.html": {
       "expand": "fill",
-      "h": 2700,
+      "h": 2913,
       "title": "Builder states · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 89730
+      "y": 104093
     },
     "StateNotFoundDark.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 922,
       "title": "Not found · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 92550
+      "y": 107126
     },
     "StateNotFoundDark-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1098,
       "title": "Not found · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 92550
+      "y": 107126
     },
     "StateCartCouponDark.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1036,
       "title": "Cart coupon error · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 93570
+      "y": 108344
     },
     "StateCartCouponDark-m.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 1630,
       "title": "Cart coupon error · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 93570
+      "y": 108344
     },
     "StateCheckoutStockDark.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1115,
       "title": "Checkout stock changed · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 94990
+      "y": 110094
     },
     "StateCheckoutStockDark-m.dc.html": {
       "expand": "fill",
@@ -815,31 +815,31 @@
       "title": "Checkout stock changed · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 94990
+      "y": 110094
     },
     "HomeDark-m.dc.html": {
       "expand": "fill",
-      "h": 2900,
+      "h": 3612,
       "title": "Home · dark · mobile",
       "w": 390,
       "x": 0,
-      "y": 126270
+      "y": 141374
     },
     "BuilderDark-m.dc.html": {
       "expand": "fill",
-      "h": 1900,
+      "h": 2936,
       "title": "Builder · dark · mobile",
       "w": 390,
       "x": 900,
-      "y": 126270
+      "y": 141374
     },
     "CheckoutDark-m.dc.html": {
       "expand": "fill",
-      "h": 2500,
+      "h": 2675,
       "title": "Checkout · dark · mobile",
       "w": 390,
       "x": 1800,
-      "y": 126270
+      "y": 141374
     },
     "StateBuilderSearch.dc.html": {
       "expand": "fill",
@@ -847,39 +847,39 @@
       "title": "Builder: search suggestions · desktop",
       "w": 1440,
       "x": 0,
-      "y": 129810
+      "y": 145313
     },
     "StateBuilderSearch-m.dc.html": {
       "expand": "fill",
-      "h": 1100,
+      "h": 1329,
       "title": "Builder: search suggestions · mobile",
       "w": 390,
       "x": 1520,
-      "y": 129810
+      "y": 145313
     },
     "StateToast.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1210,
       "title": "Builder: item added toast · desktop",
       "w": 1440,
       "x": 0,
-      "y": 131030
+      "y": 146762
     },
     "StateToast-m.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1219,
       "title": "Builder: item added toast · mobile",
       "w": 390,
       "x": 1520,
-      "y": 131030
+      "y": 146762
     },
     "StateShare.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 2972,
       "title": "Item: share menu · desktop",
       "w": 1440,
       "x": 0,
-      "y": 132150
+      "y": 148101
     },
     "StateShare-m.dc.html": {
       "expand": "fill",
@@ -887,39 +887,39 @@
       "title": "Item: share menu · mobile",
       "w": 390,
       "x": 1520,
-      "y": 132150
+      "y": 148101
     },
     "StateFloating.dc.html": {
       "expand": "fill",
-      "h": 1100,
+      "h": 1576,
       "title": "Floating contact and back-to-top · desktop",
       "w": 1440,
       "x": 0,
-      "y": 133170
+      "y": 151193
     },
     "StateFloating-m.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 1803,
       "title": "Floating contact and back-to-top · mobile",
       "w": 390,
       "x": 1520,
-      "y": 133170
+      "y": 151193
     },
     "StateLoading.dc.html": {
       "expand": "fill",
-      "h": 1100,
+      "h": 1869,
       "title": "Builder: loading skeleton · desktop",
       "w": 1440,
       "x": 0,
-      "y": 134590
+      "y": 153116
     },
     "StateLoading-m.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 1489,
       "title": "Builder: loading skeleton · mobile",
       "w": 390,
       "x": 1520,
-      "y": 134590
+      "y": 153116
     },
     "StateResume.dc.html": {
       "expand": "fill",
@@ -927,55 +927,55 @@
       "title": "Resume an unfinished hamper · desktop",
       "w": 1440,
       "x": 0,
-      "y": 136010
+      "y": 155105
     },
     "StateResume-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1141,
       "title": "Resume an unfinished hamper · mobile",
       "w": 390,
       "x": 1520,
-      "y": 136010
+      "y": 155105
     },
     "StateBuilderSearchDark.dc.html": {
       "expand": "fill",
-      "h": 1100,
+      "h": 1101,
       "title": "Builder: search suggestions · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 137450
+      "y": 156786
     },
     "StateBuilderSearchDark-m.dc.html": {
       "expand": "fill",
-      "h": 1100,
+      "h": 1330,
       "title": "Builder: search suggestions · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 137450
+      "y": 156786
     },
     "StateToastDark.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1211,
       "title": "Builder: item added toast · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 138670
+      "y": 158236
     },
     "StateToastDark-m.dc.html": {
       "expand": "fill",
-      "h": 1000,
+      "h": 1220,
       "title": "Builder: item added toast · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 138670
+      "y": 158236
     },
     "StateShareDark.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 2973,
       "title": "Item: share menu · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 139790
+      "y": 159576
     },
     "StateShareDark-m.dc.html": {
       "expand": "fill",
@@ -983,199 +983,287 @@
       "title": "Item: share menu · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 139790
+      "y": 159576
     },
     "StateFloatingDark.dc.html": {
       "expand": "fill",
-      "h": 1100,
+      "h": 1577,
       "title": "Floating contact and back-to-top · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 140810
+      "y": 162669
     },
     "StateFloatingDark-m.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 1804,
       "title": "Floating contact and back-to-top · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 140810
+      "y": 162669
     },
     "StateLoadingDark.dc.html": {
       "expand": "fill",
-      "h": 1100,
+      "h": 1870,
       "title": "Builder: loading skeleton · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 142230
+      "y": 164593
     },
     "StateLoadingDark-m.dc.html": {
       "expand": "fill",
-      "h": 1300,
+      "h": 1490,
       "title": "Builder: loading skeleton · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 142230
+      "y": 164593
     },
     "StateResumeDark.dc.html": {
       "expand": "fill",
-      "h": 800,
+      "h": 801,
       "title": "Resume an unfinished hamper · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 143650
+      "y": 166583
     },
     "StateResumeDark-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1142,
       "title": "Resume an unfinished hamper · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 143650
+      "y": 166583
     },
     "Track.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 963,
       "title": "Track an order · desktop",
       "w": 1440,
       "x": 0,
-      "y": 145240
+      "y": 168415
     },
     "Track-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1151,
       "title": "Track an order · mobile",
       "w": 390,
       "x": 1520,
-      "y": 145240
+      "y": 168415
     },
     "StateTrackError.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1056,
       "title": "Track an order: not found · desktop",
       "w": 1440,
       "x": 0,
-      "y": 146380
+      "y": 169806
     },
     "StateTrackError-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1289,
       "title": "Track an order: not found · mobile",
       "w": 390,
       "x": 1520,
-      "y": 146380
+      "y": 169806
     },
     "TrackDark.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 964,
       "title": "Track an order · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 147520
+      "y": 171335
     },
     "TrackDark-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1152,
       "title": "Track an order · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 147520
+      "y": 171335
     },
     "StateTrackErrorDark.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1057,
       "title": "Track an order: not found · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 148660
+      "y": 172727
     },
     "StateTrackErrorDark-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1290,
       "title": "Track an order: not found · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 148660
+      "y": 172727
     },
     "ConfirmationCancelled.dc.html": {
       "expand": "fill",
-      "h": 1240,
+      "h": 1270,
       "title": "Order cancelled · desktop",
       "w": 1440,
       "x": 0,
-      "y": 149800
+      "y": 174257
     },
     "ConfirmationCancelled-m.dc.html": {
       "expand": "fill",
-      "h": 1500,
+      "h": 1755,
       "title": "Order cancelled · mobile",
       "w": 390,
       "x": 1520,
-      "y": 149800
+      "y": 174257
     },
     "ConfirmationCancelledDark.dc.html": {
       "expand": "fill",
-      "h": 1240,
+      "h": 1271,
       "title": "Order cancelled · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 151540
+      "y": 176252
     },
     "ConfirmationCancelledDark-m.dc.html": {
       "expand": "fill",
-      "h": 1500,
+      "h": 1756,
       "title": "Order cancelled · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 151540
+      "y": 176252
     },
     "StateTrackWait.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1034,
       "title": "Track an order: too many tries · desktop",
       "w": 1440,
       "x": 0,
-      "y": 153280
+      "y": 178248
     },
     "StateTrackWait-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1244,
       "title": "Track an order: too many tries · mobile",
       "w": 390,
       "x": 1520,
-      "y": 153280
+      "y": 178248
     },
     "StateTrackWaitDark.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1035,
       "title": "Track an order: too many tries · dark · desktop",
       "w": 1440,
       "x": 0,
-      "y": 154420
+      "y": 179732
     },
     "StateTrackWaitDark-m.dc.html": {
       "expand": "fill",
-      "h": 900,
+      "h": 1245,
       "title": "Track an order: too many tries · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 154420
+      "y": 179732
     },
     "StateMenuOpen-m.dc.html": {
       "expand": "fill",
-      "h": 690,
+      "h": 1158,
       "title": "Menu open · mobile",
       "w": 390,
       "x": 1520,
-      "y": 155560
+      "y": 181217
     },
     "StateMenuOpenDark-m.dc.html": {
       "expand": "fill",
-      "h": 690,
+      "h": 1159,
       "title": "Menu open · dark · mobile",
       "w": 390,
       "x": 1520,
-      "y": 156700
+      "y": 182825
+    },
+    "StateInteraction.dc.html": {
+      "expand": "fill",
+      "h": 1115,
+      "title": "Interaction states · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 184464
+    },
+    "StateInteractionDark.dc.html": {
+      "expand": "fill",
+      "h": 1115,
+      "title": "Interaction states · desktop dark",
+      "w": 1440,
+      "x": 0,
+      "y": 185819
+    },
+    "StateAdminAccountMenu-m.dc.html": {
+      "expand": "fill",
+      "h": 780,
+      "title": "Admin account menu · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 187174
+    },
+    "StateItemDetails.dc.html": {
+      "expand": "fill",
+      "h": 3233,
+      "title": "Item details tab · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 188434
+    },
+    "StateItemDetails-m.dc.html": {
+      "expand": "fill",
+      "h": 4265,
+      "title": "Item details tab · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 188434
+    },
+    "StateItemDetailsDark.dc.html": {
+      "expand": "fill",
+      "h": 3234,
+      "title": "Item details tab · desktop dark",
+      "w": 1440,
+      "x": 0,
+      "y": 192939
+    },
+    "StateItemDetailsDark-m.dc.html": {
+      "expand": "fill",
+      "h": 4266,
+      "title": "Item details tab · mobile dark",
+      "w": 390,
+      "x": 1520,
+      "y": 192939
+    },
+    "StateItemShipping.dc.html": {
+      "expand": "fill",
+      "h": 3071,
+      "title": "Item delivery and returns tab · desktop",
+      "w": 1440,
+      "x": 0,
+      "y": 197445
+    },
+    "StateItemShipping-m.dc.html": {
+      "expand": "fill",
+      "h": 4118,
+      "title": "Item delivery and returns tab · mobile",
+      "w": 390,
+      "x": 1520,
+      "y": 197445
+    },
+    "StateItemShippingDark.dc.html": {
+      "expand": "fill",
+      "h": 3072,
+      "title": "Item delivery and returns tab · desktop dark",
+      "w": 1440,
+      "x": 0,
+      "y": 201803
+    },
+    "StateItemShippingDark-m.dc.html": {
+      "expand": "fill",
+      "h": 4119,
+      "title": "Item delivery and returns tab · mobile dark",
+      "w": 390,
+      "x": 1520,
+      "y": 201803
     }
   },
   "createdOnFiles": {
@@ -1220,7 +1308,9 @@
     "t31",
     "t32",
     "t40",
-    "t41"
+    "t41",
+    "t42",
+    "t43"
   ],
   "notes": {
     "n1": {
@@ -1237,7 +1327,7 @@
       "text": "Legal text is a placeholder: it must be written and checked before real use. Blog titles are sample ideas, not written posts.",
       "w": 360,
       "x": 1960,
-      "y": 27220
+      "y": 31628
     },
     "n13": {
       "fill": "orange",
@@ -1245,7 +1335,7 @@
       "text": "Admin: desktop on the left, mobile on the right. On mobile, tables become cards and the menu becomes a scrolling row of tabs. Item expiry is shown beside stock; an expired item is flagged in red.",
       "w": 360,
       "x": 1960,
-      "y": 30300
+      "y": 34708
     },
     "n14": {
       "fill": "orange",
@@ -1253,7 +1343,7 @@
       "text": "New: a VI/EN switch and a light/dark button in every header. Dark and English are drawn for three pages; the rest follow the same tokens and dictionaries.",
       "w": 360,
       "x": 3040,
-      "y": 43540
+      "y": 51831
     },
     "n15": {
       "fill": "orange",
@@ -1261,7 +1351,7 @@
       "text": "New: campaigns. Each occasion has dates, a banner in VI and EN, a last delivery date and starter boxes.",
       "w": 360,
       "x": 1960,
-      "y": 41760
+      "y": 49811
     },
     "n3": {
       "fill": "orange",
@@ -1269,7 +1359,7 @@
       "text": "Decided: an item that expires before delivery date + margin blocks checkout. The customer removes it or changes the delivery date.",
       "w": 360,
       "x": 1960,
-      "y": 3760
+      "y": 4555
     },
     "n5": {
       "fill": "orange",
@@ -1277,7 +1367,7 @@
       "text": "Delivery only for now (Bloomy also had pickup). Payment: ZaloPay or cash on delivery. Shipping fee is not part of the budget.",
       "w": 360,
       "x": 1960,
-      "y": 8180
+      "y": 9253
     },
     "n6": {
       "fill": "orange",
@@ -1285,7 +1375,7 @@
       "text": "Status strip and tracking come from the existing order page; no new feature. Every item is listed with brand, weight, origin and expiry.",
       "w": 360,
       "x": 1960,
-      "y": 11160
+      "y": 12407
     },
     "n8": {
       "fill": "orange",
@@ -1293,7 +1383,7 @@
       "text": "Descriptions, dates and reviews are placeholders in [BRACKETS]. No invented reviews.",
       "w": 360,
       "x": 1960,
-      "y": 16360
+      "y": 18445
     },
     "t1": {
       "kind": "title1",
@@ -1309,7 +1399,7 @@
       "text": "Customer: blog post",
       "w": 240,
       "x": 0,
-      "y": 21060
+      "y": 25468
     },
     "t11": {
       "kind": "title1",
@@ -1317,7 +1407,7 @@
       "text": "Customer: about and commitments",
       "w": 240,
       "x": 0,
-      "y": 24120
+      "y": 28528
     },
     "t12": {
       "kind": "title1",
@@ -1325,7 +1415,7 @@
       "text": "Customer: terms and privacy",
       "w": 240,
       "x": 0,
-      "y": 26980
+      "y": 31388
     },
     "t13": {
       "kind": "title1",
@@ -1333,7 +1423,7 @@
       "text": "Admin pages (desktop)",
       "w": 240,
       "x": 0,
-      "y": 30060
+      "y": 34468
     },
     "t14": {
       "kind": "title1",
@@ -1341,7 +1431,7 @@
       "text": "Dark mode and English (home, builder, checkout)",
       "w": 240,
       "x": 0,
-      "y": 43300
+      "y": 51351
     },
     "t2": {
       "kind": "title1",
@@ -1357,7 +1447,7 @@
       "text": "Customer: packaging and review",
       "w": 240,
       "x": 0,
-      "y": 3520
+      "y": 4315
     },
     "t4": {
       "kind": "title1",
@@ -1365,7 +1455,7 @@
       "text": "Customer: cart",
       "w": 240,
       "x": 0,
-      "y": 6200
+      "y": 6995
     },
     "t5": {
       "kind": "title1",
@@ -1373,7 +1463,7 @@
       "text": "Customer: checkout",
       "w": 240,
       "x": 0,
-      "y": 7940
+      "y": 9013
     },
     "t6": {
       "kind": "title1",
@@ -1381,7 +1471,7 @@
       "text": "Customer: order confirmation",
       "w": 240,
       "x": 0,
-      "y": 10920
+      "y": 12167
     },
     "t7": {
       "kind": "title1",
@@ -1389,7 +1479,7 @@
       "text": "Customer: home",
       "w": 240,
       "x": 0,
-      "y": 12900
+      "y": 14474
     },
     "t8": {
       "kind": "title1",
@@ -1397,7 +1487,7 @@
       "text": "Customer: item detail",
       "w": 240,
       "x": 0,
-      "y": 16120
+      "y": 18205
     },
     "t9": {
       "kind": "title1",
@@ -1405,11 +1495,11 @@
       "text": "Customer: blog",
       "w": 240,
       "x": 0,
-      "y": 18500
+      "y": 22324
     },
     "t15": {
       "x": 0,
-      "y": 49300,
+      "y": 58992,
       "text": "States: empty, error, sold out, not found",
       "kind": "title1",
       "maxW": 1910,
@@ -1417,7 +1507,7 @@
     },
     "n16": {
       "x": 1960,
-      "y": 49540,
+      "y": 59232,
       "text": "New: pages that appear only after something goes wrong or is empty. Every error says what is wrong and how to fix it, in words. Builder states, left to right: chosen, sold out, expires before the delivery date, would exceed the budget (budget is a hard cap, as in the builder). Bracketed values ([30 phút], [PHÍ], [TỔNG], support contact) are facts the team must set.",
       "w": 360,
       "fill": "orange",
@@ -1429,7 +1519,7 @@
       "text": "Dark mode: all customer pages, desktop and mobile",
       "w": 240,
       "x": 0,
-      "y": 67370
+      "y": 78194
     },
     "t21": {
       "kind": "title1",
@@ -1437,7 +1527,7 @@
       "text": "English: all customer pages, desktop and mobile",
       "w": 240,
       "x": 0,
-      "y": 96710
+      "y": 111814
     },
     "t22": {
       "kind": "title1",
@@ -1445,7 +1535,7 @@
       "text": "Dark and English on mobile: home, builder, checkout",
       "w": 240,
       "x": 0,
-      "y": 126030
+      "y": 141134
     },
     "t30": {
       "kind": "title1",
@@ -1453,14 +1543,14 @@
       "text": "Quality-of-life additions: search, toast, share, floating buttons, loading, resume",
       "w": 240,
       "x": 0,
-      "y": 129570
+      "y": 145073
     },
     "n30": {
       "fill": "orange",
       "size": 24,
       "w": 360,
       "x": 1960,
-      "y": 129810,
+      "y": 145313,
       "text": "New after comparing Bloomy and live shops. Search must ignore accents: typing \"mut\" should find \"Mứt\". The \"only items in date\" filter is on by default and the page says how many items it hides. Contact numbers, hours and the Zalo account are placeholders."
     },
     "t31": {
@@ -1469,7 +1559,7 @@
       "text": "Quality-of-life additions: dark mode",
       "w": 240,
       "x": 0,
-      "y": 137210
+      "y": 156546
     },
     "t32": {
       "kind": "title1",
@@ -1477,7 +1567,7 @@
       "text": "Quality-of-life additions: English",
       "w": 240,
       "x": 0,
-      "y": 144970
+      "y": 168145
     },
     "t40": {
       "kind": "title1",
@@ -1485,7 +1575,7 @@
       "text": "Order tracking: find an order without an account, and a cancelled order (light, not found, dark)",
       "w": 240,
       "x": 0,
-      "y": 145000
+      "y": 168175
     },
     "t41": {
       "kind": "title1",
@@ -1493,7 +1583,23 @@
       "text": "Too many tries on the track page, and the open phone menu (light, dark)",
       "w": 240,
       "x": 0,
-      "y": 153040
+      "y": 178008
+    },
+    "t42": {
+      "kind": "title1",
+      "maxW": 1910,
+      "text": "Interaction states: hover, keyboard focus, pressed, disabled (light, dark), and the admin account menu on a phone",
+      "w": 240,
+      "x": 0,
+      "y": 184224
+    },
+    "t43": {
+      "kind": "title1",
+      "maxW": 1910,
+      "text": "Item detail: the Thông tin chi tiết tab and the Giao hàng và đổi trả tab (light, dark)",
+      "w": 240,
+      "x": 0,
+      "y": 188194
     }
   },
   "order": [
@@ -1643,7 +1749,18 @@
     "StateTrackWaitDark.dc.html",
     "StateTrackWaitDark-m.dc.html",
     "StateMenuOpen-m.dc.html",
-    "StateMenuOpenDark-m.dc.html"
+    "StateMenuOpenDark-m.dc.html",
+    "StateInteraction.dc.html",
+    "StateInteractionDark.dc.html",
+    "StateAdminAccountMenu-m.dc.html",
+    "StateItemDetails.dc.html",
+    "StateItemDetails-m.dc.html",
+    "StateItemDetailsDark.dc.html",
+    "StateItemDetailsDark-m.dc.html",
+    "StateItemShipping.dc.html",
+    "StateItemShipping-m.dc.html",
+    "StateItemShippingDark.dc.html",
+    "StateItemShippingDark-m.dc.html"
   ],
   "pages": [],
   "title": "Peekbox UI mockups"
