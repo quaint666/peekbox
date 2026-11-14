@@ -92,6 +92,7 @@
 .cta__inner { display: flex; flex-direction: column; gap: var(--space-4); }
 .cta__text { margin: 0; font-size: var(--text-xl); font-weight: 700; line-height: 1.35; }
 .cta__button { background: var(--color-surface); color: var(--color-on-tint); }
+.cta__button:focus-visible { outline-color: var(--color-on-primary); }   /* --color-focus is the same green as the strip in light mode */
 #main + .site-footer { margin-top: 0; }   /* the green strip touches the footer, as in the mockup; other pages keep the gap */
 
 @media (min-width: 900px) {
