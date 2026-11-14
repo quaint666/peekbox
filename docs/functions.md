@@ -34,7 +34,7 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F22 | Shelf-life check: expiry must be later than the delivery date plus the margin (7 days, a setting). Amber badge on cards | Builder | M |
 | F23 | Sold-out items disabled | Builder | M |
 | F24 | "Continue" to packaging | Builder | M |
-| F25 | The hamper in progress is saved in the browser | Builder | M |
+| F25 | The hamper in progress is saved on the server and found again by a cookie | Builder | M |
 | **Item page** | | | |
 | F26 | Photo, name, brand, price, facts table (brand, weight, origin, expiry, production date) | Item | M |
 | F27 | In-date notice for the chosen delivery date | Item | M |
@@ -65,7 +65,9 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F49 | Payment-failed page: retry or switch to cash on delivery (Sim: reachable by a test switch) | Checkout | S |
 | F50 | "An item sold out meanwhile" notice: item removed, pick a replacement | Checkout | C |
 | **Confirmation** | | | |
-| F51 | Order number, thanks, status strip (New, Out for delivery, Delivered), items, delivery details | Confirmation | M |
+| F51 | Order number, thanks, status strip (New, Processing, Out for delivery, Delivered; or a cancelled notice), items, delivery details | Confirmation | M |
+| F60 | Track-an-order page: order number and sender's phone; one message for any mismatch; rate-limited; a match redirects to the confirmation page | Track | M |
+| F61 | The confirmation email carries the link to the confirmation page (Sim: email is a stand-in) | Email | S |
 | **Content** | | | |
 | F52 | Blog list with category and cards | Blog | S |
 | F53 | Blog post with related posts and a call to action | Blog post | S |
