@@ -21,6 +21,7 @@
 .btn--lg { min-height: 52px; padding: 0 28px; font-size: 17px; }  /* main call-to-action buttons, as in the mockups */
 .btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
 .btn--outline { background: transparent; color: var(--color-primary-text); border-color: var(--color-primary-text); }
+.btn--chip { min-height: var(--tap-min); padding: 0 var(--space-3); border-radius: 999px; font-size: var(--text-sm); }  /* small pill button: quick amounts, category chips */
 .btn--danger { background: var(--color-danger); color: #FFFFFF; }
 .btn:disabled, .btn[aria-disabled='true'] { background: var(--color-border-soft); color: var(--color-muted); border-color: var(--color-border); cursor: not-allowed; }
 

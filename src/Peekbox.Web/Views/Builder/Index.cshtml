@@ -1,0 +1,46 @@
+@using Peekbox.Web.Formatting
+@model BuilderViewModel
+@{
+    ViewData["Title"] = "Tạo hộp quà";
+    ViewData["Nav"] = SiteLinks.Builder.Key;
+    var steps = new[] { "Ngân sách", "Chọn món", "Đóng gói", "Xem lại" };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/builder.css" asp-append-version="true">
+}
+
+<div class="builder">
+    <div class="builder__head">
+        <h1 class="builder__title">Tạo hộp quà của bạn</h1>
+        <ol class="builder-steps">
+            @for (var i = 0; i < steps.Length; i++)
+            {
+                <li class="builder-step" aria-current="@(i == 0 ? "step" : null)"><span class="builder-step__num">@(i + 1)</span><span>@steps[i]</span></li>
+            }
+        </ol>
+    </div>
+
+    <form class="card budget-card" method="post">
+        @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Cập nhật" and not the first quick amount. *@
+        <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Cập nhật</button>
+
+        <div class="field budget-card__budget">
+            <label class="field__label" for="budget">Ngân sách của bạn</label>
+            <input class="input" id="budget" name="budget" type="text" inputmode="numeric" autocomplete="off">
+            <div class="budget-card__amounts">
+                @foreach (var amount in BuilderViewModel.QuickAmounts)
+                {
+                    <button type="submit" class="btn btn--outline btn--chip" name="quickAmount" value="@amount">@Vnd.Format(amount)</button>
+                }
+            </div>
+        </div>
+
+        <div class="field budget-card__date">
+            <label class="field__label" for="delivery-date">Ngày giao hàng</label>
+            <input class="input" id="delivery-date" name="deliveryDate" type="date">
+            <p class="budget-card__hint">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
+            <button type="submit" class="btn btn--primary">Cập nhật</button>
+        </div>
+    </form>
+</div>
