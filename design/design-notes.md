@@ -19,28 +19,31 @@ Minimal and calm all year, with a small seasonal accent. Mobile and desktop matt
 | Error and blocked (red) | background `#FBE4E0`, text `#7A1F14`, button `#A32A1E` |
 | Seasonal accents | Tết `#B3382A`, 20/11 `#5F4A7A`, 8/3 `#A8345E` |
 
-## Colour: dark mode (neutral near-black)
+## Colour: dark mode (near-black with a slight green tint)
+Changed 2026-11-15: the dark greys were slightly blue, which felt cold next to the sage and the kraft photos. They now lean green, like the light palette. Text contrast: text 14 to 16 to 1, muted text 7.9 to 1 or better.
+
 | Role | Hex |
 |---|---|
-| Page background | `#0E0F10` |
-| Surface | `#1A1C1E` |
-| Text | `#F2F4F5` |
-| Muted text | `#ABB1B5` |
-| Border | `#3A3E42` |
-| Primary on dark (text and outlines) | `#8CC4A8`; filled buttons stay `#3F6B57` with white text |
+| Page background | `#121513` |
+| Surface (cards, header, footer) | `#1B201C` |
+| Text | `#EEF0EA` |
+| Muted text | `#AEB5AC` |
+| Border | `#343B36` |
+| Primary on dark (text, links, outlines, focus ring) | `#9EC3A5`; filled buttons stay `#3F6B57` with white text |
 | Chosen state | background `#1D2B24`, text `#BFE3CF` |
-| Unchosen option (for example payment) | black `#000000` with a `#3A3E42` border |
+| Unchosen option (for example payment) | the page colour `#121513` with a `#343B36` border. No pure black anywhere. |
+| Wide colour blocks | deeper than in light mode: the seasonal strip `#8E3024`, the green band near the end of the home page `#2F5242`, the occasion card panels Tết `#5A1D16`, 20/11 `#302838`, 8/3 `#4F1E31` (white text 8 to 1 or better on all of them). Buttons keep the brighter green. |
 
-Product photos have a light sage background, so in dark mode they sit as light tiles. That is intended.
+Product photos have a light background, so in dark mode they are shown at 90 % brightness to stop them glaring. The logo is not dimmed.
 
 ## Type
-Be Vietnam Pro (400, 600, 700). It supports Vietnamese diacritics well. Body text 15 to 17 px, headings 20 to 48 px.
+Be Vietnam Pro (400, 600, 700). It supports Vietnamese diacritics well. Body text 15 to 17 px, headings 20 to 48 px. The page title is Bold (700); section and card headings are SemiBold (600), which reads calmer.
 
 ## Shape and touches
 - Cards: 14 to 16 px radius, 1 px border, a soft shadow.
 - Buttons and inputs: at least 44 px tall (48 px for the main button).
-- A 3 px sage bar along the top of the header, and the Peekbox logo (an open box with an eye peeking out) beside the name. The name is set in Be Vietnam Pro Bold. Light sage `#8CC4A8` is used in dark mode.
-- The home page has a soft sage band behind the hero and a "Tết · 20/11 · 8/3" pill with the three seasonal colours.
+- A 3 px sage bar along the top of the header, and the Peekbox logo (an open box with an eye peeking out) beside the name. The name is set in Be Vietnam Pro Bold. Light sage `#9EC3A5` (the dark-mode link green) is used for the logo in dark mode.
+- The home page has a soft sage band behind the hero and a "Tết · 20/11 · 8/3" pill with the three seasonal colours. Below the hero the page uses only the page colour, with white cards on it (the three promises sit between two thin lines, not on a white band).
 - No emoji. Icons are simple stroked line icons.
 
 ## Rules the screens assume
@@ -60,10 +63,11 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - A failed ZaloPay payment keeps the order and the box; the customer can retry or switch to cash on delivery. How long items are held is a bracketed placeholder, [30 phút].
 
 ## More states
+- Locked builder steps (items and packaging before the budget and date are saved) are faded to 65 % with a lock note above them, and do not react. Fading them more than that turns the photos muddy in dark mode.
 - Coupon error: the field gets the red border and a message under it; the customer can continue with the field empty.
 - An item that sells out during checkout is removed from the box with a notice and nothing is charged; the customer picks a replacement or continues with fewer items.
 - Admin login is locked after repeated wrong attempts: [5] attempts and [15 phút] are placeholders for the team to set.
-- Dark mode: unchosen options (payment, packaging, status chips) are black `#000000`; the chosen one keeps the sage tint.
+- Dark mode: unchosen options (payment, packaging, status chips) use the page colour `#121513`; the chosen one keeps the sage tint.
 
 ## Quality-of-life features (added after comparing Bloomy and live shops)
 - **Search on the builder.** A search box above the category chips with suggestions grouped as items and categories. Search must ignore accents and case: typing "mut" finds "Mứt". Pressing Enter shows all results. A sort menu (default, price low to high, price high to low, expiry latest first, name A to Z) sits beside it.
@@ -85,7 +89,7 @@ Every customer page and every state starts with the same header (logo, Trang ch�
 Every control has five looks: default, hover, keyboard focus, pressed, disabled. They are drawn once on the "Interaction states" board (light and dark, in `mockups/foundations/`) and are the same on every page.
 - **Hover** only where a mouse exists (`@media (hover: hover)`). A phone shows pressed, never hover.
 - **Colour changes take 150 ms, movement 200 ms.** With "reduce motion" on, movement is dropped and the colour change stays.
-- **Focus ring**: 3 px, offset 2 px, `#3F6B57` in light mode and `#8CC4A8` in dark mode. It is shown for the keyboard only and never removed.
+- **Focus ring**: 3 px, offset 2 px, `#3F6B57` in light mode and `#9EC3A5` in dark mode. It is shown for the keyboard only and never removed.
 - **Primary button**: hover `#2C4D3E` (dark mode: `#4A7A64`), pressed `#25513E` (dark mode: `#2C4D3E`) and 1 px down. **Secondary button**: the sage tint fills in on hover.
 - **Header link**: hover turns it green and adds a 2 px underline 8 px below the text.
 - **Text field**: the border darkens on hover, gets 2 px green plus the ring on focus, 2 px red `#A32A1E` (dark mode `#F4B8AF`) on error with a message.
