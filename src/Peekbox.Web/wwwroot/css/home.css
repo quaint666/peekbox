@@ -69,25 +69,67 @@
 .occasions { padding-block: var(--space-5) var(--space-6); }
 .occasions__inner { display: flex; flex-direction: column; gap: var(--space-4); }
 .occasions__title { margin: 0; }
+.occasions__subtitle { margin: var(--space-2) 0 0; font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
 .occasions__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+.occasions__item { display: flex; }
+
+/* One card = one link: a photo on top, a colour panel below. The first card (Tết) is the large one. */
 .occasion {
+    flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: var(--color-surface);
+    background: var(--occasion-panel);
+    color: var(--color-on-primary);   /* white in both modes; the panel is dark in both */
+    text-decoration: none;
     border: 1px solid var(--color-border);
-    border-top: 0;   /* the coloured bar is the top edge, as in the mockup */
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-pop);
+    transition: transform 200ms ease;
 }
-.occasion--tet { --occasion-color: var(--accent-tet); }
-.occasion--teachers { --occasion-color: var(--accent-teachers); }
-.occasion--women { --occasion-color: var(--accent-women); }
-.occasion__bar { height: var(--space-2); background: var(--occasion-color); }
-.occasion__body { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4); }
-.occasion__name { margin: 0; font-size: var(--text-lg); }
-.occasion__text { margin: 0; font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
-.occasion__link { display: inline-flex; align-items: center; min-height: var(--tap-min); font-size: var(--text-base); font-weight: 600; }
+/* The accent key picks two colours: the chip text and the panel. The test in HomeContentTests reads these rules. */
+.occasion--tet { --occasion-color: var(--accent-tet); --occasion-panel: var(--occasion-panel-tet); }
+.occasion--teachers { --occasion-color: var(--accent-teachers); --occasion-panel: var(--occasion-panel-teachers); }
+.occasion--women { --occasion-color: var(--accent-women); --occasion-panel: var(--occasion-panel-women); }
+
+/* Photo heights have no size token: plain numbers from the mockup (phone 220 for Tết, 180 for the others). */
+.occasion__photo { position: relative; flex: none; height: 180px; overflow: hidden; }
+.occasions__item:first-child .occasion__photo { height: 220px; }
+.occasion__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 200ms ease; }
+
+.occasion__panel { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-5); }
+.occasion__chip {
+    padding: var(--space-1) var(--space-3);
+    border-radius: 999px;
+    background: var(--color-on-primary);   /* a white pill, whatever the mode */
+    color: var(--occasion-color);
+    font-size: var(--text-sm);
+    font-weight: 700;
+}
+.occasion__name { margin: 0; font-size: var(--text-xl); line-height: 1.2; }
+.occasions__item:first-child .occasion__name { font-size: var(--text-2xl); }
+.occasion__text { margin: 0; font-size: var(--text-sm); line-height: 1.6; }
+.occasion__button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-min);
+    padding: 0 var(--space-4);
+    border-radius: 999px;
+    background: var(--color-on-primary);
+    color: var(--occasion-button-ink);   /* fixed dark ink: --color-text turns light in dark mode */
+    font-size: var(--text-base);
+    font-weight: 700;
+}
+.occasion__button .icon { width: 18px; height: 18px; transition: transform 200ms ease; }
+
+/* Hover only where there is a mouse, and the movement only when the visitor has not asked for reduced motion
+   (design-notes: "with reduce motion on, movement is dropped"). The rule in base.css only stops animations. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .occasion:hover { transform: translateY(calc(-1 * var(--space-1))); }
+    .occasion:hover .occasion__img { transform: scale(1.05); }
+    .occasion:hover .occasion__button .icon { transform: translateX(var(--space-1)); }
+}
 
 .cta { background: var(--color-primary); color: var(--color-on-primary); padding-block: var(--space-6); }
 .cta__inner { display: flex; flex-direction: column; gap: var(--space-4); }
@@ -114,8 +156,19 @@
     .occasions { padding-block: 0 calc(var(--space-6) + var(--space-5)); }
     .occasions__inner { gap: var(--space-5); }
     .occasions__title { font-size: var(--text-2xl); }
-    .occasions__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); }
-    .occasion__name { font-size: var(--text-xl); }
+    .occasions__subtitle { font-size: var(--text-base); }
+    .occasions__list { display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: 1fr 1fr; gap: var(--space-5); }
+    .occasions__item:first-child { grid-row: span 2; }
+    /* The two small cards: photo on the left (38%), panel on the right. */
+    .occasion { min-height: 260px; }
+    .occasions__item:not(:first-child) .occasion { flex-direction: row; }
+    .occasions__item:not(:first-child) .occasion__photo { flex: 0 0 38%; height: auto; }
+    .occasions__item:not(:first-child) .occasion__panel { flex: 1; justify-content: center; gap: var(--space-2); padding: var(--space-5) var(--space-6); }
+    /* The large Tết card: the photo takes the free height above the panel (at least 300 px). */
+    .occasions__item:first-child .occasion { min-height: 0; }
+    .occasions__item:first-child .occasion__photo { flex: 1 1 auto; height: auto; min-height: 300px; }
+    .occasions__item:first-child .occasion__panel { padding: var(--space-6); }
+    .occasions__item:first-child .occasion__text { font-size: var(--text-base); }
     .cta { padding-block: calc(var(--space-6) + var(--space-4)); }
     .cta__inner { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-5); }
     .cta__text { font-size: var(--text-2xl); line-height: 1.3; }

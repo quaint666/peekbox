@@ -18,6 +18,8 @@ public static class Icons
             "1.7",
             ["M4 3h6a5 3.2 0 0 0 10 0h6v32h-6a5 3.2 0 0 0-10 0H4z", "m10.5 24.5 3.2 3.2 6-6.4"],
             new Label("HSD", "15", "18", "8.6")),
+        // Arrow on the occasion buttons: a little thicker than the line icons, as in the mockup.
+        ["arrow"] = new Custom("0 0 24 24", "2.2", ["M5 12h14M13 6l6 6-6 6"], null),
     };
 
     private static readonly Dictionary<string, string> Paths = new()
