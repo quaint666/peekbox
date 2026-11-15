@@ -1,6 +1,6 @@
 /* HOME: layout of the home page only. */
 .home-banner {
-    background: var(--accent-tet);
+    background: var(--color-banner);
     color: var(--color-on-primary);
     text-align: center;
     font-size: var(--text-sm);
@@ -26,7 +26,7 @@
 .hero__image { width: 100%; height: auto; border-radius: var(--radius-lg); }
 
 .promises {
-    background: var(--color-surface);
+    /* the page colour, not a white band: the home page uses two backgrounds, not three */
     border-block: 1px solid var(--color-border);
     padding-block: var(--space-5);
 }
@@ -131,9 +131,9 @@
     .occasion:hover .occasion__button .icon { transform: translateX(var(--space-1)); }
 }
 
-.cta { background: var(--color-primary); color: var(--color-on-primary); padding-block: var(--space-6); }
+.cta { background: var(--color-band); color: var(--color-on-primary); padding-block: var(--space-6); }
 .cta__inner { display: flex; flex-direction: column; gap: var(--space-4); }
-.cta__text { margin: 0; font-size: var(--text-xl); font-weight: 700; line-height: 1.35; }
+.cta__text { margin: 0; font-size: var(--text-xl); font-weight: 600; line-height: 1.35; }
 .cta__button { background: var(--color-surface); color: var(--color-on-tint); }
 .cta__button:focus-visible { outline-color: var(--color-on-primary); }   /* --color-focus is the same green as the strip in light mode */
 #main + .site-footer { margin-top: 0; }   /* the green strip touches the footer, as in the mockup; other pages keep the gap */
