@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Content;
 using Peekbox.Web.Data;
 using Peekbox.Web.Security;
+using Peekbox.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,11 @@ builder.Services.AddControllersWithViews();
 
 // Page text from content/data/: read once at start; a missing or broken file stops the app at once.
 builder.Services.AddSingleton(HomeContent.Load(HomeContent.FilePath));
+
+// The clock is passed in (not read directly), so the tests can pick any day. See Services/BuilderLimits.cs.
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<BuilderLimits>();
+builder.Services.AddScoped<HamperService>();
 
 // The connection string is a secret, so it is never written in a file of the
 // project. See docs/frontend-plan.md, section 2, for how to set it.

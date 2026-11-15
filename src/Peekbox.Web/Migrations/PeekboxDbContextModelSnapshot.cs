@@ -38,6 +38,42 @@ namespace Peekbox.Web.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.Hamper", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("BudgetVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly?>("DeliveryDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.ToTable("Hampers", t =>
+                        {
+                            t.HasCheckConstraint("CK_Hampers_BudgetVnd", "\"BudgetVnd\" >= 0");
+                        });
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Product", b =>
                 {
                     b.Property<int>("Id")

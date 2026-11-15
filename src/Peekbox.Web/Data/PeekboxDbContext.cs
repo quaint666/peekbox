@@ -8,6 +8,8 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
 
     public DbSet<Product> Products => Set<Product>();
 
+    public DbSet<Hamper> Hampers => Set<Hamper>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(category =>
@@ -33,6 +35,13 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
                 table.HasCheckConstraint("CK_Products_PriceVnd", "\"PriceVnd\" > 0");
                 table.HasCheckConstraint("CK_Products_Stock", "\"Stock\" >= 0");
             });
+        });
+
+        modelBuilder.Entity<Hamper>(hamper =>
+        {
+            hamper.HasIndex(h => h.Token).IsUnique();
+            hamper.Property(h => h.Token).HasMaxLength(64);
+            hamper.ToTable(table => table.HasCheckConstraint("CK_Hampers_BudgetVnd", "\"BudgetVnd\" >= 0"));
         });
     }
 }
