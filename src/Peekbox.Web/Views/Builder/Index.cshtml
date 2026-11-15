@@ -1,9 +1,24 @@
 @using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
 @model BuilderViewModel
 @{
     ViewData["Title"] = "Tạo hộp quà";
     ViewData["Nav"] = SiteLinks.Builder.Key;
     var steps = new[] { "Ngân sách", "Chọn món", "Đóng gói", "Xem lại" };
+
+    // The warning texts. The controller only says which problem it found; the words are here, once.
+    var budgetError = Model.BudgetProblem switch
+    {
+        BudgetProblem.Invalid => "Nhập ngân sách bằng số, ví dụ 500.000đ.",
+        _ => null,
+    };
+    var dateError = Model.DateProblem switch
+    {
+        DateProblem.Invalid => "Ngày giao hàng không hợp lệ.",
+        DateProblem.TooEarly => "Ngày giao hàng sớm nhất là ngày mai.",
+        DateProblem.TooLate => "Ngày giao hàng muộn nhất là sau 1 năm kể từ hôm nay.",
+        _ => null,
+    };
 }
 
 @section Styles {
@@ -22,12 +37,16 @@
     </div>
 
     <form class="card budget-card" method="post">
-        @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Cập nhật" and not the first quick amount. *@
-        <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Cập nhật</button>
+        @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Lưu" and not the first quick amount. *@
+        <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Lưu</button>
 
         <div class="field budget-card__budget">
             <label class="field__label" for="budget">Ngân sách của bạn</label>
-            <input class="input" id="budget" name="budget" type="text" inputmode="numeric" autocomplete="off">
+            <input class="input" id="budget" name="budget" type="text" inputmode="numeric" autocomplete="off" value="@Model.BudgetText" aria-invalid="@(budgetError is null ? null : "true")" aria-describedby="@(budgetError is null ? null : "budget-error")">
+            @if (budgetError is not null)
+            {
+                <p class="field__error" id="budget-error">@budgetError</p>
+            }
             <div class="budget-card__amounts">
                 @foreach (var amount in BuilderViewModel.QuickAmounts)
                 {
@@ -38,9 +57,13 @@
 
         <div class="field budget-card__date">
             <label class="field__label" for="delivery-date">Ngày giao hàng</label>
-            <input class="input" id="delivery-date" name="deliveryDate" type="date">
+            <input class="input" id="delivery-date" name="deliveryDate" type="date" value="@Model.DeliveryDateText" aria-invalid="@(dateError is null ? null : "true")" aria-describedby="@(dateError is null ? null : "delivery-date-error")">
+            @if (dateError is not null)
+            {
+                <p class="field__error" id="delivery-date-error">@dateError</p>
+            }
             <p class="budget-card__hint">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
-            <button type="submit" class="btn btn--primary">Cập nhật</button>
+            <button type="submit" class="btn btn--primary">Lưu</button>
         </div>
     </form>
 </div>

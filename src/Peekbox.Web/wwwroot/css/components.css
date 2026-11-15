@@ -52,8 +52,8 @@
   color: var(--color-text);
   font: inherit;
 }
-.input[aria-invalid='true'] { border: 2px solid var(--color-danger); }
-.field__error { color: var(--color-danger); font-size: var(--text-sm); font-weight: 600; }
+.input[aria-invalid='true'] { border: 2px solid var(--color-field-error); }
+.field__error { color: var(--color-field-error); font-size: var(--text-sm); font-weight: 600; }
 
 /* ---------- Card, badges ---------- */
 .card {
