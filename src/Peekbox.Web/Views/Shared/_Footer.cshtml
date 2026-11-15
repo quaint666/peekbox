@@ -1,15 +1,29 @@
 <footer class="site-footer">
-    <div class="site-footer__inner container">
-        <div class="site-footer__about">
-            <strong>Peekbox</strong>
-            <p>Hộp quà cho Tết, 20/11 và 8/3.</p>
-            <p class="muted">[SỐ ĐIỆN THOẠI] · [EMAIL]</p>
+    <div class="site-footer__main container">
+        <div class="site-footer__brand">
+            <strong class="site-footer__name">Peekbox</strong>
+            <p class="site-footer__tagline">Hộp quà cho Tết, 20/11 và 8/3.</p>
         </div>
-        <nav class="site-footer__links" aria-label="Chân trang">
-            @foreach (var link in SiteLinks.Footer)
+        <nav class="site-footer__links" aria-labelledby="footer-explore">
+            <h2 class="site-footer__title" id="footer-explore">Khám phá</h2>
+            @foreach (var link in SiteLinks.FooterExplore)
             {
                 <a href="@link.Href">@link.Label</a>
             }
         </nav>
+        <nav class="site-footer__links" aria-labelledby="footer-legal">
+            <h2 class="site-footer__title" id="footer-legal">Pháp lý</h2>
+            @foreach (var link in SiteLinks.FooterLegal)
+            {
+                <a href="@link.Href">@link.Label</a>
+            }
+        </nav>
+        <div class="site-footer__contact">
+            <h2 class="site-footer__title">Liên hệ</h2>
+            <p>[SỐ ĐIỆN THOẠI]<br>[EMAIL]<br>[ĐỊA CHỈ]</p>
+        </div>
+    </div>
+    <div class="site-footer__bottom">
+        <p class="site-footer__copy container">© Peekbox</p>
     </div>
 </footer>

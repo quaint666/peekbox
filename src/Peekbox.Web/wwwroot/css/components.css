@@ -156,11 +156,46 @@
 }
 
 /* ---------- Site footer ---------- */
-.site-footer { background: var(--color-surface); border-top: 1px solid var(--color-border); margin-top: var(--space-6); }
-.site-footer__inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-5); padding-block: var(--space-5); }
-.site-footer__about p { margin: var(--space-1) 0 0; font-size: var(--text-sm); }
-.site-footer__links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); align-content: flex-start; }
-.site-footer__links a { display: inline-flex; align-items: center; min-height: var(--tap-min); font-size: var(--text-sm); }
+.site-footer {
+  margin-top: var(--space-6);
+  background: var(--footer-bg);
+  border-top: var(--footer-top-width) solid var(--color-border);
+  color: var(--footer-text);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+.site-footer__main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  padding-block: var(--space-6) var(--space-5);
+}
+.site-footer__brand, .site-footer__contact { grid-column: 1 / -1; }
+.site-footer__name { display: block; font-size: var(--text-xl); color: var(--footer-brand); }
+.site-footer__tagline { margin: var(--space-2) 0 0; }
+.site-footer__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: inherit;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--footer-label);
+}
+.site-footer__links { display: flex; flex-direction: column; }
+.site-footer__links a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--footer-text); text-decoration: none; }
+.site-footer a:focus-visible { outline-color: var(--footer-brand); }   /* --color-focus is too dark on the dark footer */
+.site-footer__contact p { margin: 0; line-height: 1.8; }
+.site-footer__bottom { border-top: 1px solid var(--footer-line); }
+.site-footer__copy { margin-block: 0; padding-block: var(--space-4); color: var(--footer-label); }
+@media (min-width: 900px) {
+  .site-footer__main {
+    grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    gap: var(--space-6);
+    padding-block: calc(var(--space-6) + var(--space-5)) var(--space-6);
+  }
+  .site-footer__brand, .site-footer__contact { grid-column: auto; }
+}
 
 /* ---------- Toast ---------- */
 .toasts {
