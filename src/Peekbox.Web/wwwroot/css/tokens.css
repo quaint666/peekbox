@@ -36,6 +36,9 @@
   --color-danger: #A32A1E;         /* error text and filled danger buttons */
   --color-option-off: #FFFFFF;     /* an unchosen option in a choice list */
   --color-focus: #3F6B57;
+  --color-banner: #B3382A;         /* the seasonal strip above the header */
+  --color-band: #3F6B57;           /* the wide green band near the end of the home page */
+  --photo-filter: none;            /* photos (not the logo or icons) */
 
   /* Site footer: dark in light mode so it stands out from the cream page */
   --footer-bg: #1F2A24;
@@ -53,7 +56,7 @@
   --accent-women: #A8345E;
 
   /* Occasion cards on the home page: the colour panel of each card and the ink of the white button on it.
-     The same in light and dark mode, so they are not repeated in the dark blocks. */
+     The panels are deeper and greyer in dark mode (see the dark blocks); the button ink is the same in both. */
   --occasion-panel-tet: #6E1A12;
   --occasion-panel-teachers: #36284A;
   --occasion-panel-women: #641836;
@@ -87,28 +90,34 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --color-bg: #0E0F10;
-    --color-surface: #1A1C1E;
-    --color-text: #F2F4F5;
-    --color-muted: #ABB1B5;
-    --color-border: #3A3E42;
-    --color-border-soft: #2E3235;
-    --color-input-border: #6B7378;
-    --color-primary-text: #8CC4A8;
+    --color-bg: #121513;
+    --color-surface: #1B201C;
+    --color-text: #EEF0EA;
+    --color-muted: #AEB5AC;
+    --color-border: #343B36;
+    --color-border-soft: #2A302C;
+    --color-input-border: #6E776F;
+    --color-primary-text: #9EC3A5;
     --color-tint: #1D2B24;
     --color-on-tint: #BFE3CF;
-    --color-hero-top: #141516;
+    --color-hero-top: #171B18;
     --color-warn-bg: #3A3016;
     --color-warn-text: #F2D98A;
     --color-danger-bg: #3B1F1B;
     --color-danger-text: #F4B8AF;
-    --color-option-off: #000000;
-    --color-focus: #8CC4A8;
-    --footer-bg: #1D2B24;
-    --footer-text: #ABB1B5;
-    --footer-brand: #8CC4A8;
-    --footer-label: #929A9E;
-    --footer-line: #34443B;
+    --color-option-off: #121513;
+    --color-focus: #9EC3A5;
+    --color-banner: #8E3024;   /* wide colour blocks are deeper on a dark page; buttons keep the brighter green */
+    --color-band: #2F5242;
+    --photo-filter: brightness(0.9);   /* the light photo backgrounds glare on a dark page */
+    --occasion-panel-tet: #5A1D16;
+    --occasion-panel-teachers: #302838;
+    --occasion-panel-women: #4F1E31;
+    --footer-bg: #1B201C;
+    --footer-text: #AEB5AC;
+    --footer-brand: #9EC3A5;
+    --footer-label: #9AA197;
+    --footer-line: #343B36;
     --footer-top-width: 1px;
     --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
     --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -117,28 +126,34 @@
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --color-bg: #0E0F10;
-  --color-surface: #1A1C1E;
-  --color-text: #F2F4F5;
-  --color-muted: #ABB1B5;
-  --color-border: #3A3E42;
-  --color-border-soft: #2E3235;
-  --color-input-border: #6B7378;
-  --color-primary-text: #8CC4A8;
+  --color-bg: #121513;
+  --color-surface: #1B201C;
+  --color-text: #EEF0EA;
+  --color-muted: #AEB5AC;
+  --color-border: #343B36;
+  --color-border-soft: #2A302C;
+  --color-input-border: #6E776F;
+  --color-primary-text: #9EC3A5;
   --color-tint: #1D2B24;
   --color-on-tint: #BFE3CF;
-  --color-hero-top: #141516;
+  --color-hero-top: #171B18;
   --color-warn-bg: #3A3016;
   --color-warn-text: #F2D98A;
   --color-danger-bg: #3B1F1B;
   --color-danger-text: #F4B8AF;
-  --color-option-off: #000000;
-  --color-focus: #8CC4A8;
-  --footer-bg: #1D2B24;
-  --footer-text: #ABB1B5;
-  --footer-brand: #8CC4A8;
-  --footer-label: #929A9E;
-  --footer-line: #34443B;
+  --color-option-off: #121513;
+  --color-focus: #9EC3A5;
+  --color-banner: #8E3024;   /* wide colour blocks are deeper on a dark page; buttons keep the brighter green */
+  --color-band: #2F5242;
+  --photo-filter: brightness(0.9);   /* the light photo backgrounds glare on a dark page */
+  --occasion-panel-tet: #5A1D16;
+  --occasion-panel-teachers: #302838;
+  --occasion-panel-women: #4F1E31;
+  --footer-bg: #1B201C;
+  --footer-text: #AEB5AC;
+  --footer-brand: #9EC3A5;
+  --footer-label: #9AA197;
+  --footer-line: #343B36;
   --footer-top-width: 1px;
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
   --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);

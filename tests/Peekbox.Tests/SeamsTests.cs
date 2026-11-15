@@ -66,4 +66,21 @@ public class SeamsTests
             Assert.False(Regex.IsMatch(css, @"#[0-9a-fA-F]{3,8}\b"), $"{Name(file)}: use a variable from tokens.css");
         }
     }
+
+    [Fact]
+    public void The_two_dark_blocks_in_tokens_css_have_the_same_values()
+    {
+        // CSS cannot share one block between "system is dark" and "visitor chose dark",
+        // so tokens.css writes the dark values twice. Changing only one copy makes the
+        // site look different depending on how dark mode was turned on.
+        var css = Read(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "tokens.css"));
+        var system = Values(Regex.Match(css, @":root:not\(\[data-theme='light'\]\)\s*\{([\s\S]*?)\n  \}").Groups[1].Value);
+        var chosen = Values(Regex.Match(css, @":root\[data-theme='dark'\]\s*\{([\s\S]*?)\n\}").Groups[1].Value);
+
+        Assert.NotEmpty(system);
+        Assert.Equal(system, chosen);
+    }
+
+    private static SortedDictionary<string, string> Values(string block) =>
+        new(Regex.Matches(block, @"(--[\w-]+):\s*([^;]+);").ToDictionary(m => m.Groups[1].Value, m => m.Groups[2].Value.Trim()));
 }

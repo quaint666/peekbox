@@ -30,12 +30,13 @@ body {
 }
 main { flex: 1 0 auto; }
 
-h1, h2, h3, h4 { margin: 0 0 var(--space-3); line-height: 1.25; font-weight: 700; }
-h1 { font-size: var(--text-3xl); }
+h1, h2, h3, h4 { margin: 0 0 var(--space-3); line-height: 1.25; font-weight: 600; }
+h1 { font-size: var(--text-3xl); font-weight: 700; }   /* only the page title is bold; section headings are semi-bold, which reads calmer */
 h2 { font-size: var(--text-xl); }
 h3 { font-size: var(--text-lg); }
 p { margin: 0 0 var(--space-3); }
 img, svg { display: block; max-width: 100%; }
+img:not([src$='.svg']) { filter: var(--photo-filter); }   /* photos only: the logo is an .svg */
 a { color: var(--color-primary-text); }
 
 /* A clear ring when you move around with the keyboard. */
