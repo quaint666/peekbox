@@ -67,8 +67,8 @@ public class BuilderPageTests(PeekboxFixture fixture)
 
         Assert.Contains("<form class=\"card budget-card\" method=\"post\">", html);
         Assert.Contains("name=\"__RequestVerificationToken\"", html);
-        Assert.Matches(@"<input class=""input"" id=""budget"" name=""budget"" type=""text"" inputmode=""numeric"" autocomplete=""off""\s*/?>", form);
-        Assert.Matches(@"<input class=""input"" id=""delivery-date"" name=""deliveryDate"" type=""date""\s*/?>", form);
+        Assert.Matches(@"<input class=""input"" id=""budget"" name=""budget"" type=""text"" inputmode=""numeric"" autocomplete=""off"" value=""""\s*/?>", form);
+        Assert.Matches(@"<input class=""input"" id=""delivery-date"" name=""deliveryDate"" type=""date"" value=""""\s*/?>", form);
         Assert.Matches(@"<label class=""field__label"" for=""budget"">Ngân sách của bạn</label>", form);
         Assert.Matches(@"<label class=""field__label"" for=""delivery-date"">Ngày giao hàng</label>", form);
     }
