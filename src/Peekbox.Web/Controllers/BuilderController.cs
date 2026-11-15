@@ -26,7 +26,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers) : Co
         });
     }
 
-    // "Cập nhật" and the quick amounts both end here. A wrong value saves nothing: the page comes back with a warning
+    // "Lưu" and the quick amounts both end here. A wrong value saves nothing: the page comes back with a warning
     // under the field and what the visitor typed. A good one is saved, and the visitor goes back to /builder (post, then redirect).
     [HttpPost]
     [ValidateAntiForgeryToken]

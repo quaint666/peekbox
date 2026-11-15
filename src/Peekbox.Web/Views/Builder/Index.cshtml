@@ -37,8 +37,8 @@
     </div>
 
     <form class="card budget-card" method="post">
-        @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Cập nhật" and not the first quick amount. *@
-        <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Cập nhật</button>
+        @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Lưu" and not the first quick amount. *@
+        <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Lưu</button>
 
         <div class="field budget-card__budget">
             <label class="field__label" for="budget">Ngân sách của bạn</label>
@@ -63,7 +63,7 @@
                 <p class="field__error" id="delivery-date-error">@dateError</p>
             }
             <p class="budget-card__hint">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
-            <button type="submit" class="btn btn--primary">Cập nhật</button>
+            <button type="submit" class="btn btn--primary">Lưu</button>
         </div>
     </form>
 </div>

@@ -76,13 +76,13 @@ public class BuilderPageTests(PeekboxFixture fixture)
     [Fact]
     public async Task Pressing_Enter_in_a_field_means_Cap_nhat_not_the_first_quick_amount()
     {
-        // The browser presses the first submit button of the form. It must be the hidden "Cập nhật", before any quick amount.
+        // The browser presses the first submit button of the form. It must be the hidden "Lưu", before any quick amount.
         var form = FormIn(await GetBuilderAsync());
 
         var firstButton = Regex.Match(form, @"<button[^>]*>[^<]*</button>").Value;
 
         Assert.Contains("visually-hidden", firstButton);
-        Assert.Contains("Cập nhật", firstButton);
+        Assert.Contains("Lưu", firstButton);
         Assert.DoesNotContain("quickAmount", firstButton);
     }
 }
