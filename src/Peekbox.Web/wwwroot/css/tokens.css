@@ -56,7 +56,7 @@
   --accent-women: #A8345E;
 
   /* Occasion cards on the home page: the colour panel of each card and the ink of the white button on it.
-     The same in light and dark mode, so they are not repeated in the dark blocks. */
+     The panels are deeper and greyer in dark mode (see the dark blocks); the button ink is the same in both. */
   --occasion-panel-tet: #6E1A12;
   --occasion-panel-teachers: #36284A;
   --occasion-panel-women: #641836;
@@ -110,6 +110,9 @@
     --color-banner: #8E3024;   /* wide colour blocks are deeper on a dark page; buttons keep the brighter green */
     --color-band: #2F5242;
     --photo-filter: brightness(0.9);   /* the light photo backgrounds glare on a dark page */
+    --occasion-panel-tet: #5A1D16;
+    --occasion-panel-teachers: #302838;
+    --occasion-panel-women: #4F1E31;
     --footer-bg: #1B201C;
     --footer-text: #AEB5AC;
     --footer-brand: #9EC3A5;
@@ -143,6 +146,9 @@
   --color-banner: #8E3024;   /* wide colour blocks are deeper on a dark page; buttons keep the brighter green */
   --color-band: #2F5242;
   --photo-filter: brightness(0.9);   /* the light photo backgrounds glare on a dark page */
+  --occasion-panel-tet: #5A1D16;
+  --occasion-panel-teachers: #302838;
+  --occasion-panel-women: #4F1E31;
   --footer-bg: #1B201C;
   --footer-text: #AEB5AC;
   --footer-brand: #9EC3A5;

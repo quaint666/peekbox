@@ -32,7 +32,7 @@ Changed 2026-11-15: the dark greys were slightly blue, which felt cold next to t
 | Primary on dark (text, links, outlines, focus ring) | `#9EC3A5`; filled buttons stay `#3F6B57` with white text |
 | Chosen state | background `#1D2B24`, text `#BFE3CF` |
 | Unchosen option (for example payment) | the page colour `#121513` with a `#343B36` border. No pure black anywhere. |
-| Wide colour blocks | deeper than in light mode: the seasonal strip `#8E3024`, the green band near the end of the home page `#2F5242` (white text 8 to 1). Buttons keep the brighter green. |
+| Wide colour blocks | deeper than in light mode: the seasonal strip `#8E3024`, the green band near the end of the home page `#2F5242`, the occasion card panels Tết `#5A1D16`, 20/11 `#302838`, 8/3 `#4F1E31` (white text 8 to 1 or better on all of them). Buttons keep the brighter green. |
 
 Product photos have a light background, so in dark mode they are shown at 90 % brightness to stop them glaring. The logo is not dimmed.
 
@@ -42,7 +42,7 @@ Be Vietnam Pro (400, 600, 700). It supports Vietnamese diacritics well. Body tex
 ## Shape and touches
 - Cards: 14 to 16 px radius, 1 px border, a soft shadow.
 - Buttons and inputs: at least 44 px tall (48 px for the main button).
-- A 3 px sage bar along the top of the header, and the Peekbox logo (an open box with an eye peeking out) beside the name. The name is set in Be Vietnam Pro Bold. Light sage `#8CC4A8` is used for the logo in dark mode.
+- A 3 px sage bar along the top of the header, and the Peekbox logo (an open box with an eye peeking out) beside the name. The name is set in Be Vietnam Pro Bold. Light sage `#9EC3A5` (the dark-mode link green) is used for the logo in dark mode.
 - The home page has a soft sage band behind the hero and a "Tết · 20/11 · 8/3" pill with the three seasonal colours. Below the hero the page uses only the page colour, with white cards on it (the three promises sit between two thin lines, not on a white band).
 - No emoji. Icons are simple stroked line icons.
 
@@ -63,6 +63,7 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - A failed ZaloPay payment keeps the order and the box; the customer can retry or switch to cash on delivery. How long items are held is a bracketed placeholder, [30 phút].
 
 ## More states
+- Locked builder steps (items and packaging before the budget and date are saved) are faded to 65 % with a lock note above them, and do not react. Fading them more than that turns the photos muddy in dark mode.
 - Coupon error: the field gets the red border and a message under it; the customer can continue with the field empty.
 - An item that sells out during checkout is removed from the box with a notice and nothing is charged; the customer picks a replacement or continues with fewer items.
 - Admin login is locked after repeated wrong attempts: [5] attempts and [15 phút] are placeholders for the team to set.
