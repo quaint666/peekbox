@@ -28,7 +28,7 @@ public class HomeContentTests
     public void Every_occasion_accent_has_a_css_rule_that_sets_its_colour()
     {
         // The page turns the accent into a CSS class (.occasion--tet and so on). home.css is the one place that
-        // says which accents exist; an accent without a rule would show a bar with no colour.
+        // says which accents exist; an accent without a rule would show a card with no panel colour and no chip colour.
         var css = File.ReadAllText(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "home.css"));
 
         Assert.All(Content.Occasions, o =>
@@ -38,16 +38,26 @@ public class HomeContentTests
     }
 
     [Fact]
+    public void Every_occasion_photo_exists_in_the_images_folder()
+    {
+        // The photo is named in home.json; a typo would show a broken image, so the file must be there.
+        var folder = Path.Combine(RepoRoot.WebProject, "wwwroot", "images", "occasions");
+
+        Assert.All(Content.Occasions, o =>
+            Assert.True(File.Exists(Path.Combine(folder, o.Image)), $"home.json names the photo \"{o.Image}\" but {folder} has no such file"));
+    }
+
+    [Fact]
     public void No_home_text_is_empty_or_an_unfilled_placeholder()
     {
         var texts = new List<string>
         {
             Content.Pill, Content.Title, Content.Lead, Content.PrimaryButton, Content.SecondaryButton, Content.ImageAlt,
-            Content.PromisesLabel, Content.StepsTitle, Content.StepLabel, Content.OccasionsTitle, Content.OccasionsLink, Content.ClosingText, Content.ClosingButton,
+            Content.PromisesLabel, Content.StepsTitle, Content.StepLabel, Content.OccasionsTitle, Content.OccasionsSubtitle, Content.ClosingText, Content.ClosingButton,
         };
         texts.AddRange(Content.Promises.SelectMany(c => new[] { c.Icon, c.Title, c.Text }));
         texts.AddRange(Content.Steps.SelectMany(c => new[] { c.Title, c.Text }));
-        texts.AddRange(Content.Occasions.SelectMany(o => new[] { o.Name, o.Accent, o.Text }));
+        texts.AddRange(Content.Occasions.SelectMany(o => new[] { o.Name, o.Accent, o.Chip, o.Button, o.Image, o.Text }));
 
         Assert.All(texts, text =>
         {

@@ -69,17 +69,24 @@
 
 <section class="occasions">
     <div class="container occasions__inner">
-        <h2 class="occasions__title">@Model.Content.OccasionsTitle</h2>
+        <div>
+            <h2 class="occasions__title">@Model.Content.OccasionsTitle</h2>
+            <p class="occasions__subtitle">@Model.Content.OccasionsSubtitle</p>
+        </div>
         <ul class="occasions__list">
             @foreach (var occasion in Model.Content.Occasions)
             {
-                <li class="occasion occasion--@occasion.Accent">
-                    <div class="occasion__bar"></div>
-                    <div class="occasion__body">
-                        <h3 class="occasion__name">@occasion.Name</h3>
-                        <p class="occasion__text">@occasion.Text</p>
-                        <a class="occasion__link" href="@SiteLinks.Builder.Href">@Model.Content.OccasionsLink</a>
-                    </div>
+                @* The whole card is one link. The button inside is only its label: a link inside a link is not allowed. *@
+                <li class="occasions__item">
+                    <a class="occasion occasion--@occasion.Accent" href="@SiteLinks.Builder.Href">
+                        <div class="occasion__photo"><img class="occasion__img" src="~/images/occasions/@occasion.Image" alt="" width="1264" height="848" loading="lazy"></div>
+                        <div class="occasion__panel">
+                            <span class="occasion__chip">@occasion.Chip</span>
+                            <h3 class="occasion__name">@occasion.Name</h3>
+                            <p class="occasion__text">@occasion.Text</p>
+                            <span class="occasion__button">@occasion.Button<partial name="_Icon" model='"arrow"' /></span>
+                        </div>
+                    </a>
                 </li>
             }
         </ul>

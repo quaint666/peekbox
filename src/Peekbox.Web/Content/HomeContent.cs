@@ -19,7 +19,7 @@ public sealed record HomeContent(
     string StepLabel,
     IReadOnlyList<HomeCard> Steps,
     string OccasionsTitle,
-    string OccasionsLink,
+    string OccasionsSubtitle,
     IReadOnlyList<HomeOccasion> Occasions,
     string ClosingText,
     string ClosingButton)
@@ -47,4 +47,6 @@ public sealed record HomePromise(string Icon, string Title, string Text);
 // A title with a short text: a step.
 public sealed record HomeCard(string Title, string Text);
 
-public sealed record HomeOccasion(string Name, string Accent, string Text);
+// An occasion card: the accent is a key (tet, teachers, women), not a colour; the colours are in home.css and tokens.css.
+// Chip is the date label, Button the text of the white button, Image a file name in wwwroot/images/occasions/.
+public sealed record HomeOccasion(string Name, string Accent, string Chip, string Button, string Image, string Text);
