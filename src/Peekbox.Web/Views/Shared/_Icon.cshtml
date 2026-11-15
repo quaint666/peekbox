@@ -1,2 +1,22 @@
 @model string
-<svg class="icon icon--@Model" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="@Icons.Path(Model)" /></svg>
+@{
+    var custom = Icons.CustomShape(Model);
+}
+@if (custom is null)
+{
+    <svg class="icon icon--@Model" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="@Icons.Path(Model)" /></svg>
+}
+else
+{
+    <svg class="icon icon--@Model" width="20" height="20" viewBox="@custom.ViewBox" fill="none" stroke="currentColor" stroke-width="@custom.StrokeWidth" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        @foreach (var path in custom.Paths)
+        {
+            <path d="@path" />
+        }
+        @if (custom.Text is not null)
+        {
+            @* Razor reserves the <text> tag, so the line starts with @: to make it plain SVG markup. The values are still encoded. *@
+            @:<text x="@custom.Text.X" y="@custom.Text.Y" text-anchor="middle" fill="currentColor" stroke="none" font-family="inherit" font-size="@custom.Text.FontSize" font-weight="700">@custom.Text.Value</text>
+        }
+    </svg>
+}

@@ -21,7 +21,7 @@ public class HomeContentTests
     [Fact]
     public void Every_promise_names_an_icon_that_exists()
     {
-        Assert.All(Content.Promises, promise => Assert.False(string.IsNullOrEmpty(Icons.Path(promise.Icon))));
+        Assert.All(Content.Promises, promise => Assert.True(Icons.Exists(promise.Icon), $"no icon named \"{promise.Icon}\""));
     }
 
     [Fact]

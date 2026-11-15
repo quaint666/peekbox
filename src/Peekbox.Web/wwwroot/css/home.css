@@ -44,6 +44,7 @@
     color: var(--color-on-tint);
 }
 .promise__icon .icon { width: 24px; height: 24px; }
+.promise__icon .icon--stamp { width: 28px; height: 36px; }  /* the stamp is taller than the line icons; sizes from the mockup */
 .promise__title { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
 .promise__text { margin: 0; font-size: var(--text-sm); line-height: 1.65; color: var(--color-muted); }
 
