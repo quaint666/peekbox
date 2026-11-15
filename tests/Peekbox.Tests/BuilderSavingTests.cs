@@ -150,6 +150,7 @@ public class BuilderSavingTests(PeekboxFixture fixture)
     [InlineData("")]
     [InlineData("abc")]
     [InlineData("500,000")]
+    [InlineData("1.5")]       // a typo, not 15đ
     [InlineData("99999999999999999999")]
     public async Task A_bad_budget_shows_a_warning_keeps_what_was_typed_and_saves_nothing(string typed)
     {

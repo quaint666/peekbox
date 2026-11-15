@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Peekbox.Web.Services;
 
@@ -21,23 +22,28 @@ public sealed class BuilderLimits(TimeProvider clock)
 
     public DateOnly Latest => Today.AddYears(1);
 
-    // Accepts digits, with optional dots, spaces and a trailing "đ" (500.000đ, 500 000, 500000). Whole dong, 0 or more,
-    // no upper limit except what a long can hold: a number that does not fit is simply invalid.
+    // Plain digits (500000), or digits in groups of three split by dots or spaces (500.000, 1.000.000, 500 000), with an
+    // optional "đ" at the end. A dot anywhere else is a typo, not a thousands mark: "1.5" and "500.00" used to become 15đ
+    // and 50.000đ without a warning, so now they are invalid. [0-9], not \d: \d also matches digits of other scripts.
+    private static readonly Regex Grouped = new(@"^[0-9]{1,3}([. \u00A0][0-9]{3})+$", RegexOptions.CultureInvariant);
+
+    // Whole dong, 0 or more, no upper limit except what a long can hold: a number that does not fit is simply invalid.
     public BudgetProblem ParseBudget(string? text, out long amount)
     {
         amount = 0;
         var cleaned = (text ?? "").Trim();
         if (cleaned.EndsWith('đ') || cleaned.EndsWith('Đ'))
         {
-            cleaned = cleaned[..^1];
+            cleaned = cleaned[..^1].TrimEnd();
         }
 
-        cleaned = new string(cleaned.Where(c => c != '.' && !char.IsWhiteSpace(c)).ToArray());
-
-        if (cleaned.Length == 0 || !cleaned.All(char.IsAsciiDigit))
+        var plain = cleaned.Length > 0 && cleaned.All(char.IsAsciiDigit);
+        if (!plain && !Grouped.IsMatch(cleaned))
         {
             return BudgetProblem.Invalid;
         }
+
+        cleaned = new string(cleaned.Where(char.IsAsciiDigit).ToArray());
 
         return long.TryParse(cleaned, NumberStyles.None, CultureInfo.InvariantCulture, out amount)
             ? BudgetProblem.None

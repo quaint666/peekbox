@@ -20,6 +20,9 @@ public class BuilderLimitsTests
     [InlineData("  300000  ", 300_000)]
     [InlineData("0", 0)]
     [InlineData("9223372036854775807", long.MaxValue)]
+    [InlineData("9.223.372.036.854.775.807", long.MaxValue)]
+    [InlineData("1.000 000đ", 1_000_000)]     // a mix of dots and spaces, still in groups of three
+    [InlineData("500\u00A0000", 500_000)]     // a non-breaking space, as some keyboards and copy-paste give
     public void A_budget_is_digits_with_optional_dots_spaces_and_a_trailing_d(string text, long expected)
     {
         Assert.Equal(BudgetProblem.None, LimitsAt("2026-11-15T00:00:00Z").ParseBudget(text, out var amount));
@@ -36,6 +39,15 @@ public class BuilderLimitsTests
     [InlineData("500,000")]
     [InlineData("12abc")]
     [InlineData("٣٠٠")]                      // Arabic-Indic digits are not digits here
+    [InlineData("1.5")]                      // a typo: it must not become 15đ
+    [InlineData("500.00")]                   // a typo: it must not become 50.000đ
+    [InlineData("5.00.000")]                 // groups must have three digits
+    [InlineData("1.0000")]
+    [InlineData(".500")]
+    [InlineData("500.")]
+    [InlineData("500..000")]
+    [InlineData("1.000.00đ")]
+    [InlineData("5 00 000")]
     [InlineData("9223372036854775808")]      // one more than a long can hold: invalid, not an exception
     [InlineData("99999999999999999999999")]
     public void Anything_else_is_an_invalid_budget(string? text)
