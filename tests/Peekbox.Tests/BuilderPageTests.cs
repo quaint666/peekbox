@@ -67,8 +67,8 @@ public class BuilderPageTests(PeekboxFixture fixture)
 
         Assert.Contains("<form class=\"card budget-card\" method=\"post\">", html);
         Assert.Contains("name=\"__RequestVerificationToken\"", html);
-        Assert.Matches(@"<input class=""input"" id=""budget"" name=""budget"" type=""text"" inputmode=""numeric"" autocomplete=""off""\s*/?>", form);
-        Assert.Matches(@"<input class=""input"" id=""delivery-date"" name=""deliveryDate"" type=""date""\s*/?>", form);
+        Assert.Matches(@"<input class=""input"" id=""budget"" name=""budget"" type=""text"" inputmode=""numeric"" autocomplete=""off"" value=""""\s*/?>", form);
+        Assert.Matches(@"<input class=""input"" id=""delivery-date"" name=""deliveryDate"" type=""date"" value=""""\s*/?>", form);
         Assert.Matches(@"<label class=""field__label"" for=""budget"">Ngân sách của bạn</label>", form);
         Assert.Matches(@"<label class=""field__label"" for=""delivery-date"">Ngày giao hàng</label>", form);
     }
@@ -76,13 +76,13 @@ public class BuilderPageTests(PeekboxFixture fixture)
     [Fact]
     public async Task Pressing_Enter_in_a_field_means_Cap_nhat_not_the_first_quick_amount()
     {
-        // The browser presses the first submit button of the form. It must be the hidden "Cập nhật", before any quick amount.
+        // The browser presses the first submit button of the form. It must be the hidden "Lưu", before any quick amount.
         var form = FormIn(await GetBuilderAsync());
 
         var firstButton = Regex.Match(form, @"<button[^>]*>[^<]*</button>").Value;
 
         Assert.Contains("visually-hidden", firstButton);
-        Assert.Contains("Cập nhật", firstButton);
+        Assert.Contains("Lưu", firstButton);
         Assert.DoesNotContain("quickAmount", firstButton);
     }
 }
