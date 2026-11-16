@@ -85,8 +85,8 @@ public class SeamsTests
     {
         foreach (var file in Files(Path.Combine("wwwroot", "css"), "*.css").Where(f => !f.EndsWith("tokens.css")))
         {
-            // White on the primary colour, and the toast, are the allowed exceptions.
-            var css = Regex.Replace(Read(file), "#FFFFFF|#1B2620", "");
+            // White on a filled button is the one allowed exception.
+            var css = Read(file).Replace("#FFFFFF", "");
             Assert.False(Regex.IsMatch(css, @"#[0-9a-fA-F]{3,8}\b"), $"{Name(file)}: use a variable from tokens.css");
         }
     }
