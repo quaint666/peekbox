@@ -11,11 +11,11 @@ namespace Peekbox.Web.Controllers;
 // first; that limit is what stops someone from trying numbers and phones one after another.
 public class TrackController(OrderService orders, RateLimits rateLimits) : Controller
 {
-    [HttpGet]
-    [HttpHead]
+    [HttpGet(SiteLinks.TrackPath)]
+    [HttpHead(SiteLinks.TrackPath)]
     public IActionResult Index() => Page(new TrackForm(), notFound: false, tooManyTries: false);
 
-    [HttpPost]
+    [HttpPost(SiteLinks.TrackPath)]
     public async Task<IActionResult> Index(TrackForm form, CancellationToken cancellationToken)
     {
         if (!rateLimits.TryTrack(HttpContext))

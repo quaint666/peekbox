@@ -36,7 +36,7 @@
 else
 {
     @* F36: the server checks the box again, then opens the cart (CartController.Add). *@
-    <form class="review-summary__add" method="post" action="@(SiteLinks.Cart.Href)/add" asp-antiforgery="true">
+    <form class="review-summary__add" method="post" action="@SiteLinks.CartAddPath" asp-antiforgery="true">
         <button type="submit" class="btn btn--primary review-summary__cart">Thêm vào giỏ hàng</button>
     </form>
 }

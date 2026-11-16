@@ -14,8 +14,8 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
     private const string SoldOutKey = "soldOut";
 
     // ward: the summary of a ward picked on the page; checkout.ts fetches this page and swaps the summary in.
-    [HttpGet]
-    [HttpHead]
+    [HttpGet(SiteLinks.CheckoutPath)]
+    [HttpHead(SiteLinks.CheckoutPath)]
     public async Task<IActionResult> Index(int? ward, CancellationToken cancellationToken)
     {
         var box = await ReadyBoxAsync(cancellationToken);
@@ -27,9 +27,16 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
         return await PageAsync(box, new CheckoutForm { Ward = ward }, [], tooManyTries: false, cancellationToken);
     }
 
-    [HttpPost]
+    // A value our page cannot send (a ward, a window or a payment that is not a number or a name) is refused: bound
+    // as the default, it would quietly become Sáng or ZaloPay.
+    [HttpPost(SiteLinks.CheckoutPath)]
     public async Task<IActionResult> Index(CheckoutForm form, CancellationToken cancellationToken)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
         var box = await ReadyBoxAsync(cancellationToken);
         if (box is null)
         {
@@ -71,7 +78,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
     }
 
     // F50 (state 07): shown once, after a redirect; a reload or a direct visit goes back to checkout.
-    [HttpGet]
+    [HttpGet(SiteLinks.SoldOutPath)]
     public async Task<IActionResult> SoldOut(CancellationToken cancellationToken)
     {
         if (TempData[SoldOutKey] is not string json || JsonSerializer.Deserialize<List<SoldOutLine>>(json) is not { Count: > 0 } lines)

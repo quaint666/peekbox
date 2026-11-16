@@ -7,7 +7,7 @@
     var item = Model.Item;
     var quantity = box.QuantityOf(item.Slug);
     // from=item: BuilderController.Quantity sends the visitor back to this page instead of the list.
-    var control = new QuantityControl(SiteLinks.Builder.Href + "/quantity?from=item", item.Slug, item.Name, quantity,
+    var control = new QuantityControl(SiteLinks.QuantityPath + "?from=item", item.Slug, item.Name, quantity,
         box.StatusOf(item.Priced), box.OverByVnd(item.PriceVnd), item.SoldOut, "Thêm vào hộp");
     <dl class="box-sums item-buy__sums">
         <div class="box-sums__row"><dt>Ngân sách</dt><dd>@Vnd.Format(box.BudgetVnd)</dd></div>

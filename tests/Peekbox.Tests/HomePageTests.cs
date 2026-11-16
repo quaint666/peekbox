@@ -52,7 +52,8 @@ public class HomePageTests(PeekboxFixture fixture)
         {
             var card = cards[i].Groups[2].Value;
             Assert.Matches($@"<span class=""occasion__button"">{Regex.Escape(buttons[i])}\s*<svg", card);
-            Assert.Contains($"src=\"{photos[i]}\" alt=\"\"", card);
+            var src = Regex.Match(card, @"<img[^>]*\ssrc=""([^""]+)""[^>]*\salt=""""").Groups[1].Value;
+            Assert.Equal(photos[i], BuilderItemsTests.Unfingerprinted(src));
             Assert.DoesNotContain("<a ", card);   // a link inside a link is not allowed; the button is only a label
         }
     }
@@ -84,6 +85,18 @@ public class HomePageTests(PeekboxFixture fixture)
         Assert.True(navs.Count > 0, $"no <nav class=\"{navClass}\"> on the page");
         return navs.SelectMany(nav => Regex.Matches(nav.Groups[1].Value, @"<a href=""([^""]*)""[^>]*>([^<]*)</a>")
             .Select(m => (m.Groups[1].Value, m.Groups[2].Value))).ToList();
+    }
+
+    // CSS hides one of the two logos, and a hidden image's alt text is not read: the name is on the link, so it has
+    // one in both themes.
+    [Fact]
+    public async Task The_logo_link_has_its_name_in_both_themes()
+    {
+        var html = await GetHomeAsync();
+
+        Assert.Contains("<a class=\"site-header__brand\" href=\"/\" aria-label=\"Peekbox, trang chủ\">", html);
+        Assert.Matches(@"<img class=""logo logo--light"" src=""[^""]+"" alt="""" width=""110"" height=""34"">", html);
+        Assert.Matches(@"<img class=""logo logo--dark"" src=""[^""]+"" alt="""" width=""110"" height=""34"">", html);
     }
 
     [Fact]

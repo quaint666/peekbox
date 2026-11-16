@@ -3,6 +3,8 @@
 //    it; the browser never adds money up) and the summary and the phone bar's total are swapped in.
 // 2. The "Đặt hàng" buttons name the payment that is picked ("Đặt hàng và thanh toán ZaloPay").
 
+import { fetchPage } from './lib/page.js';
+
 const ward = document.querySelector<HTMLSelectElement>('#ward');
 const payments = document.querySelectorAll<HTMLInputElement>('input[name="payment"]');
 
@@ -24,16 +26,15 @@ async function showFee(): Promise<void> {
   const url = new URL(window.location.pathname, window.location.origin);
   if (ward.value) url.searchParams.set('ward', ward.value);
   try {
-    const response = await fetch(url, { headers: { Accept: 'text/html' }, credentials: 'same-origin' });
-    if (!response.ok || response.redirected || asked !== latest) return; // a redirect means the box changed: leave the page as it is
-    const page = new DOMParser().parseFromString(await response.text(), 'text/html');
+    const { page, redirected } = await fetchPage(url, { headers: { Accept: 'text/html' } });
+    if (redirected || asked !== latest) return; // a redirect means the box changed: leave the page as it is
     const summary = page.querySelector('#checkout-summary');
     const total = page.querySelector('#checkout-bar .checkout-total');
     if (summary) document.querySelector('#checkout-summary')?.replaceWith(summary);
     if (total) document.querySelector('#checkout-bar .checkout-total')?.replaceWith(total);
     nameThePayment();
   } catch {
-    // offline or the server is down: the fee shows after "Đặt hàng" instead
+    // offline, too slow or the server is down: the fee shows after "Đặt hàng" instead
   }
 }
 

@@ -93,7 +93,7 @@
             <h2 class="cart-confirm__title" id="confirm-title">Xóa cả hộp quà?</h2>
             <p class="cart-confirm__text" id="confirm-text">Các món và kiểu đóng gói sẽ bị bỏ khỏi hộp. Ngân sách và ngày giao vẫn được giữ.</p>
             <div class="cart-confirm__actions">
-                <form method="post" action="@(SiteLinks.Cart.Href)/clear" asp-antiforgery="true">
+                <form method="post" action="@SiteLinks.CartClearPath" asp-antiforgery="true">
                     <button type="submit" class="btn btn--danger">Xóa</button>
                 </form>
                 <button type="button" class="btn btn--outline" popovertarget="xoa-hop" popovertargetaction="hide" autofocus>Giữ lại</button>

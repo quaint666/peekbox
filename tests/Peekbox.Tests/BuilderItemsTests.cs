@@ -373,9 +373,17 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     }
 
     // Mistakes a browser forgives silently but a screen reader or a click does not: a repeated id, a label or an aria
-    // reference that points at nothing, a field without a label, a CSS, image or script file that does not exist.
+    // reference that points at nothing, a field without a label, a CSS, image or script file that does not exist, a
+    // form that sends to an address the app does not have.
     internal static void AssertWellFormed(string state, string html)
     {
+        foreach (Match form in Regex.Matches(html, @"<form\b[^>]*>"))
+        {
+            var method = Regex.Match(form.Value, @"\smethod=""([^""]+)""").Groups[1].Value.ToUpperInvariant() is { Length: > 0 } m ? m : "GET";
+            var action = Regex.Match(form.Value, @"\saction=""([^""?#]*)").Groups[1].Value;
+            Assert.True(RoutesTests.Answers(action, method), $"{state}: a form sends {method} to {action}, which the app does not answer: {form.Value}");
+        }
+
         var ids = Regex.Matches(html, @"\sid=""([^""]+)""").Select(m => m.Groups[1].Value).ToList();
         var repeated = ids.GroupBy(i => i).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
         Assert.True(repeated.Count == 0, $"{state}: repeated id {string.Join(", ", repeated)}");
@@ -400,13 +408,17 @@ public class BuilderItemsTests(PeekboxFixture fixture)
 
         foreach (Match link in Regex.Matches(html, @"(?:src|href)=""(/(?:css|images|js)/[^""?#]+)"))
         {
-            var path = link.Groups[1].Value;
+            var path = Unfingerprinted(link.Groups[1].Value);
             var file = path.StartsWith("/js/")
                 ? Path.Combine(RepoRoot.WebProject, "Scripts", Path.ChangeExtension(Path.GetFileName(path), ".ts"))   // built by npm, not committed
                 : Path.Combine(RepoRoot.WebProject, "wwwroot", path.TrimStart('/'));
             Assert.True(File.Exists(file), $"{state}: {path} does not exist ({file})");
         }
     }
+
+    // "/css/tokens.rn3hf4q12m.css" -> "/css/tokens.css": the framework writes a "~/" address with the file's
+    // fingerprint (MapStaticAssets), so a changed file gets a new address.
+    internal static string Unfingerprinted(string path) => Regex.Replace(path, @"\.[a-z0-9]{10}(\.[a-z0-9]+)$", "$1");
 
     private static HttpRequestMessage WithCookie(string url, string token)
     {

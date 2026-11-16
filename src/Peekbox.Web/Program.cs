@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Content;
 using Peekbox.Web.Data;
+using Peekbox.Web.Navigation;
 using Peekbox.Web.Security;
 using Peekbox.Web.Services;
 
@@ -45,7 +46,7 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler(SiteLinks.ErrorPath);
 }
 
 // No HTTPS redirection and no HSTS here: the site is served behind a proxy
@@ -65,9 +66,9 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+// Every action names its own address (SiteLinks), so each page has exactly one. There is no
+// "{controller}/{action}/{id?}" route: it also answered /Home/Error, /Track/Index and /Cart/Index/x.
+app.MapControllers()
     .WithStaticAssets();
 
 app.Run();

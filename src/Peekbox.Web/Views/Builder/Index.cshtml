@@ -38,7 +38,7 @@
     @* Outside the head, so it stays at the top of the screen for the whole page (sticky only works inside its parent). *@
     <partial name="_BuilderSteps" model="currentStep" />
 
-    <form class="card budget-card" method="post">
+    <form class="card budget-card" method="post" action="@SiteLinks.BuilderPath" asp-antiforgery="true">
         @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Lưu" and not the first quick amount. *@
         <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Lưu</button>
 
@@ -87,7 +87,7 @@
         {
             ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = items.OnlyInDate ? null : "false",
         }.Where(p => !string.IsNullOrEmpty(p.Value));
-        var quantityAction = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href + "/quantity", listQuery);
+        var quantityAction = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.QuantityPath, listQuery);
         var box = Model.Box!;
         var outOfDateLines = box.Lines.Count(l => !l.InDate);
         var sortLabels = new Dictionary<ItemSort, string>
@@ -209,7 +209,7 @@
                 @* Step 3 (F33, mockup 27). A plain form: builder.ts sends it as soon as the choice changes; without scripts
                    the "Lưu" button does. "Tiếp tục" in the panel and the phone bar belongs to this form too (form="dong-goi-form"). *@
                 <section class="card packaging" id="dong-goi" aria-labelledby="packaging-title">
-                    <form id="dong-goi-form" method="post" action="@(SiteLinks.Builder.Href)/packaging" asp-antiforgery="true">
+                    <form id="dong-goi-form" method="post" action="@SiteLinks.PackagingPath" asp-antiforgery="true">
                         <fieldset class="packaging__set">
                             <legend><h2 class="packaging__title" id="packaging-title">Chọn kiểu đóng gói</h2></legend>
                             <div class="packaging__options">
