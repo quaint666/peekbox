@@ -85,9 +85,43 @@ public class SeamsTests
     {
         foreach (var file in Files(Path.Combine("wwwroot", "css"), "*.css").Where(f => !f.EndsWith("tokens.css")))
         {
-            // White on a filled button is the one allowed exception.
-            var css = Read(file).Replace("#FFFFFF", "");
-            Assert.False(Regex.IsMatch(css, @"#[0-9a-fA-F]{3,8}\b"), $"{Name(file)}: use a variable from tokens.css");
+            var css = Read(file);
+            Assert.False(Regex.IsMatch(css, @"#[0-9a-fA-F]{3,8}\b|rgba?\("), $"{Name(file)}: use a colour from tokens.css");
+        }
+    }
+
+    // Text sizes and layers come from the scale in tokens.css, so a size or a layer is chosen, not typed: 15 copies of
+    // "13px grey" and five hand-picked z-index values were found in the first review.
+    [Fact]
+    public void CSS_files_take_font_sizes_and_layers_from_tokens_css()
+    {
+        foreach (var file in Files(Path.Combine("wwwroot", "css"), "*.css").Where(f => !f.EndsWith("tokens.css")))
+        {
+            foreach (Match m in Regex.Matches(Read(file), @"(font-size|z-index):\s*([^;}]+)"))
+            {
+                // A raw px, rem or em size, or a bare number; clamp(var(--a), 4vw, var(--b)) is fine.
+                Assert.False(Regex.IsMatch(m.Groups[2].Value.Trim(), @"\d(px|rem|em)\b|^\d+$"), $"{Name(file)}: {m.Value} (use a variable from tokens.css)");
+            }
+        }
+    }
+
+    // A style nothing uses is dead weight that looks alive (the first review found .muted and a toast built ahead of
+    // its milestone). Every class in the CSS must appear in a view, a script or the C# that writes markup; a class
+    // made from a name (class="icon icon--@Model") counts through its prefix.
+    [Fact]
+    public void Every_css_class_is_used_by_a_view_or_a_script()
+    {
+        var markup = string.Join("\n", Files("Views", "*.cshtml").Concat(Files("Scripts", "*.ts")).Concat(Files("Models", "*.cs")).Select(Read));
+        var prefixes = Regex.Matches(markup, @"([a-z][\w-]*--)@").Select(m => m.Groups[1].Value).ToHashSet();
+        foreach (var file in Files(Path.Combine("wwwroot", "css"), "*.css"))
+        {
+            var css = Regex.Replace(Read(file), @"/\*[\s\S]*?\*/", "");
+            css = Regex.Replace(css, @"url\([^)]*\)", "");
+            foreach (var name in Regex.Matches(css, @"\.([a-zA-Z][\w-]*)").Select(m => m.Groups[1].Value).Distinct())
+            {
+                var used = Regex.IsMatch(markup, $@"(?<![\w-]){Regex.Escape(name)}(?![\w-])") || prefixes.Any(p => name.StartsWith(p, StringComparison.Ordinal));
+                Assert.True(used, $"{Name(file)}: .{name} is not used by any view or script");
+            }
         }
     }
 

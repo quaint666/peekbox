@@ -24,14 +24,14 @@
 
     @if (Model.TooManyTries)
     {
-        <div class="checkout-alert" role="alert" tabindex="-1" autofocus>
+        <div class="alert checkout-alert" role="alert" tabindex="-1" autofocus>
             <strong class="checkout-alert__title">Bạn đã thử quá nhiều lần.</strong>
             <p class="checkout-alert__text">Hãy đợi vài phút rồi thử lại. Những gì bạn đã nhập vẫn được giữ.</p>
         </div>
     }
     else if (Model.Errors.Count > 0)
     {
-        <div class="checkout-alert" role="alert" tabindex="-1" autofocus id="loi">
+        <div class="alert checkout-alert" role="alert" tabindex="-1" autofocus id="loi">
             <strong class="checkout-alert__title">Cần sửa @Model.Errors.Count chỗ trước khi đặt hàng</strong>
             <ul class="checkout-alert__list">
                 @foreach (var error in Model.Errors)
@@ -104,7 +104,7 @@
                     <div class="field">
                         <span class="field__label" id="date-label">Ngày giao</span>
                         <p class="checkout-date" aria-labelledby="date-label"><span>@VnDate.Day(box.DeliveryDate!.Value)</span><a href="@(SiteLinks.Builder.Href)#delivery-date">Đổi ngày</a></p>
-                        <p class="checkout-hint">Ngày giao đã chọn khi tạo hộp. Đổi ngày ở trang tạo hộp để kiểm tra lại hạn dùng.</p>
+                        <p class="checkout-hint meta">Ngày giao đã chọn khi tạo hộp. Đổi ngày ở trang tạo hộp để kiểm tra lại hạn dùng.</p>
                     </div>
                     <fieldset class="checkout-choices">
                         <legend class="field__label">Khung giờ</legend>
@@ -121,11 +121,11 @@
                 <legend class="checkout-set__title">3. Thanh toán</legend>
                 <label class="checkout-pay" for="payment-zalopay">
                     <input type="radio" id="payment-zalopay" name="payment" value="@PaymentMethod.ZaloPay" checked="@(form.Payment == PaymentMethod.ZaloPay)">
-                    <span><span class="checkout-pay__name">ZaloPay</span><span class="checkout-pay__desc">Thanh toán bằng ví ZaloPay sau khi đặt hàng.</span></span>
+                    <span><span class="checkout-pay__name">ZaloPay</span><span class="checkout-pay__desc meta">Thanh toán bằng ví ZaloPay sau khi đặt hàng.</span></span>
                 </label>
                 <label class="checkout-pay" for="payment-cod">
                     <input type="radio" id="payment-cod" name="payment" value="@PaymentMethod.CashOnDelivery" checked="@(form.Payment == PaymentMethod.CashOnDelivery)">
-                    <span><span class="checkout-pay__name">Thanh toán khi nhận hàng</span><span class="checkout-pay__desc">Trả tiền mặt cho người giao hàng.</span></span>
+                    <span><span class="checkout-pay__name">Thanh toán khi nhận hàng</span><span class="checkout-pay__desc meta">Trả tiền mặt cho người giao hàng.</span></span>
                 </label>
             </fieldset>
         </form>

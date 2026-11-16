@@ -56,7 +56,7 @@ public class OrderPageTests(PeekboxFixture fixture)
             Assert.Single(Regex.Matches(steps, "order-steps__step--done"));
             Assert.Contains("Thanh toán: <strong>Đã thanh toán qua ZaloPay (mô phỏng)</strong>", html);
 
-            Assert.Contains("<span class=\"order-line__name\">Trà sen</span> <span class=\"order-line__meta\">Thương hiệu A · 100 g · Xuất xứ Hà Nội · HSD 12/2027</span>", html);
+            Assert.Contains("<span class=\"order-line__name\">Trà sen</span> <span class=\"order-line__meta meta\">Thương hiệu A · 100 g · Xuất xứ Hà Nội · HSD 12/2027</span>", html);
             Assert.Contains("<span class=\"order-line__each\">2 × 180.000đ</span> <strong>360.000đ</strong>", html);
             Assert.Contains("src=\"/images/products/tra-sen.webp\"", html);
             Assert.Contains("<li class=\"order-line order-line--packaging\"><span>Hộp cứng có nơ</span><strong>40.000đ</strong></li>", html);
@@ -136,9 +136,9 @@ public class OrderPageTests(PeekboxFixture fixture)
             var html = await PageAsync(token);
 
             Assert.Contains("Đơn hàng này đã bị huỷ</h1>", html);
-            Assert.Contains("<section class=\"order-banner order-banner--cancelled\" aria-labelledby=\"order-title\">", html);
+            Assert.Contains("<section class=\"alert order-banner\" aria-labelledby=\"order-title\">", html);
             Assert.Contains("Đơn hàng sẽ không được giao. Cần giúp?", html);
-            Assert.Contains("<p class=\"order-status__cancelled\">Đã huỷ</p>", html);
+            Assert.Contains("<p class=\"alert order-status__cancelled\">Đã huỷ</p>", html);
             Assert.DoesNotContain("order-steps", html);
             Assert.DoesNotContain("Cảm ơn bạn", html);
         }

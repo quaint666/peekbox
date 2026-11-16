@@ -41,7 +41,7 @@
                 <div class="cart-box__head">
                     <div class="cart-box__heading">
                         <h2 class="cart-box__title" id="box-title">Hộp quà của bạn</h2>
-                        <p class="cart-box__meta">@when · @packaging.Name · Ngân sách @Vnd.Format(box.BudgetVnd)</p>
+                        <p class="cart-box__meta meta">@when · @packaging.Name · Ngân sách @Vnd.Format(box.BudgetVnd)</p>
                     </div>
                     <div class="cart-box__actions">
                         <a class="btn btn--outline" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">Sửa hộp</a>
@@ -66,7 +66,7 @@
                     @if (reason is not null)
                     {
                         <button type="button" class="btn btn--primary cart-checkout" disabled aria-describedby="checkout-reason">Tiếp tục thanh toán</button>
-                        <p class="cart-reason@(Model.Blocked ? " cart-reason--block" : "")" id="checkout-reason">@reason</p>
+                        <p class="cart-reason meta@(Model.Blocked ? " cart-reason--block" : "")" id="checkout-reason">@reason</p>
                     }
                     else
                     {
@@ -81,7 +81,7 @@
             @if (reason is not null)
             {
                 <button type="button" class="btn btn--primary cart-checkout" disabled aria-describedby="checkout-reason-bar">Tiếp tục thanh toán</button>
-                <p class="cart-reason@(Model.Blocked ? " cart-reason--block" : "")" id="checkout-reason-bar">@reason</p>
+                <p class="cart-reason meta@(Model.Blocked ? " cart-reason--block" : "")" id="checkout-reason-bar">@reason</p>
             }
             else
             {

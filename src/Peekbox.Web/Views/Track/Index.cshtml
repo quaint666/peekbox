@@ -18,14 +18,14 @@
 
     @if (Model.TooManyTries)
     {
-        <div class="track-alert track-alert--wait" role="alert" tabindex="-1" autofocus>
+        <div class="alert alert--warn track-alert" role="alert" tabindex="-1" autofocus>
             <partial name="_Icon" model='"alert-circle"' />
             <p class="track-alert__text"><strong>Bạn đã thử quá nhiều lần.</strong> Hãy đợi vài phút rồi thử lại.</p>
         </div>
     }
     else if (Model.NotFound)
     {
-        <div class="track-alert" role="alert" tabindex="-1" autofocus>
+        <div class="alert track-alert" role="alert" tabindex="-1" autofocus>
             <partial name="_Icon" model='"alert-circle"' />
             <p class="track-alert__text"><strong>Không tìm thấy đơn hàng.</strong> Mã đơn hàng và số điện thoại không khớp với đơn nào. Hãy kiểm tra lại cả hai.</p>
         </div>
@@ -35,7 +35,7 @@
         <div class="field">
             <label class="field__label" for="track-number">Mã đơn hàng</label>
             <input class="input" id="track-number" name="number" type="text" value="@form.Number" placeholder="Ví dụ: PEEK000123" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" required aria-describedby="track-number-hint">
-            <p class="track-hint" id="track-number-hint">Mã có trên trang xác nhận đơn hàng.</p>
+            <p class="track-hint meta" id="track-number-hint">Mã có trên trang xác nhận đơn hàng.</p>
         </div>
         <div class="field">
             <label class="field__label" for="track-phone">Số điện thoại người đặt</label>

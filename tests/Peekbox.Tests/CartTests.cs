@@ -142,7 +142,7 @@ public class CartTests(PeekboxFixture fixture)
         var html = await visitor.PageAsync("/cart");
 
         Assert.Contains("aria-label=\"Giỏ hàng, 1 hộp\" aria-current=\"page\"", CartLink(html));
-        Assert.Contains("<p class=\"cart-box__meta\">Giao ngày 15/01/2027 · Hộp cứng có nơ · Ngân sách 500.000đ</p>", html);
+        Assert.Contains("<p class=\"cart-box__meta meta\">Giao ngày 15/01/2027 · Hộp cứng có nơ · Ngân sách 500.000đ</p>", html);
         Assert.Contains("<a class=\"btn btn--outline\" href=\"/builder#chon-mon\">Sửa hộp</a>", html);
         Assert.Contains("<button type=\"button\" class=\"btn btn--outline cart-box__clear\" popovertarget=\"xoa-hop\">Xóa hộp</button>", html);
         Assert.Contains("<p class=\"review-line__name\">Trà sen</p>", html);
@@ -205,7 +205,7 @@ public class CartTests(PeekboxFixture fixture)
 
         Assert.Contains("Chưa thể đặt hàng: 1 món hết hạn trước ngày giao", html);
         Assert.Contains("action=\"/builder/quantity?from=cart\"", html);
-        Assert.Contains("<p class=\"cart-reason cart-reason--block\" id=\"checkout-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", Summary(html));
+        Assert.Contains("<p class=\"cart-reason meta cart-reason--block\" id=\"checkout-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", Summary(html));
         Assert.DoesNotContain("href=\"/checkout\"", html);
 
         var response = await visitor.PostAsync("/builder/quantity?from=cart", new() { ["slug"] = "mut-gung", ["quantity"] = "0" });
@@ -224,7 +224,7 @@ public class CartTests(PeekboxFixture fixture)
 
         var html = await visitor.PageAsync("/cart");
 
-        Assert.Contains("<p class=\"cart-reason cart-reason--block\" id=\"checkout-reason\">Ngày giao đã qua. Bấm Sửa hộp để chọn ngày giao mới.</p>", Summary(html));
+        Assert.Contains("<p class=\"cart-reason meta cart-reason--block\" id=\"checkout-reason\">Ngày giao đã qua. Bấm Sửa hộp để chọn ngày giao mới.</p>", Summary(html));
         Assert.Equal("/builder", (await visitor.PostAsync("/cart/add")).Headers.Location?.OriginalString);
     }
 

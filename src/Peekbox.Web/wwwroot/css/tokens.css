@@ -27,6 +27,8 @@
   --color-primary-hover: #2C4D3E;  /* a filled button under the mouse (design notes, "Interaction states") */
   --color-primary-pressed: #25513E;
   --color-on-primary: #FFFFFF;
+  --color-on-danger: #FFFFFF;       /* text on a filled red button, both themes */
+  --color-backdrop: rgba(0, 0, 0, 0.4);   /* behind a dialog or a sheet, both themes */
   --color-primary-text: #3F6B57;   /* links, outlines, text on the page */
   --color-tint: #E3EFE7;           /* chosen state */
   --color-on-tint: #25513E;
@@ -71,14 +73,23 @@
 
   /* Type */
   --font-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-2xs: 0.75rem;             /* 12px: the step labels, the smallest notes */
+  --text-xs: 0.8125rem;            /* 13px: hints, item details, fees (.meta) */
   --text-sm: 0.875rem;
+  --text-md: 0.9375rem;            /* 15px: list rows, sums, alerts */
   --text-base: 1rem;
+  --text-plus: 1.0625rem;          /* 17px: large buttons, sub-titles */
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
   --text-2xl: 1.75rem;
   --text-3xl: 2.125rem;
   --text-hero: 3rem;               /* home page title, wide screens */
   --text-hero-sm: 2rem;            /* home page title, phones */
+  --title-sm: 1.375rem;            /* 22px: small titles, totals and the big amount buttons */
+  --title-md: 1.5rem;              /* 24px: totals on the summary cards */
+  --title-page: 1.625rem;          /* 26px: page titles on a phone, the price on an item page */
+  --title-lg: 1.875rem;            /* 30px: the order banner and the item price, wide */
+  --title-xl: 2rem;                /* 32px: the track page title, wide */
 
   /* Shape and space */
   --radius-sm: 10px;
@@ -91,6 +102,15 @@
   --space-5: 24px;
   --space-6: 32px;
   --tap-min: 44px;                 /* smallest height of anything you tap */
+
+  /* Layers, lowest first. */
+  --z-bar: 1;                      /* a bar fixed to the bottom of the screen (phone) */
+  --z-steps: 2;                    /* the builder's step strip, which stays at the top */
+  --z-menu: 10;                    /* the phone menu, open under the header */
+  --z-skip-link: 100;              /* "Bỏ qua và vào nội dung", above everything */
+
+  /* Layout: the pages switch to their wide layout at 900px and the header at 1100px. A media query cannot read a
+     variable, so those two numbers are written in each file's @media line; change them everywhere at once. */
   --container-max: 1264px;   /* 1200 px of content plus the 32 px padding on each side, as in the mockups */
 }
 

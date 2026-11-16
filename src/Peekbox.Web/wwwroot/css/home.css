@@ -15,7 +15,7 @@
     padding-block: var(--space-6);
 }
 .hero__inner { display: grid; gap: var(--space-5); }
-.hero__badge { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 14px; font-size: 0.8125rem; line-height: 1.2; }  /* 6px, 14px, 13px and 1.2: from the mockup */
+.hero__badge { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 14px; font-size: var(--text-xs); line-height: 1.2; }  /* 6px, 14px, 13px and 1.2: from the mockup */
 .hero__dot { width: var(--space-2); height: var(--space-2); border-radius: 50%; }
 .hero__dot--tet { background: var(--accent-tet); }
 .hero__dot--teachers { background: var(--accent-teachers); }
@@ -152,7 +152,7 @@
     .promises__inner { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
     .promise { flex-direction: column; gap: var(--space-2); }
     .promise__title { font-size: var(--text-xl); }
-    .promise__text { font-size: 0.9375rem; }  /* 15px, from the mockup */
+    .promise__text { font-size: var(--text-md); }  /* 15px, from the mockup */
     .steps { padding-block: calc(var(--space-6) + var(--space-5)); }
     .steps__inner { gap: var(--space-5); }
     .steps__title { font-size: var(--text-2xl); }

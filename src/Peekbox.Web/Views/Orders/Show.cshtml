@@ -15,14 +15,14 @@
 <div class="order">
     @if (Model.Cancelled)
     {
-        <section class="order-banner order-banner--cancelled" aria-labelledby="order-title">
+        <section class="alert order-banner" aria-labelledby="order-title">
             <h1 class="order-banner__title" id="order-title"><partial name="_Icon" model='"x-circle"' />Đơn hàng này đã bị huỷ</h1>
             <p class="order-banner__text">Mã đơn hàng: <strong>@order.Number</strong>. Đơn hàng sẽ không được giao. <partial name="_SupportLine" /></p>
         </section>
     }
     else
     {
-        <section class="order-banner" aria-labelledby="order-title">
+        <section class="alert alert--success order-banner" aria-labelledby="order-title">
             <h1 class="order-banner__title" id="order-title"><partial name="_Icon" model='"check-circle"' />Cảm ơn bạn, đơn hàng đã được ghi nhận</h1>
             <p class="order-banner__text">Mã đơn hàng: <strong>@order.Number</strong>. Hãy lưu đường dẫn của trang này để xem lại đơn hàng. Bạn cũng có thể dùng mục <a href="@SiteLinks.Track.Href">Tra cứu đơn hàng</a> với mã đơn hàng và số điện thoại người đặt.</p>
         </section>
@@ -32,7 +32,7 @@
         <h2 class="order-card__title" id="status-title">Trạng thái đơn hàng</h2>
         @if (Model.Cancelled)
         {
-            <p class="order-status__cancelled">Đã huỷ</p>
+            <p class="alert order-status__cancelled">Đã huỷ</p>
         }
         else
         {
@@ -55,7 +55,7 @@
                     <li class="order-line">
                         <img class="order-line__img" src="@Model.Images.GetValueOrDefault(item.ProductId)" alt="" width="508" height="508" loading="lazy">
                         <span class="order-line__name">@item.Name</span>
-                        <span class="order-line__meta">@item.Brand · @item.WeightGrams g · Xuất xứ @item.Origin · HSD @VnDate.Month(item.ExpiryDate)</span>
+                        <span class="order-line__meta meta">@item.Brand · @item.WeightGrams g · Xuất xứ @item.Origin · HSD @VnDate.Month(item.ExpiryDate)</span>
                         <span class="order-line__price">
                             @if (item.Quantity > 1)
                             {

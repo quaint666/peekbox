@@ -241,7 +241,7 @@ public class PackagingReviewTests(PeekboxFixture fixture)
         Assert.Contains("<button type=\"submit\" class=\"btn btn--danger\" name=\"quantity\" value=\"0\" aria-label=\"Bỏ Mứt gừng khỏi hộp\">Bỏ món này</button>", line);
         Assert.DoesNotContain("Bỏ món này", Line(html, "Trà sen"));
         var summary = Summary(html);
-        Assert.Contains("<p class=\"review-summary__reason review-summary__reason--block\" id=\"cart-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", summary);
+        Assert.Contains("<p class=\"review-summary__reason meta review-summary__reason--block\" id=\"cart-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", summary);
         Assert.DoesNotContain("đều còn hạn", summary);
 
         var response = await visitor.PostAsync("/builder/quantity?from=review", new() { ["slug"] = "mut-gung", ["quantity"] = "0" });

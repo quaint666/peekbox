@@ -18,11 +18,11 @@
   text-decoration: none;
   cursor: pointer;
 }
-.btn--lg { min-height: 52px; padding: 0 28px; font-size: 17px; }  /* main call-to-action buttons, as in the mockups */
+.btn--lg { min-height: 52px; padding: 0 28px; font-size: var(--text-plus); }  /* main call-to-action buttons, as in the mockups */
 .btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
 .btn--outline { background: transparent; color: var(--color-primary-text); border-color: var(--color-primary-text); }
 .btn--chip { min-height: var(--tap-min); padding: 0 var(--space-3); border-radius: 999px; font-size: var(--text-sm); }  /* small pill button: quick amounts, category chips */
-.btn--danger { background: var(--color-danger); color: #FFFFFF; }
+.btn--danger { background: var(--color-danger); color: var(--color-on-danger); }
 .btn:disabled, .btn[aria-disabled='true'] { background: var(--color-border-soft); color: var(--color-muted); border-color: var(--color-border); cursor: not-allowed; }
 
 .icon-btn {
@@ -92,6 +92,19 @@ select.input {
 }
 .field__error { color: var(--color-field-error); font-size: var(--text-sm); font-weight: 600; }
 
+/* ---------- Small notes, alerts ---------- */
+/* Small grey supporting text: hints under a field, an item's details, a fee note (13px, from the mockups). Added next to
+   a part's own class (class="item-card__meta meta"), which keeps only what differs. */
+.meta { margin: 0; font-size: var(--text-xs); line-height: 1.5; color: var(--color-muted); }
+
+/* A coloured note with an edge: red by default (an error, a block, a cancelled order), amber for a wait (--warn), green
+   for a success (--success). Only the colours, the edge and the focus ring: the layout (a row with an icon or a column,
+   the padding) stays with each page's own class. A page opens with its alert focused, so the ring shows from the keyboard. */
+.alert { border: 1px solid var(--color-danger-border); border-radius: 12px; background: var(--color-danger-bg); color: var(--color-danger-text); }
+.alert--warn { border-color: var(--color-warn-border); background: var(--color-warn-bg); color: var(--color-warn-text); }
+.alert--success { border-color: var(--color-success-border); background: var(--color-tint); color: var(--color-on-tint); }
+.alert:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+
 /* ---------- Card, badges ---------- */
 .card {
   background: var(--color-surface);
@@ -104,7 +117,7 @@ select.input {
   display: inline-block;
   padding: 4px 10px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: var(--text-2xs);
   font-weight: 600;
   background: var(--color-tint);
   color: var(--color-on-tint);
@@ -180,7 +193,7 @@ select.input {
   left: 0;
   right: 0;
   top: 67px;
-  z-index: 10;
+  z-index: var(--z-menu);
   padding: var(--space-3) var(--space-4);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);

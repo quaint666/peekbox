@@ -147,7 +147,7 @@ public class CheckoutTests(PeekboxFixture fixture)
         var html = await visitor.TextAsync(response);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Contains("<div class=\"checkout-alert\" role=\"alert\" tabindex=\"-1\" autofocus id=\"loi\"> <strong class=\"checkout-alert__title\">Cần sửa 3 chỗ trước khi đặt hàng</strong>", html);
+        Assert.Contains("<div class=\"alert checkout-alert\" role=\"alert\" tabindex=\"-1\" autofocus id=\"loi\"> <strong class=\"checkout-alert__title\">Cần sửa 3 chỗ trước khi đặt hàng</strong>", html);
         Assert.Contains("<li><a href=\"#sender-email\">Email chưa đúng dạng</a></li>", html);
         Assert.Contains("<li><a href=\"#recipient-phone\">Số điện thoại người nhận cần 10 chữ số</a></li>", html);
         Assert.Contains("<li><a href=\"#street\">Nhập số nhà và tên đường</a></li>", html);

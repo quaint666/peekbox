@@ -64,7 +64,7 @@
             {
                 <p class="field__error" id="delivery-date-error">@dateError</p>
             }
-            <p class="budget-card__hint">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
+            <p class="budget-card__hint meta">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
             <button type="submit" class="btn btn--primary">Lưu</button>
         </div>
 
@@ -177,7 +177,7 @@
                         <a class="item-card__photo" href="@SiteLinks.Item(item.Slug)" tabindex="-1" aria-hidden="true"><img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy"></a>
                         <div class="item-card__body">
                             <h3 class="item-card__name"><a class="item-card__link" href="@SiteLinks.Item(item.Slug)">@item.Name</a></h3>
-                            <p class="item-card__meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
+                            <p class="item-card__meta meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
                             @if (item.SoldOut)
                             {
                                 <span class="badge badge--muted">Hết hàng</span>
@@ -221,7 +221,7 @@
                                             <input type="radio" id="dong-goi-@option.Id" name="packaging" value="@option.Id" checked="@(option.Id == box.Packaging!.Id)">
                                             <span class="packaging-option__name">@option.Name</span>
                                         </span>
-                                        <span class="packaging-option__desc">@option.Description</span>
+                                        <span class="packaging-option__desc meta">@option.Description</span>
                                         <span class="packaging-option__fee">@(option.FeeVnd == 0 ? "Miễn phí" : "+" + Vnd.Format(option.FeeVnd))</span>
                                     </label>
                                 }

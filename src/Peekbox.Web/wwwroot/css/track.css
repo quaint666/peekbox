@@ -2,7 +2,7 @@
    from 900px the card is 560px wide and centred. */
 .track { display: flex; flex-direction: column; gap: 18px; padding: 20px; }
 .track__head { display: flex; flex-direction: column; gap: var(--space-2); }
-.track__title { margin: 0; font-size: 1.625rem; line-height: 1.2; }  /* 26px */
+.track__title { margin: 0; font-size: var(--title-page); line-height: 1.2; }  /* 26px */
 .track__lead { margin: 0; font-size: var(--text-base); line-height: 1.6; color: var(--color-muted); }
 
 /* State 19 (no match, red) and state 22 (too many tries, amber). The page opens with it focused. */
@@ -11,22 +11,16 @@
     align-items: flex-start;
     gap: 10px;
     padding: 14px var(--space-4);
-    border: 1px solid var(--color-danger-border);
-    border-radius: 12px;
-    background: var(--color-danger-bg);
-    color: var(--color-danger-text);
 }
-.track-alert--wait { border-color: var(--color-warn-border); background: var(--color-warn-bg); color: var(--color-warn-text); }
-.track-alert:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 .track-alert .icon { flex: none; width: 16px; height: 16px; margin-top: 3px; stroke-width: 2; }
-.track-alert__text { margin: 0; font-size: 0.9375rem; line-height: 1.55; }  /* 15px */
+.track-alert__text { margin: 0; font-size: var(--text-md); line-height: 1.55; }  /* 15px */
 
 .track-form { display: flex; flex-direction: column; gap: 18px; }
-.track-hint { margin: 2px 0 0; font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }  /* 13px */
+.track-hint { margin: 2px 0 0; }
 .track-submit { min-height: 48px; }
 .track-help { margin: 0; font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
 
 @media (min-width: 900px) {
     .track { width: 560px; margin-inline: auto; padding: var(--space-6); }
-    .track__title { font-size: 2rem; }  /* 32px */
+    .track__title { font-size: var(--title-xl); }  /* 32px */
 }

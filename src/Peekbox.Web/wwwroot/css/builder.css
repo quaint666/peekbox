@@ -12,13 +12,13 @@
 .builder-steps {
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: var(--z-steps);
     list-style: none;
     margin: 0;
     padding: var(--space-3) 0;
     display: flex;
     gap: 6px;   /* 6px and 12px: from the phone mockup */
-    font-size: 0.75rem;
+    font-size: var(--text-2xs);
     border-image: linear-gradient(to top, var(--color-border) 1px, var(--color-bg) 1px) fill 0 / 0 / 0 100vmax;
 }
 html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) + var(--space-4)); }   /* #mon-…, #dong-goi */
@@ -42,7 +42,6 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .budget-card .input { font-size: var(--text-xl); font-weight: 600; }
 .budget-card .field__error { margin: 0; }
 .budget-card__amounts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.budget-card__hint { margin: 0; font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }  /* 13px: from the mockup */
 .budget-card__date .btn { align-self: flex-start; margin-top: var(--space-2); }
 .budget-card__aside { display: none; margin: 0; font-size: var(--text-sm); line-height: 1.55; color: var(--color-muted); }  /* wide screens only, as in the mockups */
 
@@ -91,7 +90,6 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .item-card__img { width: 92px; height: 92px; object-fit: cover; border-radius: var(--radius-sm); }
 .item-card__body { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); min-width: 0; }
 .item-card__name { margin: 0; font-size: var(--text-lg); font-weight: 600; line-height: 1.3; }
-.item-card__meta { margin: 0; font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }  /* 13px: from the mockup */
 .item-card__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); align-self: stretch; margin-top: auto; padding-top: var(--space-2); }
 .item-card__price { margin: 0; font-weight: 700; }
 .item-card--sold-out .item-card__img { filter: grayscale(1); opacity: 0.7; }
@@ -115,7 +113,7 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 
 /* The add control (mockups 26, 27 and state 04): "Thêm", the − n + pill, or a disabled button that says why. */
 .qty-add { min-height: var(--tap-min); padding: 0 18px; font-size: var(--text-sm); white-space: normal; text-align: center; }  /* 18px: from the mockup */
-.qty-add:disabled { padding: 0 14px; font-size: 0.8125rem; }  /* "Vượt X" and the other reasons: 14px and 13px in the mockup */
+.qty-add:disabled { padding: 0 14px; font-size: var(--text-xs); }  /* "Vượt X" and the other reasons: 14px and 13px in the mockup */
 .qty {
     display: inline-flex;
     align-items: stretch;
@@ -170,11 +168,10 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .packaging-option:has(input:checked) { padding: 11px; border: 2px solid var(--color-primary); background: var(--color-tint); }  /* 11 + 2 = 12 + 1: the card keeps its size */
 .packaging-option:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 .packaging-option__img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; border-radius: 8px; }
-.packaging-option__head { display: flex; align-items: center; gap: var(--space-2); font-size: 0.9375rem; font-weight: 600; }  /* 15px */
+.packaging-option__head { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-md); font-weight: 600; }  /* 15px */
 .packaging-option__head input { flex: none; width: 18px; height: 18px; margin: 0; accent-color: var(--color-primary); }
 .packaging-option__head input:focus-visible { outline: none; }   /* the whole card is ringed instead */
-.packaging-option__desc { font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }
-.packaging-option__fee { font-size: 0.9375rem; font-weight: 700; }
+.packaging-option__fee { font-size: var(--text-md); font-weight: 700; }
 @media (hover: hover) {
     .packaging-option:hover:not(:has(input:checked)) { border-color: var(--color-muted); }
 }
@@ -186,10 +183,10 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .box-panel__title { margin: 0; font-size: var(--text-xl); }
 .box-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
 .box-line { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border-soft); }
-.box-line__head { display: flex; justify-content: space-between; gap: var(--space-3); align-self: stretch; margin: 0; font-size: 0.9375rem; }  /* 15px: from the mockup */
+.box-line__head { display: flex; justify-content: space-between; gap: var(--space-3); align-self: stretch; margin: 0; font-size: var(--text-md); }  /* 15px: from the mockup */
 .box-line__name { font-weight: 600; }
 .box-line__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); align-self: stretch; }
-.box-line__meta { margin: 0; font-size: 0.8125rem; color: var(--color-muted); }  /* 13px: from the mockup */
+.box-line__meta { margin: 0; font-size: var(--text-xs); color: var(--color-muted); }  /* 13px: from the mockup */
 .box-sums { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; }
 .box-sums__row { display: flex; justify-content: space-between; gap: var(--space-3); font-size: var(--text-sm); }
 .box-sums__row dt, .box-sums__row dd { margin: 0; }
@@ -197,8 +194,8 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .box-sums__row--left dd, .box-sums__row--over dd { font-weight: 700; color: var(--color-text); }
 .box-sums__row--over { color: var(--color-danger-text); font-weight: 600; }   /* --color-danger has no dark value: dark red on a dark card */
 .box-sums__row--over dd { color: var(--color-danger-text); }
-.box-sums__row--total { align-items: baseline; margin-top: var(--space-2); font-size: 0.9375rem; }  /* 15px: from the mockup */
-.box-sums__row--total dd { font-size: 1.5rem; font-weight: 700; }  /* 24px: from the mockup */
+.box-sums__row--total { align-items: baseline; margin-top: var(--space-2); font-size: var(--text-md); }  /* 15px: from the mockup */
+.box-sums__row--total dd { font-size: var(--title-md); font-weight: 700; }  /* 24px: from the mockup */
 
 /* The budget bar: a <meter> (goods out of the budget), so its width needs no inline style (the CSP forbids those). */
 .budget-meter { display: block; width: 100%; height: 10px; border: 0; border-radius: 5px; background: var(--color-border-soft); appearance: none; }
@@ -206,16 +203,16 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .budget-meter::-webkit-meter-optimum-value { border-radius: 5px; background: var(--color-primary); }
 .budget-meter::-moz-meter-bar { border-radius: 5px; background: var(--color-primary); }
 
-.box-panel__note { margin: 0; padding: var(--space-3) 14px; border-radius: var(--radius-sm); background: var(--color-tint); color: var(--color-on-tint); font-size: 0.8125rem; line-height: 1.5; }  /* 14px, 13px: from the mockup */
+.box-panel__note { margin: 0; padding: var(--space-3) 14px; border-radius: var(--radius-sm); background: var(--color-tint); color: var(--color-on-tint); font-size: var(--text-xs); line-height: 1.5; }  /* 14px, 13px: from the mockup */
 .box-panel__note--warn { background: var(--color-warn-bg); color: var(--color-warn-text); }
 .box-panel__next { width: 100%; min-height: 48px; }  /* 48px: the mockup's big button */
-.box-panel__soon { margin: 0; font-size: 0.75rem; line-height: 1.5; color: var(--color-muted); }  /* 12px: as the mockup's small print */
+.box-panel__soon { margin: 0; font-size: var(--text-2xs); line-height: 1.5; color: var(--color-muted); }  /* 12px: as the mockup's small print */
 
 /* Phone: the box as a bar that stays at the bottom of the screen while the builder scrolls. */
 .box-bar {
     position: sticky;
     bottom: 0;
-    z-index: 1;
+    z-index: var(--z-bar);
     display: flex;
     flex-direction: column;
     gap: 10px;   /* from the mockup */

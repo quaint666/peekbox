@@ -3,9 +3,8 @@
 .order { display: flex; flex-direction: column; gap: var(--space-4); }
 
 /* The banner: green "received", or red "cancelled". */
-.order-banner { display: flex; flex-direction: column; gap: 10px; padding: 18px; border: 1px solid var(--color-success-border); border-radius: var(--radius-md); background: var(--color-tint); color: var(--color-on-tint); }
-.order-banner--cancelled { border-color: var(--color-danger-border); background: var(--color-danger-bg); color: var(--color-danger-text); }
-.order-banner__title { display: flex; align-items: flex-start; gap: var(--space-3); margin: 0; font-size: 1.375rem; line-height: 1.25; }  /* 22px */
+.order-banner { display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: var(--radius-md); }
+.order-banner__title { display: flex; align-items: flex-start; gap: var(--space-3); margin: 0; font-size: var(--title-sm); line-height: 1.25; }  /* 22px */
 .order-banner__title .icon { flex: none; width: 28px; height: 28px; margin-top: 2px; stroke-width: 2; }
 .order-banner__text { margin: 0; font-size: var(--text-sm); line-height: 1.6; }
 .order-banner__text a { color: inherit; font-weight: 600; }
@@ -14,13 +13,13 @@
 
 /* F51's status: four steps; the steps reached are filled. A phone shows bars with the label under them. */
 .order-status { display: flex; flex-direction: column; gap: 14px; padding: var(--space-4); border-radius: var(--radius-md); }
-.order-steps { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 0.75rem; }  /* 12px */
+.order-steps { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: var(--text-2xs); }  /* 12px */
 .order-steps__step { display: flex; flex: 1; flex-direction: column; gap: 6px; min-width: 0; color: var(--color-muted); font-weight: 600; }
 .order-steps__bar { height: 4px; border-radius: 2px; background: var(--color-border); }
 .order-steps__label { text-wrap: balance; }
 .order-steps__step--done { color: var(--color-text); }
 .order-steps__step--done .order-steps__bar { background: var(--color-primary); }
-.order-status__cancelled { align-self: flex-start; margin: 0; padding: var(--space-2) var(--space-4); border: 1px solid var(--color-danger-border); border-radius: 999px; background: var(--color-danger-bg); color: var(--color-danger-text); font-size: var(--text-sm); font-weight: 600; }
+.order-status__cancelled { align-self: flex-start; margin: 0; padding: var(--space-2) var(--space-4); border-radius: 999px; font-size: var(--text-sm); font-weight: 600; }
 .order-status__pay { margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
 .order-status__pay strong { color: var(--color-text); }
 
@@ -40,29 +39,29 @@
     border-top: 1px solid var(--color-border-soft);
 }
 .order-line__img { grid-area: img; width: 56px; height: 56px; object-fit: cover; border-radius: 10px; background: var(--color-border-soft); filter: var(--photo-filter); }
-.order-line__name { grid-area: name; font-size: 0.9375rem; font-weight: 600; }  /* 15px */
-.order-line__meta { grid-area: meta; font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }
-.order-line__price { grid-area: price; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.9375rem; text-align: right; }
-.order-line__each { font-size: 0.8125rem; color: var(--color-muted); font-weight: 400; }
-.order-line--packaging { display: flex; justify-content: space-between; font-size: 0.9375rem; }
+.order-line__name { grid-area: name; font-size: var(--text-md); font-weight: 600; }  /* 15px */
+.order-line__meta { grid-area: meta; }
+.order-line__price { grid-area: price; display: flex; flex-direction: column; align-items: flex-end; font-size: var(--text-md); text-align: right; }
+.order-line__each { font-size: var(--text-xs); color: var(--color-muted); font-weight: 400; }
+.order-line--packaging { display: flex; justify-content: space-between; font-size: var(--text-md); }
 
 /* Delivery, the sums and the way on. */
 .order-delivery { display: flex; flex-direction: column; gap: 14px; padding: var(--space-4); border-radius: var(--radius-md); }
 .order-facts { display: flex; flex-direction: column; gap: 6px; margin: 0; font-size: var(--text-sm); line-height: 1.6; }
 .order-facts dt { display: inline; color: var(--color-muted); }
 .order-facts dd { display: inline; margin: 0; }
-.order-sums { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding-top: var(--space-3); border-top: 1px solid var(--color-border-soft); font-size: 0.9375rem; }
+.order-sums { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding-top: var(--space-3); border-top: 1px solid var(--color-border-soft); font-size: var(--text-md); }
 .order-sums div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
 .order-sums dd { margin: 0; }
-.order-sums__total dd { font-size: 1.375rem; font-weight: 700; }  /* 22px */
+.order-sums__total dd { font-size: var(--title-sm); font-weight: 700; }  /* 22px */
 .order-actions { display: flex; flex-direction: column; gap: 10px; }
 .order-actions .btn { min-height: 48px; }
-.order-note { margin: 0; font-size: 0.75rem; line-height: 1.5; color: var(--color-muted); }
+.order-note { margin: 0; font-size: var(--text-2xs); line-height: 1.5; color: var(--color-muted); }
 
 @media (min-width: 900px) {
     .order { gap: 28px; }
     .order-banner { padding: 28px; border-radius: var(--radius-lg); }
-    .order-banner__title { align-items: center; font-size: 1.875rem; }  /* 30px */
+    .order-banner__title { align-items: center; font-size: var(--title-lg); }  /* 30px */
     .order-banner__title .icon { width: 32px; height: 32px; margin-top: 0; }
     .order-banner__text { font-size: var(--text-base); }
     .order-card__title { font-size: var(--text-xl); }

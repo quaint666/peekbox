@@ -18,7 +18,7 @@ public class TrackTests(PeekboxFixture fixture)
     private static Dictionary<string, string> Form(string number, string phone) => new() { ["number"] = number, ["phone"] = phone };
 
     // The alert of a page, as one string (empty when there is none).
-    private static string Alert(string html) => Regex.Match(html, @"<div class=""track-alert[^""]*""[\s\S]*?</div>").Value;
+    private static string Alert(string html) => Regex.Match(html, @"<div class=""alert[^""]*track-alert""[\s\S]*?</div>").Value;
 
     // An empty field comes back as null, and Razor leaves a null value attribute out.
     private static string Value(string typed) => typed.Length == 0 ? "" : $"value=\"{typed}\" ";
@@ -132,7 +132,7 @@ public class TrackTests(PeekboxFixture fixture)
             Assert.Equal(HttpStatusCode.OK, first.StatusCode);
             Assert.Equal(HttpStatusCode.TooManyRequests, second.StatusCode);
             Assert.Null(second.Headers.Location);
-            Assert.Contains("<div class=\"track-alert track-alert--wait\" role=\"alert\" tabindex=\"-1\" autofocus>", html);
+            Assert.Contains("<div class=\"alert alert--warn track-alert\" role=\"alert\" tabindex=\"-1\" autofocus>", html);
             Assert.Contains("<strong>Bạn đã thử quá nhiều lần.</strong> Hãy đợi vài phút rồi thử lại.", html);
             Assert.Contains($"value=\"{OrderNumber.Format(id)}\"", html);
             Assert.DoesNotContain("Không tìm thấy", html);
