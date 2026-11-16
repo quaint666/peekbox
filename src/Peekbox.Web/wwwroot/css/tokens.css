@@ -52,6 +52,7 @@
   --footer-top-width: 0px;
   --shadow-card: 0 1px 3px rgba(31, 42, 36, 0.07);
   --shadow-pop: 0 8px 24px rgba(31, 42, 36, 0.16);
+  --shadow-bar: 0 -4px 12px rgba(31, 42, 36, 0.08);   /* a bar fixed to the bottom of the screen (builder, phone) */
 
   /* Seasonal accents: Tết, 20/11, 8/3 */
   --accent-tet: #B3382A;
@@ -127,6 +128,7 @@
     --footer-top-width: 1px;
     --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
     --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-bar: 0 -4px 12px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -166,4 +168,5 @@
   --footer-top-width: 1px;
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
   --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-bar: 0 -4px 12px rgba(0, 0, 0, 0.5);
 }

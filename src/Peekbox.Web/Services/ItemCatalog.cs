@@ -5,9 +5,11 @@ namespace Peekbox.Web.Services;
 
 public sealed record CategoryChip(string Id, string Name);
 
+// Quantity is how many are in the hamper; Next says whether one more can go in (Pricing.StatusOf), and OverByVnd is how
+// far one more would pass the budget (the "Vượt X" button).
 public sealed record ItemCard(
     string Slug, string Name, string Brand, int WeightGrams, string Origin, DateOnly ExpiryDate,
-    long PriceVnd, string ImagePath, bool InDate, bool SoldOut);
+    long PriceVnd, string ImagePath, bool InDate, bool SoldOut, int Quantity, ItemStatus Next, long OverByVnd);
 
 // The sort menu of F19. The view writes the labels; the address uses the short names in ItemSorts.
 public enum ItemSort { Default, PriceAsc, PriceDesc, ExpiryLatest, NameAz }
@@ -45,7 +47,7 @@ public sealed class ItemCatalog(PeekboxDbContext db)
 {
     public const int SearchMaxLength = 100;
 
-    public async Task<ItemList> ListAsync(DateOnly deliveryDate, ItemFilter filter, CancellationToken cancellationToken = default)
+    public async Task<ItemList> ListAsync(DateOnly deliveryDate, ItemFilter filter, Box box, CancellationToken cancellationToken = default)
     {
         var categories = await db.Categories.AsNoTracking()
             .OrderBy(c => c.Id)
@@ -89,10 +91,14 @@ public sealed class ItemCatalog(PeekboxDbContext db)
         var rows = await products.ToListAsync(cancellationToken);
 
         // The shelf-life rule is checked here in C#, not in SQL, so it is written once (BuilderLimits.IsInDate).
+        // Whether one more fits is Pricing's call, through the box (the same rules the add button is checked with).
         var all = rows.Select(p => new ItemCard(
             p.Slug, p.Name, p.Brand, p.WeightGrams, p.Origin, p.ExpiryDate, p.PriceVnd, p.ImagePath,
             InDate: BuilderLimits.IsInDate(p.ExpiryDate, deliveryDate),
-            SoldOut: p.Stock == 0)).ToList();
+            SoldOut: p.Stock == 0,
+            Quantity: box.QuantityOf(p.Slug),
+            Next: box.StatusOf(new PricedItem(p.Slug, p.PriceVnd, p.ExpiryDate, p.Stock)),
+            OverByVnd: p.PriceVnd - box.Quote.RemainingVnd)).ToList();
 
         var shown = filter.OnlyInDate ? all.Where(i => i.InDate).ToList() : all;
         return new ItemList(categories, category, filter.OnlyInDate, search, sort, shown, all.Count - shown.Count);

@@ -10,6 +10,8 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
 
     public DbSet<Hamper> Hampers => Set<Hamper>();
 
+    public DbSet<HamperItem> HamperItems => Set<HamperItem>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Accent-free search on the builder ("mut" finds "Mứt", "dak lak" finds "Đắk Lắk"). The extension comes with
@@ -46,6 +48,15 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             hamper.HasIndex(h => h.Token).IsUnique();
             hamper.Property(h => h.Token).HasMaxLength(64);
             hamper.ToTable(table => table.HasCheckConstraint("CK_Hampers_BudgetVnd", "\"BudgetVnd\" >= 0"));
+        });
+
+        modelBuilder.Entity<HamperItem>(line =>
+        {
+            line.HasKey(l => new { l.HamperId, l.ProductId });
+            // Deleting a hamper deletes its lines; an item that is in someone's hamper cannot be deleted by accident.
+            line.HasOne(l => l.Hamper).WithMany(h => h.Items).HasForeignKey(l => l.HamperId).OnDelete(DeleteBehavior.Cascade);
+            line.HasOne(l => l.Product).WithMany().HasForeignKey(l => l.ProductId).OnDelete(DeleteBehavior.Restrict);
+            line.ToTable(table => table.HasCheckConstraint("CK_HamperItems_Quantity", "\"Quantity\" > 0"));
         });
     }
 }

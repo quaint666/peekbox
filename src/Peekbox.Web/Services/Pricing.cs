@@ -26,7 +26,7 @@ public static class Pricing
         {
             if (items.TryGetValue(line.Slug, out var item))
             {
-                goods += item.PriceVnd * line.Quantity;
+                goods += LineVnd(item, line.Quantity);
             }
             else
             {
@@ -37,6 +37,9 @@ public static class Pricing
         var remaining = budgetVnd - goods;
         return new Quote(goods, packagingVnd, goods + packagingVnd, remaining, remaining < 0, missing);
     }
+
+    // One line of the hamper: the price times how many.
+    public static long LineVnd(PricedItem item, int quantity) => item.PriceVnd * quantity;
 
     // Whether one more of this item can go into the hamper. The expiry rule waits until a delivery date is chosen.
     public static ItemStatus StatusOf(
