@@ -1,0 +1,135 @@
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model Box
+@{
+    ViewData["Title"] = "Xem lại hộp quà";
+    ViewData["Nav"] = SiteLinks.Builder.Key;
+    var packaging = Model.Packaging!;
+    var outOfDate = Model.OutOfDate;
+    var delivery = VnDate.Day(Model.DeliveryDate!.Value);
+    var columnSummary = new ReviewSummary(Model, "");
+    var sheetSummary = new ReviewSummary(Model, "-sheet");
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/builder.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/review.css" asp-append-version="true">
+}
+
+@* Step 4 (F34 to F36, mockups 04, 29 and 30): the hamper read-only, with links back to change it (decision 2026-11-15). *@
+<div class="builder review">
+    <div class="builder__head">
+        <h1 class="builder__title">Xem lại hộp quà</h1>
+    </div>
+    @* Outside the head, so it stays at the top of the screen for the whole page (sticky only works inside its parent). *@
+    <partial name="_BuilderSteps" model="3" />
+
+    @if (outOfDate.Count > 0)
+    {
+        @* F35: the order is blocked until the item goes or the date changes. *@
+        <section class="review-block" aria-labelledby="block-title">
+            <partial name="_Icon" model='"warning"' />
+            <div>
+                <h2 class="review-block__title" id="block-title">Chưa thể đặt hàng: @outOfDate.Count món hết hạn trước ngày giao</h2>
+                <p class="review-block__text">@string.Join(", ", outOfDate.Select(l => $"{l.Name} hết hạn ngày {VnDate.Day(l.ExpiryDate)}")), còn ngày giao của bạn là @delivery. Mỗi món cần còn hạn thêm @BuilderLimits.ShelfMarginDays ngày dự phòng sau ngày giao. Hãy bỏ @(outOfDate.Count == 1 ? "món này" : "các món này") hoặc đổi ngày giao để tiếp tục.</p>
+            </div>
+        </section>
+    }
+
+    <div class="review-main">
+        <div class="review-cards">
+            <section class="card review-card" aria-labelledby="budget-title">
+                <div class="review-card__head">
+                    <h2 class="review-card__title" id="budget-title">Ngân sách và ngày giao</h2>
+                    <a class="review-card__edit" href="@SiteLinks.Builder.Href" aria-label="Sửa ngân sách và ngày giao">Sửa</a>
+                </div>
+                <dl class="review-facts">
+                    <div><dt>Ngân sách</dt><dd>@Vnd.Format(Model.BudgetVnd)</dd></div>
+                    <div><dt>Ngày giao hàng</dt><dd>@delivery</dd></div>
+                </dl>
+            </section>
+
+            <section class="card review-card" aria-labelledby="packaging-title">
+                <div class="review-card__head">
+                    <h2 class="review-card__title" id="packaging-title">Kiểu đóng gói</h2>
+                    <a class="review-card__edit" href="@(SiteLinks.Builder.Href)#dong-goi" aria-label="Đổi kiểu đóng gói">Đổi</a>
+                </div>
+                <div class="review-packaging">
+                    <img class="review-packaging__img" src="@packaging.ImagePath" alt="" width="600" height="448">
+                    <div class="review-packaging__text">
+                        <p class="review-packaging__name">@packaging.Name</p>
+                        <p class="review-packaging__desc">@packaging.Description</p>
+                    </div>
+                    <p class="review-packaging__fee">@(packaging.FeeVnd == 0 ? "Miễn phí" : Vnd.Format(packaging.FeeVnd))</p>
+                </div>
+            </section>
+
+            <section class="card review-card" aria-labelledby="lines-title">
+                <h2 class="review-card__title" id="lines-title">Các món trong hộp</h2>
+                <ul class="review-lines">
+                    @foreach (var line in Model.Lines)
+                    {
+                        <li class="review-line@(line.InDate ? "" : " review-line--expired")">
+                            <img class="review-line__img" src="@line.ImagePath" alt="" width="508" height="508" loading="lazy">
+                            <p class="review-line__name">@line.Name</p>
+                            <p class="review-line__price">
+                                @if (line.Quantity > 1)
+                                {
+                                    <span class="review-line__each">@line.Quantity × @Vnd.Format(line.PriceVnd)</span>
+                                }
+                                <strong>@Vnd.Format(line.LineVnd)</strong>
+                            </p>
+                            <div class="review-line__details">
+                                <p class="review-line__meta">@line.Brand · @line.WeightGrams g · Xuất xứ @line.Origin</p>
+                                @if (line.InDate)
+                                {
+                                    <span class="badge">HSD @VnDate.Month(line.ExpiryDate) · đủ hạn</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge--danger">HSD @VnDate.Day(line.ExpiryDate), hết hạn trước ngày giao</span>
+                                }
+                            </div>
+                            @if (!line.InDate)
+                            {
+                                <form class="review-line__remove" method="post" action="@(SiteLinks.Builder.Href)/quantity?from=review" asp-antiforgery="true">
+                                    <input type="hidden" name="slug" value="@line.Slug">
+                                    <button type="submit" class="btn btn--danger" name="quantity" value="0" aria-label="Bỏ @line.Name khỏi hộp">Bỏ món này</button>
+                                </form>
+                            }
+                        </li>
+                    }
+                </ul>
+                <a class="review-card__back" href="@(SiteLinks.Builder.Href)#chon-mon">Quay lại chỉnh sửa món</a>
+            </section>
+        </div>
+
+        @* Wide screens: the summary in the right column. *@
+        <aside class="card review-summary" aria-labelledby="summary-title">
+            <h2 class="review-summary__title" id="summary-title">Tổng kết</h2>
+            <partial name="_ReviewSummary" model="columnSummary" />
+        </aside>
+    </div>
+
+    @* Phone: a bar at the bottom of the screen; "Xem tổng kết" opens the summary as a sheet (mockup 29). The sheet is a
+       popover, which the browser opens and closes without a script (Escape and a tap outside close it too). *@
+    <div class="review-bar" role="region" aria-label="Tổng kết hộp quà">
+        <p class="review-bar__line">
+            <button type="button" class="review-bar__open" popovertarget="tong-ket" aria-controls="tong-ket">Xem tổng kết <partial name="_Icon" model='"chevron-up"' /></button>
+            <span>@Model.Count món · @(Model.Quote.OverBudget ? "Vượt" : "Còn lại") <strong>@Vnd.Format(Model.LeftOrOverVnd)</strong></span>
+        </p>
+        <div class="review-bar__foot">
+            <p class="review-bar__total"><span>Tổng cộng</span> <strong>@Vnd.Format(Model.Quote.TotalVnd)</strong></p>
+            <button type="button" class="btn btn--primary review-bar__cart" disabled aria-describedby="cart-reason-bar">Thêm vào giỏ hàng</button>
+            <p class="visually-hidden" id="cart-reason-bar">@(outOfDate.Count > 0 ? "Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục." : "Giỏ hàng sẽ có trong bản sau.")</p>
+        </div>
+    </div>
+
+    <div class="review-sheet" id="tong-ket" popover aria-labelledby="sheet-title">
+        <div class="review-sheet__head">
+            <h2 class="review-summary__title" id="sheet-title">Tổng kết</h2>
+            <button type="button" class="review-sheet__close" popovertarget="tong-ket" popovertargetaction="hide">Thu gọn <partial name="_Icon" model='"chevron-down"' /></button>
+        </div>
+        <partial name="_ReviewSummary" model="sheetSummary" />
+    </div>
+</div>

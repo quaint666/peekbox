@@ -46,4 +46,19 @@ public class SeedDataTests
             Assert.Throws<JsonException>(() => SeedData.Parse(node.ToJsonString()));
         }
     }
+
+    // The same for packaging.json: a missing key stops the load instead of becoming a free, nameless packaging.
+    [Fact]
+    public void A_missing_key_inside_the_first_packaging_stops_the_load()
+    {
+        var keys = KeysRead(typeof(SeedPackaging));
+        Assert.NotEmpty(keys);
+
+        foreach (var key in keys)
+        {
+            var node = JsonNode.Parse(File.ReadAllText(SeedData.PackagingFilePath))!.AsObject();
+            Assert.True(node["packaging"]!.AsArray()[0]!.AsObject().Remove(key), $"packaging[0].{key} is not in the file");
+            Assert.Throws<JsonException>(() => SeedData.ParsePackaging(node.ToJsonString()));
+        }
+    }
 }

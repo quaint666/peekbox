@@ -100,7 +100,9 @@ function applyPage(fresh: Document): void {
 
   swap('#hop-cua-ban', fresh);
   swap('.box-bar', fresh);
+  // Step 3: the lock note while the box is empty, the packaging choices once it is not. Only one is on a page.
   swap('#packaging-lock', fresh, document.querySelector('.item-grid'));
+  swap('#dong-goi', fresh, document.querySelector('.item-grid'));
 }
 
 // Focus goes back to the same button; when it is gone or off (− at 1 brings "Thêm" back, + turns off at the stock or
@@ -183,6 +185,40 @@ document.addEventListener('submit', (event) => {
     })
     .finally(() => {
       sending = false;
+      form.removeAttribute('aria-busy');
+    });
+});
+
+// ---- Packaging (F33) ----
+// A new choice is saved at once, in the background, and "Hộp của bạn" and the phone bar are swapped in from the page
+// the server sends back (the total includes the packaging fee). The radios themselves are not swapped, so focus and the
+// arrow keys stay where they are. Listened for on the document: the section is replaced when the box changes.
+document.addEventListener('change', (event) => {
+  const radio = event.target;
+  if (!(radio instanceof HTMLInputElement) || radio.type !== 'radio' || radio.form?.id !== 'dong-goi-form') {
+    return;
+  }
+
+  const form = radio.form;
+  const name = radio.closest('.packaging-option')?.querySelector('.packaging-option__name')?.textContent?.trim() ?? '';
+  form.setAttribute('aria-busy', 'true');
+  fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin' })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const fresh = new DOMParser().parseFromString(await response.text(), 'text/html');
+      swap('#hop-cua-ban', fresh);
+      swap('.box-bar', fresh);
+      const total = document.querySelector('#hop-cua-ban .box-sums__row--total dd')?.textContent?.trim() ?? '';
+      announce(`Đã chọn ${name}. Tổng cộng ${total}.`);
+    })
+    .catch(() => {
+      // Send it the plain way: the server saves it and the reloaded page shows the choice.
+      form.submit();
+    })
+    .finally(() => {
       form.removeAttribute('aria-busy');
     });
 });

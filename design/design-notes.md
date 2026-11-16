@@ -67,7 +67,7 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - Coupon error: the field gets the red border and a message under it; the customer can continue with the field empty.
 - An item that sells out during checkout is removed from the box with a notice and nothing is charged; the customer picks a replacement or continues with fewer items.
 - Admin login is locked after repeated wrong attempts: [5] attempts and [15 phút] are placeholders for the team to set.
-- Dark mode: unchosen options (payment, packaging, status chips) use the page colour `#121513`; the chosen one keeps the sage tint.
+- Dark mode: unchosen payment options and status chips use the page colour `#121513`; unchosen packaging cards use the card colour `#1B201C`, as drawn in the dark mockup 27 (corrected 2026-11-16: this line used to say packaging too). The chosen one keeps the sage tint.
 
 ## Quality-of-life features (added after comparing Bloomy and live shops)
 - **Search on the builder.** A search box above the category chips with suggestions grouped as items and categories. Search must ignore accents and case: typing "mut" finds "Mứt". Pressing Enter shows all results. A sort menu (default, price low to high, price high to low, expiry latest first, name A to Z) sits beside it.
@@ -105,6 +105,9 @@ The second highlight of the home page, after the hero. A large Tết card on the
 Redrawn 2026-11-16 for the first build (M1, A3). Left: one square photo (each item has one photo). Right: a category chip, the name and brand, the price with "Đã gồm thuế", three fact chips (expiry, origin, weight), the in-date notice, the budget card (budget, bar, what is left, then the add control of the builder: "Thêm vào hộp", which becomes the −/+ pill once the item is in the box) and three small promises (expiry checked, delivery on the chosen date, ZaloPay or cash). Under it: one "Mô tả" card with the description and a "Thông tin chi tiết" table (category, brand, weight, origin, expiry; no production date, which the data does not have). On a phone the add bar (budget, bar, what is left, the add control) stays at the bottom of the screen; the desktop image shows the item before it is added, the phone image after (1 in the box).
 
 Left out until their slices, and drawn earlier (the old images are in the git history before 2026-11-16): the thumbnails, the rating and reviews, the share button, the amber allergen line and the ingredients, allergens and storage box (F29, until there is real text), the tabs, "Hay đi cùng món này" and "Món bạn vừa xem". States 24 (Thông tin chi tiết tab: category, packaging and producer) and 25 (Giao hàng và đổi trả tab: delivery, fee shown before paying, payment, the expiry rule and the return period; the fee rule and the number of days are placeholders) still show the tabbed page; they are the design for when the tabs come back.
+
+## Review page
+Mockups 04, 29 and 30 draw "Thêm vào giỏ hàng" as a working button. Until the cart is built (the slice after packaging and review) the page shows it disabled with "Giỏ hàng sẽ có trong bản sau." under it; an out-of-date item's reason ("Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.") takes its place, as in 30. The mockups are not redrawn for this. The line "Giá là giá mẫu cho bản thiết kế." is a note for the design, not page text, and is left out.
 
 ## Admin account
 The bottom of the admin sidebar shows a chip: initials in a green circle, the name, the role, and a bordered "Đăng xuất" button with an icon. On a phone the header has an initials button (44 px) that opens a menu with the name, Tài khoản and Đăng xuất (state 23). The name and role are placeholders.

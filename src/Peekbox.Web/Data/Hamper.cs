@@ -14,6 +14,12 @@ public class Hamper
     // Empty until the visitor picks a date.
     public DateOnly? DeliveryDate { get; set; }
 
+    // Empty until the visitor picks one; until then the box uses the first packaging (HamperService.BoxAsync). Not a
+    // database default: migrations run before the seed, so a default "kraft" would point at a row that is not there yet.
+    public string? PackagingId { get; set; }
+
+    public Packaging? Packaging { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; }
 
     public DateTimeOffset UpdatedAt { get; set; }
