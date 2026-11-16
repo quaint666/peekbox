@@ -19,7 +19,7 @@ public class ItemsController(BuilderLimits limits, HamperService hampers, ItemCa
             return NotFound();
         }
 
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         var box = hamper is not null && limits.ItemsOpen(hamper.DeliveryDate) ? await hampers.BoxAsync(hamper, cancellationToken) : null;
         return View(new ItemViewModel(item, box));
     }

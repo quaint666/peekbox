@@ -14,6 +14,12 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
 
     public DbSet<Packaging> Packagings => Set<Packaging>();
 
+    public DbSet<Ward> Wards => Set<Ward>();
+
+    public DbSet<Order> Orders => Set<Order>();
+
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Accent-free search on the builder ("mut" finds "Mứt", "dak lak" finds "Đắk Lắk"). The extension comes with
@@ -53,6 +59,9 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             // A packaging that some hamper uses cannot be deleted by accident.
             hamper.HasOne(h => h.Packaging).WithMany().HasForeignKey(h => h.PackagingId).OnDelete(DeleteBehavior.Restrict);
             hamper.ToTable(table => table.HasCheckConstraint("CK_Hampers_BudgetVnd", "\"BudgetVnd\" >= 0"));
+            // One hamper makes at most one order; an order is never deleted while a hamper points at it.
+            hamper.HasIndex(h => h.OrderId).IsUnique();
+            hamper.HasOne(h => h.Order).WithOne().HasForeignKey<Hamper>(h => h.OrderId).OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Packaging>(packaging =>
@@ -62,6 +71,57 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             packaging.Property(p => p.Description).HasMaxLength(300);
             packaging.Property(p => p.ImagePath).HasMaxLength(300);
             packaging.ToTable(table => table.HasCheckConstraint("CK_Packagings_FeeVnd", "\"FeeVnd\" >= 0"));
+        });
+
+        modelBuilder.Entity<Ward>(ward =>
+        {
+            ward.HasIndex(w => w.Name).IsUnique();
+            ward.Property(w => w.Name).HasMaxLength(100);
+            ward.ToTable(table => table.HasCheckConstraint("CK_Wards_Ring", "\"Ring\" BETWEEN 1 AND 3"));
+        });
+
+        modelBuilder.Entity<Order>(order =>
+        {
+            order.HasIndex(o => o.Token).IsUnique();
+            order.Property(o => o.Token).HasMaxLength(64);
+            // Enums as text, not EF's default number, so the rows read plainly in SQL and in the admin later.
+            order.Property(o => o.Status).HasConversion<string>().HasMaxLength(20);
+            order.Property(o => o.PaymentMethod).HasConversion<string>().HasMaxLength(20);
+            order.Property(o => o.PaymentStatus).HasConversion<string>().HasMaxLength(20);
+            order.Property(o => o.DeliveryWindow).HasConversion<string>().HasMaxLength(20);
+            order.Property(o => o.SenderName).HasMaxLength(100);
+            order.Property(o => o.SenderPhone).HasMaxLength(10);
+            order.Property(o => o.SenderEmail).HasMaxLength(254);
+            order.Property(o => o.RecipientName).HasMaxLength(100);
+            order.Property(o => o.RecipientPhone).HasMaxLength(10);
+            order.Property(o => o.WardName).HasMaxLength(100);
+            order.Property(o => o.Street).HasMaxLength(300);
+            order.Property(o => o.PackagingName).HasMaxLength(100);
+            // The admin's day view (M6) lists orders by delivery date; the track page finds one by id and phone.
+            order.HasIndex(o => o.DeliveryDate);
+            order.HasOne(o => o.Ward).WithMany().HasForeignKey(o => o.WardId).OnDelete(DeleteBehavior.Restrict);
+            order.ToTable(table =>
+            {
+                table.HasCheckConstraint("CK_Orders_Money",
+                    "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND " +
+                    "\"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\"");
+                table.HasCheckConstraint("CK_Orders_Phones", "\"SenderPhone\" ~ '^0[0-9]{9}$' AND \"RecipientPhone\" ~ '^0[0-9]{9}$'");
+            });
+        });
+
+        modelBuilder.Entity<OrderItem>(line =>
+        {
+            line.Property(l => l.Name).HasMaxLength(200);
+            line.Property(l => l.Brand).HasMaxLength(100);
+            line.Property(l => l.Origin).HasMaxLength(100);
+            // Deleting an order deletes its lines; an item that was ever ordered cannot be deleted by accident.
+            line.HasOne(l => l.Order).WithMany(o => o.Items).HasForeignKey(l => l.OrderId).OnDelete(DeleteBehavior.Cascade);
+            line.HasOne(l => l.Product).WithMany().HasForeignKey(l => l.ProductId).OnDelete(DeleteBehavior.Restrict);
+            line.ToTable(table =>
+            {
+                table.HasCheckConstraint("CK_OrderItems_Quantity", "\"Quantity\" > 0");
+                table.HasCheckConstraint("CK_OrderItems_UnitPriceVnd", "\"UnitPriceVnd\" >= 0");
+            });
         });
 
         modelBuilder.Entity<HamperItem>(line =>

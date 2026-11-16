@@ -9,7 +9,7 @@ public sealed class CartLinkViewComponent(HamperService hampers) : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync(bool current)
     {
-        var count = await hampers.CartCountAsync(Request.Cookies[HamperService.CookieName], HttpContext.RequestAborted);
+        var count = await hampers.CartCountAsync(HamperCookie.Read(Request), HttpContext.RequestAborted);
         return View(new CartLink(count, current));
     }
 }

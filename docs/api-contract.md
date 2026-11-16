@@ -14,11 +14,11 @@ Every endpoint says which functions (F-numbers, `docs/functions.md`) it serves.
 - **Error codes** (used for JSON errors and for the messages shown on pages): `validation_failed`, `item_not_found`, `item_sold_out`, `item_expired_for_date`, `over_budget`, `delivery_day_full`, `unknown_packaging`, `coupon_invalid`, `coupon_expired`, `payment_failed`, `rate_limited`. JSON errors use `application/problem+json` (RFC 9457) with `type`, `title`, `status`, `detail`, `code` and `errors`.
 - **Safe to repeat:** placing an order must never create two orders (the Back button, a double click). The server checks that the hamper was not already ordered.
 - **Security headers** (including the content security policy) are set by the server on every response, not by a `<meta>` tag.
-- **Rate limit** on the order actions (Bloomy used 20 per 15 minutes; a value to decide).
+- **Rate limits:** 20 orders and 10 order lookups per 15 minutes per address (`appsettings.json`, `RateLimits`). A refused request gets its page with a note and a 429.
 
 ## Pages and forms
 
-Pages are Razor views, and every change a visitor makes (set the budget, add or remove an item, check out) is a form post that redirects to the next page. The list of routes is settled in the M0 pull request.
+Pages are Razor views, and every change a visitor makes (set the budget, add or remove an item, check out) is a form post that redirects to the next page. Every address is in `Navigation/SiteLinks.cs`, each action names its own route, and `RoutesTests` lists them all.
 
 ## JSON endpoints
 

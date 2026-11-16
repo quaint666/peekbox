@@ -3,9 +3,11 @@
 }
 <header class="site-header">
     <div class="site-header__inner container">
-        <a class="site-header__brand" href="@SiteLinks.Home.Href">
-            <img class="logo logo--light" src="~/images/logo/peekbox-logo-sage.svg" alt="Peekbox" height="34">
-            <img class="logo logo--dark" src="~/images/logo/peekbox-logo-dark.svg" alt="" height="34">
+        @* The link carries the name: CSS hides one of the two logos, and a hidden image's alt text is not read, so with
+           the name on an image the link had none in one theme. 110 × 34: the logos' shape (2102 × 648). *@
+        <a class="site-header__brand" href="@SiteLinks.Home.Href" aria-label="Peekbox, trang chủ">
+            <img class="logo logo--light" src="~/images/logo/peekbox-logo-sage.svg" alt="" width="110" height="34">
+            <img class="logo logo--dark" src="~/images/logo/peekbox-logo-dark.svg" alt="" width="110" height="34">
         </a>
         <nav class="site-nav" id="site-nav" aria-label="Menu chính">
             @foreach (var link in SiteLinks.Header)

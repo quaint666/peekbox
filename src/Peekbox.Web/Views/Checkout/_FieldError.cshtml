@@ -1,0 +1,6 @@
+@model (string? Message, string Field)
+@* The message under a checkout field (F46), read with the field through aria-describedby. Same look as the builder's. *@
+@if (Model.Message is not null)
+{
+    <p class="field__error" id="@(Model.Field)-error">@Model.Message</p>
+}

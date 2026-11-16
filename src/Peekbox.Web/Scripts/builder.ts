@@ -3,6 +3,8 @@
 // filters as soon as the checkbox or the sort menu changes (the search box with Enter, not on every letter), and sends
 // the add forms in the background so the page does not jump.
 
+import { fetchPage } from './lib/page.js';
+
 const filters = document.querySelector<HTMLFormElement>('form.item-filters');
 
 // Arrow keys on a closed menu change its value at once. Sending then would reload the page on the first press, so a
@@ -168,13 +170,8 @@ document.addEventListener('submit', (event) => {
   sending = true;
   form.setAttribute('aria-busy', 'true');
 
-  fetch(form.action, { method: 'POST', body: new FormData(form, submitter), credentials: 'same-origin' })
-    .then(async (response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const fresh = new DOMParser().parseFromString(await response.text(), 'text/html');
+  fetchPage(form.action, { method: 'POST', body: new FormData(form, submitter) })
+    .then(({ page: fresh }) => {
       applyPage(fresh);
       refocus(place, slug, step);
       announce(message(name, Math.max(asked, 0), quantityIn(document, slug)));
@@ -194,6 +191,11 @@ document.addEventListener('submit', (event) => {
 // A new choice is saved at once, in the background, and "Hộp của bạn" and the phone bar are swapped in from the page
 // the server sends back (the total includes the packaging fee). The radios themselves are not swapped, so focus and the
 // arrow keys stay where they are. Listened for on the document: the section is replaced when the box changes.
+// Saves go one at a time, in the order chosen, and a choice already replaced by a newer one is not sent: sent side by
+// side, two saves could reach the server in either order and leave saved a packaging that the screen does not show.
+let packagingAsked = 0;
+let packagingQueue: Promise<void> = Promise.resolve();
+
 document.addEventListener('change', (event) => {
   const radio = event.target;
   if (!(radio instanceof HTMLInputElement) || radio.type !== 'radio' || radio.form?.id !== 'dong-goi-form') {
@@ -202,26 +204,29 @@ document.addEventListener('change', (event) => {
 
   const form = radio.form;
   const name = radio.closest('.packaging-option')?.querySelector('.packaging-option__name')?.textContent?.trim() ?? '';
+  const body = new FormData(form); // the choice as it is now, not as it is when its turn comes
+  const asked = ++packagingAsked;
   form.setAttribute('aria-busy', 'true');
-  fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin' })
-    .then(async (response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
+  packagingQueue = packagingQueue.then(async () => {
+    if (asked !== packagingAsked) {
+      return; // a newer choice is waiting: this one would only be overwritten
+    }
 
-      const fresh = new DOMParser().parseFromString(await response.text(), 'text/html');
-      swap('#hop-cua-ban', fresh);
-      swap('.box-bar', fresh);
-      const total = document.querySelector('#hop-cua-ban .box-sums__row--total dd')?.textContent?.trim() ?? '';
-      announce(`Đã chọn ${name}. Tổng cộng ${total}.`);
-    })
-    .catch(() => {
+    try {
+      const { page: fresh } = await fetchPage(form.action, { method: 'POST', body });
+      if (asked === packagingAsked) {
+        swap('#hop-cua-ban', fresh);
+        swap('.box-bar', fresh);
+        const total = document.querySelector('#hop-cua-ban .box-sums__row--total dd')?.textContent?.trim() ?? '';
+        announce(`Đã chọn ${name}. Tổng cộng ${total}.`);
+      }
+    } catch {
       // Send it the plain way: the server saves it and the reloaded page shows the choice.
       form.submit();
-    })
-    .finally(() => {
-      form.removeAttribute('aria-busy');
-    });
+    } finally {
+      if (asked === packagingAsked) {
+        form.removeAttribute('aria-busy');
+      }
+    }
+  });
 });
-
-export {};

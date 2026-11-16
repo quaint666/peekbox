@@ -53,7 +53,6 @@ a { color: var(--color-primary-text); }
 }
 
 .page { padding-block: var(--space-6); }
-.muted { color: var(--color-muted); }
 
 /* Text for screen readers only. */
 .visually-hidden {
@@ -73,7 +72,7 @@ a { color: var(--color-primary-text); }
   position: absolute;
   left: var(--space-4);
   top: -100px;
-  z-index: 100;
+  z-index: var(--z-skip-link);
   padding: var(--space-3) var(--space-4);
   background: var(--color-primary);
   color: var(--color-on-primary);

@@ -56,6 +56,9 @@ namespace Peekbox.Web.Migrations
                     b.Property<DateOnly?>("DeliveryDate")
                         .HasColumnType("date");
 
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PackagingId")
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
@@ -69,6 +72,9 @@ namespace Peekbox.Web.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
 
                     b.HasIndex("PackagingId");
 
@@ -99,6 +105,172 @@ namespace Peekbox.Web.Migrations
                     b.ToTable("HamperItems", t =>
                         {
                             t.HasCheckConstraint("CK_HamperItems_Quantity", "\"Quantity\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("DeliveryDate")
+                        .HasColumnType("date");
+
+                    b.Property<long>("DeliveryFeeVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DeliveryWindow")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<long>("GoodsVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PackagingFeeVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PackagingName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("RecipientName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RecipientPhone")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("SenderEmail")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)");
+
+                    b.Property<string>("SenderName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("SenderPhone")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<long>("TotalVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WardId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WardName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryDate");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("WardId");
+
+                    b.ToTable("Orders", t =>
+                        {
+                            t.HasCheckConstraint("CK_Orders_Money", "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND \"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\"");
+
+                            t.HasCheckConstraint("CK_Orders_Phones", "\"SenderPhone\" ~ '^0[0-9]{9}$' AND \"RecipientPhone\" ~ '^0[0-9]{9}$'");
+                        });
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateOnly>("ExpiryDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UnitPriceVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WeightGrams")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItems", t =>
+                        {
+                            t.HasCheckConstraint("CK_OrderItems_Quantity", "\"Quantity\" > 0");
+
+                            t.HasCheckConstraint("CK_OrderItems_UnitPriceVnd", "\"UnitPriceVnd\" >= 0");
                         });
                 });
 
@@ -207,12 +379,49 @@ namespace Peekbox.Web.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.Ward", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Ring")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Wards", t =>
+                        {
+                            t.HasCheckConstraint("CK_Wards_Ring", "\"Ring\" BETWEEN 1 AND 3");
+                        });
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Hamper", b =>
                 {
+                    b.HasOne("Peekbox.Web.Data.Order", "Order")
+                        .WithOne()
+                        .HasForeignKey("Peekbox.Web.Data.Hamper", "OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Peekbox.Web.Data.Packaging", "Packaging")
                         .WithMany()
                         .HasForeignKey("PackagingId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Order");
 
                     b.Navigation("Packaging");
                 });
@@ -236,6 +445,36 @@ namespace Peekbox.Web.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.Order", b =>
+                {
+                    b.HasOne("Peekbox.Web.Data.Ward", "Ward")
+                        .WithMany()
+                        .HasForeignKey("WardId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Ward");
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.OrderItem", b =>
+                {
+                    b.HasOne("Peekbox.Web.Data.Order", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Peekbox.Web.Data.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Product", b =>
                 {
                     b.HasOne("Peekbox.Web.Data.Category", "Category")
@@ -253,6 +492,11 @@ namespace Peekbox.Web.Migrations
                 });
 
             modelBuilder.Entity("Peekbox.Web.Data.Hamper", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.Order", b =>
                 {
                     b.Navigation("Items");
                 });

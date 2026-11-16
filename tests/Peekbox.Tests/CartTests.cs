@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Data;
 using Peekbox.Web.Services;
 
+using static Peekbox.Tests.TestDates;
+
 namespace Peekbox.Tests;
 
 // The cart (F37, F39, F40), "Thêm vào giỏ hàng" (F36) and the header's count. The cart is the visitor's hamper once it
@@ -15,8 +17,6 @@ namespace Peekbox.Tests;
 public class CartTests(PeekboxFixture fixture)
 {
     private static readonly DateOnly Delivery = new(2027, 1, 15);
-
-    private static DateOnly TodayInVietnam => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
 
     private sealed class Visitor(HttpClient client, string? hamperToken)
     {
@@ -61,7 +61,7 @@ public class CartTests(PeekboxFixture fixture)
 
         private Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            var cookies = new[] { hamperToken is null ? "" : $"{HamperService.CookieName}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0).ToList();
+            var cookies = new[] { hamperToken is null ? "" : $"{HamperCookie.Name}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0).ToList();
             if (cookies.Count > 0)
             {
                 request.Headers.Add("Cookie", string.Join("; ", cookies));
@@ -71,8 +71,6 @@ public class CartTests(PeekboxFixture fixture)
         }
     }
 
-    private HttpClient Client() => fixture.Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
-
     private async Task<Visitor> VisitorAsync(DateOnly? delivery, params (string Slug, int Quantity)[] lines)
     {
         var token = Guid.NewGuid().ToString("N");
@@ -81,7 +79,7 @@ public class CartTests(PeekboxFixture fixture)
             db.Hampers.Add(new Hamper { Token = token, BudgetVnd = 500_000, DeliveryDate = delivery, CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow });
             return db.SaveChangesAsync();
         });
-        var visitor = new Visitor(Client(), token);
+        var visitor = new Visitor(fixture.Client(), token);
         foreach (var (slug, quantity) in lines)
         {
             await visitor.PostAsync("/builder/quantity", new() { ["slug"] = slug, ["quantity"] = quantity.ToString(CultureInfo.InvariantCulture) });
@@ -100,7 +98,7 @@ public class CartTests(PeekboxFixture fixture)
     [Fact]
     public async Task Without_a_hamper_the_cart_is_empty_and_the_header_says_0()
     {
-        var html = await new Visitor(Client(), null).PageAsync("/cart");
+        var html = await new Visitor(fixture.Client(), null).PageAsync("/cart");
 
         Assert.Contains("<title>Giỏ hàng · Peekbox</title>", html);
         Assert.Contains("<h2 class=\"cart-empty__title\" id=\"empty-title\">Giỏ hàng đang trống</h2>", html);
@@ -136,7 +134,7 @@ public class CartTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task The_cart_shows_the_box_and_its_totals_and_checkout_waits_for_the_next_slice()
+    public async Task The_cart_shows_the_box_and_its_totals_and_leads_to_checkout()
     {
         var visitor = await VisitorAsync(Delivery, ("tra-sen", 1), ("hat-dieu-rang-muoi", 1), ("mut-gung", 1));
         await visitor.PostAsync("/builder/packaging", new() { ["packaging"] = "hard-bow" });
@@ -144,7 +142,7 @@ public class CartTests(PeekboxFixture fixture)
         var html = await visitor.PageAsync("/cart");
 
         Assert.Contains("aria-label=\"Giỏ hàng, 1 hộp\" aria-current=\"page\"", CartLink(html));
-        Assert.Contains("<p class=\"cart-box__meta\">Giao ngày 15/01/2027 · Hộp cứng có nơ · Ngân sách 500.000đ</p>", html);
+        Assert.Contains("<p class=\"cart-box__meta meta\">Giao ngày 15/01/2027 · Hộp cứng có nơ · Ngân sách 500.000đ</p>", html);
         Assert.Contains("<a class=\"btn btn--outline\" href=\"/builder#chon-mon\">Sửa hộp</a>", html);
         Assert.Contains("<button type=\"button\" class=\"btn btn--outline cart-box__clear\" popovertarget=\"xoa-hop\">Xóa hộp</button>", html);
         Assert.Contains("<p class=\"review-line__name\">Trà sen</p>", html);
@@ -157,8 +155,9 @@ public class CartTests(PeekboxFixture fixture)
         Assert.Contains("<div><dt>Đóng gói</dt><dd>40.000đ</dd></div>", summary);
         Assert.Contains("<div class=\"cart-sums__later\"><dt>Phí giao hàng</dt><dd>Tính ở bước sau</dd></div>", summary);
         Assert.Contains("<p class=\"cart-total\"><span>Tạm tính (đã gồm thuế)</span><strong>460.000đ</strong></p>", summary);
-        Assert.Contains("<button type=\"button\" class=\"btn btn--primary cart-checkout\" disabled aria-describedby=\"checkout-reason\">Tiếp tục thanh toán</button>", summary);
-        Assert.Contains("<p class=\"cart-reason\" id=\"checkout-reason\">Thanh toán sẽ có trong bản sau.</p>", summary);
+        Assert.Contains("<a class=\"btn btn--primary cart-checkout\" href=\"/checkout\">Tiếp tục thanh toán</a>", summary);
+        Assert.DoesNotContain("cart-reason", html);
+        Assert.Contains("<a class=\"btn btn--primary cart-checkout\" href=\"/checkout\">Tiếp tục thanh toán</a>", Regex.Match(html, @"<div class=""cart-bar""[\s\S]*?</div>").Value);
         Assert.Contains("<div class=\"cart-bar\" role=\"region\" aria-label=\"Tạm tính\">", html);
         Assert.Contains("<div class=\"cart-confirm\" id=\"xoa-hop\" popover role=\"dialog\" aria-labelledby=\"confirm-title\" aria-describedby=\"confirm-text\">", html);
     }
@@ -206,14 +205,15 @@ public class CartTests(PeekboxFixture fixture)
 
         Assert.Contains("Chưa thể đặt hàng: 1 món hết hạn trước ngày giao", html);
         Assert.Contains("action=\"/builder/quantity?from=cart\"", html);
-        Assert.Contains("<p class=\"cart-reason cart-reason--block\" id=\"checkout-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", Summary(html));
+        Assert.Contains("<p class=\"cart-reason meta cart-reason--block\" id=\"checkout-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", Summary(html));
+        Assert.DoesNotContain("href=\"/checkout\"", html);
 
         var response = await visitor.PostAsync("/builder/quantity?from=cart", new() { ["slug"] = "mut-gung", ["quantity"] = "0" });
 
         Assert.Equal("/cart", response.Headers.Location?.OriginalString);
         var after = await visitor.PageAsync("/cart");
         Assert.DoesNotContain("review-block", after);
-        Assert.Contains("<p class=\"cart-reason\" id=\"checkout-reason\">Thanh toán sẽ có trong bản sau.</p>", Summary(after));
+        Assert.Contains("<a class=\"btn btn--primary cart-checkout\" href=\"/checkout\">Tiếp tục thanh toán</a>", Summary(after));
     }
 
     [Fact]
@@ -224,14 +224,14 @@ public class CartTests(PeekboxFixture fixture)
 
         var html = await visitor.PageAsync("/cart");
 
-        Assert.Contains("<p class=\"cart-reason cart-reason--block\" id=\"checkout-reason\">Ngày giao đã qua. Bấm Sửa hộp để chọn ngày giao mới.</p>", Summary(html));
+        Assert.Contains("<p class=\"cart-reason meta cart-reason--block\" id=\"checkout-reason\">Ngày giao đã qua. Bấm Sửa hộp để chọn ngày giao mới.</p>", Summary(html));
         Assert.Equal("/builder", (await visitor.PostAsync("/cart/add")).Headers.Location?.OriginalString);
     }
 
     [Fact]
     public async Task Every_state_of_the_cart_is_well_formed()
     {
-        BuilderItemsTests.AssertWellFormed("empty", await (await new Visitor(Client(), null).GetAsync("/cart")).Content.ReadAsStringAsync());
+        BuilderItemsTests.AssertWellFormed("empty", await (await new Visitor(fixture.Client(), null).GetAsync("/cart")).Content.ReadAsStringAsync());
         var visitor = await VisitorAsync(Delivery, ("tra-sen", 2), ("mut-gung", 1));
         BuilderItemsTests.AssertWellFormed("full", await (await visitor.GetAsync("/cart")).Content.ReadAsStringAsync());
         await SetDeliveryAsync(visitor, new DateOnly(2027, 3, 28));

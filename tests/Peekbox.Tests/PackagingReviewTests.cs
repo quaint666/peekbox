@@ -61,7 +61,7 @@ public class PackagingReviewTests(PeekboxFixture fixture)
 
         private Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            var cookies = new[] { hamperToken is null ? "" : $"{HamperService.CookieName}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0).ToList();
+            var cookies = new[] { hamperToken is null ? "" : $"{HamperCookie.Name}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0).ToList();
             if (cookies.Count > 0)
             {
                 request.Headers.Add("Cookie", string.Join("; ", cookies));
@@ -71,8 +71,6 @@ public class PackagingReviewTests(PeekboxFixture fixture)
         }
     }
 
-    private HttpClient Client() => fixture.Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
-
     private async Task<Visitor> VisitorAsync(params (string Slug, int Quantity)[] lines)
     {
         var token = Guid.NewGuid().ToString("N");
@@ -81,7 +79,7 @@ public class PackagingReviewTests(PeekboxFixture fixture)
             db.Hampers.Add(new Hamper { Token = token, BudgetVnd = 500_000, DeliveryDate = Delivery, CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow });
             return db.SaveChangesAsync();
         });
-        var visitor = new Visitor(Client(), token);
+        var visitor = new Visitor(fixture.Client(), token);
         foreach (var (slug, quantity) in lines)
         {
             await visitor.AddAsync(slug, quantity);
@@ -166,7 +164,7 @@ public class PackagingReviewTests(PeekboxFixture fixture)
     [Fact]
     public async Task There_is_no_review_without_a_hamper_or_with_an_empty_box()
     {
-        Assert.Equal("/builder", (await new Visitor(Client(), null).GetAsync("/builder/review")).Headers.Location?.OriginalString);
+        Assert.Equal("/builder", (await new Visitor(fixture.Client(), null).GetAsync("/builder/review")).Headers.Location?.OriginalString);
         Assert.Equal("/builder", (await (await VisitorAsync()).GetAsync("/builder/review")).Headers.Location?.OriginalString);
     }
 
@@ -243,7 +241,7 @@ public class PackagingReviewTests(PeekboxFixture fixture)
         Assert.Contains("<button type=\"submit\" class=\"btn btn--danger\" name=\"quantity\" value=\"0\" aria-label=\"Bỏ Mứt gừng khỏi hộp\">Bỏ món này</button>", line);
         Assert.DoesNotContain("Bỏ món này", Line(html, "Trà sen"));
         var summary = Summary(html);
-        Assert.Contains("<p class=\"review-summary__reason review-summary__reason--block\" id=\"cart-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", summary);
+        Assert.Contains("<p class=\"review-summary__reason meta review-summary__reason--block\" id=\"cart-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", summary);
         Assert.DoesNotContain("đều còn hạn", summary);
 
         var response = await visitor.PostAsync("/builder/quantity?from=review", new() { ["slug"] = "mut-gung", ["quantity"] = "0" });

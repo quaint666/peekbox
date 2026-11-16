@@ -52,7 +52,8 @@ public class HomePageTests(PeekboxFixture fixture)
         {
             var card = cards[i].Groups[2].Value;
             Assert.Matches($@"<span class=""occasion__button"">{Regex.Escape(buttons[i])}\s*<svg", card);
-            Assert.Contains($"src=\"{photos[i]}\" alt=\"\"", card);
+            var src = Regex.Match(card, @"<img[^>]*\ssrc=""([^""]+)""[^>]*\salt=""""").Groups[1].Value;
+            Assert.Equal(photos[i], BuilderItemsTests.Unfingerprinted(src));
             Assert.DoesNotContain("<a ", card);   // a link inside a link is not allowed; the button is only a label
         }
     }
@@ -60,12 +61,12 @@ public class HomePageTests(PeekboxFixture fixture)
     // The expected links are written out here on purpose. A test that read SiteLinks would agree with a typo in SiteLinks.
     private static readonly (string Href, string Label)[] HeaderLinks =
     [
-        ("/", "Trang chủ"), ("/builder", "Tạo hộp quà"), ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"),
+        ("/", "Trang chủ"), ("/builder", "Tạo hộp quà"), ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"),
     ];
 
     private static readonly (string Href, string Label)[] FooterLinks =
     [
-        ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/legal#dieu-khoan", "Điều khoản"), ("/legal#bao-mat", "Chính sách bảo mật"),
+        ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"), ("/legal#dieu-khoan", "Điều khoản"), ("/legal#bao-mat", "Chính sách bảo mật"),
     ];
 
     // The links of one <nav>, in order, as (href, text). Looking inside one nav keeps a link in the footer from counting for the header.
@@ -86,8 +87,20 @@ public class HomePageTests(PeekboxFixture fixture)
             .Select(m => (m.Groups[1].Value, m.Groups[2].Value))).ToList();
     }
 
+    // CSS hides one of the two logos, and a hidden image's alt text is not read: the name is on the link, so it has
+    // one in both themes.
     [Fact]
-    public async Task The_header_has_the_five_menu_links_in_order_and_marks_the_current_page()
+    public async Task The_logo_link_has_its_name_in_both_themes()
+    {
+        var html = await GetHomeAsync();
+
+        Assert.Contains("<a class=\"site-header__brand\" href=\"/\" aria-label=\"Peekbox, trang chủ\">", html);
+        Assert.Matches(@"<img class=""logo logo--light"" src=""[^""]+"" alt="""" width=""110"" height=""34"">", html);
+        Assert.Matches(@"<img class=""logo logo--dark"" src=""[^""]+"" alt="""" width=""110"" height=""34"">", html);
+    }
+
+    [Fact]
+    public async Task The_header_has_the_six_menu_links_in_order_and_marks_the_current_page()
     {
         var html = await GetHomeAsync();
 

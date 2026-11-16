@@ -2,7 +2,7 @@
 slug: qua-cong-ty-chia-ngan-sach
 category_vi: Mẹo chọn quà
 category_en: Gift tips
-cover_image: ../images/packaging/basket.png
+cover_image: /images/blog/qua-cong-ty-chia-ngan-sach.webp
 status: draft for review
 note: Invoice rules depend on your company and local law; check with your accountant.
 ---

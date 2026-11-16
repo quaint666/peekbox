@@ -25,4 +25,10 @@ public class Hamper
     public DateTimeOffset UpdatedAt { get; set; }
 
     public List<HamperItem> Items { get; set; } = [];
+
+    // Set when the hamper becomes an order (F48). An ordered hamper is finished: it counts as no hamper, so the cart is
+    // empty and the builder starts a new one, and placing the same order again opens this order instead of a second one.
+    public int? OrderId { get; set; }
+
+    public Order? Order { get; set; }
 }

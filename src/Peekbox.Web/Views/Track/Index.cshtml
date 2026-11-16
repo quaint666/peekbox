@@ -1,0 +1,48 @@
+@model TrackViewModel
+@{
+    ViewData["Title"] = "Tra cứu đơn hàng";
+    var form = Model.Form;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/track.css" asp-append-version="true">
+}
+
+@* Track an order (F60; mockup 12, states 19 and 22). What was typed stays in the fields after a miss or a wait. The
+   hint does not mention the email (F61 comes later), unlike the mockup. *@
+<section class="card track" aria-labelledby="track-title">
+    <div class="track__head">
+        <h1 class="track__title" id="track-title">Tra cứu đơn hàng</h1>
+        <p class="track__lead">Nhập mã đơn hàng và số điện thoại của người đặt để xem đơn đang ở bước nào.</p>
+    </div>
+
+    @if (Model.TooManyTries)
+    {
+        <div class="alert alert--warn track-alert" role="alert" tabindex="-1" autofocus>
+            <partial name="_Icon" model='"alert-circle"' />
+            <p class="track-alert__text"><strong>Bạn đã thử quá nhiều lần.</strong> Hãy đợi vài phút rồi thử lại.</p>
+        </div>
+    }
+    else if (Model.NotFound)
+    {
+        <div class="alert track-alert" role="alert" tabindex="-1" autofocus>
+            <partial name="_Icon" model='"alert-circle"' />
+            <p class="track-alert__text"><strong>Không tìm thấy đơn hàng.</strong> Mã đơn hàng và số điện thoại không khớp với đơn nào. Hãy kiểm tra lại cả hai.</p>
+        </div>
+    }
+
+    <form class="track-form" method="post" action="@SiteLinks.Track.Href" asp-antiforgery="true">
+        <div class="field">
+            <label class="field__label" for="track-number">Mã đơn hàng</label>
+            <input class="input" id="track-number" name="number" type="text" value="@form.Number" placeholder="Ví dụ: PEEK000123" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" required aria-describedby="track-number-hint">
+            <p class="track-hint meta" id="track-number-hint">Mã có trên trang xác nhận đơn hàng.</p>
+        </div>
+        <div class="field">
+            <label class="field__label" for="track-phone">Số điện thoại người đặt</label>
+            <input class="input" id="track-phone" name="phone" type="tel" value="@form.Phone" placeholder="0900 000 000" maxlength="20" inputmode="tel" autocomplete="tel" required>
+        </div>
+        <button class="btn btn--primary track-submit" type="submit">Tra cứu</button>
+    </form>
+
+    <p class="track-help"><partial name="_SupportLine" /></p>
+</section>

@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Data;
 using Peekbox.Web.Services;
 
+using static Peekbox.Tests.TestDates;
+
 namespace Peekbox.Tests;
 
 [Collection(DatabaseCollection.Name)]
@@ -15,7 +17,7 @@ public class BuilderSavingTests(PeekboxFixture fixture)
     {
         public Dictionary<string, string> Cookies { get; } = [];
 
-        public string? Token => Cookies.GetValueOrDefault(HamperService.CookieName);
+        public string? Token => Cookies.GetValueOrDefault(HamperCookie.Name);
 
         public List<string> LastSetCookies { get; private set; } = [];
 
@@ -60,8 +62,6 @@ public class BuilderSavingTests(PeekboxFixture fixture)
 
     private Visitor NewVisitor() =>
         new(fixture.Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false }));
-
-    private static DateOnly TodayInVietnam => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
 
     private static string Iso(DateOnly date) => date.ToString("yyyy-MM-dd");
 
@@ -231,7 +231,7 @@ public class BuilderSavingTests(PeekboxFixture fixture)
     public async Task A_cookie_that_names_no_row_is_ignored_and_never_becomes_the_token_of_a_new_row()
     {
         var visitor = NewVisitor();
-        visitor.Cookies[HamperService.CookieName] = "forged-token-that-the-server-never-made";
+        visitor.Cookies[HamperCookie.Name] = "forged-token-that-the-server-never-made";
 
         var emptyPage = await BodyAsync(await visitor.GetAsync("/builder"));
         await visitor.PostAsync(new() { ["budget"] = "500000" });
@@ -246,7 +246,7 @@ public class BuilderSavingTests(PeekboxFixture fixture)
     public async Task A_very_long_cookie_value_does_not_break_the_page()
     {
         var visitor = NewVisitor();
-        visitor.Cookies[HamperService.CookieName] = new string('x', 2000);
+        visitor.Cookies[HamperCookie.Name] = new string('x', 2000);
 
         var response = await visitor.GetAsync("/builder");
 

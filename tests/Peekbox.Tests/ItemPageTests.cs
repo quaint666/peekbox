@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Data;
 using Peekbox.Web.Services;
 
+using static Peekbox.Tests.TestDates;
+
 namespace Peekbox.Tests;
 
 // The item page /items/{slug} (F26 to F28) and the links to it from the builder's cards. Budget 500.000đ, delivery
@@ -15,8 +17,6 @@ namespace Peekbox.Tests;
 public class ItemPageTests(PeekboxFixture fixture)
 {
     private static readonly DateOnly Delivery = new(2027, 1, 15);
-
-    private static DateOnly TodayInVietnam => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
 
     // A visitor with a cookie (or none), and the anti-forgery cookie and token of the last page read.
     private sealed class Visitor(HttpClient client, string? hamperToken)
@@ -56,7 +56,7 @@ public class ItemPageTests(PeekboxFixture fixture)
 
         private Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            var cookies = new[] { hamperToken is null ? "" : $"{HamperService.CookieName}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0).ToList();
+            var cookies = new[] { hamperToken is null ? "" : $"{HamperCookie.Name}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0).ToList();
             if (cookies.Count > 0)
             {
                 request.Headers.Add("Cookie", string.Join("; ", cookies));
@@ -66,8 +66,6 @@ public class ItemPageTests(PeekboxFixture fixture)
         }
     }
 
-    private HttpClient Client() => fixture.Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
-
     private async Task<Visitor> VisitorAsync(DateOnly? delivery)
     {
         var token = Guid.NewGuid().ToString("N");
@@ -76,7 +74,7 @@ public class ItemPageTests(PeekboxFixture fixture)
             db.Hampers.Add(new Hamper { Token = token, BudgetVnd = 500_000, DeliveryDate = delivery, CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow });
             return db.SaveChangesAsync();
         });
-        return new Visitor(Client(), token);
+        return new Visitor(fixture.Client(), token);
     }
 
     private Task<Dictionary<string, int>> LinesAsync(Visitor visitor) =>
@@ -93,7 +91,7 @@ public class ItemPageTests(PeekboxFixture fixture)
     [Fact]
     public async Task An_unknown_item_is_a_404()
     {
-        var response = await new Visitor(Client(), null).GetAsync("/items/khong-co-mon-nay");
+        var response = await new Visitor(fixture.Client(), null).GetAsync("/items/khong-co-mon-nay");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -101,7 +99,7 @@ public class ItemPageTests(PeekboxFixture fixture)
     [Fact]
     public async Task The_page_shows_the_item_its_facts_and_the_way_back()
     {
-        var html = Text(await new Visitor(Client(), null).PageAsync());
+        var html = Text(await new Visitor(fixture.Client(), null).PageAsync());
 
         Assert.Contains("<title>Trà sen · Peekbox</title>", html);
         Assert.Contains("<li><a href=\"/builder\">Tạo hộp quà</a></li> <li><a href=\"/builder?category=tra-ca-phe#chon-mon\">Trà và cà phê</a></li> <li aria-current=\"page\">Trà sen</li>", html);
@@ -119,7 +117,7 @@ public class ItemPageTests(PeekboxFixture fixture)
     [Fact]
     public async Task Without_a_saved_budget_and_date_the_page_asks_for_them_instead_of_offering_to_add()
     {
-        var html = Text(await new Visitor(Client(), null).PageAsync());
+        var html = Text(await new Visitor(fixture.Client(), null).PageAsync());
 
         Assert.Contains("Chọn ngày giao để kiểm tra hạn dùng của món này.", html);
         Assert.Contains("<a class=\"btn btn--primary item-buy__go\" href=\"/builder\">Đặt ngân sách và ngày giao</a>", BuyCard(html));
@@ -171,19 +169,20 @@ public class ItemPageTests(PeekboxFixture fixture)
         Assert.Empty(await LinesAsync(visitor));
     }
 
-    // The redirect goes to the item page or the builder and nowhere else, whatever "from" says.
+    // "from" names a place (ReturnTo), never an address: anything else is refused, so it cannot send anyone elsewhere.
     [Theory]
     [InlineData("https://example.com")]
     [InlineData("//example.com")]
-    [InlineData("ITEM")]
-    public async Task Any_other_from_goes_back_to_the_builder(string from)
+    [InlineData("elsewhere")]
+    public async Task Any_other_from_is_refused(string from)
     {
         var visitor = await VisitorAsync(Delivery);
         await visitor.PageAsync();
 
         var response = await visitor.SetAsync("/builder/quantity?from=" + Uri.EscapeDataString(from), "tra-sen", 1);
 
-        Assert.Equal("/builder#mon-tra-sen", response.Headers.Location?.OriginalString);
+        Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Null(response.Headers.Location);
     }
 
     [Fact]
@@ -227,7 +226,7 @@ public class ItemPageTests(PeekboxFixture fixture)
     [Fact]
     public async Task Every_state_of_the_page_is_well_formed()
     {
-        BuilderItemsTests.AssertWellFormed("no hamper", await new Visitor(Client(), null).PageAsync());
+        BuilderItemsTests.AssertWellFormed("no hamper", await new Visitor(fixture.Client(), null).PageAsync());
         var visitor = await VisitorAsync(Delivery);
         BuilderItemsTests.AssertWellFormed("can add", await visitor.PageAsync());
         await visitor.SetAsync("/builder/quantity?from=item", "tra-sen", 1);
