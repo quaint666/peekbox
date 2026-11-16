@@ -63,7 +63,7 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - A failed ZaloPay payment keeps the order and the box; the customer can retry or switch to cash on delivery. How long items are held is a bracketed placeholder, [30 phút].
 
 ## More states
-- Locked builder steps (items and packaging before the budget and date are saved) are faded to 65 % with a lock note above them, and do not react. Fading them more than that turns the photos muddy in dark mode.
+- Locked builder steps are not drawn at all: only a lock note shows where they start. Before the budget and date are saved, the note says to press "Lưu" and nothing is below it (02); before the box holds an item, the packaging note says "Chọn ít nhất 1 món" and nothing is below it (26). (They used to be drawn faded to 65 %.)
 - Coupon error: the field gets the red border and a message under it; the customer can continue with the field empty.
 - An item that sells out during checkout is removed from the box with a notice and nothing is charged; the customer picks a replacement or continues with fewer items.
 - Admin login is locked after repeated wrong attempts: [5] attempts and [15 phút] are placeholders for the team to set.
@@ -93,7 +93,7 @@ Every control has five looks: default, hover, keyboard focus, pressed, disabled.
 - **Primary button**: hover `#2C4D3E` (dark mode: `#4A7A64`), pressed `#25513E` (dark mode: `#2C4D3E`) and 1 px down. **Secondary button**: the sage tint fills in on hover.
 - **Header link**: hover turns it green and adds a 2 px underline 8 px below the text.
 - **Text field**: the border darkens on hover, gets 2 px green plus the ring on focus, 2 px red `#A32A1E` (dark mode `#F4B8AF`) on error with a message.
-- **Clickable card**: rises 2 px and gets a deeper shadow and a green border; a sold-out card is greyed and does not react.
+- **Item card (builder)**: the photo and the name are links to the item page; "Thêm" is its own button. On hover the card rises 2 px with a deeper shadow and a green border, the photo zooms to 105 % (like the occasion cards on the home page) and the name turns green and underlined; with "reduce motion" on, only the border, shadow and name change. Keyboard focus rings the link that has it. Once the item is in the box, "Thêm" becomes a − n + pill: − and + on the card colour, the number on the sage tint, and − at 1 takes the item out and brings "Thêm" back. A sold-out card is greyed and does not react.
 - **Table row (admin)**: hover tint `#F1F6F2` (dark mode `#202428`); the open row keeps the chosen tint. These two tints are the only new colours here.
 - **Occasion cards on the home page** rise 4 px, the photo zooms to 105 % and the arrow moves 4 px right.
 - **Pressed** on a phone: the same pressed colour, no movement.
