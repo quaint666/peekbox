@@ -21,4 +21,7 @@ public sealed record BuilderViewModel
 
     // The item list and the filters it was made with; null while the items are locked.
     public ItemList? Items { get; init; }
+
+    // What is in the hamper, with its quote; null while the items are locked.
+    public Box? Box { get; init; }
 }

@@ -1,0 +1,34 @@
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model QuantityControl
+@* The add control of an item, on its card and in "Hộp của bạn" (F20, F21, F23; mockups 26, 27 and state 04). A plain
+   form, so it works without scripts; builder.ts sends it in the background when it can. The server checks every
+   amount again, so a disabled button is only a hint. *@
+@if (Model.Quantity > 0)
+{
+    <form class="qty" method="post" action="@Model.Action" asp-antiforgery="true" role="group" aria-label="Số lượng @Model.Name">
+        <input type="hidden" name="slug" value="@Model.Slug">
+        <button type="submit" class="qty__btn" name="quantity" value="@(Model.Quantity - 1)" aria-label="Bớt một @Model.Name" data-qty-step="minus">−</button>
+        <span class="qty__count">@Model.Quantity</span>
+        <button type="submit" class="qty__btn" name="quantity" value="@(Model.Quantity + 1)" aria-label="Thêm một @Model.Name" data-qty-step="plus" disabled="@(Model.Next != ItemStatus.Ok)">+</button>
+    </form>
+}
+else if (Model.SoldOut || Model.Next == ItemStatus.SoldOut)
+{
+    <button type="button" class="btn btn--primary qty-add" disabled>Hết hàng</button>
+}
+else if (Model.Next == ItemStatus.ExpiredForDate)
+{
+    <button type="button" class="btn btn--primary qty-add" disabled>Không chọn được cho ngày giao này</button>
+}
+else if (Model.Next == ItemStatus.OverBudget)
+{
+    <button type="button" class="btn btn--primary qty-add" disabled>Vượt @Vnd.Format(Model.OverByVnd)</button>
+}
+else
+{
+    <form class="qty-add-form" method="post" action="@Model.Action" asp-antiforgery="true">
+        <input type="hidden" name="slug" value="@Model.Slug">
+        <button type="submit" class="btn btn--primary qty-add" name="quantity" value="1" aria-label="Thêm @Model.Name vào hộp" data-qty-step="add">Thêm</button>
+    </form>
+}

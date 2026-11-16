@@ -74,7 +74,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         var html = await PageAsync(await SavedHamperAsync(Delivery));
         var names = CardNames(html);
 
-        Assert.DoesNotContain("class=\"lock-note\"", html);
+        Assert.DoesNotContain("để mở bước chọn món và đóng gói", html);   // the items' lock note (packaging has its own)
         Assert.Equal(22, names.Count);
         Assert.DoesNotContain("Bánh quy bơ", names);
         Assert.DoesNotContain("Kẹo lạc", names);
@@ -134,10 +134,11 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         try
         {
             var html = await PageAsync(token);
-            var card = Regex.Match(html, @"<li class=""card item-card item-card--sold-out"">[\s\S]*?</li>").Value;
+            var card = Regex.Match(html, @"<li class=""card item-card item-card--sold-out"" id=""mon-tra-sen"">[\s\S]*?</li>").Value;
 
             Assert.Contains("Trà sen", card);
             Assert.Contains("<span class=\"badge badge--muted\">Hết hàng</span>", card);
+            Assert.Contains("<button type=\"button\" class=\"btn btn--primary qty-add\" disabled>Hết hàng</button>", card);
             Assert.DoesNotContain("HSD", card);
             Assert.Single(Regex.Matches(html, "item-card--sold-out"));
         }
@@ -285,7 +286,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     {
         var html = await PageAsync(await SavedHamperAsync(TodayInVietnam.AddDays(1)));
 
-        Assert.DoesNotContain("class=\"lock-note\"", html);
+        Assert.DoesNotContain("để mở bước chọn món và đóng gói", html);   // the items' lock note (packaging has its own)
         Assert.DoesNotContain("field__error", html);
         Assert.NotEmpty(CardNames(html));
     }
@@ -373,7 +374,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
 
     // Mistakes a browser forgives silently but a screen reader or a click does not: a repeated id, a label or an aria
     // reference that points at nothing, a field without a label, a CSS, image or script file that does not exist.
-    private static void AssertWellFormed(string state, string html)
+    internal static void AssertWellFormed(string state, string html)
     {
         var ids = Regex.Matches(html, @"\sid=""([^""]+)""").Select(m => m.Groups[1].Value).ToList();
         var repeated = ids.GroupBy(i => i).Where(g => g.Count() > 1).Select(g => g.Key).ToList();

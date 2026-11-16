@@ -75,6 +75,27 @@ namespace Peekbox.Web.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.HamperItem", b =>
+                {
+                    b.Property<int>("HamperId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("HamperId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("HamperItems", t =>
+                        {
+                            t.HasCheckConstraint("CK_HamperItems_Quantity", "\"Quantity\" > 0");
+                        });
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -145,6 +166,25 @@ namespace Peekbox.Web.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.HamperItem", b =>
+                {
+                    b.HasOne("Peekbox.Web.Data.Hamper", "Hamper")
+                        .WithMany("Items")
+                        .HasForeignKey("HamperId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Peekbox.Web.Data.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Hamper");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Product", b =>
                 {
                     b.HasOne("Peekbox.Web.Data.Category", "Category")
@@ -159,6 +199,11 @@ namespace Peekbox.Web.Migrations
             modelBuilder.Entity("Peekbox.Web.Data.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.Hamper", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
