@@ -73,6 +73,7 @@
   color: var(--color-on-tint);
 }
 .badge--warn { background: var(--color-warn-bg); color: var(--color-warn-text); }
+.badge--muted { background: var(--color-border-soft); color: var(--color-muted); }  /* a fact that turns something off, e.g. "Hết hàng" */
 .badge--danger { background: var(--color-danger-bg); color: var(--color-danger-text); }
 
 /* ---------- Site header ---------- */
