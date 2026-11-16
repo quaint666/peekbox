@@ -22,6 +22,10 @@ public sealed class BuilderLimits(TimeProvider clock)
 
     public DateOnly Latest => Today.AddYears(1);
 
+    // Items can be chosen once a delivery date is saved (the budget is always saved with it) and that date can still be
+    // delivered: tomorrow or later. The builder and the item page both ask this.
+    public bool ItemsOpen(DateOnly? deliveryDate) => deliveryDate is { } date && date >= Earliest;
+
     // The safety margin of F22. An item is in date only when it expires AFTER the delivery date plus this many days:
     // an item that expires on the last day of the margin is out (decision 2026-11-16). A setting once the admin exists (M6).
     public const int ShelfMarginDays = 7;

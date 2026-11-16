@@ -79,6 +79,23 @@
 .item-card__price { margin: 0; font-weight: 700; }
 .item-card--sold-out .item-card__img { filter: grayscale(1); opacity: 0.7; }
 
+/* The photo and the name are links to the item page. Pointing at either lifts the card, as the occasion cards on the
+   home page do (design-notes, "Item card (builder)"): a primary border, a deeper shadow and a green, underlined name;
+   with a mouse and without "reduce motion", the card also rises 2 px and the photo zooms to 105 %. Only the links
+   trigger it, so the card never looks clickable where it is not. */
+.item-card { transition: border-color 150ms ease, box-shadow 150ms ease, transform 200ms ease; }
+.item-card__photo { display: block; overflow: hidden; border-radius: var(--radius-sm); }
+.item-card__img { display: block; transition: transform 200ms ease; }
+.item-card__link { color: inherit; text-decoration: none; }
+@media (hover: hover) {
+    .item-card:has(.item-card__photo:hover, .item-card__link:hover) { border-color: var(--color-primary); box-shadow: var(--shadow-pop); }
+    .item-card:has(.item-card__photo:hover, .item-card__link:hover) .item-card__link { color: var(--color-primary-text); text-decoration: underline; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .item-card:has(.item-card__photo:hover, .item-card__link:hover) { transform: translateY(-2px); }
+    .item-card:has(.item-card__photo:hover, .item-card__link:hover) .item-card__img { transform: scale(1.05); }
+}
+
 /* The add control (mockups 26, 27 and state 04): "Thêm", the − n + pill, or a disabled button that says why. */
 .qty-add { min-height: var(--tap-min); padding: 0 18px; font-size: var(--text-sm); white-space: normal; text-align: center; }  /* 18px: from the mockup */
 .qty-add:disabled { padding: 0 14px; font-size: 0.8125rem; }  /* "Vượt X" and the other reasons: 14px and 13px in the mockup */
@@ -193,6 +210,7 @@
     .item-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-5); }
     .item-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
     .item-card__img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 0; }
+    .item-card__photo { border-radius: 0; }
     .item-card__body { flex: 1; padding: var(--space-4); }
     .builder-main { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 28px; align-items: start; }  /* 390 and 28: measured on mockup 27 at 1440 px */
     .builder-main .item-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }   /* three a row at 1440, two at 900 */

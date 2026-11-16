@@ -43,7 +43,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     }
 
     private static List<string> CardNames(string html) =>
-        Regex.Matches(html, @"<h3 class=""item-card__name"">([^<]*)</h3>").Select(m => m.Groups[1].Value).ToList();
+        Regex.Matches(html, @"<h3 class=""item-card__name""><a class=""item-card__link"" href=""[^""]*"">([^<]*)</a></h3>").Select(m => m.Groups[1].Value).ToList();
 
     private static string CurrentStep(string html) =>
         Regex.Match(html, @"<li class=""builder-step"" aria-current=""step""><span class=""builder-step__num"">(\d)</span>").Groups[1].Value;

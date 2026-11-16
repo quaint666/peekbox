@@ -34,9 +34,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
         }, new ItemFilter(category, inDate, q, sort), cancellationToken));
     }
 
-    // The items unlock once a delivery date is saved (the budget is always saved with it) and that date can still be
-    // delivered: tomorrow or later.
-    private bool ItemsOpen(Hamper? hamper) => hamper?.DeliveryDate is { } date && date >= limits.Earliest;
+    private bool ItemsOpen(Hamper? hamper) => limits.ItemsOpen(hamper?.DeliveryDate);
 
     private async Task<BuilderViewModel> WithItemsAsync(Hamper? hamper, BuilderViewModel model, ItemFilter filter, CancellationToken cancellationToken)
     {
@@ -54,18 +52,25 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
         };
     }
 
-    // "Thêm", − and + on a card or in "Hộp của bạn" (F20). The form sends the item and the new amount; the address keeps
-    // the filters, so the visitor comes back to the same list, at the same card (post, then redirect). The amount is
-    // checked again here: a button the page showed as off, or a made-up request, changes nothing.
+    // "Thêm", − and + on a card, in "Hộp của bạn" or on the item page (F20, F28). The form sends the item and the new
+    // amount; the address keeps the filters, so the visitor comes back to the same list, at the same card (post, then
+    // redirect). From the item page (from=item) the visitor goes back to that item: the address is built here from the
+    // slug, never taken from the request, so it cannot send anyone elsewhere. The amount is checked again here: a
+    // button the page showed as off, or a made-up request, changes nothing.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, bool inDate = true, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, string? from, bool inDate = true, CancellationToken cancellationToken = default)
     {
         var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
         if (hamper is not null && ItemsOpen(hamper) && !string.IsNullOrEmpty(slug)
             && await hampers.SetQuantityAsync(hamper, slug, quantity, cancellationToken) == QuantityChange.UnknownItem)
         {
             return NotFound();
+        }
+
+        if (from == "item" && !string.IsNullOrEmpty(slug))
+        {
+            return Redirect(SiteLinks.Item(slug) + "#them");
         }
 
         var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false" }
