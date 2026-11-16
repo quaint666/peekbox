@@ -33,6 +33,15 @@ public static class Icons
         ["close"] = "M6 6l12 12 M18 6L6 18",
         ["search"] = "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M20 20l-3.5-3.5",
         ["lock"] = "M6 11h12v10H6z M8.5 11V7.5a3.5 3.5 0 0 1 7 0V11",
+        // The item page (mockup 03): the fact chips, the in-date notice and the three promises.
+        ["calendar"] = "M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z M8 3v4 M16 3v4 M3 10h18",
+        ["pin"] = "M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z M12 6.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z",
+        ["weight"] = "M6 8h12l2 12H4L6 8z M12 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4z",
+        ["check-circle"] = "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M7.5 12.5l3 3 6-7",
+        ["warning"] = "M12 3 2 20h20L12 3z M12 10v4 M12 17.5v.1",
+        ["shield"] = "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M8.5 12l2.5 2.5 4.5-5",
+        ["truck"] = "M3 6h11v10H3z M14 9h4l3 3v4h-7 M7.5 15.7a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6z M17.5 15.7a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6z",
+        ["card"] = "M5 6h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z M3 10h18",
     };
 
     public static string Path(string name) => Paths[name];

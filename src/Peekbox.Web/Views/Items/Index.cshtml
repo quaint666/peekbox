@@ -1,0 +1,87 @@
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model ItemViewModel
+@{
+    var item = Model.Item;
+    ViewData["Title"] = item.Name;
+    ViewData["Nav"] = SiteLinks.Builder.Key;
+    var categoryLink = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, "category", item.CategoryId) + "#chon-mon";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/builder.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/item.css" asp-append-version="true">
+}
+
+@* The item page (F26 to F28, mockup 03 as redrawn 2026-11-16). *@
+<div class="item-page">
+    <nav class="breadcrumb" aria-label="Đường dẫn">
+        <ol>
+            <li><a href="@SiteLinks.Builder.Href">@SiteLinks.Builder.Label</a></li>
+            <li><a href="@categoryLink">@item.CategoryName</a></li>
+            <li aria-current="page">@item.Name</li>
+        </ol>
+    </nav>
+
+    <div class="item-main">
+        <img class="item-photo" src="@item.ImagePath" alt="@item.Name" width="508" height="508">
+
+        <div class="item-info">
+            <div class="item-info__head">
+                <a class="item-chip" href="@categoryLink">@item.CategoryName</a>
+                <h1 class="item-title">@item.Name</h1>
+                <p class="item-brand">@item.Brand</p>
+            </div>
+            <p class="item-price"><span class="item-price__value">@Vnd.Format(item.PriceVnd)</span><span class="item-price__tax">Đã gồm thuế</span></p>
+            <ul class="item-facts">
+                <li><partial name="_Icon" model='"calendar"' />HSD @VnDate.Month(item.ExpiryDate)</li>
+                <li><partial name="_Icon" model='"pin"' />@item.Origin</li>
+                <li><partial name="_Icon" model='"weight"' />@item.WeightGrams g</li>
+            </ul>
+            @if (item.SoldOut)
+            {
+                <p class="item-note item-note--muted"><partial name="_Icon" model='"warning"' /><span><strong>Hết hàng.</strong> Món này tạm thời không đặt được.</span></p>
+            }
+            @if (Model.InDate is null)
+            {
+                <p class="item-note item-note--muted"><partial name="_Icon" model='"calendar"' /><span>Chọn ngày giao để kiểm tra hạn dùng của món này.</span></p>
+            }
+            else if (Model.InDate == true)
+            {
+                <p class="item-note"><partial name="_Icon" model='"check-circle"' /><span><strong>Đủ hạn cho ngày giao @VnDate.Day(Model.DeliveryDate!.Value).</strong> Hạn sử dụng @VnDate.Day(item.ExpiryDate) còn xa hơn ngày giao cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</span></p>
+            }
+            else
+            {
+                <p class="item-note item-note--warn"><partial name="_Icon" model='"warning"' /><span><strong>Không đủ hạn cho ngày giao @VnDate.Day(Model.DeliveryDate!.Value).</strong> Hạn sử dụng @VnDate.Day(item.ExpiryDate) không còn xa hơn ngày giao cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</span></p>
+            }
+
+            <div class="card item-buy" id="them">
+                <partial name="_ItemBuy" model="Model" />
+            </div>
+
+            <ul class="item-promises">
+                <li><partial name="_Icon" model='"shield"' /><span><strong>Hạn dùng được kiểm tra</strong> So với ngày giao bạn chọn</span></li>
+                <li><partial name="_Icon" model='"truck"' /><span><strong>Giao theo ngày bạn chọn</strong> Giao tận nơi</span></li>
+                <li><partial name="_Icon" model='"card"' /><span><strong>Thanh toán linh hoạt</strong> ZaloPay hoặc tiền mặt</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <section class="card item-about" aria-labelledby="mo-ta">
+        <h2 class="item-about__title" id="mo-ta">Mô tả</h2>
+        <p class="item-about__text">@item.Description</p>
+        <h3 class="item-about__sub">Thông tin chi tiết</h3>
+        <dl class="item-details">
+            <div><dt>Danh mục</dt><dd>@item.CategoryName</dd></div>
+            <div><dt>Thương hiệu</dt><dd>@item.Brand</dd></div>
+            <div><dt>Trọng lượng</dt><dd>@item.WeightGrams g</dd></div>
+            <div><dt>Xuất xứ</dt><dd>@item.Origin</dd></div>
+            <div><dt>Hạn sử dụng</dt><dd>@VnDate.Day(item.ExpiryDate)</dd></div>
+        </dl>
+    </section>
+
+    @* Phone: the same budget and add control in a bar at the bottom of the screen (mockup 03, phone). *@
+    <div class="item-bar" role="region" aria-label="Thêm vào hộp">
+        <partial name="_ItemBuy" model="Model" />
+    </div>
+</div>

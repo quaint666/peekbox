@@ -1,0 +1,117 @@
+/* ITEM PAGE: /items/{slug} only (mockup 03, redrawn 2026-11-16). The add control, the budget sums and the bar's
+   meter come from builder.css, which the page also loads. Sizes in px without a token are from the mockup. */
+.item-page { display: flex; flex-direction: column; gap: 20px; }
+
+.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0; padding: 0; font-size: var(--text-sm); color: var(--color-muted); }
+.breadcrumb li { display: flex; align-items: center; gap: var(--space-2); }
+.breadcrumb li + li::before { content: '/'; }
+.breadcrumb a { display: inline-flex; align-items: center; min-height: var(--tap-min); }
+.breadcrumb [aria-current='page'] { color: var(--color-text); font-weight: 600; }
+
+.item-main { display: flex; flex-direction: column; gap: var(--space-5); }
+.item-photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-lg); background: var(--color-border-soft); }
+
+.item-info { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.item-info__head { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.item-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.item-title { margin: 0; font-size: var(--text-2xl); line-height: 1.25; }
+.item-brand { margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
+.item-price { display: flex; align-items: baseline; gap: var(--space-3); margin: 0; }
+.item-price__value { font-size: 1.625rem; font-weight: 700; }  /* 26px */
+.item-price__tax { font-size: 0.8125rem; color: var(--color-muted); }
+
+.item-facts { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; }
+.item-facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 36px;
+    padding: 0 var(--space-3);
+    border-radius: 999px;
+    background: var(--color-tint);
+    color: var(--color-on-tint);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+.item-facts .icon { width: 16px; height: 16px; }
+
+.item-note { display: flex; align-items: flex-start; gap: var(--space-3); margin: 0; padding: 14px; border-radius: 12px; background: var(--color-tint); color: var(--color-on-tint); font-size: 0.8125rem; line-height: 1.6; }
+.item-note .icon { flex: none; width: 22px; height: 22px; }
+.item-note--warn { background: var(--color-warn-bg); color: var(--color-warn-text); }
+.item-note--muted { background: var(--color-border-soft); color: var(--color-text); }
+
+/* The budget and the add control. On a phone the bar at the bottom holds them, so the card is hidden there. */
+.item-buy { display: none; }
+.item-buy__sums { gap: var(--space-2); }
+.item-buy__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.item-buy__foot .qty-add-form { flex: 1; }
+.item-buy__foot .qty-add { width: 100%; min-height: 52px; font-size: 1.0625rem; }  /* 17px */
+.item-buy__foot .qty-add:disabled { font-size: var(--text-sm); }
+.item-buy__foot .qty__btn { width: 52px; height: 52px; font-size: 1.375rem; }  /* 22px */
+.item-buy__foot .qty__count { min-width: 40px; font-size: 1.0625rem; }
+.item-buy__in { display: flex; flex-direction: column; align-items: flex-end; margin: 0; font-size: 0.8125rem; color: var(--color-muted); }
+.item-buy__in strong { font-size: 0.9375rem; color: var(--color-text); }
+.item-buy__locked { margin: 0; font-size: var(--text-sm); line-height: 1.5; }
+.item-buy__go { min-height: 48px; }
+
+.item-promises { list-style: none; display: flex; flex-direction: column; gap: var(--space-3); margin: 0; padding: 4px 0 0; }
+.item-promises li { display: flex; align-items: flex-start; gap: var(--space-3); font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }
+.item-promises .icon { flex: none; width: 22px; height: 22px; color: var(--color-primary-text); }
+.item-promises strong { display: block; font-size: var(--text-sm); color: var(--color-text); }
+
+.item-about { display: flex; flex-direction: column; padding: var(--space-4); border-radius: var(--radius-md); }
+.item-about__title { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+.item-about__text { margin: 0 0 var(--space-4); font-size: var(--text-sm); line-height: 1.7; color: var(--color-muted); }
+.item-about__sub { margin: 0 0 6px; font-size: var(--text-base); }
+.item-details { margin: 0; }
+.item-details div { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); padding: var(--space-3) 0; border-top: 1px solid var(--color-border-soft); font-size: var(--text-sm); }
+.item-details dt { flex: 0 0 100%; font-weight: 600; color: var(--color-muted); }
+.item-details dd { margin: 0; }
+
+/* Phone: the bar that stays at the bottom of the screen, as on /builder. */
+.item-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-inline: calc(-1 * var(--space-4));   /* edge to edge: undo the page gutter */
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-bar);
+}
+/* One line for the sums, the meter under it, as in the phone mockup. */
+.item-bar .item-buy__sums { flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+.item-bar .box-sums__row { gap: var(--space-1); }
+.item-bar .box-sums__bar { order: 3; flex-basis: 100%; }
+.item-bar .budget-meter, .item-bar .budget-meter::-webkit-meter-bar { height: 8px; }
+
+@media (min-width: 900px) {
+    .item-page { gap: var(--space-6); }
+    .item-main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+    .item-photo { border-radius: 18px; }
+    .item-info { gap: 18px; }
+    .item-title { font-size: var(--text-3xl); }
+    .item-brand { font-size: 0.9375rem; }
+    .item-price__value { font-size: 1.875rem; }  /* 30px */
+    .item-note { padding: 14px var(--space-4); font-size: var(--text-sm); }
+    .item-buy { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); }
+    .item-bar { display: none; }
+    .item-about { padding: var(--space-5); border-radius: var(--radius-lg); }
+    .item-about__title { font-size: var(--text-xl); }
+    .item-about__text, .item-details div { font-size: 0.9375rem; }
+    .item-about__sub { font-size: 1.0625rem; }
+    .item-details dt { flex-basis: 200px; }
+}

@@ -11,6 +11,16 @@ public sealed record ItemCard(
     string Slug, string Name, string Brand, int WeightGrams, string Origin, DateOnly ExpiryDate,
     long PriceVnd, string ImagePath, bool InDate, bool SoldOut, int Quantity, ItemStatus Next, long OverByVnd);
 
+// One item as its page shows it (F26). The page checks it against the hamper itself, through the Box.
+public sealed record ItemDetail(
+    string Slug, string Name, string Brand, string CategoryId, string CategoryName, int WeightGrams, string Origin,
+    DateOnly ExpiryDate, long PriceVnd, int Stock, string Description, string ImagePath)
+{
+    public bool SoldOut => Stock == 0;
+
+    public PricedItem Priced => new(Slug, PriceVnd, ExpiryDate, Stock);
+}
+
 // The sort menu of F19. The view writes the labels; the address uses the short names in ItemSorts.
 public enum ItemSort { Default, PriceAsc, PriceDesc, ExpiryLatest, NameAz }
 
@@ -98,9 +108,18 @@ public sealed class ItemCatalog(PeekboxDbContext db)
             SoldOut: p.Stock == 0,
             Quantity: box.QuantityOf(p.Slug),
             Next: box.StatusOf(new PricedItem(p.Slug, p.PriceVnd, p.ExpiryDate, p.Stock)),
-            OverByVnd: p.PriceVnd - box.Quote.RemainingVnd)).ToList();
+            OverByVnd: box.OverByVnd(p.PriceVnd))).ToList();
 
         var shown = filter.OnlyInDate ? all.Where(i => i.InDate).ToList() : all;
         return new ItemList(categories, category, filter.OnlyInDate, search, sort, shown, all.Count - shown.Count);
     }
+
+    // The item page (F26); null for an unknown slug. Every item has a page, sold out or not.
+    public Task<ItemDetail?> FindAsync(string slug, CancellationToken cancellationToken = default) =>
+        db.Products.AsNoTracking()
+            .Where(p => p.Slug == slug)
+            .Select(p => new ItemDetail(
+                p.Slug, p.Name, p.Brand, p.CategoryId, p.Category!.Name, p.WeightGrams, p.Origin,
+                p.ExpiryDate, p.PriceVnd, p.Stock, p.Description, p.ImagePath))
+            .FirstOrDefaultAsync(cancellationToken);
 }
