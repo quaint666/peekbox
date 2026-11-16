@@ -93,6 +93,14 @@
             ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = "false",
         }.Where(p => !string.IsNullOrEmpty(p.Value));
         var showAll = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, showAllQuery) + "#chon-mon";
+        // Where "Thêm", − and + post (BuilderController.Quantity), with the list's filters, so the visitor comes back to the same list.
+        var listQuery = new Dictionary<string, string?>
+        {
+            ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = items.OnlyInDate ? null : "false",
+        }.Where(p => !string.IsNullOrEmpty(p.Value));
+        var quantityAction = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href + "/quantity", listQuery);
+        var box = Model.Box!;
+        var outOfDateLines = box.Lines.Count(l => !l.InDate);
         var sortLabels = new Dictionary<ItemSort, string>
         {
             [ItemSort.Default] = "Mặc định",
@@ -102,6 +110,7 @@
             [ItemSort.NameAz] = "Tên A đến Z",
         };
 
+        <div class="builder-main">
         <section class="items" id="chon-mon" aria-labelledby="items-title">
             <h2 class="visually-hidden" id="items-title">Chọn món</h2>
 
@@ -172,7 +181,7 @@
             <ul class="item-grid">
                 @foreach (var item in items.Items)
                 {
-                    <li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")">
+                    <li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")" id="mon-@item.Slug">
                         @* alt is empty: the name is the heading right below, so a screen reader would read it twice. *@
                         <img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy">
                         <div class="item-card__body">
@@ -190,11 +199,86 @@
                             {
                                 <span class="badge badge--warn">HSD @VnDate.Day(item.ExpiryDate), trước ngày giao</span>
                             }
-                            <p class="item-card__price">@Vnd.Format(item.PriceVnd)</p>
+                            <div class="item-card__foot">
+                                <p class="item-card__price">@Vnd.Format(item.PriceVnd)</p>
+                                <partial name="_QuantityControl" model="new QuantityControl(quantityAction, item.Slug, item.Name, item.Quantity, item.Next, item.OverByVnd, item.SoldOut)" />
+                            </div>
                         </div>
                     </li>
                 }
             </ul>
+
+            @if (box.Lines.Count == 0)
+            {
+                @* Step 3 is locked until the box holds an item; nothing is drawn below the note (mockup 26). *@
+                <p class="lock-note" id="packaging-lock"><partial name="_Icon" model='"lock"' /><span>Chọn ít nhất <strong>1 món</strong> để mở bước đóng gói.</span></p>
+            }
         </section>
+
+        @* "Hộp của bạn" (F20, F21). Every number comes from the server (Pricing); this view only formats them. On a phone the
+           panel is replaced by the bar at the bottom of the screen. *@
+        <aside class="card box-panel" id="hop-cua-ban" aria-labelledby="box-title">
+            <h2 class="box-panel__title" id="box-title">Hộp của bạn</h2>
+            @if (box.Lines.Count > 0)
+            {
+                <ul class="box-lines">
+                    @foreach (var line in box.Lines)
+                    {
+                        <li class="box-line" id="hop-@line.Slug">
+                            <p class="box-line__head"><span class="box-line__name">@line.Name</span><span>@Vnd.Format(line.LineVnd)</span></p>
+                            <div class="box-line__foot">
+                                <p class="box-line__meta">@line.WeightGrams g · HSD @VnDate.Month(line.ExpiryDate)</p>
+                                <partial name="_QuantityControl" model="new QuantityControl(quantityAction, line.Slug, line.Name, line.Quantity, line.NextStatus, 0, false)" />
+                            </div>
+                            @if (!line.InDate)
+                            {
+                                <span class="badge badge--warn">HSD @VnDate.Day(line.ExpiryDate), trước ngày giao</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            <dl class="box-sums">
+                <div class="box-sums__row"><dt>Đóng gói: chưa chọn</dt><dd>–</dd></div>
+                <div class="box-sums__row"><dt>Ngân sách</dt><dd>@Vnd.Format(box.BudgetVnd)</dd></div>
+                <div class="box-sums__bar"><meter class="budget-meter" min="0" max="@Math.Max(box.BudgetVnd, 1)" value="@box.Quote.GoodsVnd" aria-hidden="true"></meter></div>
+                @if (box.Quote.OverBudget)
+                {
+                    <div class="box-sums__row box-sums__row--over"><dt>Vượt ngân sách</dt><dd>@Vnd.Format(box.LeftOrOverVnd)</dd></div>
+                }
+                else
+                {
+                    <div class="box-sums__row box-sums__row--left"><dt>Còn lại</dt><dd>@Vnd.Format(box.LeftOrOverVnd)</dd></div>
+                }
+                <div class="box-sums__row box-sums__row--total"><dt>Tổng cộng (đã gồm thuế)</dt><dd>@Vnd.Format(box.Quote.TotalVnd)</dd></div>
+            </dl>
+            @if (box.Lines.Count == 0)
+            {
+                <p class="box-panel__note">Chưa có món nào trong hộp.</p>
+            }
+            else if (outOfDateLines == 0)
+            {
+                <p class="box-panel__note">Cả @box.Lines.Count món đều còn hạn đến sau ngày giao @VnDate.Day(Model.SavedDeliveryDate!.Value) cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</p>
+            }
+            else
+            {
+                <p class="box-panel__note box-panel__note--warn">@outOfDateLines món hết hạn trước ngày giao. Bỏ món đó ra hoặc đổi ngày giao.</p>
+            }
+            @* The review page (step 4) is not built yet, so the button is off and says so (decision 2026-11-16). *@
+            <button type="button" class="btn btn--primary box-panel__next" disabled aria-describedby="next-soon">Tiếp tục: xem lại hộp quà</button>
+            <p class="box-panel__soon" id="next-soon">Bước xem lại hộp quà sẽ có trong bản sau.</p>
+        </aside>
+        </div>
+
+        @* Phone: the box as a bar fixed to the bottom of the screen (mockups 26 and 27, phone). *@
+        <div class="box-bar" aria-label="Tóm tắt hộp quà" role="region">
+            <p class="box-bar__sums"><span>@box.Count món · @(box.Quote.OverBudget ? "Vượt" : "Còn lại") <strong>@Vnd.Format(box.LeftOrOverVnd)</strong></span><strong class="box-bar__total">@Vnd.Format(box.Quote.TotalVnd)</strong></p>
+            <meter class="budget-meter" min="0" max="@Math.Max(box.BudgetVnd, 1)" value="@box.Quote.GoodsVnd" aria-hidden="true"></meter>
+            <button type="button" class="btn btn--primary box-bar__next" disabled aria-describedby="next-soon-bar">Xem lại hộp quà</button>
+            <p class="visually-hidden" id="next-soon-bar">Bước xem lại hộp quà sẽ có trong bản sau.</p>
+        </div>
+
+        @* builder.ts writes here what changed after "Thêm", − or +, for screen readers. *@
+        <p class="visually-hidden" id="box-status" role="status"></p>
     }
 </div>

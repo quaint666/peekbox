@@ -36,23 +36,24 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 </div>
 </div>
 
-<div style="max-width:1200px;margin:0 auto;padding:32px;display:flex;flex-direction:column;gap:28px">
 
-<!-- title + steps -->
-<div style="display:flex;flex-direction:column;gap:16px">
-<h1 style="margin:0;font-size:34px;font-weight:700;line-height:1.25">Tạo hộp quà của bạn</h1>
+<!-- title, then the step strip (done: tint; current: filled; not reached: plain) -->
+<div style="border-bottom:1px solid #DAD6C9"><div style="max-width:1200px;margin:0 auto;padding:32px 32px 20px"><h1 style="margin:0;font-size:34px;font-weight:700;line-height:1.25">Tạo hộp quà của bạn</h1></div></div>
+<div style="border-bottom:1px solid #DAD6C9"><div style="max-width:1200px;margin:0 auto;padding:12px 32px">
 <ol style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:12px;font-size:14px">
 <sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
-<li style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid #DAD6C9;background:#FFFFFF;color:#4A5650"><span style="font-weight:700;color:#1F2A24">{{s.n}}</span><span>{{s.label}}</span></li>
+<li style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid {{s.border}};background:{{s.bg}};color:{{s.fg}}"><span style="font-weight:700">{{s.n}}</span><span>{{s.label}}</span></li>
 </sc-for>
 </ol>
-</div>
+</div></div>
 
-<!-- budget + date -->
+<div style="max-width:1200px;margin:0 auto;padding:28px 32px 56px;display:flex;flex-direction:column;gap:28px">
+
+<!-- step 1: budget + date -->
 <div style="background:#FFFFFF;border:1px solid #DAD6C9;border-radius:16px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:24px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end">
 <div style="display:flex;flex-direction:column;gap:8px;flex:1 1 260px">
 <label for="budget" style="font-size:14px;font-weight:600">Ngân sách của bạn</label>
-<input id="budget" value="500.000đ" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:20px;font-weight:600;color:#1F2A24;background:#FFFFFF">
+<input id="budget" value="{{budget}}" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:20px;font-weight:600;color:#1F2A24;background:#FFFFFF">
 <div style="display:flex;flex-wrap:wrap;gap:8px">
 <sc-for list="{{presets}}" as="p" hint-placeholder-count="4">
 <button style="min-height:44px;padding:0 14px;border:1px solid #3F6B57;border-radius:999px;background:transparent;color:#3F6B57;font-family:inherit;font-size:14px;font-weight:600">{{p}}</button>
@@ -61,16 +62,22 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 </div>
 <div style="display:flex;flex-direction:column;gap:8px;flex:1 1 220px">
 <label for="date" style="font-size:14px;font-weight:600">Ngày giao hàng</label>
-<input id="date" value="15/01/2027" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:20px;font-weight:600;color:#1F2A24;background:#FFFFFF">
+<input id="date" value="{{date}}" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:20px;font-weight:600;color:#1F2A24;background:#FFFFFF">
 <div style="font-size:13px;color:#4A5650">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</div>
+<button style="align-self:flex-start;min-height:44px;padding:0 24px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600">Lưu</button>
 </div>
 <div style="flex:1 1 260px;font-size:14px;line-height:1.55;color:#4A5650">Đặt ngân sách trước, rồi chọn món. Tổng tiền do hệ thống tính và luôn hiện ở bên phải.</div>
 </div>
 
-<!-- main columns -->
+<!-- 02: steps 2 and 3 are locked; nothing is drawn below the note -->
+<sc-if value="{{locked}}" hint-placeholder-val="{{false}}">
+<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px dashed #8A948E;border-radius:12px;font-size:14px;line-height:1.5;color:#4A5650"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5650" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Nhập ngân sách và ngày giao hàng rồi bấm <strong style="color:#1F2A24">Lưu</strong> để mở bước chọn món và đóng gói. Chúng tôi cần ngày giao để ẩn những món sắp hết hạn.</span></div>
+</sc-if>
+
+<sc-if value="{{open}}" hint-placeholder-val="{{true}}">
 <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
 
-<!-- items -->
+<!-- step 2: items -->
 <div style="flex:999 1 620px;min-width:0;display:flex;flex-direction:column;gap:20px">
 <div style="display:flex;flex-direction:column;gap:10px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:17px;font-weight:700">Hộp gợi ý cho Tết</h2><span style="font-size:13px;color:#4A5650">Bắt đầu nhanh, rồi sửa tùy ý</span></div>
@@ -87,29 +94,25 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end"><div style="flex:1 1 280px;display:flex;flex-direction:column;gap:6px;min-width:0"><label for="q" style="font-size:13px;font-weight:600">Tìm món</label><div style="position:relative"><span style="position:absolute;left:14px;top:15px;pointer-events:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5650" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><input id="q" type="search" placeholder="Tên món, thương hiệu, xuất xứ"  style="box-sizing:border-box;width:100%;min-height:48px;padding:0 14px 0 42px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:16px;background:#FFFFFF;color:#1F2A24"></div></div><div style="display:flex;flex-direction:column;gap:6px"><label for="sort" style="font-size:13px;font-weight:600">Sắp xếp</label><select id="sort" style="box-sizing:border-box;min-height:48px;padding:0 12px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><option>Mặc định</option><option>Giá thấp đến cao</option><option>Giá cao đến thấp</option><option>Hạn dùng xa nhất</option><option>Tên A đến Z</option></select></div><label style="display:flex;align-items:center;gap:10px;min-height:48px;font-size:14px;line-height:1.4"><input type="checkbox" checked style="flex:none;width:20px;height:20px;accent-color:#3F6B57"><span>Chỉ món đủ hạn cho ngày giao <strong>15/01/2027</strong></span></label></div>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
-<sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
 <button style="min-height:44px;padding:0 16px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:600;border:1px solid #3F6B57;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button>
 </sc-for>
 </div>
 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:14px;color:#4A5650;line-height:1.5"><span>Hiện 6 món. 2 món hết hạn trước ngày giao đang được ẩn.</span><button style="min-height:44px;padding:0 4px;border:0;background:none;color:#3F6B57;font-family:inherit;font-size:14px;font-weight:600;text-decoration:underline">Hiện cả 2 món</button></div>
 
+<!-- item cards: the photo and the name are links to the item page; the add control is a separate button -->
 <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
 <sc-for list="{{items}}" as="it" hint-placeholder-count="6">
 <div style="background:#FFFFFF;border:1px solid #DAD6C9;border-radius:14px;box-shadow:0 1px 3px rgba(31,42,36,0.07);overflow:hidden;display:flex;flex-direction:column">
-<img src="{{it.img}}" alt="{{it.name}}" style="display:block;width:100%;aspect-ratio:1 / 1;object-fit:cover;background:#DBDFD3">
+<a href="Item.dc.html" style="display:block;overflow:hidden"><img src="{{it.img}}" alt="{{it.name}}" style="display:block;width:100%;aspect-ratio:1 / 1;object-fit:cover;background:#DBDFD3"></a>
 <div style="padding:16px;display:flex;flex-direction:column;gap:8px;flex:1">
-<div style="font-size:17px;font-weight:600;line-height:1.3">{{it.name}}</div>
+<a href="Item.dc.html" style="font-size:17px;font-weight:600;line-height:1.3;color:#1F2A24;text-decoration:none">{{it.name}}</a>
 <div style="font-size:13px;color:#4A5650;line-height:1.5">{{it.brand}} · {{it.weight}}<br>Xuất xứ: {{it.origin}}</div>
-<sc-if value="{{it.warn}}" hint-placeholder-val="{{false}}">
-<div style="align-self:flex-start;padding:5px 10px;border-radius:999px;background:#FFF1CC;color:#7A4F00;font-size:12px;font-weight:600">HSD {{it.expiry}}, trước ngày giao</div>
-</sc-if>
-<sc-if value="{{it.fresh}}" hint-placeholder-val="{{true}}">
 <div style="align-self:flex-start;padding:5px 10px;border-radius:999px;background:#E3EFE7;color:#25513E;font-size:12px;font-weight:600">HSD {{it.expiry}} · đủ hạn</div>
-</sc-if>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px">
 <strong style="font-size:16px">{{it.price}}</strong>
 <sc-if value="{{it.added}}" hint-placeholder-val="{{false}}">
-<button style="min-height:44px;padding:0 16px;border:1px solid #3F6B57;border-radius:10px;background:#E3EFE7;color:#25513E;font-family:inherit;font-size:14px;font-weight:600">Đã thêm</button>
+<span style="display:inline-flex;align-items:stretch;border:1px solid #3F6B57;border-radius:10px;overflow:hidden;background:#FFFFFF;color:#25513E"><button aria-label="Bớt một {{it.name}}" style="width:44px;height:44px;border:0;background:none;color:#25513E;font-family:inherit;font-size:20px;line-height:1">−</button><span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:0 4px;background:#E3EFE7;font-size:15px;font-weight:700">{{it.qty}}</span><button aria-label="Thêm một {{it.name}}" style="width:44px;height:44px;border:0;background:none;color:#25513E;font-family:inherit;font-size:20px;line-height:1">+</button></span>
 </sc-if>
 <sc-if value="{{it.canAdd}}" hint-placeholder-val="{{true}}">
 <button style="min-height:44px;padding:0 18px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:14px;font-weight:600">Thêm</button>
@@ -122,42 +125,66 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 </div>
 </sc-for>
 </div>
+
+<!-- step 3: packaging; locked (only the note) until the box holds at least one item -->
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
+<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px dashed #8A948E;border-radius:12px;font-size:14px;line-height:1.5;color:#4A5650"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A5650" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Chọn ít nhất <strong style="color:#1F2A24">1 món</strong> để mở bước đóng gói.</span></div>
+</sc-if>
+<sc-if value="{{filled}}" hint-placeholder-val="{{true}}">
+<div style="background:#FFFFFF;border:1px solid #DAD6C9;border-radius:16px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:24px;display:flex;flex-direction:column;gap:16px">
+<h2 style="margin:0;font-size:20px;font-weight:600">Chọn kiểu đóng gói</h2>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+<sc-for list="{{packs}}" as="k" hint-placeholder-count="3">
+<label style="display:flex;flex-direction:column;gap:8px;padding:12px;border:{{k.border}};border-radius:12px;background:{{k.bg}}">
+<img src="{{k.img}}" alt="" style="display:block;width:100%;aspect-ratio:2 / 1;object-fit:cover;border-radius:8px;background:#DBDFD3">
+<span style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600"><span aria-hidden="true" style="flex:none;box-sizing:border-box;width:18px;height:18px;border-radius:50%;border:{{k.ring}};background:#FFFFFF"></span>{{k.name}}</span>
+<span style="font-size:13px;line-height:1.5;color:#4A5650">{{k.text}}</span>
+<strong style="font-size:15px">{{k.fee}}</strong>
+</label>
+</sc-for>
+</div>
+</div>
+</sc-if>
 </div>
 
-<!-- summary -->
+<!-- the box so far -->
 <div style="flex:1 1 340px;min-width:300px;background:#FFFFFF;border:1px solid #DAD6C9;border-radius:16px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:24px;display:flex;flex-direction:column;gap:18px">
 <h2 style="margin:0;font-size:20px;font-weight:700">Hộp của bạn</h2>
+<sc-if value="{{filled}}" hint-placeholder-val="{{true}}">
 <div style="display:flex;flex-direction:column;gap:12px">
 <sc-for list="{{lines}}" as="l" hint-placeholder-count="3">
 <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:1px solid #E6E2D6">
 <div style="display:flex;justify-content:space-between;gap:12px;font-size:15px"><span style="font-weight:600">{{l.name}}</span><span>{{l.price}}</span></div>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:#4A5650">
 <span>{{l.weight}} · HSD {{l.expiry}}</span>
-<span style="display:inline-flex;align-items:center;gap:6px">
-<button aria-label="Giảm số lượng" style="width:44px;height:44px;border:1px solid #8A948E;border-radius:10px;background:#FFFFFF;color:#1F2A24;font-family:inherit;font-size:18px">−</button>
-<span style="min-width:20px;text-align:center;color:#1F2A24;font-weight:600">1</span>
-<button aria-label="Tăng số lượng" style="width:44px;height:44px;border:1px solid #8A948E;border-radius:10px;background:#FFFFFF;color:#1F2A24;font-family:inherit;font-size:18px">+</button>
-</span>
+<span style="display:inline-flex;align-items:stretch;border:1px solid #3F6B57;border-radius:10px;overflow:hidden;background:#FFFFFF;color:#25513E"><button aria-label="Bớt một {{l.name}}" style="width:44px;height:44px;border:0;background:none;color:#25513E;font-family:inherit;font-size:20px;line-height:1">−</button><span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:0 4px;background:#E3EFE7;font-size:15px;font-weight:700">1</span><button aria-label="Thêm một {{l.name}}" style="width:44px;height:44px;border:0;background:none;color:#25513E;font-family:inherit;font-size:20px;line-height:1">+</button></span>
 </div>
 </div>
 </sc-for>
 </div>
+</sc-if>
 
 <div style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;font-size:14px"><span>Đóng gói: {{packName}}</span><span>{{packFee}}</span></div>
 <div style="display:flex;justify-content:space-between;font-size:14px"><span>Ngân sách</span><span>500.000đ</span></div>
-<div style="height:10px;border-radius:5px;background:#E6E2D6"><div style="width:84%;height:10px;border-radius:5px;background:#3F6B57"></div></div>
-<div style="display:flex;justify-content:space-between;font-size:14px;color:#4A5650"><span>Còn lại</span><strong style="color:#1F2A24">80.000đ</strong></div>
+<div style="height:10px;border-radius:5px;background:#E6E2D6"><div style="width:{{bar}};height:10px;border-radius:5px;background:#3F6B57"></div></div>
+<div style="display:flex;justify-content:space-between;font-size:14px;color:#4A5650"><span>Còn lại</span><strong style="color:#1F2A24">{{left}}</strong></div>
 </div>
 
-<div style="display:flex;justify-content:space-between;align-items:baseline;font-size:15px"><span>Tổng cộng (đã gồm thuế)</span><strong style="font-size:24px">420.000đ</strong></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;font-size:15px"><span>Tổng cộng (đã gồm thuế)</span><strong style="font-size:24px">{{total}}</strong></div>
 
-<div style="background:#E3EFE7;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.5;color:#25513E">Cả 3 món đều còn hạn đến sau ngày giao 15/01/2027 cộng 7 ngày dự phòng.</div>
+<div style="background:#E3EFE7;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.5;color:#25513E">{{boxNote}}</div>
 
-<button style="min-height:48px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:16px;font-weight:600">Tiếp tục: chọn đóng gói</button>
-<div style="font-size:12px;color:#4A5650;line-height:1.5">Giá hiển thị là giá mẫu cho bản thiết kế.</div>
+<sc-if value="{{filled}}" hint-placeholder-val="{{true}}">
+<button style="min-height:48px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:16px;font-weight:600">Tiếp tục: xem lại hộp quà</button>
+</sc-if>
+<sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
+<button disabled style="min-height:48px;border:0;border-radius:10px;background:#E6E2D6;color:#5B655F;font-family:inherit;font-size:16px;font-weight:600">Tiếp tục: xem lại hộp quà</button>
+</sc-if>
 </div>
 
 </div>
+</sc-if>
 </div>
 </div>
 <div style="background:#1F2A24;color:#B6B8B2;font-size:14px;line-height:1.7"><div style="max-width:1200px;margin:0 auto;padding:56px 32px 32px;display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:40px"><div><div style="font-size:22px;font-weight:700;color:#F7F5EF">Peekbox</div><div style="margin-top:8px;max-width:300px;color:#B6B8B2">Hộp quà cho Tết, 20/11 và 8/3.</div></div><div style="display:flex;flex-direction:column"><div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#9DA19B;margin-bottom:6px">Khám phá</div><a href="Builder.dc.html" style="display:inline-flex;align-items:center;min-height:44px;color:#B6B8B2;text-decoration:none">Giới thiệu</a><a href="Builder.dc.html" style="display:inline-flex;align-items:center;min-height:44px;color:#B6B8B2;text-decoration:none">Cam kết</a><a href="Builder.dc.html" style="display:inline-flex;align-items:center;min-height:44px;color:#B6B8B2;text-decoration:none">Blog</a><a href="Builder.dc.html" style="display:inline-flex;align-items:center;min-height:44px;color:#B6B8B2;text-decoration:none">Tra cứu đơn hàng</a></div><div style="display:flex;flex-direction:column"><div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#9DA19B;margin-bottom:6px">Pháp lý</div><a href="Builder.dc.html" style="display:inline-flex;align-items:center;min-height:44px;color:#B6B8B2;text-decoration:none">Điều khoản</a><a href="Builder.dc.html" style="display:inline-flex;align-items:center;min-height:44px;color:#B6B8B2;text-decoration:none">Chính sách bảo mật</a></div><div><div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#9DA19B;margin-bottom:6px">Liên hệ</div><div style="color:#B6B8B2;line-height:1.8">[SỐ ĐIỆN THOẠI]<br>[EMAIL]<br>[ĐỊA CHỈ]</div></div></div><div style="border-top:1px solid #3C463F"><div style="max-width:1200px;margin:0 auto;padding:18px 32px"><div style="font-size:13px;color:#9DA19B">© Peekbox</div></div></div></div>
@@ -166,17 +193,36 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
 class Component extends DCLogic {
 renderVals() {
+// Which moment of the builder this board draws: "02" on arrival (steps 2 and 3 locked), "26" with the budget and date
+// saved and the box empty (packaging locked), "27" with three items in the box (packaging open). The exported images
+// customer/02-builder, states/26-builder-items-unlocked and states/27-builder-packaging-unlocked are this file at each stage.
+const stage = "27";
+const img = (f) => "../../src/Peekbox.Web/wwwroot/images/" + f;
+const filled = stage === "27";
+const step = (n, label, state) => ({ n, label,
+  bg: state === "current" ? "#3F6B57" : state === "done" ? "#E3EFE7" : "#FFFFFF",
+  fg: state === "current" ? "#FFFFFF" : state === "done" ? "#25513E" : "#4A5650",
+  border: state === "todo" ? "#DAD6C9" : "#3F6B57" });
+// added: the pill (− n +); canAdd: "Thêm"; over: the disabled "Vượt X" (in 27 only 80.000đ is left)
+const item = (name, file, brand, weight, origin, expiry, price, inBox, overText) => ({ name, img: img("products/" + file), brand, weight, origin, expiry, price,
+  added: filled && inBox, qty: "1", canAdd: !(filled && inBox) && !(filled && overText), over: filled && !!overText, overText: overText || "" });
 return {
+locked: stage === "02",
+open: stage !== "02",
+empty: stage === "26",
+filled,
+budget: stage === "02" ? "" : "500.000đ",
+date: stage === "02" ? "" : "15/01/2027",
 steps: [
-{ n: "1", label: "Ngân sách" },
-{ n: "2", label: "Chọn món" },
-{ n: "3", label: "Đóng gói" },
-{ n: "4", label: "Xem lại" }
+  step("1", "Ngân sách", stage === "02" ? "current" : "done"),
+  step("2", "Chọn món", stage === "26" ? "current" : stage === "27" ? "done" : "todo"),
+  step("3", "Đóng gói", stage === "27" ? "current" : "todo"),
+  step("4", "Xem lại", "todo")
 ],
 starters: [
-{ name: "Hộp biếu gia đình", budget: "500.000đ", count: "4 món", i1: "../../src/Peekbox.Web/wwwroot/images/products/tra-sen.webp", i2: "../../src/Peekbox.Web/wwwroot/images/products/hat-dieu.webp", i3: "../../src/Peekbox.Web/wwwroot/images/products/mut-gung.webp" },
-{ name: "Hộp biếu đối tác", budget: "800.000đ", count: "5 món", i1: "../../src/Peekbox.Web/wwwroot/images/products/tra-shan-tuyet.webp", i2: "../../src/Peekbox.Web/wwwroot/images/products/hat-macca.webp", i3: "../../src/Peekbox.Web/wwwroot/images/products/mat-ong-nhan.webp" },
-{ name: "Hộp biếu đồng nghiệp", budget: "300.000đ", count: "4 món", i1: "../../src/Peekbox.Web/wwwroot/images/products/ca-phe-phin-giay.webp", i2: "../../src/Peekbox.Web/wwwroot/images/products/keo-dua.webp", i3: "../../src/Peekbox.Web/wwwroot/images/products/mit-say.webp" }
+{ name: "Hộp biếu gia đình", budget: "500.000đ", count: "4 món", i1: img("products/tra-sen.webp"), i2: img("products/hat-dieu.webp"), i3: img("products/mut-gung.webp") },
+{ name: "Hộp biếu đối tác", budget: "800.000đ", count: "5 món", i1: img("products/tra-shan-tuyet.webp"), i2: img("products/hat-macca.webp"), i3: img("products/mat-ong-nhan.webp") },
+{ name: "Hộp biếu đồng nghiệp", budget: "300.000đ", count: "4 món", i1: img("products/ca-phe-phin-giay.webp"), i2: img("products/keo-dua.webp"), i3: img("products/mit-say.webp") }
 ],
 presets: ["300.000đ", "500.000đ", "800.000đ", "1.000.000đ"],
 cats: [
@@ -184,21 +230,34 @@ cats: [
 { label: "Bánh", bg: "transparent", fg: "#3F6B57" },
 { label: "Trà và cà phê", bg: "transparent", fg: "#3F6B57" },
 { label: "Hạt và trái cây sấy", bg: "transparent", fg: "#3F6B57" },
-{ label: "Mứt và kẹo", bg: "transparent", fg: "#3F6B57" }
+{ label: "Mứt và kẹo", bg: "transparent", fg: "#3F6B57" },
+{ label: "Mật ong và đặc sản", bg: "transparent", fg: "#3F6B57" }
 ],
+// The "only items in date" box is ticked, so no out-of-date item is drawn (state 04 shows that card).
 items: [
-{ name: "Trà sen", img: "../../src/Peekbox.Web/wwwroot/images/products/tra-sen.webp", brand: "Thương hiệu A", weight: "100 g", origin: "Hà Nội", expiry: "12/2027", price: "180.000đ", warn: false, fresh: true, added: true, canAdd: false, over: false, overText: "" },
-{ name: "Hạt điều rang muối", img: "../../src/Peekbox.Web/wwwroot/images/products/hat-dieu.webp", brand: "Thương hiệu B", weight: "250 g", origin: "Bình Phước", expiry: "08/2027", price: "150.000đ", warn: false, fresh: true, added: true, canAdd: false, over: false, overText: "" },
-{ name: "Mứt gừng", img: "../../src/Peekbox.Web/wwwroot/images/products/mut-gung.webp", brand: "Thương hiệu C", weight: "200 g", origin: "Huế", expiry: "03/2027", price: "90.000đ", warn: false, fresh: true, added: true, canAdd: false, over: false, overText: "" },
-{ name: "Bánh quy bơ", img: "../../src/Peekbox.Web/wwwroot/images/products/banh-quy-bo.webp", brand: "Thương hiệu D", weight: "180 g", origin: "Đồng Nai", expiry: "10/01/2027", price: "75.000đ", warn: true, fresh: false, added: false, canAdd: true, over: false, overText: "" },
-{ name: "Cà phê rang xay", img: "../../src/Peekbox.Web/wwwroot/images/products/ca-phe.webp", brand: "Thương hiệu E", weight: "250 g", origin: "Đắk Lắk", expiry: "02/2028", price: "120.000đ", warn: false, fresh: true, added: false, canAdd: false, over: true, overText: "Vượt 40.000đ" },
-{ name: "Kẹo dừa", img: "../../src/Peekbox.Web/wwwroot/images/products/keo-dua.webp", brand: "Thương hiệu F", weight: "150 g", origin: "Bến Tre", expiry: "06/2027", price: "55.000đ", warn: false, fresh: true, added: false, canAdd: true, over: false, overText: "" }
+item("Trà sen", "tra-sen.webp", "Thương hiệu A", "100 g", "Hà Nội", "12/2027", "180.000đ", true),
+item("Hạt điều rang muối", "hat-dieu.webp", "Thương hiệu B", "250 g", "Bình Phước", "08/2027", "150.000đ", true),
+item("Mứt gừng", "mut-gung.webp", "Thương hiệu C", "200 g", "Huế", "03/2027", "90.000đ", true),
+item("Mít sấy", "mit-say.webp", "Thương hiệu F", "150 g", "Tiền Giang", "07/2027", "80.000đ", false),
+item("Cà phê rang xay", "ca-phe.webp", "Thương hiệu E", "250 g", "Đắk Lắk", "02/2028", "120.000đ", false, "Vượt 40.000đ"),
+item("Kẹo dừa", "keo-dua.webp", "Thương hiệu F", "150 g", "Bến Tre", "06/2027", "55.000đ", false)
 ],
 lines: [
-{ name: "Trà sen", img: "../../src/Peekbox.Web/wwwroot/images/products/tra-sen.webp", weight: "100 g", expiry: "12/2027", price: "180.000đ" },
-{ name: "Hạt điều rang muối", img: "../../src/Peekbox.Web/wwwroot/images/products/hat-dieu.webp", weight: "250 g", expiry: "08/2027", price: "150.000đ" },
-{ name: "Mứt gừng", img: "../../src/Peekbox.Web/wwwroot/images/products/mut-gung.webp", weight: "200 g", expiry: "03/2027", price: "90.000đ" }
-]
+{ name: "Trà sen", weight: "100 g", expiry: "12/2027", price: "180.000đ" },
+{ name: "Hạt điều rang muối", weight: "250 g", expiry: "08/2027", price: "150.000đ" },
+{ name: "Mứt gừng", weight: "200 g", expiry: "03/2027", price: "90.000đ" }
+],
+packs: [
+{ name: "Hộp giấy kraft", img: img("packaging/box-kraft.webp"), text: "Giấy tái chế, buộc dây gai. Hợp quà công ty.", fee: "Miễn phí", ring: "5px solid #3F6B57", border: "2px solid #3F6B57", bg: "#E3EFE7" },
+{ name: "Hộp cứng có nơ", img: img("packaging/box-hard.webp"), text: "Hộp cứng, lót giấy, nơ vải. Hợp quà Tết.", fee: "+40.000đ", ring: "1.5px solid #8A948E", border: "1px solid #DAD6C9", bg: "#FFFFFF" },
+{ name: "Giỏ mây", img: img("packaging/basket.webp"), text: "Giỏ mây phủ màng trong, có quai xách.", fee: "+70.000đ", ring: "1.5px solid #8A948E", border: "1px solid #DAD6C9", bg: "#FFFFFF" }
+],
+packName: filled ? "Hộp giấy kraft" : "chưa chọn",
+packFee: filled ? "0đ" : "–",
+bar: filled ? "84%" : "0%",
+left: filled ? "80.000đ" : "500.000đ",
+total: filled ? "420.000đ" : "0đ",
+boxNote: filled ? "Cả 3 món đều còn hạn đến sau ngày giao 15/01/2027 cộng 7 ngày dự phòng." : "Chưa có món nào trong hộp."
 };
 }
 }

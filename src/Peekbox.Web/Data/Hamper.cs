@@ -17,4 +17,6 @@ public class Hamper
     public DateTimeOffset CreatedAt { get; set; }
 
     public DateTimeOffset UpdatedAt { get; set; }
+
+    public List<HamperItem> Items { get; set; } = [];
 }

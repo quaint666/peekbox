@@ -1,5 +1,5 @@
 {
-  "_note": "SHARED TEST CASES for the price, budget and expiry rules. The front-end tests (tests/pricing.test.mjs) read this file today. Whatever backend is built (TypeScript or C#) must read the SAME file and pass the SAME cases, so the rules cannot drift apart. Money is whole dong. Dates are YYYY-MM-DD. Change a case only together with docs/decisions.md.",
+  "_note": "SHARED TEST CASES for the price, budget and expiry rules. tests/Peekbox.Tests/PricingVectorsTests.cs runs every case against the C# pricing code. Anything else that needs these rules must read the SAME file and pass the SAME cases, so the rules cannot drift apart. Money is whole dong. Dates are YYYY-MM-DD. Change a case only together with docs/decisions.md.",
 
   "products": {
     "a": { "slug": "a", "price_vnd": 180000, "expiry_date": "2027-12-31", "stock": 10 },

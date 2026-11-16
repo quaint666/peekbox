@@ -1,5 +1,7 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using Peekbox.Web.Data;
 using Peekbox.Web.Formatting;
 using Peekbox.Web.Models;
 using Peekbox.Web.Navigation;
@@ -22,30 +24,54 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             return View(new BuilderViewModel());
         }
 
-        return View(await WithItemsAsync(new BuilderViewModel
+        return View(await WithItemsAsync(hamper, new BuilderViewModel
         {
             BudgetText = Vnd.Format(hamper.BudgetVnd),
             DeliveryDateText = hamper.DeliveryDate?.ToString(BuilderLimits.DateFormat, CultureInfo.InvariantCulture) ?? "",
             // The cookie lasts 180 days, so a date saved earlier can be today or in the past by now. It shows the same
             // warning as typing such a date, and the items stay locked until a new date is saved (decision 2026-11-16).
             DateProblem = hamper.DeliveryDate < limits.Earliest ? DateProblem.TooEarly : DateProblem.None,
-        }, hamper.DeliveryDate, new ItemFilter(category, inDate, q, sort), cancellationToken));
+        }, new ItemFilter(category, inDate, q, sort), cancellationToken));
     }
 
     // The items unlock once a delivery date is saved (the budget is always saved with it) and that date can still be
     // delivered: tomorrow or later.
-    private async Task<BuilderViewModel> WithItemsAsync(BuilderViewModel model, DateOnly? deliveryDate, ItemFilter filter, CancellationToken cancellationToken)
+    private bool ItemsOpen(Hamper? hamper) => hamper?.DeliveryDate is { } date && date >= limits.Earliest;
+
+    private async Task<BuilderViewModel> WithItemsAsync(Hamper? hamper, BuilderViewModel model, ItemFilter filter, CancellationToken cancellationToken)
     {
-        if (deliveryDate is not { } date || date < limits.Earliest)
+        if (hamper is null || !ItemsOpen(hamper))
         {
             return model;
         }
 
+        var box = await hampers.BoxAsync(hamper, cancellationToken);
         return model with
         {
-            SavedDeliveryDate = date,
-            Items = await catalog.ListAsync(date, filter, cancellationToken),
+            SavedDeliveryDate = hamper.DeliveryDate,
+            Items = await catalog.ListAsync(hamper.DeliveryDate!.Value, filter, box, cancellationToken),
+            Box = box,
         };
+    }
+
+    // "Thêm", − and + on a card or in "Hộp của bạn" (F20). The form sends the item and the new amount; the address keeps
+    // the filters, so the visitor comes back to the same list, at the same card (post, then redirect). The amount is
+    // checked again here: a button the page showed as off, or a made-up request, changes nothing.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, bool inDate = true, CancellationToken cancellationToken = default)
+    {
+        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        if (hamper is not null && ItemsOpen(hamper) && !string.IsNullOrEmpty(slug)
+            && await hampers.SetQuantityAsync(hamper, slug, quantity, cancellationToken) == QuantityChange.UnknownItem)
+        {
+            return NotFound();
+        }
+
+        var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false" }
+            .Where(p => !string.IsNullOrEmpty(p.Value));
+        var anchor = string.IsNullOrEmpty(slug) ? "#chon-mon" : "#mon-" + Uri.EscapeDataString(slug);
+        return Redirect(QueryHelpers.AddQueryString(SiteLinks.Builder.Href, back) + anchor);
     }
 
     // "Lưu" and the quick amounts both end here. A wrong value saves nothing: the page comes back with a warning
@@ -63,13 +89,13 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
         {
             // Nothing was saved, so the items below still follow the date saved earlier (if any).
             var saved = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
-            return View(await WithItemsAsync(new BuilderViewModel
+            return View(await WithItemsAsync(saved, new BuilderViewModel
             {
                 BudgetText = budgetProblem == BudgetProblem.None ? Vnd.Format(budget) : budgetText ?? "",
                 DeliveryDateText = form.DeliveryDate ?? "",
                 BudgetProblem = budgetProblem,
                 DateProblem = dateProblem,
-            }, saved?.DeliveryDate, new ItemFilter(), cancellationToken));
+            }, new ItemFilter(), cancellationToken));
         }
 
         var hamper = await hampers.SaveAsync(Request.Cookies[HamperService.CookieName], budget, date, cancellationToken);

@@ -26,7 +26,10 @@ public sealed class BuilderLimits(TimeProvider clock)
     // an item that expires on the last day of the margin is out (decision 2026-11-16). A setting once the admin exists (M6).
     public const int ShelfMarginDays = 7;
 
-    public static bool IsInDate(DateOnly expiry, DateOnly deliveryDate) => expiry > deliveryDate.AddDays(ShelfMarginDays);
+    public static bool IsInDate(DateOnly expiry, DateOnly deliveryDate) => IsInDate(expiry, deliveryDate, ShelfMarginDays);
+
+    // The same rule with any margin; tests/vectors/pricing.json also checks a margin of 0.
+    public static bool IsInDate(DateOnly expiry, DateOnly deliveryDate, int marginDays) => expiry > deliveryDate.AddDays(marginDays);
 
     // Plain digits (500000), or digits in groups of three split by dots or spaces (500.000, 1.000.000, 500 000), with an
     // optional "đ" at the end. A dot anywhere else is a typo, not a thousands mark: "1.5" and "500.00" used to become 15đ
