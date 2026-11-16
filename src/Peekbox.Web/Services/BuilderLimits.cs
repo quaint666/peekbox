@@ -22,6 +22,12 @@ public sealed class BuilderLimits(TimeProvider clock)
 
     public DateOnly Latest => Today.AddYears(1);
 
+    // The safety margin of F22. An item is in date only when it expires AFTER the delivery date plus this many days:
+    // an item that expires on the last day of the margin is out (decision 2026-11-16). A setting once the admin exists (M6).
+    public const int ShelfMarginDays = 7;
+
+    public static bool IsInDate(DateOnly expiry, DateOnly deliveryDate) => expiry > deliveryDate.AddDays(ShelfMarginDays);
+
     // Plain digits (500000), or digits in groups of three split by dots or spaces (500.000, 1.000.000, 500 000), with an
     // optional "đ" at the end. A dot anywhere else is a typo, not a thousands mark: "1.5" and "500.00" used to become 15đ
     // and 50.000đ without a warning, so now they are invalid. [0-9], not \d: \d also matches digits of other scripts.

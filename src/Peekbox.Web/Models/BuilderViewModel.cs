@@ -15,4 +15,13 @@ public sealed record BuilderViewModel
     public BudgetProblem BudgetProblem { get; init; }
 
     public DateProblem DateProblem { get; init; }
+
+    // The saved delivery date, shown next to the checkbox. Null until a budget and a date are saved: the items stay locked.
+    public DateOnly? SavedDeliveryDate { get; init; }
+
+    // The item list; null while the items are locked.
+    public ItemList? Items { get; init; }
+
+    // The "only items in date" checkbox (F18), on by default. The name is the query parameter of the filter form.
+    public bool InDate { get; init; } = true;
 }
