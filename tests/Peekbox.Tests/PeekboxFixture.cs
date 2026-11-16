@@ -34,8 +34,12 @@ public sealed class PeekboxFixture : IAsyncLifetime
     public async Task InitializeAsync()
     {
         await RunOnServerAsync($"CREATE DATABASE \"{_databaseName}\"");
-        Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
-            builder.UseSetting("ConnectionStrings:Default", _testConnection));
+        // Every test request comes from the same (empty) address, so the order limit is raised for the whole run;
+        // CheckoutTests makes its own app with a limit of 1 to see the "too many tries" page.
+        Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder => builder
+            .UseSetting("ConnectionStrings:Default", _testConnection)
+            .UseSetting("RateLimits:OrdersPer15Minutes", "100000")
+            .UseSetting("RateLimits:TrackPer15Minutes", "100000"));
 
         using var scope = Factory.Services.CreateScope();
         // Migrate, not MigrateAsync: the seed is registered with UseSeeding, which is what the dotnet ef tools and

@@ -33,6 +33,7 @@
   --color-hero-top: #EAF0E4;       /* top of the home hero gradient */
   --color-warn-bg: #FFF1CC;
   --color-warn-text: #7A4F00;
+  --color-warn-border: #E0B84A;   /* the edge of the amber note (state 07, an item sold out at checkout) */
   --color-danger-bg: #FBE4E0;
   --color-danger-text: #7A1F14;
   --color-danger-border: #D9877D;  /* the edge of the red banner on the review page (mockup 30) */
@@ -110,6 +111,7 @@
     --color-hero-top: #171B18;
     --color-warn-bg: #3A3016;
     --color-warn-text: #F2D98A;
+    --color-warn-border: #6B5A22;
     --color-danger-bg: #3B1F1B;
     --color-danger-text: #F4B8AF;
     --color-danger-border: #A32A1E;  /* no dark mockup 30: the light theme's danger red, which reads on the dark red banner */
@@ -151,6 +153,7 @@
   --color-hero-top: #171B18;
   --color-warn-bg: #3A3016;
   --color-warn-text: #F2D98A;
+  --color-warn-border: #6B5A22;
   --color-danger-bg: #3B1F1B;
   --color-danger-text: #F4B8AF;
   --color-danger-border: #A32A1E;  /* no dark mockup 30: the light theme's danger red, which reads on the dark red banner */

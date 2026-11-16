@@ -29,6 +29,7 @@
         var packaging = box.Packaging!;
         var when = box.DeliveryDate is { } date ? $"Giao ngày {VnDate.Day(date)}" : "Chưa chọn ngày giao";
         var lines = new HamperLines(box, "cart");
+        var reason = Model.CheckoutReason;   // null: the box can go to checkout
 
         @if (box.OutOfDate.Count > 0)
         {
@@ -62,16 +63,30 @@
                 @* Wide screens; on a phone the total and the button are in the bar below (mockup 05, phone). *@
                 <div class="cart-summary__end">
                     <p class="cart-total"><span>Tạm tính (đã gồm thuế)</span><strong>@Vnd.Format(box.Quote.TotalVnd)</strong></p>
-                    <button type="button" class="btn btn--primary cart-checkout" disabled aria-describedby="checkout-reason">Tiếp tục thanh toán</button>
-                    <p class="cart-reason@(Model.Blocked ? " cart-reason--block" : "")" id="checkout-reason">@Model.CheckoutReason</p>
+                    @if (reason is not null)
+                    {
+                        <button type="button" class="btn btn--primary cart-checkout" disabled aria-describedby="checkout-reason">Tiếp tục thanh toán</button>
+                        <p class="cart-reason@(Model.Blocked ? " cart-reason--block" : "")" id="checkout-reason">@reason</p>
+                    }
+                    else
+                    {
+                        <a class="btn btn--primary cart-checkout" href="@SiteLinks.CheckoutPath">Tiếp tục thanh toán</a>
+                    }
                 </div>
             </aside>
         </div>
 
         <div class="cart-bar" role="region" aria-label="Tạm tính">
             <p class="cart-total"><span>Tạm tính (đã gồm thuế)</span><strong>@Vnd.Format(box.Quote.TotalVnd)</strong></p>
-            <button type="button" class="btn btn--primary cart-checkout" disabled aria-describedby="checkout-reason-bar">Tiếp tục thanh toán</button>
-            <p class="cart-reason@(Model.Blocked ? " cart-reason--block" : "")" id="checkout-reason-bar">@Model.CheckoutReason</p>
+            @if (reason is not null)
+            {
+                <button type="button" class="btn btn--primary cart-checkout" disabled aria-describedby="checkout-reason-bar">Tiếp tục thanh toán</button>
+                <p class="cart-reason@(Model.Blocked ? " cart-reason--block" : "")" id="checkout-reason-bar">@reason</p>
+            }
+            else
+            {
+                <a class="btn btn--primary cart-checkout" href="@SiteLinks.CheckoutPath">Tiếp tục thanh toán</a>
+            }
         </div>
 
         <div class="cart-confirm" id="xoa-hop" popover role="dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">

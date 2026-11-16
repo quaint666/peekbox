@@ -24,6 +24,9 @@ public sealed record SoldOutLine(string Name, int Wanted, int Left);
 
 public sealed record PlaceResult(PlaceOutcome Outcome, string? OrderToken = null, IReadOnlyList<SoldOutLine>? SoldOut = null);
 
+// One ward in the checkout list, with the fee its ring costs.
+public sealed record WardOption(int Id, string Name, long FeeVnd);
+
 // Places an order (F48): the one place an order is written. All or nothing, in one transaction: the hamper is priced
 // again on the server, every rule is checked again, the stock is taken, the order and its lines are saved with copies
 // of everything that can change later, and the hamper is marked as ordered. The browser never sends a price.
@@ -142,6 +145,18 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
         await transaction.CommitAsync(cancellationToken);
         return new PlaceResult(PlaceOutcome.Placed, order.Token);
     }
+
+    // The order this visitor's hamper became, or null (no hamper, or not ordered yet).
+    public Task<string?> OrderTokenOfAsync(string? hamperToken, CancellationToken cancellationToken = default) =>
+        string.IsNullOrEmpty(hamperToken) || hamperToken.Length > SecretToken.MaxLength
+            ? Task.FromResult<string?>(null)
+            : db.Hampers.Where(h => h.Token == hamperToken && h.Order != null).Select(h => h.Order!.Token).FirstOrDefaultAsync(cancellationToken);
+
+    // The checkout's ward list, in page order (the file's Vietnamese order).
+    public async Task<List<WardOption>> WardsAsync(CancellationToken cancellationToken = default) =>
+        (await db.Wards.AsNoTracking().OrderBy(w => w.SortOrder).Select(w => new { w.Id, w.Name, w.Ring }).ToListAsync(cancellationToken))
+            .Select(w => new WardOption(w.Id, w.Name, DeliveryFees.ForRing(w.Ring)))
+            .ToList();
 
     private async Task<PlaceResult> AlreadyPlacedAsync(int orderId, CancellationToken cancellationToken)
     {

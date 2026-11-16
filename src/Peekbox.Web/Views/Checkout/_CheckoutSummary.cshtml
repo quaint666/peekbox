@@ -1,0 +1,33 @@
+@using Peekbox.Web.Formatting
+@model CheckoutViewModel
+@* "Đơn hàng của bạn" (F47, mockup 06). checkout.ts swaps this whole block when a ward is picked, so it has an id. *@
+@{
+    var box = Model.Box;
+}
+<aside class="card checkout-summary" id="checkout-summary" aria-labelledby="summary-title">
+    <h2 class="checkout-summary__title" id="summary-title">Đơn hàng của bạn</h2>
+    <ul class="checkout-lines">
+        @foreach (var line in box.Lines)
+        {
+            <li><span>@line.Name@(line.Quantity > 1 ? $" × {line.Quantity}" : "") <span class="checkout-lines__meta">· @line.WeightGrams g</span></span><span>@Vnd.Format(line.LineVnd)</span></li>
+        }
+    </ul>
+    <dl class="checkout-sums" aria-live="polite">
+        <div><dt>Tiền hàng</dt><dd>@Vnd.Format(box.Quote.GoodsVnd)</dd></div>
+        <div><dt>Đóng gói (@box.Packaging!.Name)</dt><dd>@Vnd.Format(box.Quote.PackagingVnd)</dd></div>
+        @if (Model.DeliveryFeeVnd is { } fee)
+        {
+            <div><dt>Phí giao hàng</dt><dd>@Vnd.Format(fee)</dd></div>
+        }
+        else
+        {
+            <div class="checkout-sums__later"><dt>Phí giao hàng</dt><dd>Chọn phường để tính</dd></div>
+        }
+    </dl>
+    <div class="checkout-summary__end">
+        <partial name="_CheckoutTotal" model="Model" />
+        <p class="checkout-note">Ngân sách @Vnd.Format(box.BudgetVnd) chỉ tính tiền hàng, không tính phí giao hàng.</p>
+        <button type="submit" form="checkout-form" class="btn btn--primary checkout-submit" data-label-zalopay="Đặt hàng và thanh toán ZaloPay" data-label-cod="Đặt hàng">Đặt hàng</button>
+    </div>
+    <p class="checkout-note">Khi đặt hàng, bạn đồng ý với <a href="@SiteLinks.Terms.Href">@SiteLinks.Terms.Label</a> và <a href="@SiteLinks.Privacy.Href">@SiteLinks.Privacy.Label</a>. Giá và phí giao hàng là giá mẫu.</p>
+</aside>

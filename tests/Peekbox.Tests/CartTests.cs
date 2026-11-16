@@ -136,7 +136,7 @@ public class CartTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task The_cart_shows_the_box_and_its_totals_and_checkout_waits_for_the_next_slice()
+    public async Task The_cart_shows_the_box_and_its_totals_and_leads_to_checkout()
     {
         var visitor = await VisitorAsync(Delivery, ("tra-sen", 1), ("hat-dieu-rang-muoi", 1), ("mut-gung", 1));
         await visitor.PostAsync("/builder/packaging", new() { ["packaging"] = "hard-bow" });
@@ -157,8 +157,9 @@ public class CartTests(PeekboxFixture fixture)
         Assert.Contains("<div><dt>Đóng gói</dt><dd>40.000đ</dd></div>", summary);
         Assert.Contains("<div class=\"cart-sums__later\"><dt>Phí giao hàng</dt><dd>Tính ở bước sau</dd></div>", summary);
         Assert.Contains("<p class=\"cart-total\"><span>Tạm tính (đã gồm thuế)</span><strong>460.000đ</strong></p>", summary);
-        Assert.Contains("<button type=\"button\" class=\"btn btn--primary cart-checkout\" disabled aria-describedby=\"checkout-reason\">Tiếp tục thanh toán</button>", summary);
-        Assert.Contains("<p class=\"cart-reason\" id=\"checkout-reason\">Thanh toán sẽ có trong bản sau.</p>", summary);
+        Assert.Contains("<a class=\"btn btn--primary cart-checkout\" href=\"/checkout\">Tiếp tục thanh toán</a>", summary);
+        Assert.DoesNotContain("cart-reason", html);
+        Assert.Contains("<a class=\"btn btn--primary cart-checkout\" href=\"/checkout\">Tiếp tục thanh toán</a>", Regex.Match(html, @"<div class=""cart-bar""[\s\S]*?</div>").Value);
         Assert.Contains("<div class=\"cart-bar\" role=\"region\" aria-label=\"Tạm tính\">", html);
         Assert.Contains("<div class=\"cart-confirm\" id=\"xoa-hop\" popover role=\"dialog\" aria-labelledby=\"confirm-title\" aria-describedby=\"confirm-text\">", html);
     }
@@ -207,13 +208,14 @@ public class CartTests(PeekboxFixture fixture)
         Assert.Contains("Chưa thể đặt hàng: 1 món hết hạn trước ngày giao", html);
         Assert.Contains("action=\"/builder/quantity?from=cart\"", html);
         Assert.Contains("<p class=\"cart-reason cart-reason--block\" id=\"checkout-reason\">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>", Summary(html));
+        Assert.DoesNotContain("href=\"/checkout\"", html);
 
         var response = await visitor.PostAsync("/builder/quantity?from=cart", new() { ["slug"] = "mut-gung", ["quantity"] = "0" });
 
         Assert.Equal("/cart", response.Headers.Location?.OriginalString);
         var after = await visitor.PageAsync("/cart");
         Assert.DoesNotContain("review-block", after);
-        Assert.Contains("<p class=\"cart-reason\" id=\"checkout-reason\">Thanh toán sẽ có trong bản sau.</p>", Summary(after));
+        Assert.Contains("<a class=\"btn btn--primary cart-checkout\" href=\"/checkout\">Tiếp tục thanh toán</a>", Summary(after));
     }
 
     [Fact]

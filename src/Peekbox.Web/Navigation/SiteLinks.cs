@@ -23,6 +23,16 @@ public static class SiteLinks
     // Step 4 of the builder, the review page (F34 to F36).
     public const string ReviewPath = "/builder/review";
 
+    // Checkout (F41 to F48) and the page an item that ran short meanwhile leads to (F50).
+    public const string CheckoutPath = "/checkout";
+
+    public const string SoldOutPath = "/checkout/soldout";
+
+    // The confirmation page of one order, opened by its secret token (F51).
+    public const string OrdersPath = "/orders";
+
+    public static string Order(string token) => $"{OrdersPath}/{Uri.EscapeDataString(token)}";
+
     public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, About, Commitments, Blog];
     public static readonly IReadOnlyList<SiteLink> FooterExplore = [About, Commitments, Blog];
     public static readonly IReadOnlyList<SiteLink> FooterLegal = [Terms, Privacy];
