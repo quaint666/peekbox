@@ -136,6 +136,10 @@
 .cta__text { margin: 0; font-size: var(--text-xl); font-weight: 600; line-height: 1.35; }
 .cta__button { background: var(--color-surface); color: var(--color-on-tint); }
 .cta__button:focus-visible { outline-color: var(--color-on-primary); }   /* --color-focus is the same green as the strip in light mode */
+.cta__button:active { background: var(--color-tint); }   /* a light button: the tint fills in, like the secondary button */
+@media (hover: hover) {
+    .cta__button:hover { background: var(--color-tint); }
+}
 #main + .site-footer { margin-top: 0; }   /* the green strip touches the footer, as in the mockup; other pages keep the gap */
 
 @media (min-width: 900px) {
