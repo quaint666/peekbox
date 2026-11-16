@@ -107,4 +107,16 @@ public class BuilderLimitsTests
         Assert.Equal(DateProblem.None, limits.ParseDate("2029-02-28", out _));
         Assert.Equal(DateProblem.TooLate, limits.ParseDate("2029-03-01", out _));
     }
+
+    // Delivery 15/01/2027 plus 7 days is 22/01/2027. Expiring on that day is out (decision 2026-11-16); the day after is in.
+    [Theory]
+    [InlineData("2027-01-23", true)]
+    [InlineData("2027-01-22", false)]
+    [InlineData("2027-01-21", false)]
+    [InlineData("2027-01-15", false)]
+    [InlineData("2027-01-10", false)]
+    public void An_item_is_in_date_only_if_it_expires_after_the_delivery_date_plus_7_days(string expiry, bool expected)
+    {
+        Assert.Equal(expected, BuilderLimits.IsInDate(DateOnly.Parse(expiry), new DateOnly(2027, 1, 15)));
+    }
 }

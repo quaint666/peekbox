@@ -15,6 +15,7 @@ builder.Services.AddSingleton(HomeContent.Load(HomeContent.FilePath));
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<BuilderLimits>();
 builder.Services.AddScoped<HamperService>();
+builder.Services.AddScoped<ItemCatalog>();
 
 // The connection string is a secret, so it is never written in a file of the
 // project. See docs/frontend-plan.md, section 2, for how to set it.

@@ -31,6 +31,7 @@ public static class Icons
         ["eye"] = "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z M9 12a3 3 0 1 0 6 0 3 3 0 1 0-6 0",
         ["wallet"] = "M5 6h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z M3 10h18 M16.5 14.5h.01",
         ["close"] = "M6 6l12 12 M18 6L6 18",
+        ["lock"] = "M6 11h12v10H6z M8.5 11V7.5a3.5 3.5 0 0 1 7 0V11",
     };
 
     public static string Path(string name) => Paths[name];

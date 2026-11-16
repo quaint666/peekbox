@@ -5,6 +5,8 @@
     ViewData["Title"] = "Tạo hộp quà";
     ViewData["Nav"] = SiteLinks.Builder.Key;
     var steps = new[] { "Ngân sách", "Chọn món", "Đóng gói", "Xem lại" };
+    var items = Model.Items;
+    var currentStep = items is null ? 0 : 1;   // step 2 (items) once the budget and the date are saved
 
     // The warning texts. The controller only says which problem it found; the words are here, once.
     var budgetError = Model.BudgetProblem switch
@@ -25,13 +27,24 @@
     <link rel="stylesheet" href="~/css/builder.css" asp-append-version="true">
 }
 
+@section Scripts {
+    <script type="module" src="~/js/builder.js" asp-append-version="true"></script>
+}
+
 <div class="builder">
     <div class="builder__head">
         <h1 class="builder__title">Tạo hộp quà của bạn</h1>
         <ol class="builder-steps">
             @for (var i = 0; i < steps.Length; i++)
             {
-                <li class="builder-step" aria-current="@(i == 0 ? "step" : null)"><span class="builder-step__num">@(i + 1)</span><span>@steps[i]</span></li>
+                if (i < currentStep)
+                {
+                    <li class="builder-step builder-step--done"><span class="builder-step__num">@(i + 1)</span><span>@steps[i]</span><span class="visually-hidden">, đã xong</span></li>
+                }
+                else
+                {
+                    <li class="builder-step" aria-current="@(i == currentStep ? "step" : null)"><span class="builder-step__num">@(i + 1)</span><span>@steps[i]</span></li>
+                }
             }
         </ol>
     </div>
@@ -65,5 +78,75 @@
             <p class="budget-card__hint">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
             <button type="submit" class="btn btn--primary">Lưu</button>
         </div>
+
+        <p class="budget-card__aside">Đặt ngân sách trước, rồi chọn món. Tổng tiền do hệ thống tính và luôn hiện ở bên phải.</p>
     </form>
+
+    @if (items is null)
+    {
+        <p class="lock-note"><partial name="_Icon" model='"lock"' /><span>Nhập ngân sách và ngày giao hàng rồi bấm <strong>Lưu</strong> để mở bước chọn món và đóng gói. Chúng tôi cần ngày giao để ẩn những món sắp hết hạn.</span></p>
+    }
+    else
+    {
+        var showAllQuery = new Dictionary<string, string?> { ["category"] = items.Category, ["inDate"] = "false" }.Where(p => p.Value is not null);
+        var showAll = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, showAllQuery) + "#chon-mon";
+
+        <section class="items" id="chon-mon" aria-labelledby="items-title">
+            <h2 class="visually-hidden" id="items-title">Chọn món</h2>
+
+            @* A plain GET form: a chip or the checkbox reloads the page with the filter in the address (works without scripts). *@
+            <form class="item-filters" method="get" action="@(SiteLinks.Builder.Href)#chon-mon">
+                <div class="item-filters__check">
+                    @* The framework's checkbox pattern, written by hand: a ticked box sends "true" before the hidden "false",
+                       and model binding takes the first. (asp-for would also print an English "field is required" text.) *@
+                    <input type="checkbox" id="in-date" name="inDate" value="true" checked="@Model.InDate">
+                    <input type="hidden" name="inDate" value="false">
+                    <label for="in-date">Chỉ món đủ hạn cho ngày giao <strong>@VnDate.Day(Model.SavedDeliveryDate!.Value)</strong></label>
+                    <noscript><button type="submit" class="btn btn--outline btn--chip">Lọc</button></noscript>
+                </div>
+                <div class="chip-list">
+                    <button type="submit" class="btn btn--outline btn--chip" name="category" value="" aria-pressed="@(items.Category is null ? "true" : "false")">Tất cả</button>
+                    @foreach (var chip in items.Categories)
+                    {
+                        <button type="submit" class="btn btn--outline btn--chip" name="category" value="@chip.Id" aria-pressed="@(chip.Id == items.Category ? "true" : "false")">@chip.Name</button>
+                    }
+                </div>
+            </form>
+
+            <p class="items__count">
+                <span>Hiện @items.Items.Count món.@if (items.HiddenCount > 0) {<text> @items.HiddenCount món hết hạn trước ngày giao đang được ẩn.</text>}</span>
+                @if (items.HiddenCount > 0)
+                {
+                    <a href="@showAll">Hiện cả @items.HiddenCount món</a>
+                }
+            </p>
+
+            <ul class="item-grid">
+                @foreach (var item in items.Items)
+                {
+                    <li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")">
+                        @* alt is empty: the name is the heading right below, so a screen reader would read it twice. *@
+                        <img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy">
+                        <div class="item-card__body">
+                            <h3 class="item-card__name">@item.Name</h3>
+                            <p class="item-card__meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
+                            @if (item.SoldOut)
+                            {
+                                <span class="badge badge--muted">Hết hàng</span>
+                            }
+                            else if (item.InDate)
+                            {
+                                <span class="badge">HSD @VnDate.Month(item.ExpiryDate) · đủ hạn</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge--warn">HSD @VnDate.Day(item.ExpiryDate), trước ngày giao</span>
+                            }
+                            <p class="item-card__price">@Vnd.Format(item.PriceVnd)</p>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </section>
+    }
 </div>

@@ -7,11 +7,12 @@ using Peekbox.Web.Services;
 
 namespace Peekbox.Web.Controllers;
 
-public class BuilderController(BuilderLimits limits, HamperService hampers) : Controller
+public class BuilderController(BuilderLimits limits, HamperService hampers, ItemCatalog catalog) : Controller
 {
-    // The page of the hamper builder (/builder). It shows the saved budget and date, found by the cookie.
+    // The page of the hamper builder (/builder). It shows the saved budget and date, found by the cookie, and once both
+    // are saved, the items. The filter form sends the category and the "only items in date" checkbox in the address.
     [HttpGet]
-    public async Task<IActionResult> Index(CancellationToken cancellationToken)
+    public async Task<IActionResult> Index(string? category, bool inDate = true, CancellationToken cancellationToken = default)
     {
         var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
         if (hamper is null)
@@ -19,11 +20,27 @@ public class BuilderController(BuilderLimits limits, HamperService hampers) : Co
             return View(new BuilderViewModel());
         }
 
-        return View(new BuilderViewModel
+        return View(await WithItemsAsync(new BuilderViewModel
         {
             BudgetText = Vnd.Format(hamper.BudgetVnd),
             DeliveryDateText = hamper.DeliveryDate?.ToString(BuilderLimits.DateFormat, CultureInfo.InvariantCulture) ?? "",
-        });
+        }, hamper.DeliveryDate, category, inDate, cancellationToken));
+    }
+
+    // The items unlock once a delivery date is saved (the budget is always saved with it).
+    private async Task<BuilderViewModel> WithItemsAsync(BuilderViewModel model, DateOnly? deliveryDate, string? category, bool inDate, CancellationToken cancellationToken)
+    {
+        if (deliveryDate is not { } date)
+        {
+            return model;
+        }
+
+        return model with
+        {
+            SavedDeliveryDate = date,
+            InDate = inDate,
+            Items = await catalog.ListAsync(date, category, inDate, cancellationToken),
+        };
     }
 
     // "Lưu" and the quick amounts both end here. A wrong value saves nothing: the page comes back with a warning
@@ -39,13 +56,15 @@ public class BuilderController(BuilderLimits limits, HamperService hampers) : Co
 
         if (budgetProblem != BudgetProblem.None || dateProblem != DateProblem.None)
         {
-            return View(new BuilderViewModel
+            // Nothing was saved, so the items below still follow the date saved earlier (if any).
+            var saved = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+            return View(await WithItemsAsync(new BuilderViewModel
             {
                 BudgetText = budgetProblem == BudgetProblem.None ? Vnd.Format(budget) : budgetText ?? "",
                 DeliveryDateText = form.DeliveryDate ?? "",
                 BudgetProblem = budgetProblem,
                 DateProblem = dateProblem,
-            });
+            }, saved?.DeliveryDate, category: null, inDate: true, cancellationToken));
         }
 
         var hamper = await hampers.SaveAsync(Request.Cookies[HamperService.CookieName], budget, date, cancellationToken);
