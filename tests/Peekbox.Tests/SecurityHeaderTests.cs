@@ -17,6 +17,18 @@ public class SecurityHeaderTests(PeekboxFixture fixture)
         Assert.Equal(ContentSecurityPolicy.Value, Assert.Single(values));
     }
 
+    [Theory]
+    [InlineData("/")]
+    [InlineData("/css/tokens.css")]
+    [InlineData("/this-page-does-not-exist")]
+    public async Task Every_response_says_never_send_the_address_to_another_site(string path)
+    {
+        var response = await fixture.Factory.CreateClient().GetAsync(path);
+
+        Assert.True(response.Headers.TryGetValues(ReferrerPolicy.HeaderName, out var values), $"{path}: no referrer policy header");
+        Assert.Equal("no-referrer", Assert.Single(values));
+    }
+
     [Fact]
     public void The_policy_blocks_inline_scripts_and_styles()
     {

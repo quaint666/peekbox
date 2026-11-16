@@ -21,7 +21,6 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
     // "Thêm vào giỏ hàng" on the review page (F36). The hamper is already the cart; this checks it again on the server
     // and opens the cart. A box that cannot go on goes back to where the visitor can fix it.
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Add(CancellationToken cancellationToken)
     {
         var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
@@ -41,7 +40,6 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
 
     // "Xóa hộp" (F37), after the confirm popover. The items and the packaging go; the budget and the date stay.
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Clear(CancellationToken cancellationToken)
     {
         var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);

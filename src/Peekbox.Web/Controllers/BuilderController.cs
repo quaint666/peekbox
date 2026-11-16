@@ -65,7 +65,6 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // a "Lưu" button does. "Tiếp tục" (F24) is a button of this same form with next=review, so continuing always saves
     // the choice on screen first. Nothing is saved while the box is empty (the step is locked then).
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Packaging(string? packaging, string? next, CancellationToken cancellationToken)
     {
         var open = await OpenBoxAsync(cancellationToken);
@@ -104,7 +103,6 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // request, so it cannot send anyone elsewhere. The amount is checked again here: a
     // button the page showed as off, or a made-up request, changes nothing.
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, string? from, bool inDate = true, CancellationToken cancellationToken = default)
     {
         var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
@@ -140,7 +138,6 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // "Lưu" and the quick amounts both end here. A wrong value saves nothing: the page comes back with a warning
     // under the field and what the visitor typed. A good one is saved, and the visitor goes back to /builder (post, then redirect).
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(BuilderForm form, CancellationToken cancellationToken)
     {
         // A quick amount button sends its own amount; it wins over what is typed in the field.
