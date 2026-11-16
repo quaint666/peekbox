@@ -14,6 +14,7 @@ The customer sets a budget first, then picks items. Every item shows its brand, 
 - [`docs/architecture.md`](docs/architecture.md): how the app is put together.
 - [`docs/frontend-plan.md`](docs/frontend-plan.md): how the pages are built and reviewed.
 - [`docs/api-contract.md`](docs/api-contract.md): the shared rules and the few JSON endpoints.
+- [`docs/repo-review.md`](docs/repo-review.md): the prompt for a full repository review, run at the end of each phase.
 - [`design/`](design/README.md): the screen mockups and design notes. Start with `design/mockups/customer/`.
 - [`content/`](content/README.md): blog posts, terms and privacy text, and sample product data.
 - [`public/images/`](public/images/): product photos, packaging, hero and the logo.
