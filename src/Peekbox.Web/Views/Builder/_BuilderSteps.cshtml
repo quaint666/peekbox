@@ -1,0 +1,19 @@
+@model int
+@* The step strip of the builder and the review page (decision 2026-11-15): done, current and not reached. The model is
+   the index of the current step: 0 budget, 1 items, 2 packaging, 3 review. *@
+@{
+    var steps = new[] { "Ngân sách", "Chọn món", "Đóng gói", "Xem lại" };
+}
+<ol class="builder-steps">
+    @for (var i = 0; i < steps.Length; i++)
+    {
+        if (i < Model)
+        {
+            <li class="builder-step builder-step--done"><span class="builder-step__num">@(i + 1)</span><span>@steps[i]</span><span class="visually-hidden">, đã xong</span></li>
+        }
+        else
+        {
+            <li class="builder-step" aria-current="@(i == Model ? "step" : null)"><span class="builder-step__num">@(i + 1)</span><span>@steps[i]</span></li>
+        }
+    }
+</ol>

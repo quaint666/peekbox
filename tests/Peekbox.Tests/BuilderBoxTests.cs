@@ -116,7 +116,10 @@ public class BuilderBoxTests(PeekboxFixture fixture)
         Assert.Contains("<p class=\"lock-note\" id=\"packaging-lock\">", html);
         Assert.Equal("500.000đ", Sum(html, "Còn lại"));
         Assert.Equal("0đ", Sum(html, "Tổng cộng (đã gồm thuế)"));
-        Assert.Contains("<button type=\"button\" class=\"btn btn--primary box-panel__next\" disabled aria-describedby=\"next-soon\">Tiếp tục: xem lại hộp quà</button>", html);
+        Assert.Contains("<button type=\"button\" class=\"btn btn--primary box-panel__next\" disabled aria-describedby=\"next-empty\">Tiếp tục: xem lại hộp quà</button>", html);
+        Assert.Contains("<p class=\"box-panel__soon\" id=\"next-empty\">Chọn ít nhất 1 món để tiếp tục.</p>", html);
+        Assert.Contains("<div class=\"box-sums__row\"><dt>Đóng gói: chưa chọn</dt><dd>–</dd></div>", html);
+        Assert.DoesNotContain("id=\"dong-goi\"", html);
         Assert.Contains(">Thêm</button>", Card(html, "tra-sen"));
     }
 

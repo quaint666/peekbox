@@ -12,6 +12,8 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
 
     public DbSet<HamperItem> HamperItems => Set<HamperItem>();
 
+    public DbSet<Packaging> Packagings => Set<Packaging>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Accent-free search on the builder ("mut" finds "Mứt", "dak lak" finds "Đắk Lắk"). The extension comes with
@@ -47,7 +49,19 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
         {
             hamper.HasIndex(h => h.Token).IsUnique();
             hamper.Property(h => h.Token).HasMaxLength(64);
+            hamper.Property(h => h.PackagingId).HasMaxLength(40);
+            // A packaging that some hamper uses cannot be deleted by accident.
+            hamper.HasOne(h => h.Packaging).WithMany().HasForeignKey(h => h.PackagingId).OnDelete(DeleteBehavior.Restrict);
             hamper.ToTable(table => table.HasCheckConstraint("CK_Hampers_BudgetVnd", "\"BudgetVnd\" >= 0"));
+        });
+
+        modelBuilder.Entity<Packaging>(packaging =>
+        {
+            packaging.Property(p => p.Id).HasMaxLength(40);
+            packaging.Property(p => p.Name).HasMaxLength(100);
+            packaging.Property(p => p.Description).HasMaxLength(300);
+            packaging.Property(p => p.ImagePath).HasMaxLength(300);
+            packaging.ToTable(table => table.HasCheckConstraint("CK_Packagings_FeeVnd", "\"FeeVnd\" >= 0"));
         });
 
         modelBuilder.Entity<HamperItem>(line =>

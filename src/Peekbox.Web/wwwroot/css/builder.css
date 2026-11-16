@@ -3,8 +3,25 @@
 .builder__head { display: flex; flex-direction: column; gap: var(--space-4); }
 .builder__title { margin: 0; font-size: var(--text-2xl); }  /* phone title 28 (mockup 26) */
 
-/* Step strip. Phone: four bars with a label under each. From 900 px: four pills. */
-.builder-steps { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; font-size: 0.75rem; }  /* 6px and 12px: from the phone mockup */
+/* Step strip. Phone: four bars with a label under each. From 900 px: four pills. It stays at the top of the screen
+   while the page scrolls (decision 2026-11-15), drawn as a band as wide as the screen in the page colour with a line
+   under it (mockup 04). The band is a border image painted past the box sideways: that is ink overflow, so it never
+   makes the page scroll sideways. --builder-steps-height (measured) keeps the panel and jumped-to sections below it. */
+:root { --builder-steps-height: 53px; }   /* measured at 390 px */
+@media (max-width: 359px) { :root { --builder-steps-height: 78px; } }   /* the labels wrap to two lines (measured at 320 px) */
+.builder-steps {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    list-style: none;
+    margin: 0;
+    padding: var(--space-3) 0;
+    display: flex;
+    gap: 6px;   /* 6px and 12px: from the phone mockup */
+    font-size: 0.75rem;
+    border-image: linear-gradient(to top, var(--color-border) 1px, var(--color-bg) 1px) fill 0 / 0 / 0 100vmax;
+}
+html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) + var(--space-4)); }   /* #mon-…, #dong-goi */
 .builder-step {
     flex: 1;
     display: flex;
@@ -131,6 +148,37 @@
     .qty__btn:active:not(:disabled) { background: var(--color-border-soft); }
 }
 
+/* Step 3, packaging (F33, mockup 27): three cards, each a label around its radio. The chosen one has the sage tint and a
+   2 px primary border; the others the card colour (as drawn in the dark mockup). */
+.packaging { display: flex; flex-direction: column; padding: var(--space-5); border-radius: var(--radius-lg); }
+.packaging__set { margin: 0; padding: 0; border: 0; min-width: 0; }
+.packaging__set legend { padding: 0; margin-bottom: var(--space-4); }
+.packaging__title { margin: 0; font-size: var(--text-xl); font-weight: 600; }
+.packaging__options { display: grid; gap: var(--space-4); }
+.packaging__save { align-self: flex-start; margin-top: var(--space-4); }
+.packaging-option {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: border-color 150ms ease, background-color 150ms ease;
+}
+.packaging-option:has(input:checked) { padding: 11px; border: 2px solid var(--color-primary); background: var(--color-tint); }  /* 11 + 2 = 12 + 1: the card keeps its size */
+.packaging-option:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.packaging-option__img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; border-radius: 8px; }
+.packaging-option__head { display: flex; align-items: center; gap: var(--space-2); font-size: 0.9375rem; font-weight: 600; }  /* 15px */
+.packaging-option__head input { flex: none; width: 18px; height: 18px; margin: 0; accent-color: var(--color-primary); }
+.packaging-option__head input:focus-visible { outline: none; }   /* the whole card is ringed instead */
+.packaging-option__desc { font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }
+.packaging-option__fee { font-size: 0.9375rem; font-weight: 700; }
+@media (hover: hover) {
+    .packaging-option:hover:not(:has(input:checked)) { border-color: var(--color-muted); }
+}
+
 /* The items and "Hộp của bạn" side by side from 900 px; on a phone the panel is replaced by the bar below. */
 .builder-main { display: flex; flex-direction: column; gap: var(--space-5); }
 .box-panel { display: none; }
@@ -147,8 +195,8 @@
 .box-sums__row dt, .box-sums__row dd { margin: 0; }
 .box-sums__row--left { color: var(--color-muted); }
 .box-sums__row--left dd, .box-sums__row--over dd { font-weight: 700; color: var(--color-text); }
-.box-sums__row--over { color: var(--color-danger); font-weight: 600; }
-.box-sums__row--over dd { color: var(--color-danger); }
+.box-sums__row--over { color: var(--color-danger-text); font-weight: 600; }   /* --color-danger has no dark value: dark red on a dark card */
+.box-sums__row--over dd { color: var(--color-danger-text); }
 .box-sums__row--total { align-items: baseline; margin-top: var(--space-2); font-size: 0.9375rem; }  /* 15px: from the mockup */
 .box-sums__row--total dd { font-size: 1.5rem; font-weight: 700; }  /* 24px: from the mockup */
 
@@ -185,6 +233,7 @@
 @media (min-width: 900px) {
     .builder { gap: var(--space-5); }  /* 24 (mockup 28) */
     .builder__title { font-size: var(--text-3xl); }
+    :root { --builder-steps-height: 64px; }   /* the pills, measured at 900 and 1440 px */
     .builder-steps { flex-wrap: wrap; gap: var(--space-3); font-size: var(--text-sm); }
     .builder-step {
         flex: none;
@@ -214,7 +263,8 @@
     .item-card__body { flex: 1; padding: var(--space-4); }
     .builder-main { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 28px; align-items: start; }  /* 390 and 28: measured on mockup 27 at 1440 px */
     .builder-main .item-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }   /* three a row at 1440, two at 900 */
-    .box-panel { position: sticky; top: var(--space-4); display: flex; flex-direction: column; gap: 18px; padding: var(--space-5); border-radius: var(--radius-lg); }  /* 18px: from the mockup */
+    .packaging__options { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }   /* three a row, as in mockup 27 */
+    .box-panel { position: sticky; top: calc(var(--builder-steps-height) + var(--space-4)); display: flex; flex-direction: column; gap: 18px; padding: var(--space-5); border-radius: var(--radius-lg); }  /* 18px: from the mockup */
     .box-bar { display: none; }
     .budget-card { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: var(--space-5); padding: var(--space-5); border-radius: var(--radius-lg); }
     /* Widths measured from the mockup at 1440 px */

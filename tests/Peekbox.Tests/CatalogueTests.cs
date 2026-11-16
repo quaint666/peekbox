@@ -54,6 +54,30 @@ public class CatalogueTests(PeekboxFixture fixture)
         Assert.Equal(File.Categories.Count, categories);
     }
 
+    // packaging.json (F33): unique ids, a fee of 0 or more, a photo that exists, and the database holds the same rows in
+    // the file's order. The fees in tests/vectors/pricing.json are copies, so they must match the file.
+    [Fact]
+    public async Task The_packaging_choices_match_their_file_the_photos_and_the_pricing_vectors()
+    {
+        var packaging = SeedData.LoadPackaging(SeedData.PackagingFilePath).Packaging;
+        Assert.Equal(packaging.Count, packaging.Select(p => p.Id).Distinct().Count());
+        foreach (var p in packaging)
+        {
+            Assert.True(p.FeeVnd >= 0, $"{p.Id}: negative fee");
+            Assert.True(System.IO.File.Exists(Path.Combine(RepoRoot.WebProject, "wwwroot", p.Image.TrimStart('/'))), $"{p.Image}: file not found in wwwroot");
+        }
+
+        var rows = await fixture.WithDbAsync(db => db.Packagings.OrderBy(p => p.SortOrder).Select(p => new { p.Id, p.FeeVnd }).ToListAsync());
+        Assert.Equal(packaging.Select(p => (p.Id, p.FeeVnd)), rows.Select(r => (r.Id, r.FeeVnd)));
+
+        var vectors = System.Text.Json.JsonDocument.Parse(await System.IO.File.ReadAllTextAsync(Path.Combine(RepoRoot.Path, "tests", "vectors", "pricing.json")));
+        foreach (var v in vectors.RootElement.GetProperty("packaging").EnumerateArray())
+        {
+            var id = v.GetProperty("id").GetString();
+            Assert.Equal(packaging.Single(p => p.Id == id).FeeVnd, v.GetProperty("fee_vnd").GetInt64());
+        }
+    }
+
     [Fact]
     public async Task Running_the_seed_again_adds_nothing()
     {
