@@ -9,6 +9,7 @@
     var delivery = VnDate.Day(Model.DeliveryDate!.Value);
     var columnSummary = new ReviewSummary(Model, "");
     var sheetSummary = new ReviewSummary(Model, "-sheet");
+    var lines = new HamperLines(Model, "review");
 }
 
 @section Styles {
@@ -26,14 +27,7 @@
 
     @if (outOfDate.Count > 0)
     {
-        @* F35: the order is blocked until the item goes or the date changes. *@
-        <section class="review-block" aria-labelledby="block-title">
-            <partial name="_Icon" model='"warning"' />
-            <div>
-                <h2 class="review-block__title" id="block-title">Chưa thể đặt hàng: @outOfDate.Count món hết hạn trước ngày giao</h2>
-                <p class="review-block__text">@string.Join(", ", outOfDate.Select(l => $"{l.Name} hết hạn ngày {VnDate.Day(l.ExpiryDate)}")), còn ngày giao của bạn là @delivery. Mỗi món cần còn hạn thêm @BuilderLimits.ShelfMarginDays ngày dự phòng sau ngày giao. Hãy bỏ @(outOfDate.Count == 1 ? "món này" : "các món này") hoặc đổi ngày giao để tiếp tục.</p>
-            </div>
-        </section>
+        <partial name="_OutOfDateBlock" model="Model" />
     }
 
     <div class="review-main">
@@ -66,40 +60,7 @@
 
             <section class="card review-card" aria-labelledby="lines-title">
                 <h2 class="review-card__title" id="lines-title">Các món trong hộp</h2>
-                <ul class="review-lines">
-                    @foreach (var line in Model.Lines)
-                    {
-                        <li class="review-line@(line.InDate ? "" : " review-line--expired")">
-                            <img class="review-line__img" src="@line.ImagePath" alt="" width="508" height="508" loading="lazy">
-                            <p class="review-line__name">@line.Name</p>
-                            <p class="review-line__price">
-                                @if (line.Quantity > 1)
-                                {
-                                    <span class="review-line__each">@line.Quantity × @Vnd.Format(line.PriceVnd)</span>
-                                }
-                                <strong>@Vnd.Format(line.LineVnd)</strong>
-                            </p>
-                            <div class="review-line__details">
-                                <p class="review-line__meta">@line.Brand · @line.WeightGrams g · Xuất xứ @line.Origin</p>
-                                @if (line.InDate)
-                                {
-                                    <span class="badge">HSD @VnDate.Month(line.ExpiryDate) · đủ hạn</span>
-                                }
-                                else
-                                {
-                                    <span class="badge badge--danger">HSD @VnDate.Day(line.ExpiryDate), hết hạn trước ngày giao</span>
-                                }
-                            </div>
-                            @if (!line.InDate)
-                            {
-                                <form class="review-line__remove" method="post" action="@(SiteLinks.Builder.Href)/quantity?from=review" asp-antiforgery="true">
-                                    <input type="hidden" name="slug" value="@line.Slug">
-                                    <button type="submit" class="btn btn--danger" name="quantity" value="0" aria-label="Bỏ @line.Name khỏi hộp">Bỏ món này</button>
-                                </form>
-                            }
-                        </li>
-                    }
-                </ul>
+                <partial name="_HamperLines" model="lines" />
                 <a class="review-card__back" href="@(SiteLinks.Builder.Href)#chon-mon">Quay lại chỉnh sửa món</a>
             </section>
         </div>
@@ -120,12 +81,21 @@
         </p>
         <div class="review-bar__foot">
             <p class="review-bar__total"><span>Tổng cộng</span> <strong>@Vnd.Format(Model.Quote.TotalVnd)</strong></p>
-            <button type="button" class="btn btn--primary review-bar__cart" disabled aria-describedby="cart-reason-bar">Thêm vào giỏ hàng</button>
-            <p class="visually-hidden" id="cart-reason-bar">@(outOfDate.Count > 0 ? "Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục." : "Giỏ hàng sẽ có trong bản sau.")</p>
+            @if (outOfDate.Count > 0)
+            {
+                <button type="button" class="btn btn--primary review-bar__cart" disabled aria-describedby="cart-reason-bar">Thêm vào giỏ hàng</button>
+                <p class="visually-hidden" id="cart-reason-bar">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>
+            }
+            else
+            {
+                <form class="review-bar__add" method="post" action="@(SiteLinks.Cart.Href)/add" asp-antiforgery="true">
+                    <button type="submit" class="btn btn--primary review-bar__cart">Thêm vào giỏ hàng</button>
+                </form>
+            }
         </div>
     </div>
 
-    <div class="review-sheet" id="tong-ket" popover aria-labelledby="sheet-title">
+    <div class="review-sheet" id="tong-ket" popover role="dialog" aria-labelledby="sheet-title">
         <div class="review-sheet__head">
             <h2 class="review-summary__title" id="sheet-title">Tổng kết</h2>
             <button type="button" class="review-sheet__close" popovertarget="tong-ket" popovertargetaction="hide">Thu gọn <partial name="_Icon" model='"chevron-down"' /></button>

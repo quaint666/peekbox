@@ -27,13 +27,16 @@
 {
     <p class="box-panel__note">Cả @box.Lines.Count món đều còn hạn đến sau ngày giao @VnDate.Day(box.DeliveryDate!.Value) cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</p>
 }
-@* The cart is the next slice, so the button is off and says why; an out-of-date item is the reason that comes first (F35). *@
-<button type="button" class="btn btn--primary review-summary__cart" disabled aria-describedby="@reasonId">Thêm vào giỏ hàng</button>
 @if (outOfDate > 0)
 {
+    @* F35: an item that expires before the delivery date keeps the box out of the cart; the button says why. *@
+    <button type="button" class="btn btn--primary review-summary__cart" disabled aria-describedby="@reasonId">Thêm vào giỏ hàng</button>
     <p class="review-summary__reason review-summary__reason--block" id="@reasonId">Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục.</p>
 }
 else
 {
-    <p class="review-summary__reason" id="@reasonId">Giỏ hàng sẽ có trong bản sau.</p>
+    @* F36: the server checks the box again, then opens the cart (CartController.Add). *@
+    <form class="review-summary__add" method="post" action="@(SiteLinks.Cart.Href)/add" asp-antiforgery="true">
+        <button type="submit" class="btn btn--primary review-summary__cart">Thêm vào giỏ hàng</button>
+    </form>
 }
