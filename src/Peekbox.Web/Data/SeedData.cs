@@ -21,6 +21,9 @@ public static class SeedData
     // The packaging choices, from content/data/packaging.json (copied as Seed/packaging.json).
     public static string PackagingFilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "packaging.json");
 
+    // The delivery wards, from content/data/wards.json (copied as Seed/wards.json).
+    public static string WardsFilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "wards.json");
+
     public static SeedFile Load(string path) =>
         Parse(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
 
@@ -31,6 +34,11 @@ public static class SeedData
         ParsePackaging(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
 
     public static SeedPackagingFile? ParsePackaging(string json) => JsonSerializer.Deserialize<SeedPackagingFile>(json, JsonOptions);
+
+    public static SeedWardsFile LoadWards(string path) =>
+        ParseWards(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
+
+    public static SeedWardsFile? ParseWards(string json) => JsonSerializer.Deserialize<SeedWardsFile>(json, JsonOptions);
 
     // Safe to run again: a table that already has rows is left alone.
     public static void Run(DbContext context)
@@ -44,6 +52,12 @@ public static class SeedData
             {
                 Id = p.Id, Name = p.NameVi, Description = p.DescVi, FeeVnd = p.FeeVnd, ImagePath = p.Image, SortOrder = i,
             }));
+        }
+
+        if (!context.Set<Ward>().Any())
+        {
+            // The file is already in Vietnamese order; that order is the order of the list on the checkout page.
+            context.Set<Ward>().AddRange(LoadWards(WardsFilePath).Wards.Select((w, i) => new Ward { Name = w.Name, Ring = w.Ring, SortOrder = i }));
         }
 
         if (!context.Set<Category>().Any())
@@ -82,6 +96,11 @@ public sealed record SeedCategory(string Id, string NameVi);
 public sealed record SeedPackagingFile(List<SeedPackaging> Packaging);
 
 public sealed record SeedPackaging(string Id, string NameVi, string DescVi, long FeeVnd, string Image);
+
+// The shape of content/data/wards.json.
+public sealed record SeedWardsFile(List<SeedWard> Wards);
+
+public sealed record SeedWard(string Name, int Ring);
 
 public sealed record SeedProduct(
     string Slug,

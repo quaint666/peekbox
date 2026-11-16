@@ -65,7 +65,7 @@ public class BuilderPageTests(PeekboxFixture fixture)
         var html = await GetBuilderAsync();
         var form = FormIn(html);
 
-        Assert.Contains("<form class=\"card budget-card\" method=\"post\">", html);
+        Assert.Contains("<form class=\"card budget-card\" method=\"post\" action=\"/builder\">", html);
         Assert.Contains("name=\"__RequestVerificationToken\"", html);
         Assert.Matches(@"<input class=""input"" id=""budget"" name=""budget"" type=""text"" inputmode=""numeric"" autocomplete=""off"" value=""""\s*/?>", form);
         Assert.Matches(@"<input class=""input"" id=""delivery-date"" name=""deliveryDate"" type=""date"" value=""""\s*/?>", form);

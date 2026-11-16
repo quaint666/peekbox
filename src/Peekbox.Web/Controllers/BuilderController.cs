@@ -14,11 +14,11 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // The page of the hamper builder (/builder). It shows the saved budget and date, found by the cookie, and once both
     // are saved, the items. The filter form sends the category, the "only items in date" checkbox, the search words (q)
     // and the sort in the address. HEAD as well, as link checkers and uptime monitors ask (the home page already answers it).
-    [HttpGet]
-    [HttpHead]
+    [HttpGet(SiteLinks.BuilderPath)]
+    [HttpHead(SiteLinks.BuilderPath)]
     public async Task<IActionResult> Index(string? category, string? q, string? sort, bool inDate = true, CancellationToken cancellationToken = default)
     {
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is null)
         {
             return View(new BuilderViewModel());
@@ -57,16 +57,15 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // The visitor's hamper when its items can be chosen, with its box; null otherwise.
     private async Task<(Hamper Hamper, Box Box)?> OpenBoxAsync(CancellationToken cancellationToken)
     {
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         return hamper is not null && ItemsOpen(hamper) ? (hamper, await hampers.BoxAsync(hamper, cancellationToken)) : null;
     }
 
     // Step 3 (F33): the packaging radios. With scripts, builder.ts sends the form whenever the choice changes; without,
     // a "Lưu" button does. "Tiếp tục" (F24) is a button of this same form with next=review, so continuing always saves
     // the choice on screen first. Nothing is saved while the box is empty (the step is locked then).
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Packaging(string? packaging, string? next, CancellationToken cancellationToken)
+    [HttpPost(SiteLinks.PackagingPath)]
+    public async Task<IActionResult> Packaging(string? packaging, ReturnTo next, CancellationToken cancellationToken)
     {
         var open = await OpenBoxAsync(cancellationToken);
         if (open is not { } o || o.Box.Lines.Count == 0)
@@ -79,13 +78,13 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             return NotFound();
         }
 
-        return Redirect(next == "review" ? SiteLinks.ReviewPath : SiteLinks.Builder.Href + "#dong-goi");
+        return Redirect(next == ReturnTo.Review ? SiteLinks.ReviewPath : SiteLinks.Builder.Href + Anchors.Link(Anchors.Packaging));
     }
 
     // Step 4 (F34 to F36): the hamper read-only, with links back to change it (decision 2026-11-15). Without a hamper
     // whose items can be chosen, or with an empty box, there is nothing to review: back to the builder.
-    [HttpGet]
-    [HttpHead]
+    [HttpGet(SiteLinks.ReviewPath)]
+    [HttpHead(SiteLinks.ReviewPath)]
     public async Task<IActionResult> Review(CancellationToken cancellationToken)
     {
         var open = await OpenBoxAsync(cancellationToken);
@@ -102,45 +101,49 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // same list, at the same card (post, then redirect). From the item page (from=item) the visitor goes back to that
     // item, from the review page (from=review) to the review page: the address is built here, never taken from the
     // request, so it cannot send anyone elsewhere. The amount is checked again here: a
-    // button the page showed as off, or a made-up request, changes nothing.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, string? from, bool inDate = true, CancellationToken cancellationToken = default)
+    // button the page showed as off, or a made-up request, changes nothing. An amount that is not a number is refused:
+    // bound as 0, it would take the item out.
+    [HttpPost(SiteLinks.QuantityPath)]
+    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, CancellationToken cancellationToken = default)
     {
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is not null && ItemsOpen(hamper) && !string.IsNullOrEmpty(slug)
             && await hampers.SetQuantityAsync(hamper, slug, quantity, cancellationToken) == QuantityChange.UnknownItem)
         {
             return NotFound();
         }
 
-        if (from == "item" && !string.IsNullOrEmpty(slug))
+        if (from == ReturnTo.Item && !string.IsNullOrEmpty(slug))
         {
-            return Redirect(SiteLinks.Item(slug) + "#them");
+            return Redirect(SiteLinks.Item(slug) + Anchors.Link(Anchors.ItemBuy));
         }
 
         // "Bỏ món này" on the review page or in the cart (F35, F37). An emptied box sends the review page on to the
         // builder, and shows the empty cart.
-        if (from == "review")
+        if (from == ReturnTo.Review)
         {
             return Redirect(SiteLinks.ReviewPath);
         }
 
-        if (from == "cart")
+        if (from == ReturnTo.Cart)
         {
             return Redirect(SiteLinks.Cart.Href);
         }
 
         var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false" }
             .Where(p => !string.IsNullOrEmpty(p.Value));
-        var anchor = string.IsNullOrEmpty(slug) ? "#chon-mon" : "#mon-" + Uri.EscapeDataString(slug);
+        var anchor = Anchors.Link(string.IsNullOrEmpty(slug) ? Anchors.Items : Anchors.ItemCard(slug));
         return Redirect(QueryHelpers.AddQueryString(SiteLinks.Builder.Href, back) + anchor);
     }
 
     // "Lưu" and the quick amounts both end here. A wrong value saves nothing: the page comes back with a warning
     // under the field and what the visitor typed. A good one is saved, and the visitor goes back to /builder (post, then redirect).
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+    [HttpPost(SiteLinks.BuilderPath)]
     public async Task<IActionResult> Index(BuilderForm form, CancellationToken cancellationToken)
     {
         // A quick amount button sends its own amount; it wins over what is typed in the field.
@@ -151,7 +154,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
         if (budgetProblem != BudgetProblem.None || dateProblem != DateProblem.None)
         {
             // Nothing was saved, so the items below still follow the date saved earlier (if any).
-            var saved = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+            var saved = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
             return View(await WithItemsAsync(saved, new BuilderViewModel
             {
                 BudgetText = budgetProblem == BudgetProblem.None ? Vnd.Format(budget) : budgetText ?? "",
@@ -161,25 +164,8 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             }, new ItemFilter(), cancellationToken));
         }
 
-        var hamper = await hampers.SaveAsync(Request.Cookies[HamperService.CookieName], budget, date, cancellationToken);
-        Response.Cookies.Append(HamperService.CookieName, hamper.Token, new CookieOptions
-        {
-            HttpOnly = true,
-            SameSite = SameSiteMode.Lax,
-            Secure = Request.IsHttps,
-            MaxAge = HamperService.CookieLifetime,
-            IsEssential = true,   // no consent banner: it only holds a random code
-        });
+        var hamper = await hampers.SaveAsync(HamperCookie.Read(Request), budget, date, cancellationToken);
+        HamperCookie.Write(Response, hamper.Token);
         return Redirect(SiteLinks.Builder.Href);   // /builder, written once in SiteLinks
     }
-}
-
-// The fields of the budget card, as the browser sends them. Text on purpose: BuilderLimits reads it, so a bad value is a warning, not an error page.
-public sealed class BuilderForm
-{
-    public string? Budget { get; set; }
-
-    public string? DeliveryDate { get; set; }
-
-    public string? QuickAmount { get; set; }
 }

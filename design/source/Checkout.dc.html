@@ -15,7 +15,7 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 </style>
 </helmet>
 <div style="width:100%;box-sizing:border-box;background:#F7F5EF;font-family:'Be Vietnam Pro',sans-serif;color:#1F2A24">
-<div style="min-height:1451px">
+<div style="min-height:1150px">
 
 <div style="background:#FFFFFF;border-bottom:1px solid #DAD6C9;border-top:3px solid #3F6B57">
 <div style="max-width:1200px;margin:0 auto;padding:0 32px;min-height:72px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px">
@@ -58,11 +58,11 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 <div style="display:flex;flex-direction:column;gap:6px"><label for="r-phone" style="font-size:14px;font-weight:600">Số điện thoại người nhận</label><input id="r-phone" value="0900 111 111" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"></div>
 </div>
 <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
-<div style="display:flex;flex-direction:column;gap:6px"><label for="ward" style="font-size:14px;font-weight:600">Phường</label><select id="ward" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><option>Chọn phường</option></select></div>
-<div style="display:flex;flex-direction:column;gap:6px"><label for="addr" style="font-size:14px;font-weight:600">Số nhà, đường</label><input id="addr" placeholder="Ví dụ: 12 đường mẫu" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"></div>
+<div style="display:flex;flex-direction:column;gap:6px"><label for="ward" style="font-size:14px;font-weight:600">Phường</label><select id="ward" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><option>Phường Bến Thành</option></select></div>
+<div style="display:flex;flex-direction:column;gap:6px"><label for="addr" style="font-size:14px;font-weight:600">Số nhà, đường</label><input id="addr" value="12 đường mẫu" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"></div>
 </div>
 <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
-<div style="display:flex;flex-direction:column;gap:6px"><label for="date" style="font-size:14px;font-weight:600">Ngày giao</label><input id="date" value="15/01/2027" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"><span style="font-size:13px;color:#25513E;font-weight:600">Cả 3 món đều còn hạn đủ cho ngày này.</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:600">Ngày giao</span><div style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #DAD6C9;border-radius:10px;background:#F7F5EF;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px"><span>15/01/2027</span><a href="Checkout.dc.html" style="font-size:14px;font-weight:600">Đổi ngày</a></div><span style="font-size:13px;color:#4A5650;line-height:1.5">Ngày giao đã chọn khi tạo hộp. Đổi ngày ở trang tạo hộp để kiểm tra lại hạn dùng.</span></div>
 <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:14px;font-weight:600">Khung giờ</span>
 <div style="display:flex;flex-direction:column;gap:8px">
 <sc-for list="{{windows}}" as="w" hint-placeholder-count="3">
@@ -70,8 +70,6 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 </sc-for>
 </div></div>
 </div>
-<div style="display:flex;flex-direction:column;gap:6px"><label for="note" style="font-size:14px;font-weight:600">Lời nhắn trên thiệp (không bắt buộc)</label><textarea id="note" rows="3" style="box-sizing:border-box;padding:12px 14px;border:1px solid #8A948E;border-radius:10px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#1F2A24"></textarea></div>
-<label style="display:flex;align-items:flex-start;gap:12px;min-height:44px;font-size:14px;line-height:1.5"><input type="checkbox" style="flex:none;width:20px;height:20px;margin-top:2px;accent-color:#3F6B57"><span><strong>Ẩn giá trong hộp quà</strong><br><span style="color:#4A5650">Phiếu kèm hộp chỉ ghi tên món, không ghi giá. Email xác nhận gửi cho bạn vẫn có giá.</span></span></label>
 </fieldset>
 
 <fieldset style="margin:0;border:1px solid #DAD6C9;border-radius:16px;box-shadow:0 1px 3px rgba(31,42,36,0.07);background:#FFFFFF;padding:24px;display:flex;flex-direction:column;gap:12px">
@@ -82,7 +80,6 @@ a{color:#3F6B57}a:hover{color:#2C4D3E}
 <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{p.name}}</span><span style="font-size:13px;color:#4A5650;line-height:1.5">{{p.desc}}</span></span>
 </label>
 </sc-for>
-<label style="display:flex;align-items:center;gap:12px;min-height:44px;font-size:14px;margin-top:6px"><input type="checkbox" style="width:20px;height:20px;accent-color:#3F6B57"><span>Tôi cần xuất hóa đơn cho công ty</span></label>
 </fieldset>
 
 </form>

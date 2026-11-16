@@ -1,0 +1,144 @@
+@using Peekbox.Web.Data
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Thanh toán";
+    var form = Model.Form;
+    var box = Model.Box;
+
+    // The attributes of a field with an error: red border, and the message read with the field.
+    string? Invalid(string field) => Model.ErrorFor(field) is null ? null : "true";
+    string? Described(string field) => Model.ErrorFor(field) is null ? null : field + "-error";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true">
+}
+
+@* Checkout (F41 to F48; mockups 06 and state 02, redrawn for M3). Without scripts everything works: the fee shows after
+   "Đặt hàng" if no ward was picked before, and the button says "Đặt hàng". checkout.ts swaps in the summary of a picked
+   ward and names the payment on the button. *@
+<div class="checkout">
+    <h1 class="checkout__title">Thanh toán</h1>
+
+    @if (Model.TooManyTries)
+    {
+        <div class="alert checkout-alert" role="alert" tabindex="-1" autofocus>
+            <strong class="checkout-alert__title">Bạn đã thử quá nhiều lần.</strong>
+            <p class="checkout-alert__text">Hãy đợi vài phút rồi thử lại. Những gì bạn đã nhập vẫn được giữ.</p>
+        </div>
+    }
+    else if (Model.Errors.Count > 0)
+    {
+        <div class="alert checkout-alert" role="alert" tabindex="-1" autofocus id="loi">
+            <strong class="checkout-alert__title">Cần sửa @Model.Errors.Count chỗ trước khi đặt hàng</strong>
+            <ul class="checkout-alert__list">
+                @foreach (var error in Model.Errors)
+                {
+                    <li><a href="#@error.Field">@error.Summary</a></li>
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="checkout-main">
+        <form class="checkout-form" id="checkout-form" method="post" action="@SiteLinks.CheckoutPath" asp-antiforgery="true" novalidate>
+            @* novalidate: the server checks every field and says what is wrong in Vietnamese; the browser's own bubbles would not. *@
+            <fieldset class="card checkout-set">
+                <legend class="checkout-set__title">1. Người gửi</legend>
+                <div class="checkout-row">
+                    <div class="field">
+                        <label class="field__label" for="sender-name">Họ và tên</label>
+                        <input class="input" id="sender-name" name="senderName" value="@form.SenderName" maxlength="@CheckoutCheck.NameMax" autocomplete="name" required aria-invalid="@Invalid("sender-name")" aria-describedby="@Described("sender-name")">
+                        <partial name="_FieldError" model='(Model.ErrorFor("sender-name"), "sender-name")' />
+                    </div>
+                    <div class="field">
+                        <label class="field__label" for="sender-phone">Số điện thoại</label>
+                        <input class="input" id="sender-phone" name="senderPhone" type="tel" value="@form.SenderPhone" inputmode="tel" autocomplete="tel" required aria-invalid="@Invalid("sender-phone")" aria-describedby="@Described("sender-phone")">
+                        <partial name="_FieldError" model='(Model.ErrorFor("sender-phone"), "sender-phone")' />
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="field__label" for="sender-email">Email nhận xác nhận đơn hàng</label>
+                    <input class="input" id="sender-email" name="senderEmail" type="email" value="@form.SenderEmail" maxlength="@CheckoutCheck.EmailMax" autocomplete="email" required aria-invalid="@Invalid("sender-email")" aria-describedby="@Described("sender-email")">
+                    <partial name="_FieldError" model='(Model.ErrorFor("sender-email"), "sender-email")' />
+                </div>
+            </fieldset>
+
+            <fieldset class="card checkout-set">
+                <legend class="checkout-set__title">2. Người nhận và địa chỉ giao</legend>
+                <div class="checkout-row">
+                    <div class="field">
+                        <label class="field__label" for="recipient-name">Họ và tên người nhận</label>
+                        <input class="input" id="recipient-name" name="recipientName" value="@form.RecipientName" maxlength="@CheckoutCheck.NameMax" required aria-invalid="@Invalid("recipient-name")" aria-describedby="@Described("recipient-name")">
+                        <partial name="_FieldError" model='(Model.ErrorFor("recipient-name"), "recipient-name")' />
+                    </div>
+                    <div class="field">
+                        <label class="field__label" for="recipient-phone">Số điện thoại người nhận</label>
+                        <input class="input" id="recipient-phone" name="recipientPhone" type="tel" value="@form.RecipientPhone" inputmode="tel" required aria-invalid="@Invalid("recipient-phone")" aria-describedby="@Described("recipient-phone")">
+                        <partial name="_FieldError" model='(Model.ErrorFor("recipient-phone"), "recipient-phone")' />
+                    </div>
+                </div>
+                <div class="checkout-row">
+                    <div class="field">
+                        <label class="field__label" for="ward">Phường</label>
+                        <select class="input" id="ward" name="ward" required aria-invalid="@Invalid("ward")" aria-describedby="@Described("ward")">
+                            <option value="" selected="@(form.Ward is null)">Chọn phường</option>
+                            @foreach (var ward in Model.Wards)
+                            {
+                                <option value="@ward.Id" selected="@(ward.Id == form.Ward)">@ward.Name</option>
+                            }
+                        </select>
+                        <partial name="_FieldError" model='(Model.ErrorFor("ward"), "ward")' />
+                    </div>
+                    <div class="field">
+                        <label class="field__label" for="street">Số nhà, đường</label>
+                        <input class="input" id="street" name="street" value="@form.Street" maxlength="@CheckoutCheck.StreetMax" placeholder="Ví dụ: 12 đường mẫu" autocomplete="address-line1" required aria-invalid="@Invalid("street")" aria-describedby="@Described("street")">
+                        <partial name="_FieldError" model='(Model.ErrorFor("street"), "street")' />
+                    </div>
+                </div>
+                <div class="checkout-row">
+                    @* The date is chosen in the builder and read-only here (decision M3-2): changing it means checking every
+                       item's expiry again, which the builder does. *@
+                    <div class="field">
+                        <span class="field__label" id="date-label">Ngày giao</span>
+                        <p class="checkout-date" aria-labelledby="date-label"><span>@VnDate.Day(box.DeliveryDate!.Value)</span><a href="@(SiteLinks.Builder.Href)#delivery-date">Đổi ngày</a></p>
+                        <p class="checkout-hint meta">Ngày giao đã chọn khi tạo hộp. Đổi ngày ở trang tạo hộp để kiểm tra lại hạn dùng.</p>
+                    </div>
+                    <fieldset class="checkout-choices">
+                        <legend class="field__label">Khung giờ</legend>
+                        @foreach (var window in DeliveryWindows.All)
+                        {
+                            var id = "window-" + window.ToString().ToLowerInvariant();
+                            <label class="checkout-choice" for="@id"><input type="radio" id="@id" name="window" value="@window" checked="@(form.Window == window)"><span>@DeliveryWindows.Label(window)</span></label>
+                        }
+                    </fieldset>
+                </div>
+            </fieldset>
+
+            <fieldset class="card checkout-set">
+                <legend class="checkout-set__title">3. Thanh toán</legend>
+                <label class="checkout-pay" for="payment-zalopay">
+                    <input type="radio" id="payment-zalopay" name="payment" value="@PaymentMethod.ZaloPay" checked="@(form.Payment == PaymentMethod.ZaloPay)">
+                    <span><span class="checkout-pay__name">ZaloPay</span><span class="checkout-pay__desc meta">Thanh toán bằng ví ZaloPay sau khi đặt hàng.</span></span>
+                </label>
+                <label class="checkout-pay" for="payment-cod">
+                    <input type="radio" id="payment-cod" name="payment" value="@PaymentMethod.CashOnDelivery" checked="@(form.Payment == PaymentMethod.CashOnDelivery)">
+                    <span><span class="checkout-pay__name">Thanh toán khi nhận hàng</span><span class="checkout-pay__desc meta">Trả tiền mặt cho người giao hàng.</span></span>
+                </label>
+            </fieldset>
+        </form>
+
+        <partial name="_CheckoutSummary" model="Model" />
+    </div>
+
+    <div class="checkout-bar" id="checkout-bar" role="region" aria-label="Tổng cộng">
+        <partial name="_CheckoutTotal" model="Model" />
+        <button type="submit" form="checkout-form" class="btn btn--primary checkout-submit" data-label-zalopay="Đặt hàng và thanh toán ZaloPay" data-label-cod="Đặt hàng">Đặt hàng</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/js/checkout.js" asp-append-version="true"></script>
+}

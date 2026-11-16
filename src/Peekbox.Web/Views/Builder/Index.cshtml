@@ -38,7 +38,7 @@
     @* Outside the head, so it stays at the top of the screen for the whole page (sticky only works inside its parent). *@
     <partial name="_BuilderSteps" model="currentStep" />
 
-    <form class="card budget-card" method="post">
+    <form class="card budget-card" method="post" action="@SiteLinks.BuilderPath" asp-antiforgery="true">
         @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Lưu" and not the first quick amount. *@
         <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Lưu</button>
 
@@ -64,7 +64,7 @@
             {
                 <p class="field__error" id="delivery-date-error">@dateError</p>
             }
-            <p class="budget-card__hint">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
+            <p class="budget-card__hint meta">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
             <button type="submit" class="btn btn--primary">Lưu</button>
         </div>
 
@@ -81,13 +81,13 @@
         {
             ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = "false",
         }.Where(p => !string.IsNullOrEmpty(p.Value));
-        var showAll = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, showAllQuery) + "#chon-mon";
+        var showAll = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, showAllQuery) + Anchors.Link(Anchors.Items);
         // Where "Thêm", − and + post (BuilderController.Quantity), with the list's filters, so the visitor comes back to the same list.
         var listQuery = new Dictionary<string, string?>
         {
             ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = items.OnlyInDate ? null : "false",
         }.Where(p => !string.IsNullOrEmpty(p.Value));
-        var quantityAction = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href + "/quantity", listQuery);
+        var quantityAction = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.QuantityPath, listQuery);
         var box = Model.Box!;
         var outOfDateLines = box.Lines.Count(l => !l.InDate);
         var sortLabels = new Dictionary<ItemSort, string>
@@ -100,12 +100,12 @@
         };
 
         <div class="builder-main">
-        <section class="items" id="chon-mon" aria-labelledby="items-title">
+        <section class="items" id="@Anchors.Items" aria-labelledby="items-title">
             <h2 class="visually-hidden" id="items-title">Chọn món</h2>
 
             @* A plain GET form: search, sort, the checkbox and the chips reload the page with the filters in the address
                (works without scripts). Every filter is in the form, so changing one keeps the others. *@
-            <form class="item-filters" method="get" action="@(SiteLinks.Builder.Href)#chon-mon">
+            <form class="item-filters" method="get" action="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">
                 @* Enter in the search box presses the first submit button of the form. This hidden one comes first, so Enter
                    searches instead of pressing the "Tất cả" chip. *@
                 <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Tìm</button>
@@ -163,21 +163,21 @@
                 <div class="card no-match">
                     <p class="no-match__title">@(items.Search is null ? "Không có món nào phù hợp" : $"Không có món nào khớp \"{items.Search}\"")</p>
                     <p class="no-match__text">Thử bỏ bộ lọc hoặc tìm bằng từ khác.</p>
-                    <a class="btn btn--outline" href="@(SiteLinks.Builder.Href)#chon-mon">Xóa bộ lọc</a>
+                    <a class="btn btn--outline" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">Xóa bộ lọc</a>
                 </div>
             }
 
             <ul class="item-grid">
                 @foreach (var item in items.Items)
                 {
-                    <li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")" id="mon-@item.Slug">
+                    <li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")" id="@Anchors.ItemCard(item.Slug)">
                         @* The photo and the name both open the item page. The photo's link is for the mouse only: hidden from
                            screen readers and skipped by Tab, so the name's link is the one link they meet (alt is empty for
                            the same reason: the name is right below). *@
                         <a class="item-card__photo" href="@SiteLinks.Item(item.Slug)" tabindex="-1" aria-hidden="true"><img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy"></a>
                         <div class="item-card__body">
                             <h3 class="item-card__name"><a class="item-card__link" href="@SiteLinks.Item(item.Slug)">@item.Name</a></h3>
-                            <p class="item-card__meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
+                            <p class="item-card__meta meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
                             @if (item.SoldOut)
                             {
                                 <span class="badge badge--muted">Hết hàng</span>
@@ -208,8 +208,8 @@
             {
                 @* Step 3 (F33, mockup 27). A plain form: builder.ts sends it as soon as the choice changes; without scripts
                    the "Lưu" button does. "Tiếp tục" in the panel and the phone bar belongs to this form too (form="dong-goi-form"). *@
-                <section class="card packaging" id="dong-goi" aria-labelledby="packaging-title">
-                    <form id="dong-goi-form" method="post" action="@(SiteLinks.Builder.Href)/packaging" asp-antiforgery="true">
+                <section class="card packaging" id="@Anchors.Packaging" aria-labelledby="packaging-title">
+                    <form id="dong-goi-form" method="post" action="@SiteLinks.PackagingPath" asp-antiforgery="true">
                         <fieldset class="packaging__set">
                             <legend><h2 class="packaging__title" id="packaging-title">Chọn kiểu đóng gói</h2></legend>
                             <div class="packaging__options">
@@ -221,7 +221,7 @@
                                             <input type="radio" id="dong-goi-@option.Id" name="packaging" value="@option.Id" checked="@(option.Id == box.Packaging!.Id)">
                                             <span class="packaging-option__name">@option.Name</span>
                                         </span>
-                                        <span class="packaging-option__desc">@option.Description</span>
+                                        <span class="packaging-option__desc meta">@option.Description</span>
                                         <span class="packaging-option__fee">@(option.FeeVnd == 0 ? "Miễn phí" : "+" + Vnd.Format(option.FeeVnd))</span>
                                     </label>
                                 }
@@ -292,7 +292,7 @@
             @if (box.Lines.Count > 0)
             {
                 @* F24: saves the packaging on screen, then opens the review page. *@
-                <button type="submit" class="btn btn--primary box-panel__next" form="dong-goi-form" name="next" value="review">Tiếp tục: xem lại hộp quà</button>
+                <button type="submit" class="btn btn--primary box-panel__next" form="dong-goi-form" name="next" value="@ReturnTo.Review.Value()">Tiếp tục: xem lại hộp quà</button>
             }
             else
             {
@@ -308,7 +308,7 @@
             <meter class="budget-meter" min="0" max="@Math.Max(box.BudgetVnd, 1)" value="@box.Quote.GoodsVnd" aria-hidden="true"></meter>
             @if (box.Lines.Count > 0)
             {
-                <button type="submit" class="btn btn--primary box-bar__next" form="dong-goi-form" name="next" value="review">Xem lại hộp quà</button>
+                <button type="submit" class="btn btn--primary box-bar__next" form="dong-goi-form" name="next" value="@ReturnTo.Review.Value()">Xem lại hộp quà</button>
             }
             else
             {

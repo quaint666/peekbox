@@ -6,12 +6,13 @@ namespace Peekbox.Web.Models;
 // when the saved delivery date can no longer be delivered (today or earlier); the box is still shown, but it cannot go on.
 public sealed record CartViewModel(Box? Box, bool DateOpen)
 {
-    // Why "Tiếp tục thanh toán" is off. The first reason that applies wins; checkout itself is not built yet (M3).
-    public string CheckoutReason =>
+    // Why "Tiếp tục thanh toán" is off, or null when the box can go to checkout. The first reason that applies wins; the
+    // checkout controller refuses the same boxes (it sends them back here).
+    public string? CheckoutReason =>
         Box is { OutOfDate.Count: > 0 } ? "Bỏ món hết hạn hoặc đổi ngày giao để tiếp tục."
         : Box is { DeliveryDate: null } ? "Chưa có ngày giao. Bấm Sửa hộp để chọn ngày giao."
         : !DateOpen ? "Ngày giao đã qua. Bấm Sửa hộp để chọn ngày giao mới."
-        : "Thanh toán sẽ có trong bản sau.";
+        : null;
 
     // Whether the reason is a problem with the box (red) rather than a note.
     public bool Blocked => Box is { OutOfDate.Count: > 0 } || !DateOpen;

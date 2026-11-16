@@ -1,0 +1,65 @@
+@using Peekbox.Web.Formatting
+@model SoldOutViewModel
+@{
+    ViewData["Title"] = "Thanh toán";
+    var gone = Model.Lines.Where(l => l.Left == 0).ToList();
+    var fewer = Model.Lines.Where(l => l.Left > 0).ToList();
+    var box = Model.Box;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true">
+}
+
+@* F50 (state 07): an item ran short between the cart and "Đặt hàng". Nothing was charged and no stock was taken; the
+   hamper now holds what is left. Shown once, after the redirect from the checkout. *@
+<div class="checkout">
+    <h1 class="checkout__title">Thanh toán</h1>
+
+    <section class="card checkout-stock" aria-labelledby="stock-title">
+        <div class="checkout-stock__note" role="alert">
+            <h2 class="checkout-stock__title" id="stock-title">@(Model.Lines.Count == 1 && gone.Count == 1 ? "Một món vừa hết hàng" : "Có món vừa hết hoặc không còn đủ")</h2>
+            <p class="checkout-stock__text">
+                @if (gone.Count > 0)
+                {
+                    @(string.Join(", ", gone.Select(l => l.Name)))<text> vừa có người khác đặt hết. Chúng tôi đã bỏ @(gone.Count == 1 ? "món này" : "các món này") khỏi hộp của bạn. </text>
+                }
+                @foreach (var line in fewer)
+                {
+                    @line.Name<text> chỉ còn @line.Left, hộp của bạn đã giảm từ @line.Wanted xuống @line.Left. </text>
+                }
+                Chưa có khoản nào bị tính.
+            </p>
+        </div>
+
+        @if (box is not null)
+        {
+            <ul class="checkout-stock__lines">
+                @foreach (var line in box.Lines)
+                {
+                    <li><span><span class="checkout-stock__name">@line.Name@(line.Quantity > 1 ? $" × {line.Quantity}" : "")</span><span class="checkout-stock__meta">@line.Brand · @line.WeightGrams g</span></span><strong>@Vnd.Format(line.LineVnd)</strong></li>
+                }
+                @foreach (var line in gone)
+                {
+                    <li class="checkout-stock__gone"><span><span class="checkout-stock__name">@line.Name</span></span><span class="badge badge--muted">Hết hàng</span></li>
+                }
+            </ul>
+            <dl class="checkout-sums">
+                <div><dt>Tiền hàng (@box.Count món)</dt><dd>@Vnd.Format(box.Quote.GoodsVnd)</dd></div>
+                <div class="checkout-sums__left"><dt>Ngân sách @Vnd.Format(box.BudgetVnd), @(box.Quote.OverBudget ? "vượt" : "còn lại")</dt><dd>@Vnd.Format(box.LeftOrOverVnd)</dd></div>
+            </dl>
+        }
+        else
+        {
+            <p class="checkout-stock__empty">Hộp của bạn không còn món nào.</p>
+        }
+
+        <div class="checkout-stock__actions">
+            <a class="btn btn--primary" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">Chọn món thay thế</a>
+            @if (box is not null)
+            {
+                <a class="btn btn--outline" href="@SiteLinks.CheckoutPath">Tiếp tục thanh toán với @box.Count món</a>
+            }
+        </div>
+    </section>
+</div>

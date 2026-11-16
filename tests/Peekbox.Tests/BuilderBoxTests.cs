@@ -56,7 +56,7 @@ public class BuilderBoxTests(PeekboxFixture fixture)
 
         private Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            request.Headers.Add("Cookie", string.Join("; ", new[] { $"{HamperService.CookieName}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0)));
+            request.Headers.Add("Cookie", string.Join("; ", new[] { $"{HamperCookie.Name}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0)));
             return client.SendAsync(request);
         }
     }

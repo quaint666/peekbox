@@ -1,12 +1,24 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Content;
 using Peekbox.Web.Data;
+using Peekbox.Web.Navigation;
 using Peekbox.Web.Security;
 using Peekbox.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+// Every POST, PUT, PATCH and DELETE must carry the form's anti-forgery token, or the request gets a 400; GET and HEAD
+// are never checked. A future payment callback, which cannot send the token, opts out with [IgnoreAntiforgeryToken].
+builder.Services.AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
+// Development already runs these checks; this turns them on in every environment. A scoped service (the DbContext,
+// HamperService) taken by a singleton then stops the app at start, instead of one object being shared by all visitors.
+builder.Host.UseDefaultServiceProvider(options =>
+{
+    options.ValidateScopes = true;
+    options.ValidateOnBuild = true;
+});
 
 // Page text from content/data/: read once at start; a missing or broken file stops the app at once.
 builder.Services.AddSingleton(HomeContent.Load(HomeContent.FilePath));
@@ -16,6 +28,8 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<BuilderLimits>();
 builder.Services.AddScoped<HamperService>();
 builder.Services.AddScoped<ItemCatalog>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddSingleton<RateLimits>();
 
 // The connection string is a secret, so it is never written in a file of the
 // project. See docs/frontend-plan.md, section 2, for how to set it.
@@ -32,16 +46,17 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler(SiteLinks.ErrorPath);
 }
 
 // No HTTPS redirection and no HSTS here: the site is served behind a proxy
 // that handles HTTPS.
 
-// First, so that every response carries the policy, including static files and errors.
+// First, so that every response carries the headers, including static files and errors.
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Append(ContentSecurityPolicy.HeaderName, ContentSecurityPolicy.Value);
+    context.Response.Headers.Append(ReferrerPolicy.HeaderName, ReferrerPolicy.Value);
     await next();
 });
 
@@ -51,9 +66,9 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+// Every action names its own address (SiteLinks), so each page has exactly one. There is no
+// "{controller}/{action}/{id?}" route: it also answered /Home/Error, /Track/Index and /Cart/Index/x.
+app.MapControllers()
     .WithStaticAssets();
 
 app.Run();

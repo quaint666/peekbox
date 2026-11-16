@@ -112,6 +112,13 @@ Left out until their slices, and drawn earlier (the old images are in the git hi
 ## Cart
 Redrawn 2026-11-16 for the first build (M2). The cart is the visitor's one hamper once it holds an item, so every header shows "Giỏ hàng (1)" from the first item on, and "Giỏ hàng (0)" before (screen readers hear "Giỏ hàng, 1 hộp" or "Giỏ hàng, trống"); on /cart the link is marked as the current page (green text and border), on the empty cart too. Left out until their slices: the coupon field (F38; state 06 still shows it, as the design for then) and "Xem hộp gợi ý cho Tết" on the empty cart (F15). "Tiếp tục thanh toán" is drawn disabled with "Thanh toán sẽ có trong bản sau." until checkout (M3). Not drawn: "Xóa hộp" asks first, in a small box in the middle of the screen over a dimmed page ("Xóa cả hộp quà?", the text "Các món và kiểu đóng gói sẽ bị bỏ khỏi hộp. Ngân sách và ngày giao vẫn được giữ.", a red "Xóa" and an outlined "Giữ lại", which has the focus). An item that expires before the delivery date shows the review page's red block and "Bỏ món này" in the cart too.
 
+## Built differently from the mockups (M3)
+Each one is on purpose; change the mockup or the page when the reason goes away.
+- **No email yet (F61 comes later),** so no page says one was sent. Confirmation (07): the banner says "Hãy lưu đường dẫn của trang này để xem lại đơn hàng. Bạn cũng có thể dùng mục Tra cứu đơn hàng…" (the words link to /track) instead of "Chúng tôi đã gửi email xác nhận…". Track (12): the hint under the order number is "Mã có trên trang xác nhận đơn hàng." without the email.
+- **Confirmation sums** have an "Đóng gói" row: the mockup's 0đ kraft box let Tiền hàng + Phí giao hàng equal the total, a 40.000đ box does not. The footnote is "Giá và phí giao hàng là giá mẫu." (the order number is real now).
+- **Cancelled order, dark:** the banner's edge is the existing `--color-danger-border` (#A32A1E), not the mockup's #7A3B33, to keep one dark red.
+- **Header:** the six links sit in a row from 1100 px wide (measured: they need about 1040 px with the theme button and "Giỏ hàng (0)"); below that they are in the menu, as on a phone. Only 1440 and 390 are drawn.
+
 ## Admin account
 The bottom of the admin sidebar shows a chip: initials in a green circle, the name, the role, and a bordered "Đăng xuất" button with an icon. On a phone the header has an initials button (44 px) that opens a menu with the name, Tài khoản and Đăng xuất (state 23). The name and role are placeholders.
 

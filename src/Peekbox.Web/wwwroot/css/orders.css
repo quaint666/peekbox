@@ -1,0 +1,81 @@
+/* AN ORDER'S PAGE: /orders/{token} (mockups 07 and 07-cancelled, "Confirmation"). Sizes in px without a token are from
+   the mockups. Phone first; the wide layout starts at 900px, as on the cart and checkout. */
+.order { display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* The banner: green "received", or red "cancelled". */
+.order-banner { display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: var(--radius-md); }
+.order-banner__title { display: flex; align-items: flex-start; gap: var(--space-3); margin: 0; font-size: var(--title-sm); line-height: 1.25; }  /* 22px */
+.order-banner__title .icon { flex: none; width: 28px; height: 28px; margin-top: 2px; stroke-width: 2; }
+.order-banner__text { margin: 0; font-size: var(--text-sm); line-height: 1.6; }
+.order-banner__text a { color: inherit; font-weight: 600; }
+
+.order-card__title { margin: 0; font-size: var(--text-lg); font-weight: 700; }
+
+/* F51's status: four steps; the steps reached are filled. A phone shows bars with the label under them. */
+.order-status { display: flex; flex-direction: column; gap: 14px; padding: var(--space-4); border-radius: var(--radius-md); }
+.order-steps { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: var(--text-2xs); }  /* 12px */
+.order-steps__step { display: flex; flex: 1; flex-direction: column; gap: 6px; min-width: 0; color: var(--color-muted); font-weight: 600; }
+.order-steps__bar { height: 4px; border-radius: 2px; background: var(--color-border); }
+.order-steps__label { text-wrap: balance; }
+.order-steps__step--done { color: var(--color-text); }
+.order-steps__step--done .order-steps__bar { background: var(--color-primary); }
+.order-status__cancelled { align-self: flex-start; margin: 0; padding: var(--space-2) var(--space-4); border-radius: 999px; font-size: var(--text-sm); font-weight: 600; }
+.order-status__pay { margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
+.order-status__pay strong { color: var(--color-text); }
+
+.order-main { display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* The items, as sold. */
+.order-items { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-4); border-radius: var(--radius-md); }
+.order-lines { margin: 0; padding: 0; list-style: none; }
+/* Phone (mockup 07, phone): the price beside the name, the details under both. Wide: the price in its own column. */
+.order-line {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    grid-template-areas: "img name price" "img meta meta";
+    align-items: start;
+    gap: var(--space-1) var(--space-3);
+    padding: 14px 0;
+    border-top: 1px solid var(--color-border-soft);
+}
+.order-line__img { grid-area: img; width: 56px; height: 56px; object-fit: cover; border-radius: 10px; background: var(--color-border-soft); filter: var(--photo-filter); }
+.order-line__name { grid-area: name; font-size: var(--text-md); font-weight: 600; }  /* 15px */
+.order-line__meta { grid-area: meta; }
+.order-line__price { grid-area: price; display: flex; flex-direction: column; align-items: flex-end; font-size: var(--text-md); text-align: right; }
+.order-line__each { font-size: var(--text-xs); color: var(--color-muted); font-weight: 400; }
+.order-line--packaging { display: flex; justify-content: space-between; font-size: var(--text-md); }
+
+/* Delivery, the sums and the way on. */
+.order-delivery { display: flex; flex-direction: column; gap: 14px; padding: var(--space-4); border-radius: var(--radius-md); }
+.order-facts { display: flex; flex-direction: column; gap: 6px; margin: 0; font-size: var(--text-sm); line-height: 1.6; }
+.order-facts dt { display: inline; color: var(--color-muted); }
+.order-facts dd { display: inline; margin: 0; }
+.order-sums { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding-top: var(--space-3); border-top: 1px solid var(--color-border-soft); font-size: var(--text-md); }
+.order-sums div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+.order-sums dd { margin: 0; }
+.order-sums__total dd { font-size: var(--title-sm); font-weight: 700; }  /* 22px */
+.order-actions { display: flex; flex-direction: column; gap: 10px; }
+.order-actions .btn { min-height: 48px; }
+.order-note { margin: 0; font-size: var(--text-2xs); line-height: 1.5; color: var(--color-muted); }
+
+@media (min-width: 900px) {
+    .order { gap: 28px; }
+    .order-banner { padding: 28px; border-radius: var(--radius-lg); }
+    .order-banner__title { align-items: center; font-size: var(--title-lg); }  /* 30px */
+    .order-banner__title .icon { width: 32px; height: 32px; margin-top: 0; }
+    .order-banner__text { font-size: var(--text-base); }
+    .order-card__title { font-size: var(--text-xl); }
+    .order-status, .order-items, .order-delivery { padding: var(--space-5); border-radius: var(--radius-lg); }
+    .order-status { gap: var(--space-4); }
+    /* Wide: the steps are pills (mockup 07, desktop). */
+    .order-steps { flex-wrap: wrap; gap: var(--space-3); font-size: var(--text-sm); }
+    .order-steps__step { flex: none; padding: var(--space-2) var(--space-4); border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); }
+    .order-steps__bar { display: none; }
+    .order-steps__step--done { border-color: var(--color-primary); background: var(--color-primary); color: var(--color-on-primary); }
+    .order-main { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 28px; align-items: start; }
+    .order-line { grid-template-columns: 64px minmax(0, 1fr) auto; grid-template-areas: "img name price" "img meta price"; column-gap: 14px; }
+    .order-line__img { width: 64px; height: 64px; }
+    .order-line__name { align-self: end; }
+    .order-line__price { align-self: center; }
+    .order-line__name { font-size: var(--text-base); }
+}

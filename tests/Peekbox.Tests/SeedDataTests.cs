@@ -61,4 +61,19 @@ public class SeedDataTests
             Assert.Throws<JsonException>(() => SeedData.ParsePackaging(node.ToJsonString()));
         }
     }
+
+    // The same for wards.json: a ward without a ring would get no fee at checkout.
+    [Fact]
+    public void A_missing_key_inside_the_first_ward_stops_the_load()
+    {
+        var keys = KeysRead(typeof(SeedWard));
+        Assert.NotEmpty(keys);
+
+        foreach (var key in keys)
+        {
+            var node = JsonNode.Parse(File.ReadAllText(SeedData.WardsFilePath))!.AsObject();
+            Assert.True(node["wards"]!.AsArray()[0]!.AsObject().Remove(key), $"wards[0].{key} is not in the file");
+            Assert.Throws<JsonException>(() => SeedData.ParseWards(node.ToJsonString()));
+        }
+    }
 }

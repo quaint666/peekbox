@@ -1,0 +1,7 @@
+@using Peekbox.Web.Formatting
+@model CheckoutViewModel
+@* The total, in the summary on wide screens and in the bar on a phone. Without a ward the fee is not in it yet. *@
+<p class="checkout-total">
+    <span>@(Model.DeliveryFeeVnd is null ? "Tạm tính (chưa gồm phí giao)" : "Tổng cộng (đã gồm thuế)")</span>
+    <strong>@Vnd.Format(Model.TotalVnd)</strong>
+</p>

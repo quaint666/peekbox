@@ -1,0 +1,409 @@
+{
+  "_note": "HCMC wards after the 1 July 2025 merger, copied from Bloomy (seed-reference.sql), which took them from GHTK list of the 168 new units (https://ghtk.vn/blog/danh-sach-168-xa-phuong-moi-cua-thanh-pho-ho-chi-minh-sau-sap-nhap/, page dated 5 Dec 2025): the 102 former-HCMC units minus Xa Thanh An (island). Ring 1 to 3 around Phuong Sai Gon decides the delivery fee (Services/DeliveryFees.cs). Sorted in Vietnamese order; the file order is the order of the list on the checkout page. Not checked again against an official source.",
+  "wards": [
+    {
+      "name": "Phường An Đông",
+      "ring": 1
+    },
+    {
+      "name": "Phường An Hội Đông",
+      "ring": 2
+    },
+    {
+      "name": "Phường An Hội Tây",
+      "ring": 2
+    },
+    {
+      "name": "Phường An Khánh",
+      "ring": 1
+    },
+    {
+      "name": "Phường An Lạc",
+      "ring": 3
+    },
+    {
+      "name": "Phường An Nhơn",
+      "ring": 2
+    },
+    {
+      "name": "Phường An Phú Đông",
+      "ring": 3
+    },
+    {
+      "name": "Phường Bàn Cờ",
+      "ring": 1
+    },
+    {
+      "name": "Phường Bảy Hiền",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bến Thành",
+      "ring": 1
+    },
+    {
+      "name": "Phường Bình Đông",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bình Hưng Hòa",
+      "ring": 3
+    },
+    {
+      "name": "Phường Bình Lợi Trung",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bình Phú",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bình Quới",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bình Tân",
+      "ring": 3
+    },
+    {
+      "name": "Phường Bình Tây",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bình Thạnh",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bình Thới",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bình Tiên",
+      "ring": 2
+    },
+    {
+      "name": "Phường Bình Trị Đông",
+      "ring": 3
+    },
+    {
+      "name": "Phường Bình Trưng",
+      "ring": 2
+    },
+    {
+      "name": "Phường Cát Lái",
+      "ring": 3
+    },
+    {
+      "name": "Phường Cầu Kiệu",
+      "ring": 1
+    },
+    {
+      "name": "Phường Cầu Ông Lãnh",
+      "ring": 1
+    },
+    {
+      "name": "Phường Chánh Hưng",
+      "ring": 2
+    },
+    {
+      "name": "Phường Chợ Lớn",
+      "ring": 1
+    },
+    {
+      "name": "Phường Chợ Quán",
+      "ring": 1
+    },
+    {
+      "name": "Phường Diên Hồng",
+      "ring": 1
+    },
+    {
+      "name": "Phường Đông Hưng Thuận",
+      "ring": 3
+    },
+    {
+      "name": "Phường Đức Nhuận",
+      "ring": 1
+    },
+    {
+      "name": "Phường Gia Định",
+      "ring": 2
+    },
+    {
+      "name": "Phường Gò Vấp",
+      "ring": 2
+    },
+    {
+      "name": "Phường Hạnh Thông",
+      "ring": 2
+    },
+    {
+      "name": "Phường Hiệp Bình",
+      "ring": 3
+    },
+    {
+      "name": "Phường Hòa Bình",
+      "ring": 2
+    },
+    {
+      "name": "Phường Hòa Hưng",
+      "ring": 1
+    },
+    {
+      "name": "Phường Khánh Hội",
+      "ring": 1
+    },
+    {
+      "name": "Phường Linh Xuân",
+      "ring": 3
+    },
+    {
+      "name": "Phường Long Bình",
+      "ring": 3
+    },
+    {
+      "name": "Phường Long Phước",
+      "ring": 3
+    },
+    {
+      "name": "Phường Long Trường",
+      "ring": 3
+    },
+    {
+      "name": "Phường Minh Phụng",
+      "ring": 2
+    },
+    {
+      "name": "Phường Nhiêu Lộc",
+      "ring": 1
+    },
+    {
+      "name": "Phường Phú Định",
+      "ring": 2
+    },
+    {
+      "name": "Phường Phú Lâm",
+      "ring": 2
+    },
+    {
+      "name": "Phường Phú Nhuận",
+      "ring": 1
+    },
+    {
+      "name": "Phường Phú Thạnh",
+      "ring": 2
+    },
+    {
+      "name": "Phường Phú Thọ",
+      "ring": 2
+    },
+    {
+      "name": "Phường Phú Thọ Hòa",
+      "ring": 2
+    },
+    {
+      "name": "Phường Phú Thuận",
+      "ring": 2
+    },
+    {
+      "name": "Phường Phước Long",
+      "ring": 3
+    },
+    {
+      "name": "Phường Sài Gòn",
+      "ring": 1
+    },
+    {
+      "name": "Phường Tam Bình",
+      "ring": 3
+    },
+    {
+      "name": "Phường Tăng Nhơn Phú",
+      "ring": 3
+    },
+    {
+      "name": "Phường Tân Bình",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Định",
+      "ring": 1
+    },
+    {
+      "name": "Phường Tân Hòa",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Hưng",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Mỹ",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Phú",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Sơn",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Sơn Hòa",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Sơn Nhất",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Sơn Nhì",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tân Tạo",
+      "ring": 3
+    },
+    {
+      "name": "Phường Tân Thới Hiệp",
+      "ring": 3
+    },
+    {
+      "name": "Phường Tân Thuận",
+      "ring": 2
+    },
+    {
+      "name": "Phường Tây Thạnh",
+      "ring": 2
+    },
+    {
+      "name": "Phường Thạnh Mỹ Tây",
+      "ring": 2
+    },
+    {
+      "name": "Phường Thông Tây Hội",
+      "ring": 2
+    },
+    {
+      "name": "Phường Thới An",
+      "ring": 3
+    },
+    {
+      "name": "Phường Thủ Đức",
+      "ring": 3
+    },
+    {
+      "name": "Phường Trung Mỹ Tây",
+      "ring": 3
+    },
+    {
+      "name": "Phường Vĩnh Hội",
+      "ring": 1
+    },
+    {
+      "name": "Phường Vườn Lài",
+      "ring": 1
+    },
+    {
+      "name": "Phường Xóm Chiếu",
+      "ring": 1
+    },
+    {
+      "name": "Phường Xuân Hòa",
+      "ring": 1
+    },
+    {
+      "name": "Xã An Nhơn Tây",
+      "ring": 3
+    },
+    {
+      "name": "Xã An Thới Đông",
+      "ring": 3
+    },
+    {
+      "name": "Xã Bà Điểm",
+      "ring": 3
+    },
+    {
+      "name": "Xã Bình Chánh",
+      "ring": 3
+    },
+    {
+      "name": "Xã Bình Hưng",
+      "ring": 3
+    },
+    {
+      "name": "Xã Bình Khánh",
+      "ring": 3
+    },
+    {
+      "name": "Xã Bình Lợi",
+      "ring": 3
+    },
+    {
+      "name": "Xã Bình Mỹ",
+      "ring": 3
+    },
+    {
+      "name": "Xã Cần Giờ",
+      "ring": 3
+    },
+    {
+      "name": "Xã Củ Chi",
+      "ring": 3
+    },
+    {
+      "name": "Xã Đông Thạnh",
+      "ring": 3
+    },
+    {
+      "name": "Xã Hiệp Phước",
+      "ring": 3
+    },
+    {
+      "name": "Xã Hóc Môn",
+      "ring": 3
+    },
+    {
+      "name": "Xã Hưng Long",
+      "ring": 3
+    },
+    {
+      "name": "Xã Nhà Bè",
+      "ring": 3
+    },
+    {
+      "name": "Xã Nhuận Đức",
+      "ring": 3
+    },
+    {
+      "name": "Xã Phú Hòa Đông",
+      "ring": 3
+    },
+    {
+      "name": "Xã Tân An Hội",
+      "ring": 3
+    },
+    {
+      "name": "Xã Tân Nhựt",
+      "ring": 3
+    },
+    {
+      "name": "Xã Tân Vĩnh Lộc",
+      "ring": 3
+    },
+    {
+      "name": "Xã Thái Mỹ",
+      "ring": 3
+    },
+    {
+      "name": "Xã Vĩnh Lộc",
+      "ring": 3
+    },
+    {
+      "name": "Xã Xuân Thới Sơn",
+      "ring": 3
+    }
+  ]
+}

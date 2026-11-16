@@ -2,7 +2,7 @@
 slug: bao-quan-banh-mut-tra-sau-tet
 category_vi: Bảo quản
 category_en: Storage
-cover_image: ../images/products/tra-sen.png
+cover_image: /images/blog/bao-quan-banh-mut-tra-sau-tet.webp
 status: draft for review
 note: General storage advice. Follow the instructions printed on each product.
 ---
