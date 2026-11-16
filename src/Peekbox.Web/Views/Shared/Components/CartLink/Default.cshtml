@@ -1,0 +1,6 @@
+@model Peekbox.Web.ViewComponents.CartLink
+@* The phone header shows the icon only, so the label carries the count: "Giỏ hàng, 1 hộp" or "Giỏ hàng, trống" (mockups). *@
+<a class="cart-link" href="@SiteLinks.Cart.Href" aria-label="@(Model.Count == 0 ? $"{SiteLinks.Cart.Label}, trống" : $"{SiteLinks.Cart.Label}, {Model.Count} hộp")" aria-current="@(Model.Current ? "page" : null)">
+    <partial name="_Icon" model='"cart"' />
+    <span class="cart-link__text">@SiteLinks.Cart.Label (@Model.Count)</span>
+</a>

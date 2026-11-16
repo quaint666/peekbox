@@ -119,10 +119,16 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             return Redirect(SiteLinks.Item(slug) + "#them");
         }
 
-        // "Bỏ món này" on the review page (F35). An emptied box sends the review page on to the builder.
+        // "Bỏ món này" on the review page or in the cart (F35, F37). An emptied box sends the review page on to the
+        // builder, and shows the empty cart.
         if (from == "review")
         {
             return Redirect(SiteLinks.ReviewPath);
+        }
+
+        if (from == "cart")
+        {
+            return Redirect(SiteLinks.Cart.Href);
         }
 
         var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false" }

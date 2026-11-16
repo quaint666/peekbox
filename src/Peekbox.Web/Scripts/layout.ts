@@ -57,3 +57,13 @@ document.addEventListener('click', (event) => {
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') setMenu(false);
 });
+
+// Back and Forward. Safari keeps whole pages in its back-forward cache and shows them exactly as they were left: a
+// builder page could still show items that were taken out in the cart since, and its buttons would send amounts based
+// on that old box. Every page shows the hamper in the header, so a page restored from that cache is loaded again.
+// (Checked in WebKit; Chromium loaded the page again by itself in the same test.)
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});

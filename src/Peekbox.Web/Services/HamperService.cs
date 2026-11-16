@@ -98,6 +98,23 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         return true;
     }
 
+    // How many hampers the header's cart link counts (F37): the visitor's hamper is in the cart once it holds an item
+    // (decision 2026-11-16), so this is 1 or 0. One small query, run on every page.
+    public async Task<int> CartCountAsync(string? token, CancellationToken cancellationToken = default) =>
+        string.IsNullOrEmpty(token) || token.Length > 64
+            ? 0
+            : await db.HamperItems.AnyAsync(l => l.Hamper!.Token == token, cancellationToken) ? 1 : 0;
+
+    // "Xóa hộp" in the cart (F37): the items and the packaging choice go; the budget and the date stay, so the builder
+    // opens again at step 2.
+    public async Task ClearAsync(Hamper hamper, CancellationToken cancellationToken = default)
+    {
+        await db.HamperItems.Where(l => l.HamperId == hamper.Id).ExecuteDeleteAsync(cancellationToken);
+        hamper.PackagingId = null;
+        hamper.UpdatedAt = clock.GetUtcNow();
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
     // Sets how many of an item are in the hamper (F20). 0 or less takes it out. Going up is allowed only when the last
     // one added still passes every rule of Pricing.StatusOf (stock, the delivery date, the budget); going down always is,
     // so a visitor who lowered the budget can still take things out.

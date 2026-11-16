@@ -48,6 +48,30 @@ public class SeamsTests
         }
     }
 
+    // Found in WebKit (Safari's engine): Back to the builder showed it from the back-forward cache with a box that had
+    // been emptied in the cart since. Every page shows the hamper in the header, so layout.ts loads such a page again.
+    [Fact]
+    public void A_page_restored_from_the_back_forward_cache_is_loaded_again()
+    {
+        var code = Read(Path.Combine(RepoRoot.WebProject, "Scripts", "layout.ts"));
+
+        Assert.Matches(@"addEventListener\('pageshow',\s*\(event\)\s*=>\s*\{\s*if \(event\.persisted\)\s*\{\s*window\.location\.reload\(\);", code);
+    }
+
+    // Found in WebKit and then in Chromium: after "Thêm" in the background the header still said "Giỏ hàng (0)".
+    // Everything on the builder that shows the hamper is swapped in from the server's page.
+    [Fact]
+    public void The_builder_swaps_the_header_count_after_a_background_add()
+    {
+        var code = Read(Path.Combine(RepoRoot.WebProject, "Scripts", "builder.ts"));
+        var applyPage = Regex.Match(code, @"function applyPage\(fresh: Document\): void \{([\s\S]*?)\n\}").Groups[1].Value;
+
+        foreach (var part in new[] { "'#hop-cua-ban'", "'.box-bar'", "'.cart-link'", "'#packaging-lock'", "'#dong-goi'" })
+        {
+            Assert.Contains($"swap({part}, fresh", applyPage);
+        }
+    }
+
     [Fact]
     public void The_global_hidden_rule_is_still_in_base_css()
     {
