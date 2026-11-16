@@ -194,9 +194,7 @@
     .item-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
     .item-card__img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 0; }
     .item-card__body { flex: 1; padding: var(--space-4); }
-    /* Mockup 27 has a 390 px panel beside three 247 px cards, in 1200 px of content. Our content is 1136 px (the
-       --container-max gap with the mockups, a separate fix), so the panel gives up 30 px to keep three cards a row. */
-    .builder-main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; align-items: start; }  /* 28: from the mockup */
+    .builder-main { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 28px; align-items: start; }  /* 390 and 28: measured on mockup 27 at 1440 px */
     .builder-main .item-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }   /* three a row at 1440, two at 900 */
     .box-panel { position: sticky; top: var(--space-4); display: flex; flex-direction: column; gap: 18px; padding: var(--space-5); border-radius: var(--radius-lg); }  /* 18px: from the mockup */
     .box-bar { display: none; }
