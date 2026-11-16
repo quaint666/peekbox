@@ -152,6 +152,19 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
             ? Task.FromResult<string?>(null)
             : db.Hampers.Where(h => h.Token == hamperToken && h.Order != null).Select(h => h.Order!.Token).FirstOrDefaultAsync(cancellationToken);
 
+    // An order and its lines by its secret token (the confirmation page), or null. Read-only.
+    public Task<Order?> FindAsync(string? orderToken, CancellationToken cancellationToken = default) =>
+        string.IsNullOrEmpty(orderToken) || orderToken.Length > SecretToken.MaxLength
+            ? Task.FromResult<Order?>(null)
+            : db.Orders.AsNoTracking().Include(o => o.Items.OrderBy(i => i.Id)).SingleOrDefaultAsync(o => o.Token == orderToken, cancellationToken);
+
+    // The pictures of the products on an order, by product id.
+    public async Task<Dictionary<int, string>> ImagesAsync(Order order, CancellationToken cancellationToken = default)
+    {
+        var ids = order.Items.Select(i => i.ProductId).ToList();
+        return await db.Products.AsNoTracking().Where(p => ids.Contains(p.Id)).ToDictionaryAsync(p => p.Id, p => p.ImagePath, cancellationToken);
+    }
+
     // The checkout's ward list, in page order (the file's Vietnamese order).
     public async Task<List<WardOption>> WardsAsync(CancellationToken cancellationToken = default) =>
         (await db.Wards.AsNoTracking().OrderBy(w => w.SortOrder).Select(w => new { w.Id, w.Name, w.Ring }).ToListAsync(cancellationToken))

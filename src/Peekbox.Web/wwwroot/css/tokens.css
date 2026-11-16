@@ -30,6 +30,7 @@
   --color-primary-text: #3F6B57;   /* links, outlines, text on the page */
   --color-tint: #E3EFE7;           /* chosen state */
   --color-on-tint: #25513E;
+  --color-success-border: #9CC3AB; /* the edge of the green "order received" banner (mockup 07) */
   --color-hero-top: #EAF0E4;       /* top of the home hero gradient */
   --color-warn-bg: #FFF1CC;
   --color-warn-text: #7A4F00;
@@ -108,6 +109,7 @@
     --color-primary-text: #9EC3A5;
     --color-tint: #1D2B24;
     --color-on-tint: #BFE3CF;
+    --color-success-border: #3D6B54;
     --color-hero-top: #171B18;
     --color-warn-bg: #3A3016;
     --color-warn-text: #F2D98A;
@@ -150,6 +152,7 @@
   --color-primary-text: #9EC3A5;
   --color-tint: #1D2B24;
   --color-on-tint: #BFE3CF;
+  --color-success-border: #3D6B54;
   --color-hero-top: #171B18;
   --color-warn-bg: #3A3016;
   --color-warn-text: #F2D98A;

@@ -1,0 +1,92 @@
+@using Peekbox.Web.Formatting
+@model OrderPageModel
+@{
+    var order = Model.Order;
+    ViewData["Title"] = $"Đơn hàng {order.Number}";
+    var current = OrderPageModel.Steps.ToList().FindIndex(s => s.Status == order.Status);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true">
+}
+
+@* An order's page (F51; mockups 07 and 07-cancelled). Opened by the order's secret token only. No email is sent yet
+   (F61 comes later), so unlike the mockup the banner does not say one was. *@
+<div class="order">
+    @if (Model.Cancelled)
+    {
+        <section class="order-banner order-banner--cancelled" aria-labelledby="order-title">
+            <h1 class="order-banner__title" id="order-title"><partial name="_Icon" model='"x-circle"' />Đơn hàng này đã bị huỷ</h1>
+            <p class="order-banner__text">Mã đơn hàng: <strong>@order.Number</strong>. Đơn hàng sẽ không được giao. Cần giúp? [Số điện thoại hoặc email hỗ trợ] · Hỗ trợ [7:00 – 21:30]</p>
+        </section>
+    }
+    else
+    {
+        <section class="order-banner" aria-labelledby="order-title">
+            <h1 class="order-banner__title" id="order-title"><partial name="_Icon" model='"check-circle"' />Cảm ơn bạn, đơn hàng đã được ghi nhận</h1>
+            <p class="order-banner__text">Mã đơn hàng: <strong>@order.Number</strong>. Hãy lưu đường dẫn của trang này để xem lại đơn hàng. Bạn cũng có thể dùng mục Tra cứu đơn hàng với mã đơn hàng và số điện thoại người đặt.</p>
+        </section>
+    }
+
+    <section class="card order-status" aria-labelledby="status-title">
+        <h2 class="order-card__title" id="status-title">Trạng thái đơn hàng</h2>
+        @if (Model.Cancelled)
+        {
+            <p class="order-status__cancelled">Đã huỷ</p>
+        }
+        else
+        {
+            <ol class="order-steps">
+                @for (var i = 0; i < OrderPageModel.Steps.Count; i++)
+                {
+                    <li class="order-steps__step@(i <= current ? " order-steps__step--done" : "")" aria-current="@(i == current ? "step" : null)"><span class="order-steps__bar"></span><span class="order-steps__label">@OrderPageModel.Steps[i].Label</span></li>
+                }
+            </ol>
+        }
+        <p class="order-status__pay">Thanh toán: <strong>@Model.PaymentText</strong></p>
+    </section>
+
+    <div class="order-main">
+        <section class="card order-items" aria-labelledby="items-title">
+            <h2 class="order-card__title" id="items-title">Các món trong hộp</h2>
+            <ul class="order-lines">
+                @foreach (var item in order.Items)
+                {
+                    <li class="order-line">
+                        <img class="order-line__img" src="@Model.Images.GetValueOrDefault(item.ProductId)" alt="" width="508" height="508" loading="lazy">
+                        <span class="order-line__name">@item.Name</span>
+                        <span class="order-line__meta">@item.Brand · @item.WeightGrams g · Xuất xứ @item.Origin · HSD @VnDate.Month(item.ExpiryDate)</span>
+                        <span class="order-line__price">
+                            @if (item.Quantity > 1)
+                            {
+                                <span class="order-line__each">@item.Quantity × @Vnd.Format(item.UnitPriceVnd)</span>
+                            }
+                            <strong>@Vnd.Format(item.UnitPriceVnd * item.Quantity)</strong>
+                        </span>
+                    </li>
+                }
+                <li class="order-line order-line--packaging"><span>@order.PackagingName</span><strong>@Vnd.Format(order.PackagingFeeVnd)</strong></li>
+            </ul>
+        </section>
+
+        <aside class="card order-delivery" aria-labelledby="delivery-title">
+            <h2 class="order-card__title" id="delivery-title">Giao hàng</h2>
+            <dl class="order-facts">
+                <div><dt>Người nhận:</dt> <dd>@order.RecipientName, @OrderPageModel.Phone(order.RecipientPhone)</dd></div>
+                <div><dt>Địa chỉ:</dt> <dd>@order.Street, @order.WardName</dd></div>
+                <div><dt>Ngày giao:</dt> <dd>@Model.When</dd></div>
+            </dl>
+            <dl class="order-sums">
+                <div><dt>Tiền hàng</dt><dd>@Vnd.Format(order.GoodsVnd)</dd></div>
+                <div><dt>Đóng gói</dt><dd>@Vnd.Format(order.PackagingFeeVnd)</dd></div>
+                <div><dt>Phí giao hàng</dt><dd>@Vnd.Format(order.DeliveryFeeVnd)</dd></div>
+                <div class="order-sums__total"><dt>Tổng cộng</dt><dd>@Vnd.Format(order.TotalVnd)</dd></div>
+            </dl>
+            <div class="order-actions">
+                <a class="btn btn--primary" href="@SiteLinks.Builder.Href">Tạo hộp quà khác</a>
+                <a class="btn btn--outline" href="@SiteLinks.Home.Href">Về trang chủ</a>
+            </div>
+            <p class="order-note">Giá và phí giao hàng là giá mẫu.</p>
+        </aside>
+    </div>
+</div>
