@@ -24,6 +24,8 @@
   --color-border-soft: #E6E2D6;
   --color-input-border: #8A948E;
   --color-primary: #3F6B57;        /* filled buttons */
+  --color-primary-hover: #2C4D3E;  /* a filled button under the mouse (design notes, "Interaction states") */
+  --color-primary-pressed: #25513E;
   --color-on-primary: #FFFFFF;
   --color-primary-text: #3F6B57;   /* links, outlines, text on the page */
   --color-tint: #E3EFE7;           /* chosen state */
@@ -98,6 +100,8 @@
     --color-border: #343B36;
     --color-border-soft: #2A302C;
     --color-input-border: #6E776F;
+    --color-primary-hover: #4A7A64;   /* lighter on a dark page */
+    --color-primary-pressed: #2C4D3E;
     --color-primary-text: #9EC3A5;
     --color-tint: #1D2B24;
     --color-on-tint: #BFE3CF;
@@ -135,6 +139,8 @@
   --color-border: #343B36;
   --color-border-soft: #2A302C;
   --color-input-border: #6E776F;
+  --color-primary-hover: #4A7A64;   /* lighter on a dark page */
+  --color-primary-pressed: #2C4D3E;
   --color-primary-text: #9EC3A5;
   --color-tint: #1D2B24;
   --color-on-tint: #BFE3CF;

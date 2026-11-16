@@ -88,21 +88,56 @@
     }
     else
     {
-        var showAllQuery = new Dictionary<string, string?> { ["category"] = items.Category, ["inDate"] = "false" }.Where(p => p.Value is not null);
+        var showAllQuery = new Dictionary<string, string?>
+        {
+            ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = "false",
+        }.Where(p => !string.IsNullOrEmpty(p.Value));
         var showAll = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, showAllQuery) + "#chon-mon";
+        var sortLabels = new Dictionary<ItemSort, string>
+        {
+            [ItemSort.Default] = "Mặc định",
+            [ItemSort.PriceAsc] = "Giá thấp đến cao",
+            [ItemSort.PriceDesc] = "Giá cao đến thấp",
+            [ItemSort.ExpiryLatest] = "Hạn dùng xa nhất",
+            [ItemSort.NameAz] = "Tên A đến Z",
+        };
 
         <section class="items" id="chon-mon" aria-labelledby="items-title">
             <h2 class="visually-hidden" id="items-title">Chọn món</h2>
 
-            @* A plain GET form: a chip or the checkbox reloads the page with the filter in the address (works without scripts). *@
+            @* A plain GET form: search, sort, the checkbox and the chips reload the page with the filters in the address
+               (works without scripts). Every filter is in the form, so changing one keeps the others. *@
             <form class="item-filters" method="get" action="@(SiteLinks.Builder.Href)#chon-mon">
+                @* Enter in the search box presses the first submit button of the form. This hidden one comes first, so Enter
+                   searches instead of pressing the "Tất cả" chip. *@
+                <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Tìm</button>
+
+                <div class="item-filters__row">
+                    <div class="field item-filters__search">
+                        <label class="field__label" for="item-search">Tìm món</label>
+                        <div class="search-input">
+                            <partial name="_Icon" model='"search"' />
+                            <input class="input" id="item-search" name="q" type="search" value="@items.Search" maxlength="@ItemCatalog.SearchMaxLength" placeholder="Tên món, thương hiệu, xuất xứ" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="field item-filters__sort">
+                        <label class="field__label" for="item-sort">Sắp xếp</label>
+                        <select class="input" id="item-sort" name="sort">
+                            @foreach (var sort in ItemSorts.All)
+                            {
+                                <option value="@ItemSorts.ToQuery(sort)" selected="@(sort == items.Sort)">@sortLabels[sort]</option>
+                            }
+                        </select>
+                    </div>
+                    <noscript><button type="submit" class="btn btn--outline item-filters__apply">Lọc</button></noscript>
+                </div>
+
                 <div class="item-filters__check">
                     @* The framework's checkbox pattern, written by hand: a ticked box sends "true" before the hidden "false",
                        and model binding takes the first. (asp-for would also print an English "field is required" text.) *@
-                    <input type="checkbox" id="in-date" name="inDate" value="true" checked="@Model.InDate">
+                    <input type="checkbox" id="in-date" name="inDate" value="true" checked="@items.OnlyInDate">
                     <input type="hidden" name="inDate" value="false">
-                    <label for="in-date">Chỉ món đủ hạn cho ngày giao <strong>@VnDate.Day(Model.SavedDeliveryDate!.Value)</strong></label>
-                    <noscript><button type="submit" class="btn btn--outline btn--chip">Lọc</button></noscript>
+                    <label for="in-date"><span>Chỉ món đủ hạn cho ngày giao <strong>@VnDate.Day(Model.SavedDeliveryDate!.Value)</strong></span></label>
                 </div>
                 <div class="chip-list">
                     <button type="submit" class="btn btn--outline btn--chip" name="category" value="" aria-pressed="@(items.Category is null ? "true" : "false")">Tất cả</button>
@@ -111,6 +146,9 @@
                         <button type="submit" class="btn btn--outline btn--chip" name="category" value="@chip.Id" aria-pressed="@(chip.Id == items.Category ? "true" : "false")">@chip.Name</button>
                     }
                 </div>
+                @* The chosen category, for a send that is not a chip (search, sort, checkbox). It comes AFTER the chips: a pressed
+                   chip sends its value first, and model binding takes the first value. *@
+                <input type="hidden" name="category" value="@items.Category">
             </form>
 
             <p class="items__count">
@@ -120,6 +158,16 @@
                     <a href="@showAll">Hiện cả @items.HiddenCount món</a>
                 }
             </p>
+
+            @if (items.Items.Count == 0)
+            {
+                @* Mockup state 04. "Xóa bộ lọc" goes back to the plain list: all categories, no search, default order. *@
+                <div class="card no-match">
+                    <p class="no-match__title">@(items.Search is null ? "Không có món nào phù hợp" : $"Không có món nào khớp \"{items.Search}\"")</p>
+                    <p class="no-match__text">Thử bỏ bộ lọc hoặc tìm bằng từ khác.</p>
+                    <a class="btn btn--outline" href="@(SiteLinks.Builder.Href)#chon-mon">Xóa bộ lọc</a>
+                </div>
+            }
 
             <ul class="item-grid">
                 @foreach (var item in items.Items)

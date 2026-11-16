@@ -21,9 +21,14 @@ The customer sets a budget first, then picks items. Every item shows its brand, 
 
 ## Run it
 
-`docs/frontend-plan.md`, section 2, lists what to install and how to set up the database (PostgreSQL, a user secret and `dotnet ef database update`). Then, from the project folder:
+The site and the tests need a PostgreSQL 18 server. `docs/frontend-plan.md`, section 2, lists what to install and how to set PostgreSQL up without Docker. With Docker, from the project folder:
 
 ```
+docker run -d --name peekbox-pg -p 127.0.0.1:5434:5432 -e POSTGRES_USER=peekbox -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=peekbox postgres:18   # once; after a restart: docker start peekbox-pg
+dotnet user-secrets set "ConnectionStrings:Default" "Host=localhost;Port=5434;Database=peekbox;Username=peekbox;Password=dev" --project src/Peekbox.Web   # once
+dotnet tool restore                                    # once: the EF Core command line tool
+(cd src/Peekbox.Web && npm install && npm run build)   # compiles the TypeScript to wwwroot/js
+dotnet ef database update --project src/Peekbox.Web    # creates the tables and the 24 sample items; again after a pull that changes the database
 dotnet test                                            # builds everything, then runs the checks
 dotnet run --project src/Peekbox.Web                   # starts the site; the address is printed
 ```

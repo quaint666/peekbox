@@ -31,10 +31,10 @@ Then, from the project folder, once:
 dotnet tool restore                                    # installs the EF Core command line tool the project lists
 ```
 
-**PostgreSQL on Fedora, once.** Fedora does not start a server by itself:
+**PostgreSQL on Fedora, once.** Fedora does not start a server by itself, and it ships the `unaccent` extension (the builder's search needs it) in a separate package, `postgresql-contrib`. On Arch it is part of the `postgresql` package.
 
 ```
-sudo dnf install postgresql-server
+sudo dnf install postgresql-server postgresql-contrib
 sudo postgresql-setup --initdb --unit postgresql
 sudo systemctl enable --now postgresql
 ```

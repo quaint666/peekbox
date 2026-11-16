@@ -12,6 +12,10 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Accent-free search on the builder ("mut" finds "Mứt", "dak lak" finds "Đắk Lắk"). The extension comes with
+        // PostgreSQL (on Fedora in the postgresql-contrib package) and a database owner may switch it on.
+        modelBuilder.HasPostgresExtension("unaccent");
+
         modelBuilder.Entity<Category>(category =>
         {
             category.Property(c => c.Id).HasMaxLength(40);

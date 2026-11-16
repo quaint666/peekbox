@@ -10,9 +10,11 @@ namespace Peekbox.Web.Controllers;
 public class BuilderController(BuilderLimits limits, HamperService hampers, ItemCatalog catalog) : Controller
 {
     // The page of the hamper builder (/builder). It shows the saved budget and date, found by the cookie, and once both
-    // are saved, the items. The filter form sends the category and the "only items in date" checkbox in the address.
+    // are saved, the items. The filter form sends the category, the "only items in date" checkbox, the search words (q)
+    // and the sort in the address. HEAD as well, as link checkers and uptime monitors ask (the home page already answers it).
     [HttpGet]
-    public async Task<IActionResult> Index(string? category, bool inDate = true, CancellationToken cancellationToken = default)
+    [HttpHead]
+    public async Task<IActionResult> Index(string? category, string? q, string? sort, bool inDate = true, CancellationToken cancellationToken = default)
     {
         var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
         if (hamper is null)
@@ -24,13 +26,17 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
         {
             BudgetText = Vnd.Format(hamper.BudgetVnd),
             DeliveryDateText = hamper.DeliveryDate?.ToString(BuilderLimits.DateFormat, CultureInfo.InvariantCulture) ?? "",
-        }, hamper.DeliveryDate, category, inDate, cancellationToken));
+            // The cookie lasts 180 days, so a date saved earlier can be today or in the past by now. It shows the same
+            // warning as typing such a date, and the items stay locked until a new date is saved (decision 2026-11-16).
+            DateProblem = hamper.DeliveryDate < limits.Earliest ? DateProblem.TooEarly : DateProblem.None,
+        }, hamper.DeliveryDate, new ItemFilter(category, inDate, q, sort), cancellationToken));
     }
 
-    // The items unlock once a delivery date is saved (the budget is always saved with it).
-    private async Task<BuilderViewModel> WithItemsAsync(BuilderViewModel model, DateOnly? deliveryDate, string? category, bool inDate, CancellationToken cancellationToken)
+    // The items unlock once a delivery date is saved (the budget is always saved with it) and that date can still be
+    // delivered: tomorrow or later.
+    private async Task<BuilderViewModel> WithItemsAsync(BuilderViewModel model, DateOnly? deliveryDate, ItemFilter filter, CancellationToken cancellationToken)
     {
-        if (deliveryDate is not { } date)
+        if (deliveryDate is not { } date || date < limits.Earliest)
         {
             return model;
         }
@@ -38,8 +44,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
         return model with
         {
             SavedDeliveryDate = date,
-            InDate = inDate,
-            Items = await catalog.ListAsync(date, category, inDate, cancellationToken),
+            Items = await catalog.ListAsync(date, filter, cancellationToken),
         };
     }
 
@@ -64,7 +69,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
                 DeliveryDateText = form.DeliveryDate ?? "",
                 BudgetProblem = budgetProblem,
                 DateProblem = dateProblem,
-            }, saved?.DeliveryDate, category: null, inDate: true, cancellationToken));
+            }, saved?.DeliveryDate, new ItemFilter(), cancellationToken));
         }
 
         var hamper = await hampers.SaveAsync(Request.Cookies[HamperService.CookieName], budget, date, cancellationToken);
