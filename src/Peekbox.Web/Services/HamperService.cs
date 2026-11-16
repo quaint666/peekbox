@@ -7,15 +7,11 @@ namespace Peekbox.Web.Services;
 // Finds and saves a visitor's unfinished hamper. The browser holds only a random token in a cookie.
 public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
 {
-    public const string CookieName = "peekbox_hamper";
-
-    public static readonly TimeSpan CookieLifetime = TimeSpan.FromDays(180);
-
     // null when there is no cookie, the cookie names no row (an old or made-up token), or the hamper is already an
     // order: an ordered hamper is finished, so the cart is empty and the next save starts a new hamper (F48).
     public async Task<Hamper?> FindAsync(string? token, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(token) || token.Length > SecretToken.MaxLength)
+        if (!SecretToken.IsWellFormed(token))
         {
             return null;
         }
@@ -99,7 +95,7 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
     // How many hampers the header's cart link counts (F37): the visitor's hamper is in the cart once it holds an item
     // (decision 2026-11-16), so this is 1 or 0; an ordered hamper is no longer in the cart. One small query, run on every page.
     public async Task<int> CartCountAsync(string? token, CancellationToken cancellationToken = default) =>
-        string.IsNullOrEmpty(token) || token.Length > SecretToken.MaxLength
+        !SecretToken.IsWellFormed(token)
             ? 0
             : await db.HamperItems.AnyAsync(l => l.Hamper!.Token == token && l.Hamper.OrderId == null, cancellationToken) ? 1 : 0;
 

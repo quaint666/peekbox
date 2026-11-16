@@ -41,7 +41,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
         if (box is null)
         {
             // Also a second click after the order was placed (the hamper is an order now): it opens that order.
-            var placed = await orders.OrderTokenOfAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+            var placed = await orders.OrderTokenOfAsync(HamperCookie.Read(Request), cancellationToken);
             return Redirect(placed is null ? SiteLinks.Cart.Href : SiteLinks.Order(placed));
         }
 
@@ -58,7 +58,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
             return await PageAsync(box, form, errors, tooManyTries: false, cancellationToken, wards);
         }
 
-        var result = await orders.PlaceAsync(Request.Cookies[HamperService.CookieName], request, cancellationToken);
+        var result = await orders.PlaceAsync(HamperCookie.Read(Request), request, cancellationToken);
         switch (result.Outcome)
         {
             case PlaceOutcome.Placed:
@@ -86,7 +86,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
             return Redirect(SiteLinks.CheckoutPath);
         }
 
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         var box = hamper is null ? null : await hampers.BoxAsync(hamper, cancellationToken);
         ViewData["NoIndex"] = true;
         return View(new SoldOutViewModel(lines, box is { Lines.Count: > 0 } ? box : null));
@@ -95,7 +95,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
     // The visitor's box when it can be ordered, else null (the same rules as the cart's "Tiếp tục thanh toán").
     private async Task<Box?> ReadyBoxAsync(CancellationToken cancellationToken)
     {
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is null || !limits.ItemsOpen(hamper.DeliveryDate))
         {
             return null;

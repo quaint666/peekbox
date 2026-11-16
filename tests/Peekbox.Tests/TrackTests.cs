@@ -15,9 +15,6 @@ public class TrackTests(PeekboxFixture fixture)
 {
     private const string NotFound = "<strong>Không tìm thấy đơn hàng.</strong> Mã đơn hàng và số điện thoại không khớp với đơn nào. Hãy kiểm tra lại cả hai.";
 
-    private HttpClient Client(WebApplicationFactory<Program>? factory = null) =>
-        (factory ?? fixture.Factory).CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
-
     private static Dictionary<string, string> Form(string number, string phone) => new() { ["number"] = number, ["phone"] = phone };
 
     // The alert of a page, as one string (empty when there is none).
@@ -36,7 +33,7 @@ public class TrackTests(PeekboxFixture fixture)
     [Fact]
     public async Task The_page_has_the_form_and_is_marked_in_the_menu()
     {
-        var visitor = new Visitor(Client(), null);
+        var visitor = new Visitor(fixture.Client(), null);
         var html = await visitor.PageAsync("/track");
 
         Assert.Contains("<title>Tra cứu đơn hàng · Peekbox</title>", html);
@@ -64,7 +61,7 @@ public class TrackTests(PeekboxFixture fixture)
         try
         {
             var number = string.Format(numberShape, OrderNumber.Format(id), OrderNumber.Format(id).ToLowerInvariant(), id);
-            var visitor = new Visitor(Client(), null);
+            var visitor = new Visitor(fixture.Client(), null);
             await visitor.PageAsync("/track");
 
             var response = await visitor.PostAsync("/track", Form(number, phone));
@@ -93,7 +90,7 @@ public class TrackTests(PeekboxFixture fixture)
                 (right, ""),                             // no phone
                 ("", ""),                                // nothing
             ];
-            var visitor = new Visitor(Client(), null);
+            var visitor = new Visitor(fixture.Client(), null);
             await visitor.PageAsync("/track");
             var alerts = new List<string>();
             foreach (var (number, phone) in tries)
@@ -125,7 +122,7 @@ public class TrackTests(PeekboxFixture fixture)
         try
         {
             await using var strict = fixture.Factory.WithWebHostBuilder(builder => builder.UseSetting("RateLimits:TrackPer15Minutes", "1"));
-            var visitor = new Visitor(Client(strict), null);
+            var visitor = new Visitor(fixture.Client(strict), null);
             await visitor.PageAsync("/track");
 
             var first = await visitor.PostAsync("/track", Form("PEEK999999999", "0900000000"));   // a miss, and it still counts
@@ -149,7 +146,7 @@ public class TrackTests(PeekboxFixture fixture)
     [Fact]
     public async Task A_lookup_without_the_form_token_is_refused()
     {
-        var visitor = new Visitor(Client(), null);
+        var visitor = new Visitor(fixture.Client(), null);
         await visitor.PageAsync("/track");
 
         Assert.Equal(HttpStatusCode.BadRequest, (await visitor.PostAsync("/track", Form("PEEK000001", "0900000000"), withToken: false)).StatusCode);
@@ -158,11 +155,11 @@ public class TrackTests(PeekboxFixture fixture)
     [Fact]
     public async Task Every_state_of_the_track_page_is_well_formed()
     {
-        var visitor = new Visitor(Client(), null);
+        var visitor = new Visitor(fixture.Client(), null);
         BuilderItemsTests.AssertWellFormed("empty", await (await visitor.GetAsync("/track")).Content.ReadAsStringAsync());
         BuilderItemsTests.AssertWellFormed("miss", await (await visitor.PostAsync("/track", Form("PEEK999999999", "0900000000"))).Content.ReadAsStringAsync());
         await using var strict = fixture.Factory.WithWebHostBuilder(builder => builder.UseSetting("RateLimits:TrackPer15Minutes", "1"));
-        var limited = new Visitor(Client(strict), null);
+        var limited = new Visitor(fixture.Client(strict), null);
         await limited.PageAsync("/track");
         await limited.PostAsync("/track", Form("x", "y"));
         BuilderItemsTests.AssertWellFormed("wait", await (await limited.PostAsync("/track", Form("x", "y"))).Content.ReadAsStringAsync());

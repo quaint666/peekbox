@@ -34,7 +34,7 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
 {
     public async Task<PlaceResult> PlaceAsync(string? hamperToken, OrderRequest request, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(hamperToken) || hamperToken.Length > SecretToken.MaxLength)
+        if (!SecretToken.IsWellFormed(hamperToken))
         {
             return new PlaceResult(PlaceOutcome.NoHamper);
         }
@@ -148,13 +148,13 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
 
     // The order this visitor's hamper became, or null (no hamper, or not ordered yet).
     public Task<string?> OrderTokenOfAsync(string? hamperToken, CancellationToken cancellationToken = default) =>
-        string.IsNullOrEmpty(hamperToken) || hamperToken.Length > SecretToken.MaxLength
+        !SecretToken.IsWellFormed(hamperToken)
             ? Task.FromResult<string?>(null)
             : db.Hampers.Where(h => h.Token == hamperToken && h.Order != null).Select(h => h.Order!.Token).FirstOrDefaultAsync(cancellationToken);
 
     // An order and its lines by its secret token (the confirmation page), or null. Read-only.
     public Task<Order?> FindAsync(string? orderToken, CancellationToken cancellationToken = default) =>
-        string.IsNullOrEmpty(orderToken) || orderToken.Length > SecretToken.MaxLength
+        !SecretToken.IsWellFormed(orderToken)
             ? Task.FromResult<Order?>(null)
             : db.Orders.AsNoTracking().Include(o => o.Items.OrderBy(i => i.Id)).SingleOrDefaultAsync(o => o.Token == orderToken, cancellationToken);
 

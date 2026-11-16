@@ -105,6 +105,34 @@ public class SeamsTests
         Assert.Equal(system, chosen);
     }
 
+    // The scripts find parts of a page by id ('#hop-cua-ban', `#mon-${slug}`). TypeScript cannot read the C#
+    // constants, so a renamed id would leave a script quietly finding nothing: every id a script asks for must be set
+    // by a view, written there or taken from Navigation/Anchors.cs. An id that ends in ${...} must be a prefix one.
+    [Fact]
+    public void Every_id_a_script_asks_for_is_set_by_a_view()
+    {
+        var views = string.Join("\n", Files("Views", "*.cshtml").Select(Read));
+        var ids = Regex.Matches(views, @"\sid=""([a-zA-Z][\w-]*)""").Select(m => m.Groups[1].Value).ToHashSet();
+        var prefixes = Regex.Matches(views, @"\sid=""([a-zA-Z][\w-]*-)@").Select(m => m.Groups[1].Value).ToHashSet();
+        foreach (var field in typeof(Peekbox.Web.Navigation.Anchors).GetFields().Where(f => f.IsLiteral))
+        {
+            ids.Add((string)field.GetRawConstantValue()!);
+        }
+
+        prefixes.Add(Peekbox.Web.Navigation.Anchors.ItemCard(""));
+
+        foreach (var file in Files("Scripts", "*.ts"))
+        {
+            var script = Read(file);
+            var asked = Regex.Matches(script, @"#([a-zA-Z][\w-]*)(\$\{)?").Select(m => (Id: m.Groups[1].Value, Prefix: m.Groups[2].Success))
+                .Concat(Regex.Matches(script, @"getElementById\('([^']+)'\)").Select(m => (Id: m.Groups[1].Value, Prefix: false)));
+            foreach (var (id, prefix) in asked)
+            {
+                Assert.True(prefix ? prefixes.Contains(id) : ids.Contains(id), $"{Name(file)} asks for #{id}{(prefix ? "..." : "")}, which no view sets");
+            }
+        }
+    }
+
     private static SortedDictionary<string, string> Values(string block) =>
         new(Regex.Matches(block, @"(--[\w-]+):\s*([^;]+);").ToDictionary(m => m.Groups[1].Value, m => m.Groups[2].Value.Trim()));
 }

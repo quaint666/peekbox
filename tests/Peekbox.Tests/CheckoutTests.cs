@@ -8,6 +8,8 @@ using Peekbox.Web.Data;
 using Peekbox.Web.Models;
 using Peekbox.Web.Services;
 
+using static Peekbox.Tests.TestDates;
+
 namespace Peekbox.Tests;
 
 // The checkout page (F41 to F48) and the sold-out page (F50), through HTTP. Seed: Trà sen 180.000 (stock 120, expires
@@ -16,14 +18,6 @@ namespace Peekbox.Tests;
 [Collection(DatabaseCollection.Name)]
 public class CheckoutTests(PeekboxFixture fixture)
 {
-    private static DateOnly TodayInVietnam => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
-
-    // A month ahead: every item used here is in date for it.
-    private static DateOnly Delivery => TodayInVietnam.AddDays(30);
-
-    private HttpClient Client(WebApplicationFactory<Program>? factory = null) =>
-        (factory ?? fixture.Factory).CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
-
     private async Task<string> HamperAsync(DateOnly? delivery, params (string Slug, int Quantity)[] lines)
     {
         var token = Guid.NewGuid().ToString("N");
@@ -46,23 +40,13 @@ public class CheckoutTests(PeekboxFixture fixture)
         return token;
     }
 
-    private async Task<Visitor> VisitorAsync(params (string Slug, int Quantity)[] lines) => new(Client(), await HamperAsync(Delivery, lines));
+    private async Task<Visitor> VisitorAsync(params (string Slug, int Quantity)[] lines) => new(fixture.Client(), await HamperAsync(Delivery, lines));
 
     private Task<Ward> WardAsync(int ring) =>
         fixture.WithDbAsync(db => db.Wards.AsNoTracking().OrderBy(w => w.SortOrder).FirstAsync(w => w.Ring == ring));
 
     private Task<Dictionary<string, int>> StockAsync() =>
         fixture.WithDbAsync(db => db.Products.AsNoTracking().ToDictionaryAsync(p => p.Slug, p => p.Stock));
-
-    private Task RestoreStockAsync(Dictionary<string, int> stock) => fixture.WithDbAsync(async db =>
-    {
-        foreach (var product in await db.Products.ToListAsync())
-        {
-            product.Stock = stock[product.Slug];
-        }
-
-        return await db.SaveChangesAsync();
-    });
 
     private Task SetStockAsync(string slug, int stock) =>
         fixture.WithDbAsync(db => db.Products.Where(p => p.Slug == slug).ExecuteUpdateAsync(s => s.SetProperty(p => p.Stock, stock)));
@@ -87,11 +71,11 @@ public class CheckoutTests(PeekboxFixture fixture)
     [Fact]
     public async Task A_box_that_cannot_be_ordered_goes_back_to_the_cart()
     {
-        var noHamper = new Visitor(Client(), null);
-        var empty = new Visitor(Client(), await HamperAsync(Delivery));
-        var noDate = new Visitor(Client(), await HamperAsync(null, ("tra-sen", 1)));
-        var passed = new Visitor(Client(), await HamperAsync(TodayInVietnam, ("tra-sen", 1)));
-        var outOfDate = new Visitor(Client(), await HamperAsync(new DateOnly(2027, 4, 28), ("tra-sen", 1), ("banh-pia", 1)));   // Bánh pía mini expires 30/04/2027
+        var noHamper = new Visitor(fixture.Client(), null);
+        var empty = new Visitor(fixture.Client(), await HamperAsync(Delivery));
+        var noDate = new Visitor(fixture.Client(), await HamperAsync(null, ("tra-sen", 1)));
+        var passed = new Visitor(fixture.Client(), await HamperAsync(TodayInVietnam, ("tra-sen", 1)));
+        var outOfDate = new Visitor(fixture.Client(), await HamperAsync(new DateOnly(2027, 4, 28), ("tra-sen", 1), ("banh-pia", 1)));   // Bánh pía mini expires 30/04/2027
         var ward = await WardAsync(1);
 
         foreach (var visitor in new[] { noHamper, empty, noDate, passed, outOfDate })
@@ -208,7 +192,7 @@ public class CheckoutTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -245,7 +229,7 @@ public class CheckoutTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -253,7 +237,7 @@ public class CheckoutTests(PeekboxFixture fixture)
     public async Task Too_many_tries_from_one_address_get_the_page_with_a_note_and_a_429()
     {
         await using var strict = fixture.Factory.WithWebHostBuilder(builder => builder.UseSetting("RateLimits:OrdersPer15Minutes", "1"));
-        var visitor = new Visitor(Client(strict), await HamperAsync(Delivery, ("tra-sen", 1)));
+        var visitor = new Visitor(fixture.Client(strict), await HamperAsync(Delivery, ("tra-sen", 1)));
         await visitor.PageAsync("/checkout");
         var form = Form((await WardAsync(1)).Id);
         form["street"] = "";   // the first try fails the checks, and still counts

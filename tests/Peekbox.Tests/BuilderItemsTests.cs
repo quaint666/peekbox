@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Data;
 using Peekbox.Web.Services;
 
+using static Peekbox.Tests.TestDates;
+
 namespace Peekbox.Tests;
 
 // The item list of /builder (F16, F18, F22, F23) with the 24 seed items. The expected names and counts are written out
@@ -15,6 +17,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     // Delivery 15/01/2027: with the 7-day margin, Bánh quy bơ (10/01/2027) and Kẹo lạc (18/01/2027) are out of date.
     private static readonly DateOnly Delivery = new(2027, 1, 15);
 
+    // Follows redirects, unlike fixture.Client(): these tests read the page a form leads to.
     private HttpClient Client() => fixture.Factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = false });
 
     // A visitor who already pressed "Lưu": a hamper row, found by its cookie.
@@ -34,7 +37,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         var request = new HttpRequestMessage(HttpMethod.Get, "/builder" + query);
         if (token is not null)
         {
-            request.Headers.Add("Cookie", $"{HamperService.CookieName}={token}");
+            request.Headers.Add("Cookie", $"{HamperCookie.Name}={token}");
         }
 
         var response = await Client().SendAsync(request);
@@ -165,7 +168,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
                 ["__RequestVerificationToken"] = Regex.Match(page, @"name=""__RequestVerificationToken"" type=""hidden"" value=""([^""]+)""").Groups[1].Value,
             }),
         };
-        post.Headers.Add("Cookie", $"{HamperService.CookieName}={token}; {antiForgeryCookie}");
+        post.Headers.Add("Cookie", $"{HamperCookie.Name}={token}; {antiForgeryCookie}");
 
         var html = WebUtility.HtmlDecode(await (await client.SendAsync(post)).Content.ReadAsStringAsync());
 
@@ -261,8 +264,6 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     }
 
     // ---------- A saved date that has passed ----------
-
-    private static DateOnly TodayInVietnam => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
 
     [Theory]
     [InlineData(-30)]
@@ -361,7 +362,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
                 ["__RequestVerificationToken"] = Regex.Match(page, @"name=""__RequestVerificationToken"" type=""hidden"" value=""([^""]+)""").Groups[1].Value,
             }),
         };
-        post.Headers.Add("Cookie", $"{HamperService.CookieName}={token}; {get.Headers.GetValues("Set-Cookie").Single(c => c.StartsWith(".AspNetCore.Antiforgery")).Split(';')[0]}");
+        post.Headers.Add("Cookie", $"{HamperCookie.Name}={token}; {get.Headers.GetValues("Set-Cookie").Single(c => c.StartsWith(".AspNetCore.Antiforgery")).Split(';')[0]}");
         AssertWellFormed("wrong budget and date", await RawAsync(client, post));
     }
 
@@ -423,7 +424,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     private static HttpRequestMessage WithCookie(string url, string token)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add("Cookie", $"{HamperService.CookieName}={token}");
+        request.Headers.Add("Cookie", $"{HamperCookie.Name}={token}");
         return request;
     }
 

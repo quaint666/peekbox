@@ -10,9 +10,6 @@ namespace Peekbox.Tests;
 [Collection(DatabaseCollection.Name)]
 public class RoutesTests(PeekboxFixture fixture)
 {
-    private HttpClient Client(WebApplicationFactory<Program>? factory = null) =>
-        (factory ?? fixture.Factory).CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
-
     // Written out on purpose: a new page must be added here, so a second address for a page cannot slip in unseen.
     private static readonly string[] Expected =
     [
@@ -71,13 +68,13 @@ public class RoutesTests(PeekboxFixture fixture)
     [InlineData("/Cart/Index/x")]
     public async Task An_address_of_the_old_default_route_is_a_404(string path)
     {
-        Assert.Equal(HttpStatusCode.NotFound, (await Client().GetAsync(path)).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await fixture.Client().GetAsync(path)).StatusCode);
     }
 
     [Fact]
     public async Task The_error_page_opened_directly_is_a_404()
     {
-        Assert.Equal(HttpStatusCode.NotFound, (await Client().GetAsync("/error")).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await fixture.Client().GetAsync("/error")).StatusCode);
     }
 
     // Production, with a database that cannot be reached: the item page fails, and the visitor gets our page, not the
@@ -89,7 +86,7 @@ public class RoutesTests(PeekboxFixture fixture)
             .UseEnvironment("Production")
             .UseSetting("ConnectionStrings:Default", "Host=127.0.0.1;Port=1;Database=none;Username=none;Password=none;Timeout=2"));
 
-        var response = await Client(broken).GetAsync("/items/tra-sen");
+        var response = await fixture.Client(broken).GetAsync("/items/tra-sen");
         var html = await response.Content.ReadAsStringAsync();
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);

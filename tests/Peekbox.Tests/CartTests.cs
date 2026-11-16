@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Data;
 using Peekbox.Web.Services;
 
+using static Peekbox.Tests.TestDates;
+
 namespace Peekbox.Tests;
 
 // The cart (F37, F39, F40), "Thêm vào giỏ hàng" (F36) and the header's count. The cart is the visitor's hamper once it
@@ -15,8 +17,6 @@ namespace Peekbox.Tests;
 public class CartTests(PeekboxFixture fixture)
 {
     private static readonly DateOnly Delivery = new(2027, 1, 15);
-
-    private static DateOnly TodayInVietnam => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
 
     private sealed class Visitor(HttpClient client, string? hamperToken)
     {
@@ -61,7 +61,7 @@ public class CartTests(PeekboxFixture fixture)
 
         private Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            var cookies = new[] { hamperToken is null ? "" : $"{HamperService.CookieName}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0).ToList();
+            var cookies = new[] { hamperToken is null ? "" : $"{HamperCookie.Name}={hamperToken}", _antiForgeryCookie }.Where(c => c.Length > 0).ToList();
             if (cookies.Count > 0)
             {
                 request.Headers.Add("Cookie", string.Join("; ", cookies));
@@ -71,8 +71,6 @@ public class CartTests(PeekboxFixture fixture)
         }
     }
 
-    private HttpClient Client() => fixture.Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
-
     private async Task<Visitor> VisitorAsync(DateOnly? delivery, params (string Slug, int Quantity)[] lines)
     {
         var token = Guid.NewGuid().ToString("N");
@@ -81,7 +79,7 @@ public class CartTests(PeekboxFixture fixture)
             db.Hampers.Add(new Hamper { Token = token, BudgetVnd = 500_000, DeliveryDate = delivery, CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow });
             return db.SaveChangesAsync();
         });
-        var visitor = new Visitor(Client(), token);
+        var visitor = new Visitor(fixture.Client(), token);
         foreach (var (slug, quantity) in lines)
         {
             await visitor.PostAsync("/builder/quantity", new() { ["slug"] = slug, ["quantity"] = quantity.ToString(CultureInfo.InvariantCulture) });
@@ -100,7 +98,7 @@ public class CartTests(PeekboxFixture fixture)
     [Fact]
     public async Task Without_a_hamper_the_cart_is_empty_and_the_header_says_0()
     {
-        var html = await new Visitor(Client(), null).PageAsync("/cart");
+        var html = await new Visitor(fixture.Client(), null).PageAsync("/cart");
 
         Assert.Contains("<title>Giỏ hàng · Peekbox</title>", html);
         Assert.Contains("<h2 class=\"cart-empty__title\" id=\"empty-title\">Giỏ hàng đang trống</h2>", html);
@@ -233,7 +231,7 @@ public class CartTests(PeekboxFixture fixture)
     [Fact]
     public async Task Every_state_of_the_cart_is_well_formed()
     {
-        BuilderItemsTests.AssertWellFormed("empty", await (await new Visitor(Client(), null).GetAsync("/cart")).Content.ReadAsStringAsync());
+        BuilderItemsTests.AssertWellFormed("empty", await (await new Visitor(fixture.Client(), null).GetAsync("/cart")).Content.ReadAsStringAsync());
         var visitor = await VisitorAsync(Delivery, ("tra-sen", 2), ("mut-gung", 1));
         BuilderItemsTests.AssertWellFormed("full", await (await visitor.GetAsync("/cart")).Content.ReadAsStringAsync());
         await SetDeliveryAsync(visitor, new DateOnly(2027, 3, 28));

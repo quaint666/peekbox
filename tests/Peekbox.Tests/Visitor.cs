@@ -14,7 +14,7 @@ internal sealed class Visitor(HttpClient client)
     {
         if (hamperToken is not null)
         {
-            _cookies[HamperService.CookieName] = hamperToken;
+            _cookies[HamperCookie.Name] = hamperToken;
         }
     }
 

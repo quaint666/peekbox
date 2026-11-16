@@ -13,7 +13,7 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
     [HttpHead(SiteLinks.CartPath)]
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         var box = hamper is null ? null : await hampers.BoxAsync(hamper, cancellationToken);
         return View(new CartViewModel(box is { Lines.Count: > 0 } ? box : null, limits.ItemsOpen(hamper?.DeliveryDate)));
     }
@@ -23,7 +23,7 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
     [HttpPost(SiteLinks.CartAddPath)]
     public async Task<IActionResult> Add(CancellationToken cancellationToken)
     {
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is null || !limits.ItemsOpen(hamper.DeliveryDate))
         {
             return Redirect(SiteLinks.Builder.Href);
@@ -42,7 +42,7 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
     [HttpPost(SiteLinks.CartClearPath)]
     public async Task<IActionResult> Clear(CancellationToken cancellationToken)
     {
-        var hamper = await hampers.FindAsync(Request.Cookies[HamperService.CookieName], cancellationToken);
+        var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is not null)
         {
             await hampers.ClearAsync(hamper, cancellationToken);

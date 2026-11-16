@@ -55,7 +55,7 @@
         }
 
         <div class="checkout-stock__actions">
-            <a class="btn btn--primary" href="@(SiteLinks.Builder.Href)#chon-mon">Chọn món thay thế</a>
+            <a class="btn btn--primary" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">Chọn món thay thế</a>
             @if (box is not null)
             {
                 <a class="btn btn--outline" href="@SiteLinks.CheckoutPath">Tiếp tục thanh toán với @box.Count món</a>

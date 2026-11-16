@@ -9,8 +9,6 @@ namespace Peekbox.Tests;
 // 40.000, the first ring-1 ward. Sender: Nguyễn Văn A, 0900000000. Callers put the stock back.
 internal static class TestOrders
 {
-    private static DateOnly Delivery => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7)).AddDays(30);
-
     // Places a hamper of Trà sen × quantity and gives the order's token, with the stock as it was before.
     public static async Task<(string Token, Ward Ward, Dictionary<string, int> Stock)> PlaceAsync(PeekboxFixture fixture, int quantity, PaymentMethod payment)
     {
@@ -21,7 +19,7 @@ internal static class TestOrders
         {
             var hamper = new Hamper
             {
-                Token = hamperToken, BudgetVnd = 500_000, DeliveryDate = Delivery, PackagingId = "hard-bow",
+                Token = hamperToken, BudgetVnd = 500_000, DeliveryDate = TestDates.Delivery, PackagingId = "hard-bow",
                 CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow,
             };
             hamper.Items.Add(new HamperItem { ProductId = (await db.Products.SingleAsync(p => p.Slug == "tra-sen")).Id, Quantity = quantity });

@@ -7,6 +7,8 @@ using Peekbox.Web.Formatting;
 using Peekbox.Web.Models;
 using Peekbox.Web.Services;
 
+using static Peekbox.Tests.TestDates;
+
 namespace Peekbox.Tests;
 
 // An order's page (F51): /orders/{token}. Orders are placed through OrderService. Seed: Trà sen 180.000 (Thương hiệu A,
@@ -15,21 +17,15 @@ namespace Peekbox.Tests;
 [Collection(DatabaseCollection.Name)]
 public class OrderPageTests(PeekboxFixture fixture)
 {
-    private static DateOnly Delivery => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7)).AddDays(30);
-
-    private HttpClient Client() => fixture.Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
-
     private Task<(string Token, Ward Ward, Dictionary<string, int> Stock)> PlaceAsync(int quantity, PaymentMethod payment) =>
         TestOrders.PlaceAsync(fixture, quantity, payment);
-
-    private Task RestoreStockAsync(Dictionary<string, int> stock) => TestOrders.RestoreStockAsync(fixture, stock);
 
     private Task SetAsync(string token, OrderStatus status) =>
         fixture.WithDbAsync(db => db.Orders.Where(o => o.Token == token).ExecuteUpdateAsync(s => s.SetProperty(o => o.Status, status)));
 
     private async Task<string> PageAsync(string token)
     {
-        var response = await Client().GetAsync($"/orders/{token}");
+        var response = await fixture.Client().GetAsync($"/orders/{token}");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         return WebUtility.HtmlDecode(Regex.Replace(await response.Content.ReadAsStringAsync(), @"\s+", " "));
     }
@@ -43,7 +39,7 @@ public class OrderPageTests(PeekboxFixture fixture)
         try
         {
             var number = await fixture.WithDbAsync(db => db.Orders.Where(o => o.Token == token).Select(o => o.Id).SingleAsync());
-            var response = await Client().GetAsync($"/orders/{token}");
+            var response = await fixture.Client().GetAsync($"/orders/{token}");
             var html = await PageAsync(token);
 
             Assert.Equal("no-store,no-cache", string.Join(",", response.Headers.CacheControl!.ToString().Split(", ")));
@@ -79,7 +75,7 @@ public class OrderPageTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -103,7 +99,7 @@ public class OrderPageTests(PeekboxFixture fixture)
         {
             await fixture.WithDbAsync(db => db.Products.Where(p => p.Slug == "tra-sen")
                 .ExecuteUpdateAsync(s => s.SetProperty(p => p.Name, before.Name).SetProperty(p => p.PriceVnd, before.PriceVnd)));
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -125,7 +121,7 @@ public class OrderPageTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -148,7 +144,7 @@ public class OrderPageTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -158,7 +154,7 @@ public class OrderPageTests(PeekboxFixture fixture)
     [InlineData("1")]
     public async Task An_unknown_token_is_not_found(string token)
     {
-        Assert.Equal(HttpStatusCode.NotFound, (await Client().GetAsync($"/orders/{token}")).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await fixture.Client().GetAsync($"/orders/{token}")).StatusCode);
     }
 
     [Fact]
@@ -167,13 +163,13 @@ public class OrderPageTests(PeekboxFixture fixture)
         var (token, _, stock) = await PlaceAsync(2, PaymentMethod.ZaloPay);
         try
         {
-            BuilderItemsTests.AssertWellFormed("new", await (await Client().GetAsync($"/orders/{token}")).Content.ReadAsStringAsync());
+            BuilderItemsTests.AssertWellFormed("new", await (await fixture.Client().GetAsync($"/orders/{token}")).Content.ReadAsStringAsync());
             await SetAsync(token, OrderStatus.Cancelled);
-            BuilderItemsTests.AssertWellFormed("cancelled", await (await Client().GetAsync($"/orders/{token}")).Content.ReadAsStringAsync());
+            BuilderItemsTests.AssertWellFormed("cancelled", await (await fixture.Client().GetAsync($"/orders/{token}")).Content.ReadAsStringAsync());
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 }

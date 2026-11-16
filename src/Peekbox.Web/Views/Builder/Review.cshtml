@@ -9,7 +9,7 @@
     var delivery = VnDate.Day(Model.DeliveryDate!.Value);
     var columnSummary = new ReviewSummary(Model, "");
     var sheetSummary = new ReviewSummary(Model, "-sheet");
-    var lines = new HamperLines(Model, "review");
+    var lines = new HamperLines(Model, ReturnTo.Review);
 }
 
 @section Styles {
@@ -46,7 +46,7 @@
             <section class="card review-card" aria-labelledby="packaging-title">
                 <div class="review-card__head">
                     <h2 class="review-card__title" id="packaging-title">Kiểu đóng gói</h2>
-                    <a class="review-card__edit" href="@(SiteLinks.Builder.Href)#dong-goi" aria-label="Đổi kiểu đóng gói">Đổi</a>
+                    <a class="review-card__edit" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Packaging))" aria-label="Đổi kiểu đóng gói">Đổi</a>
                 </div>
                 <div class="review-packaging">
                     <img class="review-packaging__img" src="@packaging.ImagePath" alt="" width="600" height="448">
@@ -61,7 +61,7 @@
             <section class="card review-card" aria-labelledby="lines-title">
                 <h2 class="review-card__title" id="lines-title">Các món trong hộp</h2>
                 <partial name="_HamperLines" model="lines" />
-                <a class="review-card__back" href="@(SiteLinks.Builder.Href)#chon-mon">Quay lại chỉnh sửa món</a>
+                <a class="review-card__back" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">Quay lại chỉnh sửa món</a>
             </section>
         </div>
 

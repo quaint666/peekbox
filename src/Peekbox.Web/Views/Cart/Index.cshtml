@@ -28,7 +28,7 @@
     {
         var packaging = box.Packaging!;
         var when = box.DeliveryDate is { } date ? $"Giao ngày {VnDate.Day(date)}" : "Chưa chọn ngày giao";
-        var lines = new HamperLines(box, "cart");
+        var lines = new HamperLines(box, ReturnTo.Cart);
         var reason = Model.CheckoutReason;   // null: the box can go to checkout
 
         @if (box.OutOfDate.Count > 0)
@@ -44,7 +44,7 @@
                         <p class="cart-box__meta">@when · @packaging.Name · Ngân sách @Vnd.Format(box.BudgetVnd)</p>
                     </div>
                     <div class="cart-box__actions">
-                        <a class="btn btn--outline" href="@(SiteLinks.Builder.Href)#chon-mon">Sửa hộp</a>
+                        <a class="btn btn--outline" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">Sửa hộp</a>
                         @* Asks first (decision 2026-11-16): the popover opens and closes without a script. *@
                         <button type="button" class="btn btn--outline cart-box__clear" popovertarget="xoa-hop">Xóa hộp</button>
                     </div>

@@ -5,7 +5,7 @@
     var item = Model.Item;
     ViewData["Title"] = item.Name;
     ViewData["Nav"] = SiteLinks.Builder.Key;
-    var categoryLink = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, "category", item.CategoryId) + "#chon-mon";
+    var categoryLink = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, "category", item.CategoryId) + Anchors.Link(Anchors.Items);
 }
 
 @section Styles {
@@ -55,7 +55,7 @@
                 <p class="item-note item-note--warn"><partial name="_Icon" model='"warning"' /><span><strong>Không đủ hạn cho ngày giao @VnDate.Day(Model.DeliveryDate!.Value).</strong> Hạn sử dụng @VnDate.Day(item.ExpiryDate) không còn xa hơn ngày giao cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</span></p>
             }
 
-            <div class="card item-buy" id="them">
+            <div class="card item-buy" id="@Anchors.ItemBuy">
                 <partial name="_ItemBuy" model="Model" />
             </div>
 

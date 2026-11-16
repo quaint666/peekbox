@@ -31,6 +31,11 @@ public sealed class PeekboxFixture : IAsyncLifetime
 
     public WebApplicationFactory<Program> Factory { get; private set; } = null!;
 
+    // A client that keeps no cookies and follows no redirect, so a test says exactly what it sends and sees every
+    // answer. factory: an app made with WithWebHostBuilder (another setting); the shared app otherwise.
+    public HttpClient Client(WebApplicationFactory<Program>? factory = null) =>
+        (factory ?? Factory).CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
+
     public async Task InitializeAsync()
     {
         await RunOnServerAsync($"CREATE DATABASE \"{_databaseName}\"");

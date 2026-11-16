@@ -28,7 +28,7 @@
             </div>
             @if (!line.InDate)
             {
-                <form class="review-line__remove" method="post" action="@SiteLinks.QuantityPath?from=@Model.From" asp-antiforgery="true">
+                <form class="review-line__remove" method="post" action="@SiteLinks.Quantity(Model.From)" asp-antiforgery="true">
                     <input type="hidden" name="slug" value="@line.Slug">
                     <button type="submit" class="btn btn--danger" name="quantity" value="0" aria-label="Bỏ @line.Name khỏi hộp">Bỏ món này</button>
                 </form>

@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Peekbox.Web.Data;
 using Peekbox.Web.Services;
 
+using static Peekbox.Tests.TestDates;
+
 namespace Peekbox.Tests;
 
 // Placing an order (F48): OrderService.PlaceAsync, without the page around it. Seed prices: Trà sen 180.000 (expires
@@ -10,11 +12,6 @@ namespace Peekbox.Tests;
 [Collection(DatabaseCollection.Name)]
 public class OrderPlacingTests(PeekboxFixture fixture)
 {
-    private static DateOnly TodayInVietnam => DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7));
-
-    // A month ahead: every item used here is in date for it.
-    private static DateOnly Delivery => TodayInVietnam.AddDays(30);
-
     private static OrderRequest Request(int wardId, PaymentMethod payment = PaymentMethod.ZaloPay) => new(
         "Nguyễn Văn A", "0900000000", "ten@example.com", "Trần Thị B", "0900111111", wardId, "12 đường mẫu",
         DeliveryWindow.Morning, payment);
@@ -46,16 +43,6 @@ public class OrderPlacingTests(PeekboxFixture fixture)
 
     private Task<Dictionary<string, int>> StockAsync() =>
         fixture.WithDbAsync(db => db.Products.AsNoTracking().ToDictionaryAsync(p => p.Slug, p => p.Stock));
-
-    private Task RestoreStockAsync(Dictionary<string, int> stock) => fixture.WithDbAsync(async db =>
-    {
-        foreach (var product in await db.Products.ToListAsync())
-        {
-            product.Stock = stock[product.Slug];
-        }
-
-        return await db.SaveChangesAsync();
-    });
 
     private Task SetStockAsync(string slug, int stock) =>
         fixture.WithDbAsync(db => db.Products.Where(p => p.Slug == slug).ExecuteUpdateAsync(s => s.SetProperty(p => p.Stock, stock)));
@@ -114,7 +101,7 @@ public class OrderPlacingTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -137,7 +124,7 @@ public class OrderPlacingTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -161,7 +148,7 @@ public class OrderPlacingTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -187,7 +174,7 @@ public class OrderPlacingTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -228,7 +215,7 @@ public class OrderPlacingTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 
@@ -261,7 +248,7 @@ public class OrderPlacingTests(PeekboxFixture fixture)
         }
         finally
         {
-            await RestoreStockAsync(stock);
+            await TestOrders.RestoreStockAsync(fixture, stock);
         }
     }
 }

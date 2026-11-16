@@ -17,7 +17,7 @@
     {
         <section class="order-banner order-banner--cancelled" aria-labelledby="order-title">
             <h1 class="order-banner__title" id="order-title"><partial name="_Icon" model='"x-circle"' />Đơn hàng này đã bị huỷ</h1>
-            <p class="order-banner__text">Mã đơn hàng: <strong>@order.Number</strong>. Đơn hàng sẽ không được giao. Cần giúp? [Số điện thoại hoặc email hỗ trợ] · Hỗ trợ [7:00 – 21:30]</p>
+            <p class="order-banner__text">Mã đơn hàng: <strong>@order.Number</strong>. Đơn hàng sẽ không được giao. <partial name="_SupportLine" /></p>
         </section>
     }
     else

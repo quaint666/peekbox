@@ -38,6 +38,9 @@ public static class SiteLinks
     // card posts to BuilderPath.
     public const string QuantityPath = "/builder/quantity";
 
+    // The amount form's address when it should not go back to the list (the item page, the review page, the cart).
+    public static string Quantity(ReturnTo back) => back == ReturnTo.Builder ? QuantityPath : $"{QuantityPath}?from={back.Value()}";
+
     public const string PackagingPath = "/builder/packaging";
 
     // The cart's forms: "Thêm vào giỏ hàng" on the review page (F36) and "Xóa hộp" (F37).
