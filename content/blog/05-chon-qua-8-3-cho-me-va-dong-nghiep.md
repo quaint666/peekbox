@@ -2,7 +2,7 @@
 slug: chon-qua-8-3-cho-me-va-dong-nghiep
 category_vi: 8/3
 category_en: 8/3
-cover_image: ../images/packaging/box-hard.png
+cover_image: /images/blog/chon-qua-8-3-cho-me-va-dong-nghiep.webp
 status: draft for review
 note: Suggestions only; choose what fits the person.
 ---

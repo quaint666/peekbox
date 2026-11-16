@@ -4,7 +4,7 @@ A web app for building a gift hamper for Tết, 20/11 (Teachers' Day) and 8/3 (W
 
 The customer sets a budget first, then picks items. Every item shows its brand, weight, origin and expiry date, and the total is calculated by the server. An item that would expire before the delivery date cannot be ordered.
 
-**Status:** the design, written content and images are done, and the base of the app is built (milestone M0, in progress): one ASP.NET Core MVC app with Razor views and PostgreSQL, in Vietnamese only, with the 24 sample items in the database.
+**Status:** the design, written content and images are done. Built so far (milestones M0 to M3): home, the builder with item pages, packaging and review, the cart, checkout with a real order in the database, the order page and order tracking. One ASP.NET Core MVC app with Razor views and PostgreSQL, in Vietnamese only, with the 24 sample items. Next: the content pages (M4). `docs/frontend-plan.md`, section 6, has the milestones.
 
 ## Where to look
 
@@ -17,7 +17,7 @@ The customer sets a budget first, then picks items. Every item shows its brand, 
 - [`docs/repo-review.md`](docs/repo-review.md): the prompt for a full repository review, run at the end of each phase.
 - [`design/`](design/README.md): the screen mockups and design notes. Start with `design/mockups/customer/`.
 - [`content/`](content/README.md): blog posts, terms and privacy text, and sample product data.
-- [`public/images/`](public/images/): product photos, packaging, hero and the logo.
+- [`src/Peekbox.Web/wwwroot/images/`](src/Peekbox.Web/wwwroot/images/): product photos, packaging, the hero, the blog pictures and the logo.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md): how to propose a change (no installs needed).
 
 ## Run it
@@ -30,6 +30,7 @@ dotnet user-secrets set "ConnectionStrings:Default" "Host=localhost;Port=5434;Da
 dotnet tool restore                                    # once: the EF Core command line tool
 (cd src/Peekbox.Web && npm install && npm run build)   # compiles the TypeScript to wwwroot/js
 dotnet ef database update --project src/Peekbox.Web    # creates the tables and the 24 sample items; again after a pull that changes the database
+# A database made before 2026-11-17 needs "dotnet ef database drop --project src/Peekbox.Web" once first: the migrations were squashed into one.
 dotnet test                                            # builds everything, then runs the checks
 dotnet run --project src/Peekbox.Web                   # starts the site; the address is printed
 ```

@@ -11,7 +11,7 @@ namespace Peekbox.Tests;
 public class RoutesTests(PeekboxFixture fixture)
 {
     // Written out on purpose: a new page must be added here, so a second address for a page cannot slip in unseen.
-    private static readonly string[] Expected =
+    internal static readonly string[] Expected =
     [
         "/ GET,HEAD",
         "/builder GET,HEAD",

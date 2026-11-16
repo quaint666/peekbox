@@ -1,6 +1,6 @@
 # Peekbox: content pack
 
-Everything a page needs to *say*: blog posts, legal text, page copy, product data and campaigns. The pictures are in `public/images/` (WebP): `products/`, `packaging/`, `hero.webp` and `logo/`. Written 2026-11-10 and 2026-11-11. Image paths in the data files (`/images/...`) are relative to `public/`. All text is a **draft** unless it says APPROVED.
+Everything a page needs to *say*: blog posts, legal text, page copy, product data and campaigns. The pictures are in `src/Peekbox.Web/wwwroot/images/` (WebP): `products/`, `packaging/`, `occasions/`, `blog/`, `about/`, `hero.webp` and `logo/`. Written 2026-11-10 and 2026-11-11. Image paths in the data files and the blog posts (`/images/...`) are relative to `src/Peekbox.Web/wwwroot/`. All text is a **draft** unless it says APPROVED.
 
 The site is **Vietnamese only** (decided 2026-11-11). The English text in these files is not used; it is dropped when the data is loaded into the database.
 
@@ -19,7 +19,7 @@ The site is **Vietnamese only** (decided 2026-11-11). The English text in these 
 ## Things to know before using any of it
 
 - **Brands are placeholders** ("Thương hiệu A" to "H"). **Prices, stock and product descriptions are samples.** Product names and origins are plausible guesses, not sourced facts. Check them before launch.
-- **Photos are AI-generated placeholders** (in `public/images/`) with plain, unprinted packaging. The site copies are lossy WebP at about 508 px; the full-size PNG originals are in the handoff zip, not in the repo. They are fine for the design and a demo. A shop that promises trust needs real photos of the real products. Say "AI-generated" wherever they are used.
+- **Photos are AI-generated placeholders** (in `src/Peekbox.Web/wwwroot/images/`) with plain, unprinted packaging. The site copies are lossy WebP at about 508 px; the full-size PNG originals are in the handoff zip, not in the repo. They are fine for the design and a demo. A shop that promises trust needs real photos of the real products. Say "AI-generated" wherever they are used.
 - **Items in [BRACKETS]** are facts that only the team knows (company name, address, refund window, dates, contact details). Fill them in.
 - **Blog posts and legal text are general guidance, not professional or legal advice.** Have a person review them before real use.
 - **Expiry dates** like `12/2027` are stored as the last day of the month (`2027-12-31`).

@@ -2,7 +2,7 @@
 slug: qua-tri-an-thay-co-20-11
 category_vi: 20/11
 category_en: 20/11
-cover_image: ../images/packaging/box-kraft.png
+cover_image: /images/blog/qua-tri-an-thay-co-20-11.webp
 status: draft for review
 note: Check your school's own rules on gifts before ordering.
 ---

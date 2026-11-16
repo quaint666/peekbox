@@ -2,7 +2,7 @@
 slug: chon-hop-qua-tet-theo-ngan-sach
 category_vi: Mẹo chọn quà
 category_en: Gift tips
-cover_image: ../images/hero.png
+cover_image: /images/blog/chon-hop-qua-tet-theo-ngan-sach.webp
 status: draft for review
 note: Prices in this post are the sample prices used in the design, not real prices.
 ---

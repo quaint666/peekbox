@@ -2,7 +2,7 @@
 slug: doc-han-su-dung-tren-bao-bi
 category_vi: Hạn sử dụng
 category_en: Expiry dates
-cover_image: ../images/products/banh-quy-bo.png
+cover_image: /images/blog/doc-han-su-dung-tren-bao-bi.webp
 status: draft for review
 note: General guidance only. The exact rules and wording are on each product's packaging.
 ---

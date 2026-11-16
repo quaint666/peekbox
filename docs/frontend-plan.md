@@ -63,7 +63,7 @@ dotnet test                                            # builds everything, then
 dotnet run --project src/Peekbox.Web                   # starts the site; the address is printed
 ```
 
-Run `npm run build` again after you change a `.ts` file, or run `npm run watch` in `src/Peekbox.Web` to do it on every save. When someone changes the database model, run `dotnet ef database update --project src/Peekbox.Web` again.
+Run `npm run build` again after you change a `.ts` file, or run `npm run watch` in `src/Peekbox.Web` to do it on every save. When someone changes the database model, run `dotnet ef database update --project src/Peekbox.Web` again. **A database made before 2026-11-17** has the six old migrations, which were squashed into one: run `dotnet ef database drop --project src/Peekbox.Web` once, then `update` (the sample data comes back; anything you added by hand does not).
 
 ## 3. How the project is organised
 
@@ -86,7 +86,7 @@ Each rule exists because breaking it cost us time in an earlier project (Bloomy)
 5. **Money maths only in the pricing service (C#).** Views and TypeScript never calculate a price, total or budget: they show what the server gives.
 6. **Data only through controllers and services.** A view never reads the database; it only draws the view model it was given.
 7. **To hide something, use the `hidden` attribute.** The rule in `base.css` makes it really hide. Do not remove that rule.
-8. **Colours and sizes come from `tokens.css` variables**, for example `var(--color-text)`. No new hex colours in other files.
+8. **Colours, text sizes and layers come from `tokens.css` variables**, for example `var(--color-text)`, `var(--text-xs)`, `var(--z-bar)`. No hex or `rgba` colours, no typed `font-size` and no z-index number in other files (`SeamsTests` checks). Small grey notes take the `.meta` class and coloured notes the `.alert` class (`components.css`); a page's own class keeps only what differs.
 9. **Vietnamese only.** Text is written in the views and shared partials, except a page that has a content file in `content/data/` (the home page: `home.json`): its text lives only in that file, and the view prints it from the view model. Text used in more than one place lives in one shared place.
 10. **Check every page at 1440 px and 390 px wide, in light and dark.**
 11. **Do not animate from invisible.** Start at 40% opacity or more, never 0.
@@ -94,13 +94,14 @@ Each rule exists because breaking it cost us time in an earlier project (Bloomy)
 13. **One scroll offset.** `base.css` already has it for `#anchors`. Do not add another.
 14. **Small steps.** One pull request, one purpose, about 300 lines or fewer.
 15. **Say what you did not test.** In every pull request, honestly.
-16. **Use the framework's own way first** (tag helpers, model binding, data annotations). If you are not sure, ask before inventing your own.
+16. **Use the framework's own way first** (tag helpers, model binding). If you are not sure, ask before inventing your own. The exceptions we chose are written in `docs/architecture.md` (form checks in one class per form, section 7; the rate limiter called from the controller, section 10).
+17. **Every address is in `Navigation/SiteLinks.cs`.** An action names its route from there, a form's `action` and a link read the same constant, every form says `asp-antiforgery="true"`, and the ids that addresses jump to are in `Navigation/Anchors.cs`. A new page is added to `RoutesTests` too; the tests check that every form sends to an address the app answers and that every id a script asks for is on a page.
 
 ## 5. How to build a page
 
 The steps are always:
 
-1. Add an action to the area's controller and a view model with exactly what the page needs.
+1. Add the page's address to `SiteLinks` (and to `RoutesTests`), then an action with that route in the area's controller and a view model with exactly what the page needs.
 2. Add the view in `Views/<Area>/`, using the shared layout.
 3. Put the page's CSS in its own file under `wwwroot/css/`.
 4. Add TypeScript only if the page needs behaviour in the browser.
@@ -116,9 +117,9 @@ One milestone is several small pull requests. "Mockup" paths are inside `design/
 | **M0** | Base, written by the owner and the assistant first: the ASP.NET project, layout with header and footer, the styles, a Home placeholder reading the database, the security-policy header, tests | F01, F03, F04 | `foundations/` |
 | **M1** | Home; Builder core: budget, delivery date, search and sort, item cards, add/remove, budget bar, expiry check, sold out, saved hamper | F11, F12, F14, F16, F18 (chips), F20–F25 | `customer/01-home`, `customer/02-builder` |
 | **M2** | Item page; Packaging and review; Cart | F26–F28, F33–F37, F39, F40 | `customer/03`, `04`, `05` |
-| **M3** | Checkout and Confirmation. The order is real: saved in the database. Payment is a stand-in | F41, F44, F46–F48, F51 | `customer/06`, `07`, `states/02` |
+| **M3** | Checkout, Confirmation and order tracking. The order is real: saved in the database. Payment is a stand-in | F41, F42 (the time window), F44, F46–F48, F50, F51, F60 | `customer/06`, `07`, `12`, `states/02`, `07`, `19`, `22` |
 | **M4** | About, Blog, Blog post, Legal, 404 | F09, F52–F55 | `customer/08` to `11`, `states/05` |
-| **M5** | Extras: starter hampers, campaign banner, contact button, share, toast, back-to-top, resume banner, coupon, time windows, hide prices, loading skeletons, payment-failed page | F05–F08, F10, F13, F15, F17, F19, F29–F32, F38, F42, F43, F45, F49, F50 | `states/`, `dark/` |
+| **M5** | Extras: starter hampers, campaign banner, contact button, share, toast, back-to-top, resume banner, coupon, time windows, hide prices, loading skeletons, payment-failed page | F05–F08, F10, F13, F15, F17, F19, F29–F32, F38, F42 (the "day is full" message), F43, F45, F49, F61 | `states/`, `dark/` |
 | **M6** | Admin. **Not in the first report.** Built after the front end is done | F56–F59 | `admin/`, `states/14` to `18` |
 | **M7** | The report: screenshots and code excerpts of the pages | — | — |
 

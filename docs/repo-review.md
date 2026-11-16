@@ -94,6 +94,10 @@ proxy's rate-limit bucket and the hamper cookie is not marked Secure), `AllowedH
 - The background requests go through `Scripts/lib/page.ts` (10 s timeout); the packaging saves are sent one at a time.
 - The logo link carries its own name (`aria-label`); both logo images have `alt=""` and width and height.
 - `/error` answers only after an exception; EF's SQL is at Warning in `appsettings.json`.
-- Still open after the first review: the one-source batch (the hamper lookup written 14 times, the token check,
-  `ReturnTo`, the support line, one Vietnam "today"), the CSS batch (`.alert`, `.meta`, the type-scale, backdrop,
-  on-danger and z-index tokens), the docs batch, and the deployment items.
+- One source per value: the hamper cookie (`HamperCookie`), the token check (`SecretToken.IsWellFormed`), `ReturnTo`,
+  `Anchors`, `_SupportLine`, one Vietnam "today" in the tests (`TestDates`), one test client (`fixture.Client()`).
+- CSS: sizes, layers and colours only from `tokens.css`, `.meta` and `.alert` shared, every CSS class used (`SeamsTests`).
+- Docs: README, sitemap, architecture, frontend plan, API contract, content and design READMEs match what is built;
+  the mockup departures are listed in `design/design-notes.md`.
+- Still open after the first review: the deployment items, browser compatibility of the Popover API ("Xóa hộp", the
+  review summary) checked against current data, and the M3 pages in Firefox (driving it needs geckodriver, not installed).
