@@ -20,6 +20,9 @@ public static class SiteLinks
 
     public static string Item(string slug) => $"{ItemsPath}/{Uri.EscapeDataString(slug)}";
 
+    // Step 4 of the builder, the review page (F34 to F36).
+    public const string ReviewPath = "/builder/review";
+
     public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, About, Commitments, Blog];
     public static readonly IReadOnlyList<SiteLink> FooterExplore = [About, Commitments, Blog];
     public static readonly IReadOnlyList<SiteLink> FooterLegal = [Terms, Privacy];

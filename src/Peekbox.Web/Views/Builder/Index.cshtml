@@ -4,9 +4,9 @@
 @{
     ViewData["Title"] = "Tạo hộp quà";
     ViewData["Nav"] = SiteLinks.Builder.Key;
-    var steps = new[] { "Ngân sách", "Chọn món", "Đóng gói", "Xem lại" };
     var items = Model.Items;
-    var currentStep = items is null ? 0 : 1;   // step 2 (items) once the budget and the date are saved
+    // Step 2 (items) once the budget and the date are saved, step 3 (packaging) once the box holds an item.
+    var currentStep = items is null ? 0 : Model.Box!.Lines.Count == 0 ? 1 : 2;
 
     // The warning texts. The controller only says which problem it found; the words are here, once.
     var budgetError = Model.BudgetProblem switch
@@ -34,20 +34,9 @@
 <div class="builder">
     <div class="builder__head">
         <h1 class="builder__title">Tạo hộp quà của bạn</h1>
-        <ol class="builder-steps">
-            @for (var i = 0; i < steps.Length; i++)
-            {
-                if (i < currentStep)
-                {
-                    <li class="builder-step builder-step--done"><span class="builder-step__num">@(i + 1)</span><span>@steps[i]</span><span class="visually-hidden">, đã xong</span></li>
-                }
-                else
-                {
-                    <li class="builder-step" aria-current="@(i == currentStep ? "step" : null)"><span class="builder-step__num">@(i + 1)</span><span>@steps[i]</span></li>
-                }
-            }
-        </ol>
     </div>
+    @* Outside the head, so it stays at the top of the screen for the whole page (sticky only works inside its parent). *@
+    <partial name="_BuilderSteps" model="currentStep" />
 
     <form class="card budget-card" method="post">
         @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Lưu" and not the first quick amount. *@
@@ -215,6 +204,33 @@
                 @* Step 3 is locked until the box holds an item; nothing is drawn below the note (mockup 26). *@
                 <p class="lock-note" id="packaging-lock"><partial name="_Icon" model='"lock"' /><span>Chọn ít nhất <strong>1 món</strong> để mở bước đóng gói.</span></p>
             }
+            else
+            {
+                @* Step 3 (F33, mockup 27). A plain form: builder.ts sends it as soon as the choice changes; without scripts
+                   the "Lưu" button does. "Tiếp tục" in the panel and the phone bar belongs to this form too (form="dong-goi-form"). *@
+                <section class="card packaging" id="dong-goi" aria-labelledby="packaging-title">
+                    <form id="dong-goi-form" method="post" action="@(SiteLinks.Builder.Href)/packaging" asp-antiforgery="true">
+                        <fieldset class="packaging__set">
+                            <legend><h2 class="packaging__title" id="packaging-title">Chọn kiểu đóng gói</h2></legend>
+                            <div class="packaging__options">
+                                @foreach (var option in Model.Packagings)
+                                {
+                                    <label class="packaging-option" for="dong-goi-@option.Id">
+                                        <img class="packaging-option__img" src="@option.ImagePath" alt="" width="600" height="448" loading="lazy">
+                                        <span class="packaging-option__head">
+                                            <input type="radio" id="dong-goi-@option.Id" name="packaging" value="@option.Id" checked="@(option.Id == box.Packaging!.Id)">
+                                            <span class="packaging-option__name">@option.Name</span>
+                                        </span>
+                                        <span class="packaging-option__desc">@option.Description</span>
+                                        <span class="packaging-option__fee">@(option.FeeVnd == 0 ? "Miễn phí" : "+" + Vnd.Format(option.FeeVnd))</span>
+                                    </label>
+                                }
+                            </div>
+                        </fieldset>
+                        <noscript><button type="submit" class="btn btn--outline packaging__save">Lưu kiểu đóng gói</button></noscript>
+                    </form>
+                </section>
+            }
         </section>
 
         @* "Hộp của bạn" (F20, F21). Every number comes from the server (Pricing); this view only formats them. On a phone the
@@ -241,7 +257,14 @@
                 </ul>
             }
             <dl class="box-sums">
-                <div class="box-sums__row"><dt>Đóng gói: chưa chọn</dt><dd>–</dd></div>
+                @if (box.Packaging is { } packaging)
+                {
+                    <div class="box-sums__row"><dt>Đóng gói: @packaging.Name</dt><dd>@Vnd.Format(packaging.FeeVnd)</dd></div>
+                }
+                else
+                {
+                    <div class="box-sums__row"><dt>Đóng gói: chưa chọn</dt><dd>–</dd></div>
+                }
                 <div class="box-sums__row"><dt>Ngân sách</dt><dd>@Vnd.Format(box.BudgetVnd)</dd></div>
                 <div class="box-sums__bar"><meter class="budget-meter" min="0" max="@Math.Max(box.BudgetVnd, 1)" value="@box.Quote.GoodsVnd" aria-hidden="true"></meter></div>
                 @if (box.Quote.OverBudget)
@@ -266,9 +289,16 @@
             {
                 <p class="box-panel__note box-panel__note--warn">@outOfDateLines món hết hạn trước ngày giao. Bỏ món đó ra hoặc đổi ngày giao.</p>
             }
-            @* The review page (step 4) is not built yet, so the button is off and says so (decision 2026-11-16). *@
-            <button type="button" class="btn btn--primary box-panel__next" disabled aria-describedby="next-soon">Tiếp tục: xem lại hộp quà</button>
-            <p class="box-panel__soon" id="next-soon">Bước xem lại hộp quà sẽ có trong bản sau.</p>
+            @if (box.Lines.Count > 0)
+            {
+                @* F24: saves the packaging on screen, then opens the review page. *@
+                <button type="submit" class="btn btn--primary box-panel__next" form="dong-goi-form" name="next" value="review">Tiếp tục: xem lại hộp quà</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn--primary box-panel__next" disabled aria-describedby="next-empty">Tiếp tục: xem lại hộp quà</button>
+                <p class="box-panel__soon" id="next-empty">Chọn ít nhất 1 món để tiếp tục.</p>
+            }
         </aside>
         </div>
 
@@ -276,8 +306,15 @@
         <div class="box-bar" aria-label="Tóm tắt hộp quà" role="region">
             <p class="box-bar__sums"><span>@box.Count món · @(box.Quote.OverBudget ? "Vượt" : "Còn lại") <strong>@Vnd.Format(box.LeftOrOverVnd)</strong></span><strong class="box-bar__total">@Vnd.Format(box.Quote.TotalVnd)</strong></p>
             <meter class="budget-meter" min="0" max="@Math.Max(box.BudgetVnd, 1)" value="@box.Quote.GoodsVnd" aria-hidden="true"></meter>
-            <button type="button" class="btn btn--primary box-bar__next" disabled aria-describedby="next-soon-bar">Xem lại hộp quà</button>
-            <p class="visually-hidden" id="next-soon-bar">Bước xem lại hộp quà sẽ có trong bản sau.</p>
+            @if (box.Lines.Count > 0)
+            {
+                <button type="submit" class="btn btn--primary box-bar__next" form="dong-goi-form" name="next" value="review">Xem lại hộp quà</button>
+            }
+            else
+            {
+                <button type="button" class="btn btn--primary box-bar__next" disabled aria-describedby="next-empty-bar">Xem lại hộp quà</button>
+                <p class="visually-hidden" id="next-empty-bar">Chọn ít nhất 1 món để tiếp tục.</p>
+            }
         </div>
 
         @* builder.ts writes here what changed after "Thêm", − or +, for screen readers. *@

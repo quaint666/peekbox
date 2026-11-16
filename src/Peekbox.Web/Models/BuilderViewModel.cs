@@ -24,4 +24,7 @@ public sealed record BuilderViewModel
 
     // What is in the hamper, with its quote; null while the items are locked.
     public Box? Box { get; init; }
+
+    // The packaging choices of step 3; empty while the step is locked (no item in the box yet).
+    public IReadOnlyList<PackagingOption> Packagings { get; init; } = [];
 }

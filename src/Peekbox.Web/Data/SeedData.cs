@@ -18,16 +18,33 @@ public static class SeedData
 
     public static string FilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "products.json");
 
+    // The packaging choices, from content/data/packaging.json (copied as Seed/packaging.json).
+    public static string PackagingFilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "packaging.json");
+
     public static SeedFile Load(string path) =>
         Parse(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
 
     // Throws JsonException if the JSON is broken or a key is missing.
     public static SeedFile? Parse(string json) => JsonSerializer.Deserialize<SeedFile>(json, JsonOptions);
 
+    public static SeedPackagingFile LoadPackaging(string path) =>
+        ParsePackaging(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
+
+    public static SeedPackagingFile? ParsePackaging(string json) => JsonSerializer.Deserialize<SeedPackagingFile>(json, JsonOptions);
+
     // Safe to run again: a table that already has rows is left alone.
     public static void Run(DbContext context)
     {
         var file = Load(FilePath);
+
+        if (!context.Set<Packaging>().Any())
+        {
+            // The file's order is the page's order; the first choice is the one a hamper gets until the visitor picks.
+            context.Set<Packaging>().AddRange(LoadPackaging(PackagingFilePath).Packaging.Select((p, i) => new Packaging
+            {
+                Id = p.Id, Name = p.NameVi, Description = p.DescVi, FeeVnd = p.FeeVnd, ImagePath = p.Image, SortOrder = i,
+            }));
+        }
 
         if (!context.Set<Category>().Any())
         {
@@ -60,6 +77,11 @@ public static class SeedData
 public sealed record SeedFile(List<SeedCategory> Categories, List<SeedProduct> Products);
 
 public sealed record SeedCategory(string Id, string NameVi);
+
+// The shape of content/data/packaging.json.
+public sealed record SeedPackagingFile(List<SeedPackaging> Packaging);
+
+public sealed record SeedPackaging(string Id, string NameVi, string DescVi, long FeeVnd, string Image);
 
 public sealed record SeedProduct(
     string Slug,

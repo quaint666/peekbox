@@ -42,6 +42,9 @@ public static class Icons
         ["shield"] = "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M8.5 12l2.5 2.5 4.5-5",
         ["truck"] = "M3 6h11v10H3z M14 9h4l3 3v4h-7 M7.5 15.7a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6z M17.5 15.7a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6z",
         ["card"] = "M5 6h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z M3 10h18",
+        // The review page's summary sheet on a phone (mockup 29): "Xem tổng kết" and "Thu gọn".
+        ["chevron-up"] = "M6 15l6-6 6 6",
+        ["chevron-down"] = "M6 9l6 6 6-6",
     };
 
     public static string Path(string name) => Paths[name];

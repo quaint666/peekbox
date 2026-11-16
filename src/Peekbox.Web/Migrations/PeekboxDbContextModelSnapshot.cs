@@ -56,6 +56,10 @@ namespace Peekbox.Web.Migrations
                     b.Property<DateOnly?>("DeliveryDate")
                         .HasColumnType("date");
 
+                    b.Property<string>("PackagingId")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -65,6 +69,8 @@ namespace Peekbox.Web.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PackagingId");
 
                     b.HasIndex("Token")
                         .IsUnique();
@@ -93,6 +99,41 @@ namespace Peekbox.Web.Migrations
                     b.ToTable("HamperItems", t =>
                         {
                             t.HasCheckConstraint("CK_HamperItems_Quantity", "\"Quantity\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.Packaging", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<long>("FeeVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Packagings", t =>
+                        {
+                            t.HasCheckConstraint("CK_Packagings_FeeVnd", "\"FeeVnd\" >= 0");
                         });
                 });
 
@@ -164,6 +205,16 @@ namespace Peekbox.Web.Migrations
 
                             t.HasCheckConstraint("CK_Products_Stock", "\"Stock\" >= 0");
                         });
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.Hamper", b =>
+                {
+                    b.HasOne("Peekbox.Web.Data.Packaging", "Packaging")
+                        .WithMany()
+                        .HasForeignKey("PackagingId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Packaging");
                 });
 
             modelBuilder.Entity("Peekbox.Web.Data.HamperItem", b =>

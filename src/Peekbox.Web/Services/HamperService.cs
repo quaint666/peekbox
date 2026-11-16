@@ -44,23 +44,58 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         return hamper;
     }
 
-    // What is in the hamper, in catalogue order, with the money worked out by Pricing.
+    // The packaging choices, in page order (F33).
+    public Task<List<PackagingOption>> PackagingOptionsAsync(CancellationToken cancellationToken = default) =>
+        db.Packagings.AsNoTracking()
+            .OrderBy(p => p.SortOrder)
+            .Select(p => new PackagingOption(p.Id, p.Name, p.Description, p.FeeVnd, p.ImagePath))
+            .ToListAsync(cancellationToken);
+
+    // What is in the hamper, in catalogue order, with the money worked out by Pricing. The packaging counts once the box
+    // holds an item: the one the visitor picked, or the first choice until they pick (mockups 26 and 27: "chưa chọn"
+    // while the box is empty, "Hộp giấy kraft 0đ" once it is not).
     public async Task<Box> BoxAsync(Hamper hamper, CancellationToken cancellationToken = default)
     {
         var rows = await db.HamperItems.AsNoTracking()
             .Where(l => l.HamperId == hamper.Id)
             .OrderBy(l => l.ProductId)
-            .Select(l => new { l.Quantity, l.Product!.Slug, l.Product.Name, l.Product.WeightGrams, l.Product.ExpiryDate, l.Product.PriceVnd, l.Product.Stock })
+            .Select(l => new
+            {
+                l.Quantity, l.Product!.Slug, l.Product.Name, l.Product.Brand, l.Product.Origin, l.Product.ImagePath,
+                l.Product.WeightGrams, l.Product.ExpiryDate, l.Product.PriceVnd, l.Product.Stock,
+            })
             .ToListAsync(cancellationToken);
 
         var items = rows.ToDictionary(r => r.Slug, r => new PricedItem(r.Slug, r.PriceVnd, r.ExpiryDate, r.Stock));
         var lines = rows.Select(r => new HamperLine(r.Slug, r.Quantity)).ToList();
         var boxLines = rows.Select(r => new BoxLine(
-            r.Slug, r.Name, r.WeightGrams, r.ExpiryDate, r.PriceVnd, r.Quantity, Pricing.LineVnd(items[r.Slug], r.Quantity),
+            r.Slug, r.Name, r.Brand, r.Origin, r.ImagePath, r.WeightGrams, r.ExpiryDate, r.PriceVnd, r.Quantity, Pricing.LineVnd(items[r.Slug], r.Quantity),
             InDate: hamper.DeliveryDate is not { } date || BuilderLimits.IsInDate(r.ExpiryDate, date),
             NextStatus: Pricing.StatusOf(items[r.Slug], hamper.BudgetVnd, hamper.DeliveryDate, lines, items))).ToList();
 
-        return new Box(hamper.BudgetVnd, hamper.DeliveryDate, boxLines, Pricing.Quote(hamper.BudgetVnd, lines, items, 0), lines, items);
+        PackagingOption? packaging = null;
+        if (rows.Count > 0)
+        {
+            var options = await PackagingOptionsAsync(cancellationToken);
+            packaging = options.FirstOrDefault(p => p.Id == hamper.PackagingId) ?? options.FirstOrDefault();
+        }
+
+        var quote = Pricing.Quote(hamper.BudgetVnd, lines, items, packaging?.FeeVnd ?? 0);
+        return new Box(hamper.BudgetVnd, hamper.DeliveryDate, boxLines, quote, lines, items, packaging);
+    }
+
+    // Saves the visitor's packaging (F33). False for an id that is not a packaging; nothing is saved then.
+    public async Task<bool> SetPackagingAsync(Hamper hamper, string packagingId, CancellationToken cancellationToken = default)
+    {
+        if (!await db.Packagings.AnyAsync(p => p.Id == packagingId, cancellationToken))
+        {
+            return false;
+        }
+
+        hamper.PackagingId = packagingId;
+        hamper.UpdatedAt = clock.GetUtcNow();
+        await db.SaveChangesAsync(cancellationToken);
+        return true;
     }
 
     // Sets how many of an item are in the hamper (F20). 0 or less takes it out. Going up is allowed only when the last
@@ -115,17 +150,25 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
 
 public enum QuantityChange { Done, UnknownItem, NotAllowed }
 
-// One line of "Hộp của bạn". InDate is false when the delivery date changed after the item went in (the review page
-// blocks it, F35); NextStatus says whether one more fits (it turns the + button off).
+// One line of "Hộp của bạn" and of the review page. InDate is false when the delivery date changed after the item went
+// in (the review page blocks it, F35); NextStatus says whether one more fits (it turns the + button off).
 public sealed record BoxLine(
-    string Slug, string Name, int WeightGrams, DateOnly ExpiryDate, long PriceVnd, int Quantity, long LineVnd, bool InDate, ItemStatus NextStatus);
+    string Slug, string Name, string Brand, string Origin, string ImagePath, int WeightGrams, DateOnly ExpiryDate,
+    long PriceVnd, int Quantity, long LineVnd, bool InDate, ItemStatus NextStatus);
 
-// The hamper's items and its quote. The view shows these numbers and never adds anything up itself.
+// One packaging choice (F33).
+public sealed record PackagingOption(string Id, string Name, string Description, long FeeVnd, string ImagePath);
+
+// The hamper's items, its packaging and its quote. The view shows these numbers and never adds anything up itself.
+// Packaging is null while the box is empty (the step is locked then).
 public sealed record Box(
     long BudgetVnd, DateOnly? DeliveryDate, IReadOnlyList<BoxLine> Lines, Quote Quote,
-    IReadOnlyList<HamperLine> HamperLines, IReadOnlyDictionary<string, PricedItem> Items)
+    IReadOnlyList<HamperLine> HamperLines, IReadOnlyDictionary<string, PricedItem> Items, PackagingOption? Packaging)
 {
     public int Count => Lines.Sum(l => l.Quantity);
+
+    // Lines whose item expires too early for the delivery date (F35): the review page blocks the order until they go.
+    public IReadOnlyList<BoxLine> OutOfDate => Lines.Where(l => !l.InDate).ToList();
 
     // What is left of the budget, or how far over it the box is (Quote.OverBudget says which).
     public long LeftOrOverVnd => Math.Abs(Quote.RemainingVnd);
