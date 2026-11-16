@@ -1,0 +1,92 @@
+/* CART: /cart only (mockups 05 and state 01, redrawn 2026-11-16). The item lines, the red block and the two columns
+   come from review.css, which the page also loads. Sizes in px without a token are from the mockups. */
+.cart { display: flex; flex-direction: column; gap: 18px; }
+.cart__title { margin: 0; font-size: 1.625rem; }  /* 26px */
+
+/* F40: the empty cart. */
+.cart-empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); padding: 28px 20px; text-align: center; }
+.cart-empty__icon { display: flex; align-items: center; justify-content: center; width: 96px; height: 96px; border-radius: 50%; background: var(--color-tint); }
+.cart-empty__title { margin: 0; font-size: 1.375rem; }  /* 22px */
+.cart-empty__text { max-width: 460px; margin: 0; line-height: 1.6; color: var(--color-muted); }
+.cart-empty__go { align-self: stretch; min-height: 48px; }
+
+/* The box (F37). */
+.cart-box { display: flex; flex-direction: column; padding: var(--space-4); border-radius: var(--radius-md); }   /* no gap: the lines and the packaging row are one list, split by rules */
+.cart-box__head { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-3); }
+.cart-box__heading { display: flex; flex-direction: column; gap: var(--space-1); }
+.cart-box__title { margin: 0; font-size: var(--text-lg); font-weight: 700; }
+.cart-box__meta { margin: 0; font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }
+.cart-box__actions { display: flex; gap: var(--space-2); }
+.cart-box__actions .btn { flex: 1; min-height: var(--tap-min); padding: 0 var(--space-4); font-size: var(--text-sm); }   /* 14px, as drawn */
+.cart-box__clear { border-color: var(--color-input-border); color: var(--color-text); }   /* the quieter of the two, as drawn */
+/* The lines are separated by rules here, not by padding as on the review page (mockup 05). */
+.cart-box .review-lines { gap: 0; }
+.cart-box .review-line { padding: var(--space-3) 0; border-top: 1px solid var(--color-border-soft); border-radius: 0; }
+.cart-box .review-line--expired { padding-inline: var(--space-3); border-radius: 12px; }
+.cart-box__packaging { display: flex; justify-content: space-between; gap: var(--space-3); margin: 0; padding: var(--space-3) 0 0; border-top: 1px solid var(--color-border-soft); font-size: var(--text-sm); }
+
+/* F39: the totals. On a phone the summary card holds the three rows; the total and the button are in the bar. */
+.cart-summary { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); }
+.cart-summary__title { display: none; margin: 0; font-size: var(--text-xl); font-weight: 700; }
+.cart-summary__end { display: none; }
+.cart-sums { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; font-size: var(--text-sm); }
+.cart-sums div { display: flex; justify-content: space-between; gap: var(--space-3); }
+.cart-sums dd { margin: 0; }
+.cart-sums__later { color: var(--color-muted); }
+.cart-total { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); margin: 0; font-size: var(--text-sm); }
+.cart-total strong { font-size: var(--text-xl); }
+.cart-checkout { width: 100%; min-height: 48px; }
+.cart-reason { margin: 0; font-size: 0.8125rem; line-height: 1.5; color: var(--color-muted); }
+.cart-reason--block { color: var(--color-danger-text); font-weight: 600; }
+
+.cart-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-inline: calc(-1 * var(--space-4));   /* edge to edge: undo the page gutter */
+    padding: 14px var(--space-4) 20px;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-bar);
+}
+
+/* "Xóa hộp" asks first: a popover in the middle of the screen over a dimmed page (the browser places it there). */
+.cart-confirm {
+    width: min(100% - 2 * var(--space-4), 400px);
+    padding: var(--space-5);
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-pop);
+}
+.cart-confirm::backdrop { background: rgba(0, 0, 0, 0.4); }
+.cart-confirm__title { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+.cart-confirm__text { margin: 0 0 var(--space-5); font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
+.cart-confirm__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.cart-confirm__actions .btn { min-height: var(--tap-min); }
+
+@media (min-width: 900px) {
+    .cart { gap: 28px; }
+    .cart__title { font-size: var(--text-3xl); }
+    .cart-empty { padding: 56px var(--space-6); }
+    .cart-empty__title { font-size: 1.625rem; }
+    .cart-empty__go { align-self: center; padding: 0 22px; }
+    .cart-box { padding: var(--space-5); border-radius: var(--radius-lg); }
+    .cart-box__head { flex-direction: row; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+    .cart-box__title { font-size: var(--text-xl); }
+    .cart-box__meta { font-size: var(--text-sm); }
+    .cart-box__actions .btn { flex: none; }
+    .cart-box .review-line { padding-block: 14px; }   /* 14px rows on wide screens, as drawn */
+    .cart-box__packaging { padding-top: 14px; font-size: 0.9375rem; }
+    .cart-summary { position: sticky; top: var(--space-4); gap: var(--space-4); padding: var(--space-5); border-radius: var(--radius-lg); }
+    .cart-summary__title { display: block; }
+    .cart-sums { gap: 10px; font-size: 0.9375rem; }
+    .cart-summary__end { display: flex; flex-direction: column; gap: var(--space-4); padding-top: var(--space-3); border-top: 1px solid var(--color-border-soft); }
+    .cart-total { font-size: 0.9375rem; }
+    .cart-total strong { font-size: 1.5rem; }  /* 24px */
+    .cart-bar { display: none; }
+}

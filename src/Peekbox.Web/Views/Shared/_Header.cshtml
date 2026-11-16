@@ -18,10 +18,7 @@
                 <partial name="_Icon" model='"moon"' />
                 <partial name="_Icon" model='"sun"' />
             </button>
-            <a class="cart-link" href="@SiteLinks.Cart.Href" aria-label="@SiteLinks.Cart.Label">
-                <partial name="_Icon" model='"cart"' />
-                <span class="cart-link__text">@SiteLinks.Cart.Label</span>
-            </a>
+            @await Component.InvokeAsync("CartLink", new { current = active == SiteLinks.Cart.Key })
             <button type="button" class="icon-btn menu-btn" data-action="toggle-menu" aria-expanded="false" aria-controls="site-nav" aria-label="Mở menu" data-label-open="Mở menu" data-label-close="Đóng menu">
                 <partial name="_Icon" model='"menu"' />
                 <partial name="_Icon" model='"close"' />

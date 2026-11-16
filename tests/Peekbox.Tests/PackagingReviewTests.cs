@@ -198,12 +198,13 @@ public class PackagingReviewTests(PeekboxFixture fixture)
         Assert.Contains("<dt>Còn lại</dt><dd>80.000đ</dd>", summary);
         Assert.Contains("<dt>Tổng cộng (đã gồm thuế)</dt><dd>420.000đ</dd>", summary);
         Assert.Contains("Cả 3 món đều còn hạn đến sau ngày giao 15/01/2027 cộng 7 ngày dự phòng.", summary);
-        Assert.Contains("<button type=\"button\" class=\"btn btn--primary review-summary__cart\" disabled aria-describedby=\"cart-reason\">Thêm vào giỏ hàng</button>", summary);
-        Assert.Contains("<p class=\"review-summary__reason\" id=\"cart-reason\">Giỏ hàng sẽ có trong bản sau.</p>", summary);
+        Assert.Contains("<form class=\"review-summary__add\" method=\"post\" action=\"/cart/add\">", summary);
+        Assert.Contains("<button type=\"submit\" class=\"btn btn--primary review-summary__cart\">Thêm vào giỏ hàng</button>", summary);
+        Assert.DoesNotContain("disabled", summary);
 
         // The phone sheet: a popover the bar opens, with the same summary.
         Assert.Contains("popovertarget=\"tong-ket\"", html);
-        Assert.Contains("<div class=\"review-sheet\" id=\"tong-ket\" popover aria-labelledby=\"sheet-title\">", html);
+        Assert.Contains("<div class=\"review-sheet\" id=\"tong-ket\" popover role=\"dialog\" aria-labelledby=\"sheet-title\">", html);
         Assert.Contains("3 món · Còn lại <strong>80.000đ</strong>", html);
     }
 

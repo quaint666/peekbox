@@ -80,6 +80,16 @@
   font: inherit;
 }
 .input[aria-invalid='true'] { border: 2px solid var(--color-field-error); }
+/* A menu draws its own arrow, so it looks the same in every engine: Safari (WebKit) ignores most styling of a native
+   menu and draws a grey button instead. The arrow is two small triangles in the text colour, so dark mode needs nothing. */
+select.input {
+  appearance: none;
+  padding-right: 40px;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 21px) 50%, calc(100% - 16px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
 .field__error { color: var(--color-field-error); font-size: var(--text-sm); font-weight: 600; }
 
 /* ---------- Card, badges ---------- */
@@ -157,6 +167,7 @@
   color: var(--color-text);
   text-decoration: none;
 }
+.cart-link[aria-current='page'] { border-color: var(--color-primary-text); color: var(--color-primary-text); font-weight: 600; }   /* on /cart (mockups 05 and 01) */
 .cart-link__text { display: none; }
 
 /* Phones: the menu opens as a column under the header. */

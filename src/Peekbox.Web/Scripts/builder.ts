@@ -51,7 +51,7 @@ filters?.addEventListener('focusout', (event) => {
 // ---- "Thêm", − and + (F20) ----
 // The form is sent in the background. The server answers as it does without scripts: it saves, then redirects to the
 // builder page. This file reads the new page and swaps in what changed: every card's add control (one item can change
-// "Vượt X" on the others), "Hộp của bạn", the phone bar and the packaging note. It never works out a price: every
+// "Vượt X" on the others), "Hộp của bạn", the phone bar, the header's cart count and step 3. It never works out a price: every
 // number it shows comes from the server's page.
 
 const status = document.getElementById('box-status');
@@ -100,6 +100,7 @@ function applyPage(fresh: Document): void {
 
   swap('#hop-cua-ban', fresh);
   swap('.box-bar', fresh);
+  swap('.cart-link', fresh);   // the header's count: the first item puts the hamper in the cart, the last takes it out
   // Step 3: the lock note while the box is empty, the packaging choices once it is not. Only one is on a page.
   swap('#packaging-lock', fresh, document.querySelector('.item-grid'));
   swap('#dong-goi', fresh, document.querySelector('.item-grid'));
