@@ -29,6 +29,6 @@ else
 {
     <form class="qty-add-form" method="post" action="@Model.Action" asp-antiforgery="true">
         <input type="hidden" name="slug" value="@Model.Slug">
-        <button type="submit" class="btn btn--primary qty-add" name="quantity" value="1" aria-label="Thêm @Model.Name vào hộp" data-qty-step="add">Thêm</button>
+        <button type="submit" class="btn btn--primary qty-add" name="quantity" value="1" aria-label="Thêm @Model.Name vào hộp" data-qty-step="add">@Model.AddLabel</button>
     </form>
 }

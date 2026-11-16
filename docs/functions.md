@@ -37,7 +37,7 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F24 | "Continue" to packaging | Builder | M |
 | F25 | The hamper in progress is saved on the server and found again by a cookie | Builder | M |
 | **Item page** | | | |
-| F26 | Photo, name, brand, price, facts table (brand, weight, origin, expiry, production date) | Item | M |
+| F26 | Photo, name, brand, price, facts table (category, brand, weight, origin, expiry; no production date, see decisions 2026-11-16) | Item | M |
 | F27 | In-date notice for the chosen delivery date | Item | M |
 | F28 | Add to hamper, with the budget bar | Item | M |
 | F29 | Description; ingredients, allergens, storage and "last reviewed" date [placeholders] | Item | S |

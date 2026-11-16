@@ -182,10 +182,12 @@
                 @foreach (var item in items.Items)
                 {
                     <li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")" id="mon-@item.Slug">
-                        @* alt is empty: the name is the heading right below, so a screen reader would read it twice. *@
-                        <img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy">
+                        @* The photo and the name both open the item page. The photo's link is for the mouse only: hidden from
+                           screen readers and skipped by Tab, so the name's link is the one link they meet (alt is empty for
+                           the same reason: the name is right below). *@
+                        <a class="item-card__photo" href="@SiteLinks.Item(item.Slug)" tabindex="-1" aria-hidden="true"><img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy"></a>
                         <div class="item-card__body">
-                            <h3 class="item-card__name">@item.Name</h3>
+                            <h3 class="item-card__name"><a class="item-card__link" href="@SiteLinks.Item(item.Slug)">@item.Name</a></h3>
                             <p class="item-card__meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
                             @if (item.SoldOut)
                             {

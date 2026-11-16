@@ -134,4 +134,7 @@ public sealed record Box(
 
     // Whether one more of an item (in the hamper or not) can go in.
     public ItemStatus StatusOf(PricedItem item) => Pricing.StatusOf(item, BudgetVnd, DeliveryDate, HamperLines, Items);
+
+    // How far one more of an item would pass the budget: the "Vượt X" button, on a card and on the item page.
+    public long OverByVnd(long priceVnd) => priceVnd - Quote.RemainingVnd;
 }
