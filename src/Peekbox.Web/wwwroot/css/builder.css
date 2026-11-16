@@ -46,11 +46,26 @@
 /* Items (mockup state 26). Phone: chips scroll sideways, cards are a row with a small photo. */
 .items { display: flex; flex-direction: column; gap: var(--space-4); }
 .item-filters { display: flex; flex-direction: column; gap: var(--space-4); }
+.item-filters__row { display: flex; flex-direction: column; gap: var(--space-4); }
+.item-filters__sort { width: min(100%, 180px); }  /* 180 px: the menu width in the mockups */
+.item-filters__apply { align-self: flex-start; }
+.search-input { position: relative; }
+.search-input .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--color-muted); pointer-events: none; }
+.search-input .input { padding-left: 42px; }  /* room for the icon, as in the mockup */
+.no-match { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); text-align: center; }
+.no-match__title { margin: 0; font-size: var(--text-lg); font-weight: 700; }
+.no-match__text { margin: 0; color: var(--color-muted); }
 .item-filters__check { display: flex; align-items: center; gap: var(--space-3); min-height: 48px; font-size: var(--text-sm); line-height: 1.4; }
 .item-filters__check input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--color-primary); }
+.item-filters__check label { display: flex; align-items: center; min-height: var(--tap-min); }  /* the label is the tap target: the box itself is 20 px. The text is in a span, so its spaces stay. */
 .chip-list { display: flex; gap: var(--space-2); overflow-x: auto; padding-bottom: 2px; }
 .chip-list .btn--chip { flex: none; padding: 0 var(--space-4); }
 .chip-list .btn--chip[aria-pressed='true'] { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
+.chip-list .btn--chip[aria-pressed='true']:active { background: var(--color-primary-pressed); }   /* the chosen chip reacts like a primary button */
+@media (hover: hover) {
+    .chip-list .btn--chip[aria-pressed='true']:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+    .chip-list .btn--chip[aria-pressed='true']:active { background: var(--color-primary-pressed); }
+}
 .items__count { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); margin: 0; font-size: var(--text-sm); line-height: 1.5; color: var(--color-muted); }
 .items__count a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--color-primary-text); font-weight: 600; }
 
@@ -85,6 +100,9 @@
     .builder-step[aria-current='step'] .builder-step__num, .builder-step--done .builder-step__num { color: inherit; }
     .budget-card__aside { display: block; flex: 1 1 260px; align-self: flex-end; }
     .chip-list { flex-wrap: wrap; overflow-x: visible; }
+    .item-filters__row { flex-direction: row; align-items: flex-end; }
+    .item-filters__search { flex: 1; }
+    .item-filters__apply { align-self: flex-end; }
     .item-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-5); }
     .item-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
     .item-card__img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 0; }

@@ -39,6 +39,33 @@
   cursor: pointer;
 }
 
+/* ---------- Interaction states ----------
+   From design/design-notes.md, "Interaction states", and the boards in design/mockups/foundations/.
+   Colour changes take 150 ms and movement 200 ms. Hover only where a mouse exists: a phone shows pressed, never hover.
+   The 1 px press only with a mouse and without "reduce motion" (base.css then also drops every transition).
+   The focus ring is the outline from base.css and is never removed. */
+.btn, .icon-btn, .cart-link, .input, .site-nav a {
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease, transform 200ms ease;
+}
+.btn--primary:active:not(:disabled) { background: var(--color-primary-pressed); }
+.btn--outline:active:not(:disabled), .icon-btn:active, .cart-link:active { background: var(--color-tint); }
+.btn--outline:disabled { background: transparent; border-color: var(--color-border); color: var(--color-muted); }
+/* Focus on a field: a 2 px primary border (1 px border plus 1 px inset, so the text does not move) and the ring. */
+.input:focus-visible:not([aria-invalid='true']) { border-color: var(--color-focus); box-shadow: inset 0 0 0 1px var(--color-focus); }
+.input:disabled { background: var(--color-border-soft); color: var(--color-muted); cursor: not-allowed; }
+
+@media (hover: hover) {
+  .btn--primary:hover:not(:disabled) { background: var(--color-primary-hover); }
+  .btn--primary:active:not(:disabled) { background: var(--color-primary-pressed); }   /* again, so pressed wins over hover */
+  .btn--outline:hover:not(:disabled), .icon-btn:hover, .cart-link:hover { background: var(--color-tint); }
+  .input:hover:not(:disabled):not(:focus-visible):not([aria-invalid='true']) { border-color: var(--color-muted); }
+  .site-nav a:hover { color: var(--color-primary-text); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn--primary:active:not(:disabled) { transform: translateY(1px); }
+}
+
 /* ---------- Forms ---------- */
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field__label { font-size: var(--text-sm); font-weight: 600; }
