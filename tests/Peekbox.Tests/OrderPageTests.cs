@@ -2,7 +2,6 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Peekbox.Web.Data;
 using Peekbox.Web.Formatting;
 using Peekbox.Web.Models;
@@ -20,39 +19,10 @@ public class OrderPageTests(PeekboxFixture fixture)
 
     private HttpClient Client() => fixture.Factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = false });
 
-    // Places a hamper of Trà sen × quantity and gives the order's token, with the stock as it was before.
-    private async Task<(string Token, Ward Ward, Dictionary<string, int> Stock)> PlaceAsync(int quantity, PaymentMethod payment)
-    {
-        var stock = await fixture.WithDbAsync(db => db.Products.AsNoTracking().ToDictionaryAsync(p => p.Slug, p => p.Stock));
-        var ward = await fixture.WithDbAsync(db => db.Wards.AsNoTracking().OrderBy(w => w.SortOrder).FirstAsync(w => w.Ring == 1));
-        var hamperToken = Guid.NewGuid().ToString("N");
-        await fixture.WithDbAsync(async db =>
-        {
-            var hamper = new Hamper
-            {
-                Token = hamperToken, BudgetVnd = 500_000, DeliveryDate = Delivery, PackagingId = "hard-bow",
-                CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow,
-            };
-            hamper.Items.Add(new HamperItem { ProductId = (await db.Products.SingleAsync(p => p.Slug == "tra-sen")).Id, Quantity = quantity });
-            db.Hampers.Add(hamper);
-            return await db.SaveChangesAsync();
-        });
-        using var scope = fixture.Factory.Services.CreateScope();
-        var result = await scope.ServiceProvider.GetRequiredService<OrderService>().PlaceAsync(hamperToken, new OrderRequest(
-            "Nguyễn Văn A", "0900000000", "ten@example.com", "Trần Thị B", "0900111111", ward.Id, "12 đường mẫu", DeliveryWindow.Afternoon, payment));
-        Assert.Equal(PlaceOutcome.Placed, result.Outcome);
-        return (result.OrderToken!, ward, stock);
-    }
+    private Task<(string Token, Ward Ward, Dictionary<string, int> Stock)> PlaceAsync(int quantity, PaymentMethod payment) =>
+        TestOrders.PlaceAsync(fixture, quantity, payment);
 
-    private Task RestoreStockAsync(Dictionary<string, int> stock) => fixture.WithDbAsync(async db =>
-    {
-        foreach (var product in await db.Products.ToListAsync())
-        {
-            product.Stock = stock[product.Slug];
-        }
-
-        return await db.SaveChangesAsync();
-    });
+    private Task RestoreStockAsync(Dictionary<string, int> stock) => TestOrders.RestoreStockAsync(fixture, stock);
 
     private Task SetAsync(string token, OrderStatus status) =>
         fixture.WithDbAsync(db => db.Orders.Where(o => o.Token == token).ExecuteUpdateAsync(s => s.SetProperty(o => o.Status, status)));
@@ -81,6 +51,7 @@ public class OrderPageTests(PeekboxFixture fixture)
             Assert.Contains("<meta name=\"robots\" content=\"noindex\">", html);
             Assert.Contains("Cảm ơn bạn, đơn hàng đã được ghi nhận</h1>", html);
             Assert.Contains($"Mã đơn hàng: <strong>{OrderNumber.Format(number)}</strong>. Hãy lưu đường dẫn của trang này để xem lại đơn hàng.", html);
+            Assert.Contains("Bạn cũng có thể dùng mục <a href=\"/track\">Tra cứu đơn hàng</a> với mã đơn hàng và số điện thoại người đặt.", html);
             Assert.DoesNotContain("đã gửi email", html);   // no email is sent yet (F61)
 
             var steps = Steps(html);

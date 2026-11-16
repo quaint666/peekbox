@@ -60,12 +60,12 @@ public class HomePageTests(PeekboxFixture fixture)
     // The expected links are written out here on purpose. A test that read SiteLinks would agree with a typo in SiteLinks.
     private static readonly (string Href, string Label)[] HeaderLinks =
     [
-        ("/", "Trang chủ"), ("/builder", "Tạo hộp quà"), ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"),
+        ("/", "Trang chủ"), ("/builder", "Tạo hộp quà"), ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"),
     ];
 
     private static readonly (string Href, string Label)[] FooterLinks =
     [
-        ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/legal#dieu-khoan", "Điều khoản"), ("/legal#bao-mat", "Chính sách bảo mật"),
+        ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"), ("/legal#dieu-khoan", "Điều khoản"), ("/legal#bao-mat", "Chính sách bảo mật"),
     ];
 
     // The links of one <nav>, in order, as (href, text). Looking inside one nav keeps a link in the footer from counting for the header.
@@ -87,7 +87,7 @@ public class HomePageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task The_header_has_the_five_menu_links_in_order_and_marks_the_current_page()
+    public async Task The_header_has_the_six_menu_links_in_order_and_marks_the_current_page()
     {
         var html = await GetHomeAsync();
 

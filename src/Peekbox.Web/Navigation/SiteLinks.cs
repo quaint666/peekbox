@@ -14,6 +14,7 @@ public static class SiteLinks
     public static readonly SiteLink Terms = new("terms", "/legal#dieu-khoan", "Điều khoản");
     public static readonly SiteLink Privacy = new("privacy", "/legal#bao-mat", "Chính sách bảo mật");
     public static readonly SiteLink Cart = new("cart", "/cart", "Giỏ hàng");
+    public static readonly SiteLink Track = new("track", "/track", "Tra cứu đơn hàng");
 
     // The page of one item (/items/tra-sen), written once for the cards, the item page and the redirect after adding.
     public const string ItemsPath = "/items";
@@ -33,7 +34,7 @@ public static class SiteLinks
 
     public static string Order(string token) => $"{OrdersPath}/{Uri.EscapeDataString(token)}";
 
-    public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, About, Commitments, Blog];
-    public static readonly IReadOnlyList<SiteLink> FooterExplore = [About, Commitments, Blog];
+    public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, About, Commitments, Blog, Track];
+    public static readonly IReadOnlyList<SiteLink> FooterExplore = [About, Commitments, Blog, Track];
     public static readonly IReadOnlyList<SiteLink> FooterLegal = [Terms, Privacy];
 }

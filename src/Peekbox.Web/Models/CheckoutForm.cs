@@ -106,12 +106,15 @@ public static class CheckoutCheck
         return name;
     }
 
-    // A Vietnamese phone number: 10 digits starting with 0. Spaces, dots and dashes between the digits are allowed and
-    // dropped ("0900 111 111", "0900.111.111"). [0-9], not char.IsDigit: that also takes digits of other scripts.
+    // A typed phone with the spaces, dots and dashes between the digits dropped ("0900 111 111", "0900.111.111" give
+    // "0900111111"). Checkout and the track page both read a phone this way.
+    public static string PhoneDigits(string? text) => new((text ?? "").Trim().Where(c => c is not (' ' or '.' or '-')).ToArray());
+
+    // A Vietnamese phone number: 10 digits starting with 0, separators allowed (PhoneDigits). [0-9], not
+    // char.IsDigit: that also takes digits of other scripts.
     private static string Phone(string? text, string field, string whose, List<FieldError> errors)
     {
-        var typed = (text ?? "").Trim();
-        var digits = new string(typed.Where(c => c is not (' ' or '.' or '-')).ToArray());
+        var digits = PhoneDigits(text);
         FieldError? error =
             digits.Length == 0 ? new(field, $"Nhập số điện thoại {whose}", $"Nhập số điện thoại {whose}.")
             : !digits.All(char.IsAsciiDigit) ? new(field, $"Số điện thoại {whose} chưa đúng", "Số điện thoại chỉ gồm chữ số.")

@@ -158,6 +158,11 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
             ? Task.FromResult<Order?>(null)
             : db.Orders.AsNoTracking().Include(o => o.Items.OrderBy(i => i.Id)).SingleOrDefaultAsync(o => o.Token == orderToken, cancellationToken);
 
+    // The token of the order with this number and sender's phone (the track page, F60), or null. Both must match, so a
+    // wrong number and a wrong phone look the same to the visitor.
+    public Task<string?> TokenForAsync(int orderId, string senderPhone, CancellationToken cancellationToken = default) =>
+        db.Orders.AsNoTracking().Where(o => o.Id == orderId && o.SenderPhone == senderPhone).Select(o => o.Token).SingleOrDefaultAsync(cancellationToken);
+
     // The pictures of the products on an order, by product id.
     public async Task<Dictionary<int, string>> ImagesAsync(Order order, CancellationToken cancellationToken = default)
     {
