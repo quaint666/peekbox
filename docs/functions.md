@@ -25,7 +25,7 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F13 | Banner "you have an unfinished hamper": continue or start over | Home, Builder | S |
 | **Builder** | | | |
 | F14 | Set the budget (typed, or quick amounts 300.000 / 500.000 / 800.000 / 1.000.000đ) and the delivery date | Builder | M |
-| F15 | Starter hampers per occasion; "use this hamper" fills the box, still checked for shelf life | Builder | S |
+| F15 | Starter hampers per occasion; "use this hamper" fills the box, still checked for shelf life | Occasion pages, Builder | S |
 | F16 | Item cards: photo, name, brand, weight, origin, expiry badge, price | Builder | M |
 | F17 | Search items, ignoring accents and case, with suggestions grouped as items and categories | Builder | S |
 | F18 | Category chips; checkbox "only items in date for the delivery date" (on by default) with a message saying how many are hidden | Builder | M |

@@ -47,7 +47,7 @@ Fedora then allows password logins on `localhost` only after one edit, or the co
 sudo -u postgres createuser --createdb --pwprompt peekbox   # you choose a password
 sudo -u postgres createdb --owner peekbox peekbox
 dotnet user-secrets set "ConnectionStrings:Default" "Host=localhost;Database=peekbox;Username=peekbox;Password=YOUR_PASSWORD" --project src/Peekbox.Web
-dotnet ef database update --project src/Peekbox.Web         # creates the tables and loads the 24 sample items
+dotnet ef database update --project src/Peekbox.Web         # creates the tables and loads the 83 sample items
 ```
 
 The password stays on your computer (user secrets) and never goes into a file of the project. With Docker you can replace the first two lines with one command that starts a ready server (use `Port=5434;Password=dev` in the connection string):
@@ -115,15 +115,15 @@ One milestone is several small pull requests. "Mockup" paths are inside `design/
 | M | What | Functions | Mockups |
 |---|---|---|---|
 | **M0** | Base, written by the owner and the assistant first: the ASP.NET project, layout with header and footer, the styles, a Home placeholder reading the database, the security-policy header, tests | F01, F03, F04 | `foundations/` |
-| **M1** | Home; Builder core: budget, delivery date, search and sort, item cards, add/remove, budget bar, expiry check, sold out, saved hamper | F11, F12, F14, F16, F18 (chips), F20–F25 | `customer/01-home`, `customer/02-builder` |
+| **M1** | Home; Builder core: budget, delivery date, search and sort, item cards, add/remove, budget bar, expiry check, sold out, saved hamper | F11, F12, F14, F16, F17, F18 (chips), F19, F20–F25 | `customer/01-home`, `customer/02-builder` |
 | **M2** | Item page; Packaging and review; Cart | F26–F28, F33–F37, F39, F40 | `customer/03`, `04`, `05` |
 | **M3** | Checkout, Confirmation and order tracking. The order is real: saved in the database. Payment is a stand-in | F41, F42 (the time window), F44, F46–F48, F50, F51, F60 | `customer/06`, `07`, `12`, `states/02`, `07`, `19`, `22` |
 | **M4** | About, Blog, Blog post, Legal, 404 | F09, F52–F55 | `customer/08` to `11`, `states/05` |
-| **M5** | Extras: starter hampers, campaign banner, contact button, share, toast, back-to-top, resume banner, coupon, time windows, hide prices, loading skeletons, payment-failed page | F05–F08, F10, F13, F15, F17, F19, F29–F32, F38, F42 (the "day is full" message), F43, F45, F49, F61 | `states/`, `dark/` |
+| **M5** | Extras: campaign banner, contact button, share, toast, back-to-top, resume banner, coupon, time windows, hide prices, loading skeletons, payment-failed page | F05–F08, F10, F13, F29–F32, F38, F42 (the "day is full" message), F43, F45, F49, F61 | `states/`, `dark/` |
 | **M6** | Admin. **Not in the first report.** Built after the front end is done | F56–F59 | `admin/`, `states/14` to `18` |
 | **M7** | The report: screenshots and code excerpts of the pages | — | — |
 
-F02 (language switch) was dropped. Live search suggestions and the live budget bar need browser scripts and come as their own slices after the plain versions work.
+F02 (language switch) was dropped. F17 and F19 (search and sort) were built with the builder in M1, and F15 (starter hampers) was brought forward from M5 and built after M3 (`docs/decisions.md`, 2026-11-17). Live search suggestions and the live budget bar need browser scripts and come as their own slices after the plain versions work.
 
 **Done means:** the tests pass; the page matches the mockup at 1440 and 390 px in both themes (screenshots in the pull request); it works with the keyboard; the browser console has no errors; and the pull request lists the F-numbers it covers.
 

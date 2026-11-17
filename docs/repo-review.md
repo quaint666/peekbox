@@ -1,8 +1,16 @@
 # Full repository review (prompt)
 
-A prompt for a whole-repository review, written after the first one (2026-11-17, end of M3) so the next one checks the
-same things the same way. Run it at the end of the front end, before the backend work starts, and again before the first
-deployment. Paste everything below the line to the assistant, in a session started in this repository.
+A prompt for a whole-repository review of the front end, written after the first one (2026-11-17, end of M3) so the next
+one checks the same things the same way. "Front end" here includes the server code the pages need (controllers,
+services, the order saved in the database). Run it at the end of the front end, and again before the first deployment.
+Paste everything below the line to the assistant, in a session started in this repository.
+
+**Not covered yet, because it is not built:** the admin (M6: login, the 2-step code, orders and stock screens), real
+payment (the ZaloPay callback and its signature check), sending email (F61), and deployment beyond the four items
+below. When one of them is built, add its own area to this prompt before the review that includes it. Likely first
+entries: for the admin, sign-in, roles and the 2-step code; for payment, the signature check and a callback that
+arrives twice; for stock and orders, two orders racing for the last item and a repeated order; for the database,
+indexes and migration review once the catalogue and the orders grow.
 
 ---
 
