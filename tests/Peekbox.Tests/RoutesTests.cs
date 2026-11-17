@@ -25,6 +25,8 @@ public class RoutesTests(PeekboxFixture fixture)
         "/checkout GET,HEAD",
         "/checkout POST",
         "/checkout/soldout GET",
+            "/dip/dung-hop POST",
+            "/dip/{id} GET,HEAD",
         "/error any",
         "/items/{slug} GET,HEAD",
         "/orders/{token} GET,HEAD",

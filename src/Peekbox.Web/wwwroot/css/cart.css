@@ -51,22 +51,6 @@
     box-shadow: var(--shadow-bar);
 }
 
-/* "Xóa hộp" asks first: a popover in the middle of the screen over a dimmed page (the browser places it there). */
-.cart-confirm {
-    width: min(100% - 2 * var(--space-4), 400px);
-    padding: var(--space-5);
-    border: 0;
-    border-radius: var(--radius-lg);
-    background: var(--color-surface);
-    color: var(--color-text);
-    box-shadow: var(--shadow-pop);
-}
-.cart-confirm::backdrop { background: var(--color-backdrop); }
-.cart-confirm__title { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
-.cart-confirm__text { margin: 0 0 var(--space-5); font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
-.cart-confirm__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
-.cart-confirm__actions .btn { min-height: var(--tap-min); }
-
 @media (min-width: 900px) {
     .cart { gap: 28px; }
     .cart__title { font-size: var(--text-3xl); }

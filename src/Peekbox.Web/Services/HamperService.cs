@@ -109,6 +109,34 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         await db.SaveChangesAsync(cancellationToken);
     }
 
+    // "Dùng hộp này" (F15): the ready hamper's items and packaging replace what is in the visitor's box. A budget lower
+    // than the hamper's is raised to it; a higher one and the delivery date are kept. A visitor with no hamper yet gets
+    // one with the hamper's budget and no date. The rules of SetQuantityAsync are not run here: the caller has checked
+    // the stock (ReadyHamperCard.SoldOut), and an item that expires too early for the date is shown and blocked by the
+    // builder and the review page, as after a date change (decision 2026-11-17).
+    public async Task<Hamper> UseReadyHamperAsync(Hamper? hamper, ReadyHamperCard card, CancellationToken cancellationToken = default)
+    {
+        var now = clock.GetUtcNow();
+        if (hamper is null)
+        {
+            hamper = new Hamper { Token = SecretToken.New(), CreatedAt = now };
+            db.Hampers.Add(hamper);
+        }
+        else
+        {
+            await db.HamperItems.Where(l => l.HamperId == hamper.Id).ExecuteDeleteAsync(cancellationToken);
+        }
+
+        var slugs = card.Lines.Select(l => l.Slug).ToList();
+        var ids = await db.Products.Where(p => slugs.Contains(p.Slug)).ToDictionaryAsync(p => p.Slug, p => p.Id, cancellationToken);
+        hamper.Items = card.Lines.Select(l => new HamperItem { ProductId = ids[l.Slug], Quantity = l.Quantity }).ToList();
+        hamper.PackagingId = card.Packaging.Id;
+        hamper.BudgetVnd = Math.Max(hamper.BudgetVnd, card.BudgetVnd);
+        hamper.UpdatedAt = now;
+        await db.SaveChangesAsync(cancellationToken);
+        return hamper;
+    }
+
     // Sets how many of an item are in the hamper (F20). 0 or less takes it out. Going up is allowed only when the last
     // one added still passes every rule of Pricing.StatusOf (stock, the delivery date, the budget); going down always is,
     // so a visitor who lowered the budget can still take things out.

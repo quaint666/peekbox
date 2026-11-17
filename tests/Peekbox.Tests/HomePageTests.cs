@@ -38,19 +38,20 @@ public class HomePageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task Each_occasion_card_is_one_link_to_the_builder_with_a_decorative_photo_and_a_button_label()
+    public async Task Each_occasion_card_is_one_link_to_its_occasion_page_with_a_decorative_photo_and_a_button_label()
     {
         var html = await GetHomeAsync();
 
-        var cards = Regex.Matches(html, @"<a class=""occasion occasion--(\w+)"" href=""/builder"">([\s\S]*?)</a>").ToList();
+        var cards = Regex.Matches(html, @"<a class=""occasion occasion--(\w+)"" href=""([^""]+)"">([\s\S]*?)</a>").ToList();
         Assert.Equal(["tet", "teachers", "women"], cards.Select(c => c.Groups[1].Value));
+        Assert.Equal(["/dip/tet", "/dip/20-11", "/dip/phu-nu"], cards.Select(c => c.Groups[2].Value));
 
         // Written out here on purpose: a test that read home.json would agree with a typo in it.
         string[] buttons = ["Tạo hộp cho Tết", "Tạo hộp cho 20/11", "Tạo hộp cho 8/3"];
         string[] photos = ["/images/occasions/tet.webp", "/images/occasions/20-11.webp", "/images/occasions/8-3.webp"];
         for (var i = 0; i < cards.Count; i++)
         {
-            var card = cards[i].Groups[2].Value;
+            var card = cards[i].Groups[3].Value;
             Assert.Matches($@"<span class=""occasion__button"">{Regex.Escape(buttons[i])}\s*<svg", card);
             var src = Regex.Match(card, @"<img[^>]*\ssrc=""([^""]+)""[^>]*\salt=""""").Groups[1].Value;
             Assert.Equal(photos[i], BuilderItemsTests.Unfingerprinted(src));

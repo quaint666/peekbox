@@ -10,6 +10,15 @@ public static class Anchors
 
     public static string ItemCard(string slug) => "mon-" + slug;   // one card in the item list
 
+    // On an occasion page: one budget's row, one hamper card, and the hamper's two popovers.
+    public static string Budget(long budgetVnd) => "ngan-sach-" + budgetVnd.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+    public static string HamperCard(string slug) => "hop-" + slug;
+
+    public static string HamperItems(string slug) => "xem-" + slug;
+
+    public static string HamperReplace(string slug) => "thay-" + slug;
+
     // "#chon-mon", for an address.
     public static string Link(string id) => "#" + Uri.EscapeDataString(id);
 }

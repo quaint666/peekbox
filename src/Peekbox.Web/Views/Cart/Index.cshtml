@@ -89,10 +89,10 @@
             }
         </div>
 
-        <div class="cart-confirm" id="xoa-hop" popover role="dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">
-            <h2 class="cart-confirm__title" id="confirm-title">Xóa cả hộp quà?</h2>
-            <p class="cart-confirm__text" id="confirm-text">Các món và kiểu đóng gói sẽ bị bỏ khỏi hộp. Ngân sách và ngày giao vẫn được giữ.</p>
-            <div class="cart-confirm__actions">
+        <div class="confirm" id="xoa-hop" popover role="dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+            <h2 class="confirm__title" id="confirm-title">Xóa cả hộp quà?</h2>
+            <p class="confirm__text" id="confirm-text">Các món và kiểu đóng gói sẽ bị bỏ khỏi hộp. Ngân sách và ngày giao vẫn được giữ.</p>
+            <div class="confirm__actions">
                 <form method="post" action="@SiteLinks.CartClearPath" asp-antiforgery="true">
                     <button type="submit" class="btn btn--danger">Xóa</button>
                 </form>

@@ -253,3 +253,19 @@ select.input {
   .site-footer__brand, .site-footer__contact { grid-column: auto; }
 }
 
+/* A question before something that cannot be undone ("Xóa hộp" in the cart, "Thay hộp" on an occasion page): a popover
+   in the middle of the screen over a dimmed page (the browser places it there), so it works without a script. */
+.confirm {
+    width: min(100% - 2 * var(--space-4), 400px);
+    padding: var(--space-5);
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-pop);
+}
+.confirm::backdrop { background: var(--color-backdrop); }
+.confirm__title { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+.confirm__text { margin: 0 0 var(--space-5); font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
+.confirm__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.confirm__actions .btn { min-height: var(--tap-min); }
