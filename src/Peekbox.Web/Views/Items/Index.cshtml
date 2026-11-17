@@ -34,7 +34,7 @@
             </div>
             <p class="item-price"><span class="item-price__value">@Vnd.Format(item.PriceVnd)</span><span class="item-price__tax">Đã gồm thuế</span></p>
             <ul class="item-facts">
-                <li><partial name="_Icon" model='"calendar"' />HSD @VnDate.Month(item.ExpiryDate)</li>
+                <li><partial name="_Icon" model='"calendar"' />@VnDate.Expiry(item.ExpiryDate)</li>
                 <li><partial name="_Icon" model='"pin"' />@item.Origin</li>
                 <li><partial name="_Icon" model='"weight"' />@item.WeightGrams g</li>
             </ul>
@@ -42,17 +42,21 @@
             {
                 <p class="item-note item-note--muted"><partial name="_Icon" model='"warning"' /><span><strong>Hết hàng.</strong> Món này tạm thời không đặt được.</span></p>
             }
-            @if (Model.InDate is null)
+            @if (item.ExpiryDate is null)
+            {
+                <p class="item-note item-note--muted"><partial name="_Icon" model='"calendar"' /><span>Món này không phải đồ ăn nên không có hạn dùng và không cần kiểm tra theo ngày giao.</span></p>
+            }
+            else if (Model.InDate is null)
             {
                 <p class="item-note item-note--muted"><partial name="_Icon" model='"calendar"' /><span>Chọn ngày giao để kiểm tra hạn dùng của món này.</span></p>
             }
             else if (Model.InDate == true)
             {
-                <p class="item-note"><partial name="_Icon" model='"check-circle"' /><span><strong>Đủ hạn cho ngày giao @VnDate.Day(Model.DeliveryDate!.Value).</strong> Hạn sử dụng @VnDate.Day(item.ExpiryDate) còn xa hơn ngày giao cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</span></p>
+                <p class="item-note"><partial name="_Icon" model='"check-circle"' /><span><strong>Đủ hạn cho ngày giao @VnDate.Day(Model.DeliveryDate!.Value).</strong> Hạn sử dụng @VnDate.Day(item.ExpiryDate.Value) còn xa hơn ngày giao cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</span></p>
             }
             else
             {
-                <p class="item-note item-note--warn"><partial name="_Icon" model='"warning"' /><span><strong>Không đủ hạn cho ngày giao @VnDate.Day(Model.DeliveryDate!.Value).</strong> Hạn sử dụng @VnDate.Day(item.ExpiryDate) không còn xa hơn ngày giao cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</span></p>
+                <p class="item-note item-note--warn"><partial name="_Icon" model='"warning"' /><span><strong>Không đủ hạn cho ngày giao @VnDate.Day(Model.DeliveryDate!.Value).</strong> Hạn sử dụng @VnDate.Day(item.ExpiryDate.Value) không còn xa hơn ngày giao cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</span></p>
             }
 
             <div class="card item-buy" id="@Anchors.ItemBuy">
@@ -76,7 +80,7 @@
             <div><dt>Thương hiệu</dt><dd>@item.Brand</dd></div>
             <div><dt>Trọng lượng</dt><dd>@item.WeightGrams g</dd></div>
             <div><dt>Xuất xứ</dt><dd>@item.Origin</dd></div>
-            <div><dt>Hạn sử dụng</dt><dd>@VnDate.Day(item.ExpiryDate)</dd></div>
+            <div><dt>Hạn sử dụng</dt><dd>@(item.ExpiryDate is { } expiry ? VnDate.Day(expiry) : VnDate.NoExpiry)</dd></div>
         </dl>
     </section>
 

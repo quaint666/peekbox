@@ -182,13 +182,17 @@
                             {
                                 <span class="badge badge--muted">Hết hàng</span>
                             }
+                            else if (item.ExpiryDate is null)
+                            {
+                                <span class="badge badge--muted">@VnDate.NoExpiry</span>
+                            }
                             else if (item.InDate)
                             {
-                                <span class="badge">HSD @VnDate.Month(item.ExpiryDate) · đủ hạn</span>
+                                <span class="badge">HSD @VnDate.Month(item.ExpiryDate.Value) · đủ hạn</span>
                             }
                             else
                             {
-                                <span class="badge badge--warn">HSD @VnDate.Day(item.ExpiryDate), trước ngày giao</span>
+                                <span class="badge badge--warn">HSD @VnDate.Day(item.ExpiryDate.Value), trước ngày giao</span>
                             }
                             <div class="item-card__foot">
                                 <p class="item-card__price">@Vnd.Format(item.PriceVnd)</p>
@@ -245,12 +249,12 @@
                         <li class="box-line" id="hop-@line.Slug">
                             <p class="box-line__head"><span class="box-line__name">@line.Name</span><span>@Vnd.Format(line.LineVnd)</span></p>
                             <div class="box-line__foot">
-                                <p class="box-line__meta">@line.WeightGrams g · HSD @VnDate.Month(line.ExpiryDate)</p>
+                                <p class="box-line__meta">@line.WeightGrams g · @VnDate.Expiry(line.ExpiryDate)</p>
                                 <partial name="_QuantityControl" model="new QuantityControl(quantityAction, line.Slug, line.Name, line.Quantity, line.NextStatus, 0, false)" />
                             </div>
                             @if (!line.InDate)
                             {
-                                <span class="badge badge--warn">HSD @VnDate.Day(line.ExpiryDate), trước ngày giao</span>
+                                <span class="badge badge--warn">HSD @VnDate.Day(line.ExpiryDate!.Value), trước ngày giao</span>
                             }
                         </li>
                     }

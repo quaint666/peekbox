@@ -62,7 +62,7 @@ public static class SeedData
 
         if (!context.Set<Category>().Any())
         {
-            context.Set<Category>().AddRange(file.Categories.Select(c => new Category { Id = c.Id, Name = c.NameVi }));
+            context.Set<Category>().AddRange(file.Categories.Select((c, i) => new Category { Id = c.Id, Name = c.NameVi, SortOrder = i }));
         }
 
         if (!context.Set<Product>().Any())
@@ -109,7 +109,7 @@ public sealed record SeedProduct(
     string Brand,
     int WeightG,
     string Origin,
-    DateOnly ExpiryDate,
+    DateOnly? ExpiryDate,   // null for an item that is not food; the key must still be there
     long PriceVnd,
     int Stock,
     string DescriptionVi,

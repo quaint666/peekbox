@@ -55,7 +55,7 @@
                     <li class="order-line">
                         <img class="order-line__img" src="@Model.Images.GetValueOrDefault(item.ProductId)" alt="" width="508" height="508" loading="lazy">
                         <span class="order-line__name">@item.Name</span>
-                        <span class="order-line__meta meta">@item.Brand · @item.WeightGrams g · Xuất xứ @item.Origin · HSD @VnDate.Month(item.ExpiryDate)</span>
+                        <span class="order-line__meta meta">@item.Brand · @item.WeightGrams g · Xuất xứ @item.Origin · @VnDate.Expiry(item.ExpiryDate)</span>
                         <span class="order-line__price">
                             @if (item.Quantity > 1)
                             {

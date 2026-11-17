@@ -9,7 +9,7 @@ using static Peekbox.Tests.TestDates;
 
 namespace Peekbox.Tests;
 
-// The item list of /builder (F16, F18, F22, F23) with the 24 seed items. The expected names and counts are written out
+// The item list of /builder (F16, F18, F22, F23) with the 83 seed items. The expected names and counts are written out
 // on purpose: a test that computed them with the same rule would agree with a mistake in it.
 [Collection(DatabaseCollection.Name)]
 public class BuilderItemsTests(PeekboxFixture fixture)
@@ -78,10 +78,10 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         var names = CardNames(html);
 
         Assert.DoesNotContain("để mở bước chọn món và đóng gói", html);   // the items' lock note (packaging has its own)
-        Assert.Equal(22, names.Count);
+        Assert.Equal(81, names.Count);
         Assert.DoesNotContain("Bánh quy bơ", names);
         Assert.DoesNotContain("Kẹo lạc", names);
-        Assert.Contains("Hiện 22 món. 2 món hết hạn trước ngày giao đang được ẩn.", html);
+        Assert.Contains("Hiện 81 món. 2 món hết hạn trước ngày giao đang được ẩn.", html);
         Assert.Matches(@"<a href=""/builder\?inDate=false#chon-mon"">Hiện cả 2 món</a>", html);
         Assert.Contains("Chỉ món đủ hạn cho ngày giao <strong>15/01/2027</strong>", html);
         Assert.Contains("HSD 12/2027 · đủ hạn", html);   // Trà sen, 31/12/2027
@@ -90,42 +90,43 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task Turning_the_checkbox_off_shows_all_24_with_an_amber_badge_on_the_two()
+    public async Task Turning_the_checkbox_off_shows_all_83_with_an_amber_badge_on_the_two()
     {
         var token = await SavedHamperAsync(Delivery);
         var html = await PageAsync(token, "?inDate=false");
 
-        Assert.Equal(24, CardNames(html).Count);
-        Assert.Contains("Hiện 24 món.", html);
+        Assert.Equal(83, CardNames(html).Count);
+        Assert.Contains("Hiện 83 món.", html);
         Assert.DoesNotContain("đang được ẩn", html);
         Assert.Contains("HSD 10/01/2027, trước ngày giao", html);
         Assert.Contains("HSD 18/01/2027, trước ngày giao", html);
         Assert.DoesNotMatch(@"<input[^>]*id=""in-date""[^>]*checked", html);
 
         // A ticked checkbox sends "true" and its hidden "false" (the framework's checkbox); the first value wins.
-        Assert.Equal(22, CardNames(await PageAsync(token, "?inDate=true&inDate=false")).Count);
+        Assert.Equal(81, CardNames(await PageAsync(token, "?inDate=true&inDate=false")).Count);
     }
 
     [Fact]
-    public async Task The_chips_are_Tat_ca_and_the_five_categories_and_one_chip_filters_the_items()
+    public async Task The_chips_are_Tat_ca_and_the_categories_in_file_order_and_one_chip_filters_the_items()
     {
         var token = await SavedHamperAsync(Delivery);
 
         var all = await PageAsync(token);
         var chips = Regex.Matches(all, @"<button type=""submit"" class=""btn btn--outline btn--chip"" name=""category"" value=""([^""]*)"" aria-pressed=""(true|false)"">([^<]*)</button>")
             .Select(m => (Id: m.Groups[1].Value, Pressed: m.Groups[2].Value, Label: m.Groups[3].Value)).ToList();
-        Assert.Equal(["Tất cả", "Bánh", "Hạt và trái cây sấy", "Mật ong và đặc sản", "Mứt và kẹo", "Trà và cà phê"], chips.Select(c => c.Label));
+        Assert.Equal(["Tất cả", "Bánh", "Trà và cà phê", "Hạt và trái cây sấy", "Mứt và kẹo", "Mật ong và đặc sản", "Socola", "Sức khỏe",
+            "Đặc sản mặn", "Nhu yếu phẩm Tết", "Đồ uống", "Quà không phải đồ ăn"], chips.Select(c => c.Label));
         Assert.Equal("true", chips[0].Pressed);
 
-        // Bánh in date for 15/01/2027: Bánh quy bơ (10/01) is out; the other four are in.
+        // Bánh in date for 15/01/2027: Bánh quy bơ (10/01) is out; the other eight are in.
         var banh = await PageAsync(token, "?category=banh");
-        Assert.Equal(new[] { "Bánh đậu xanh", "Bánh gừng", "Bánh pía mini", "Bánh quy yến mạch" }.Order(StringComparer.Ordinal), CardNames(banh).Order(StringComparer.Ordinal));
-        Assert.Contains("Hiện 4 món. 1 món hết hạn trước ngày giao đang được ẩn.", banh);
+        Assert.Equal(new[] { "Bánh cốm", "Bánh đậu xanh", "Bánh gừng", "Bánh in", "Bánh ngói hạnh nhân", "Bánh pía mini", "Bánh quy bơ hộp thiếc", "Bánh quy yến mạch" }.Order(StringComparer.Ordinal), CardNames(banh).Order(StringComparer.Ordinal));
+        Assert.Contains("Hiện 8 món. 1 món hết hạn trước ngày giao đang được ẩn.", banh);
         Assert.Contains("name=\"category\" value=\"banh\" aria-pressed=\"true\"", banh);
         Assert.Matches(@"<a href=""/builder\?category=banh&inDate=false#chon-mon"">Hiện cả 1 món</a>", banh);   // decoded: &amp; became &
 
         // An unknown category (a typo, an old link) shows the items of every category.
-        Assert.Equal(22, CardNames(await PageAsync(token, "?category=khong-co")).Count);
+        Assert.Equal(81, CardNames(await PageAsync(token, "?category=khong-co")).Count);
     }
 
     [Fact]
@@ -173,7 +174,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         var html = WebUtility.HtmlDecode(await (await client.SendAsync(post)).Content.ReadAsStringAsync());
 
         Assert.Contains("Nhập ngân sách bằng số", html);
-        Assert.Equal(22, CardNames(html).Count);
+        Assert.Equal(81, CardNames(html).Count);
     }
 
     // ---------- Search and sort (F17, F19) ----------
@@ -185,11 +186,30 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     {
         var token = await SavedHamperAsync(Delivery);
 
-        Assert.Equal(Sorted(["Mứt dâu", "Mứt gừng", "Mứt hạt sen"]), Sorted(CardNames(await PageAsync(token, "?q=mut"))));
-        Assert.Equal(Sorted(["Mứt dâu", "Mứt gừng", "Mứt hạt sen"]), Sorted(CardNames(await PageAsync(token, "?q=M%E1%BB%A8T"))));   // "MỨT"
-        Assert.Equal(Sorted(["Cà phê rang xay", "Hạt macca", "Mật ong hoa cà phê"]), Sorted(CardNames(await PageAsync(token, "?q=dak+lak"))));   // origin Đắk Lắk: đ is folded too
-        Assert.Equal(Sorted(["Bánh pía mini", "Mật ong hoa cà phê", "Mật ong hoa nhãn", "Tiêu đen Phú Quốc"]), Sorted(CardNames(await PageAsync(token, "?q=thuong+hieu+g"))));   // brand
+        Assert.Equal(Sorted(["Mứt dâu", "Mứt dừa", "Mứt gừng", "Mứt hạt sen", "Mứt me"]), Sorted(CardNames(await PageAsync(token, "?q=mut"))));
+        Assert.Equal(Sorted(["Mứt dâu", "Mứt dừa", "Mứt gừng", "Mứt hạt sen", "Mứt me"]), Sorted(CardNames(await PageAsync(token, "?q=M%E1%BB%A8T"))));   // "MỨT"
+        Assert.Equal(Sorted(["Cà phê chồn", "Cà phê rang xay", "Hạt bí", "Hạt macca", "Mật ong hoa cà phê"]), Sorted(CardNames(await PageAsync(token, "?q=dak+lak"))));   // origin Đắk Lắk: đ is folded too
+        Assert.Equal(Sorted(["Bánh pía mini", "Chà bông heo", "Cá cơm khô", "Khô bò", "Kẹo cu đơ", "Kẹo gừng", "Kẹo sìu châu", "Lạp xưởng tươi", "Mật ong hoa cà phê", "Mật ong hoa nhãn", "Nến thơm", "Thịt trâu gác bếp", "Tinh dầu sả chanh", "Tiêu đen Phú Quốc", "Tôm khô Cà Mau"]),
+            Sorted(CardNames(await PageAsync(token, "?q=thuong+hieu+g"))));   // brand
         Assert.Contains("value=\"mut\"", await PageAsync(token, "?q=++mut++"));   // the box shows the words, trimmed
+    }
+
+    // An item with no expiry date (not food) shows a grey "Không có hạn dùng" pill instead of an expiry, stays in the
+    // list with the in-date box ticked, and comes last when sorting by expiry.
+    [Fact]
+    public async Task An_item_with_no_expiry_date_shows_so_stays_listed_and_sorts_last_by_expiry()
+    {
+        var token = await SavedHamperAsync(Delivery);
+
+        var gifts = await PageAsync(token, "?category=qua-khong-an");
+        Assert.Equal(9, CardNames(gifts).Count);
+        Assert.Contains("Hiện 9 món.", gifts);
+        Assert.Equal(9, Regex.Matches(gifts, @"<span class=""badge badge--muted"">Không có hạn dùng</span>").Count);
+        Assert.DoesNotContain("HSD", Regex.Match(gifts, @"<ul class=""item-grid""[\s\S]*?</ul>").Value);
+
+        var byExpiry = CardNames(await PageAsync(token, "?sort=expiry"));
+        Assert.Equal(81, byExpiry.Count);
+        Assert.Equal(["Nến thơm", "Tinh dầu sả chanh", "Sổ tay và bút", "Khăn lụa", "Ấm chén Bát Tràng", "Ly sứ", "Lịch Tết 2027", "Bao lì xì", "Thiệp viết tay"], byExpiry.TakeLast(9));
     }
 
     [Fact]
@@ -210,10 +230,10 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     }
 
     [Theory]
-    [InlineData("price-asc", "Muối tôm Tây Ninh", "Kẹo dừa")]          // 50.000đ, 55.000đ (Kẹo lạc, 45.000đ, is out of date)
-    [InlineData("price-desc", "Trà shan tuyết", "Hạt macca")]          // 220.000đ, 190.000đ
-    [InlineData("expiry", "Mật ong hoa nhãn", "Mật ong hoa cà phê")]   // 31/12/2028, 31/10/2028
-    [InlineData("name", "Bánh đậu xanh", "Bánh gừng")]
+    [InlineData("price-asc", "Thiệp viết tay", "Bao lì xì")]           // 25.000đ, 30.000đ
+    [InlineData("price-desc", "Yến sào tinh chế 100 g", "Yến sào tinh chế 50 g")]   // 2.900.000đ, 1.500.000đ
+    [InlineData("expiry", "Mật ong hoa nhãn", "Yến sào tinh chế 50 g")]   // both 31/12/2028: the tie keeps the catalogue order
+    [InlineData("name", "Ấm chén Bát Tràng", "Bánh cốm")]   // the database's collation puts Ấ with A
     public async Task The_sort_menu_orders_the_items_and_shows_its_choice(string sort, string first, string second)
     {
         var html = await PageAsync(await SavedHamperAsync(Delivery), "?sort=" + sort);
@@ -237,15 +257,15 @@ public class BuilderItemsTests(PeekboxFixture fixture)
 
         // Search inside a category.
         Assert.Empty(CardNames(await PageAsync(token, "?q=mut&category=banh")));
-        Assert.Equal(5, CardNames(await PageAsync(token, "?q=banh&category=banh&inDate=false")).Count);
+        Assert.Equal(9, CardNames(await PageAsync(token, "?q=banh&category=banh&inDate=false")).Count);
 
         // Sort or checkbox: the form sends only the hidden category. A pressed chip comes before it, so the chip wins.
-        Assert.Equal(5, CardNames(await PageAsync(token, "?q=&sort=&inDate=false&category=banh")).Count);
-        Assert.Equal(Sorted(["Kẹo dừa", "Kẹo lạc", "Mứt dâu", "Mứt gừng", "Mứt hạt sen"]), Sorted(CardNames(await PageAsync(token, "?inDate=false&category=mut-keo&category=banh"))));
+        Assert.Equal(9, CardNames(await PageAsync(token, "?q=&sort=&inDate=false&category=banh")).Count);
+        Assert.Equal(Sorted(["Kẹo cu đơ", "Kẹo dừa", "Kẹo gừng", "Kẹo lạc", "Kẹo sìu châu", "Mứt dâu", "Mứt dừa", "Mứt gừng", "Mứt hạt sen", "Mứt me"]), Sorted(CardNames(await PageAsync(token, "?inDate=false&category=mut-keo&category=banh"))));
 
         // ...which only works if the page really puts the hidden category after the chips.
         var html = await PageAsync(token, "?category=banh");
-        var lastChip = html.LastIndexOf("name=\"category\" value=\"tra-ca-phe\"", StringComparison.Ordinal);
+        var lastChip = html.LastIndexOf("name=\"category\" value=\"qua-khong-an\"", StringComparison.Ordinal);
         var hidden = html.IndexOf("<input type=\"hidden\" name=\"category\" value=\"banh\">", StringComparison.Ordinal);
         Assert.True(lastChip > 0 && hidden > lastChip, "the hidden category must come after the chips");
     }
@@ -255,7 +275,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     {
         var html = await PageAsync(await SavedHamperAsync(Delivery), "?q=banh&sort=price-asc");
 
-        Assert.Contains("Hiện 4 món. 1 món hết hạn trước ngày giao đang được ẩn.", html);
+        Assert.Contains("Hiện 8 món. 1 món hết hạn trước ngày giao đang được ẩn.", html);
         Assert.Matches(@"<a href=""/builder\?q=banh&sort=price-asc&inDate=false#chon-mon"">Hiện cả 1 món</a>", html);
 
         var form = Regex.Match(html, @"<form class=""item-filters""[^>]*>([\s\S]*?)</form>").Groups[1].Value;
@@ -299,8 +319,8 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     {
         var token = await SavedHamperAsync(Delivery);
 
-        Assert.Equal(22, CardNames(await PageAsync(token, "?inDate=abc")).Count);          // not a yes/no: the box stays on
-        Assert.Equal(22, CardNames(await PageAsync(token, "?category=BANH")).Count);       // ids are lower case: unknown, so all
+        Assert.Equal(81, CardNames(await PageAsync(token, "?inDate=abc")).Count);          // not a yes/no: the box stays on
+        Assert.Equal(81, CardNames(await PageAsync(token, "?category=BANH")).Count);       // ids are lower case: unknown, so all
         Assert.Matches(@"<option value="""" selected=""selected"">Mặc định</option>", await PageAsync(token, "?sort=PRICE-ASC"));
     }
 
@@ -310,9 +330,9 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         var token = await SavedHamperAsync(Delivery);
         var decomposed = Uri.EscapeDataString("Mứt".Normalize(System.Text.NormalizationForm.FormD));   // what some phone keyboards send
 
-        Assert.Equal(3, CardNames(await PageAsync(token, "?q=" + decomposed)).Count);
+        Assert.Equal(5, CardNames(await PageAsync(token, "?q=" + decomposed)).Count);
         var spaced = await PageAsync(token, "?q=++banh+++quy%0A");
-        Assert.Equal(["Bánh quy yến mạch"], CardNames(spaced));                              // Bánh quy bơ is out of date
+        Assert.Equal(["Bánh quy yến mạch", "Bánh quy bơ hộp thiếc"], CardNames(spaced));   // Bánh quy bơ is out of date
         Assert.Contains("value=\"banh quy\"", spaced);
     }
 

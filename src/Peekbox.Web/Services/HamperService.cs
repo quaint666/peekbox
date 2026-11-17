@@ -164,7 +164,7 @@ public enum QuantityChange { Done, UnknownItem, NotAllowed }
 // One line of "Hộp của bạn" and of the review page. InDate is false when the delivery date changed after the item went
 // in (the review page blocks it, F35); NextStatus says whether one more fits (it turns the + button off).
 public sealed record BoxLine(
-    string Slug, string Name, string Brand, string Origin, string ImagePath, int WeightGrams, DateOnly ExpiryDate,
+    string Slug, string Name, string Brand, string Origin, string ImagePath, int WeightGrams, DateOnly? ExpiryDate,
     long PriceVnd, int Quantity, long LineVnd, bool InDate, ItemStatus NextStatus);
 
 // One packaging choice (F33).

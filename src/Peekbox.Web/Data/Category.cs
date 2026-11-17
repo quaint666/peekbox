@@ -7,5 +7,8 @@ public class Category
 
     public required string Name { get; set; }
 
+    // The order of the category chips on the builder: the order of content/data/products.json.
+    public int SortOrder { get; set; }
+
     public List<Product> Products { get; set; } = [];
 }

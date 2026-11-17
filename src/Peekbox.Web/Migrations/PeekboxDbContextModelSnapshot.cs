@@ -34,6 +34,9 @@ namespace Peekbox.Web.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
@@ -232,7 +235,7 @@ namespace Peekbox.Web.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<DateOnly>("ExpiryDate")
+                    b.Property<DateOnly?>("ExpiryDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Name")
@@ -332,7 +335,7 @@ namespace Peekbox.Web.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<DateOnly>("ExpiryDate")
+                    b.Property<DateOnly?>("ExpiryDate")
                         .HasColumnType("date");
 
                     b.Property<string>("ImagePath")

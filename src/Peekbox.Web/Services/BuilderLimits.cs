@@ -32,6 +32,9 @@ public sealed class BuilderLimits(TimeProvider clock)
 
     public static bool IsInDate(DateOnly expiry, DateOnly deliveryDate) => IsInDate(expiry, deliveryDate, ShelfMarginDays);
 
+    // An item with no expiry date (not food) is always in date.
+    public static bool IsInDate(DateOnly? expiry, DateOnly deliveryDate) => expiry is not { } date || IsInDate(date, deliveryDate);
+
     // The same rule with any margin; tests/vectors/pricing.json also checks a margin of 0.
     public static bool IsInDate(DateOnly expiry, DateOnly deliveryDate, int marginDays) => expiry > deliveryDate.AddDays(marginDays);
 

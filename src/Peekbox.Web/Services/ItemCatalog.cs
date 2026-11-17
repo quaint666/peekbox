@@ -8,13 +8,13 @@ public sealed record CategoryChip(string Id, string Name);
 // Quantity is how many are in the hamper; Next says whether one more can go in (Pricing.StatusOf), and OverByVnd is how
 // far one more would pass the budget (the "Vượt X" button).
 public sealed record ItemCard(
-    string Slug, string Name, string Brand, int WeightGrams, string Origin, DateOnly ExpiryDate,
+    string Slug, string Name, string Brand, int WeightGrams, string Origin, DateOnly? ExpiryDate,
     long PriceVnd, string ImagePath, bool InDate, bool SoldOut, int Quantity, ItemStatus Next, long OverByVnd);
 
 // One item as its page shows it (F26). The page checks it against the hamper itself, through the Box.
 public sealed record ItemDetail(
     string Slug, string Name, string Brand, string CategoryId, string CategoryName, int WeightGrams, string Origin,
-    DateOnly ExpiryDate, long PriceVnd, int Stock, string Description, string ImagePath)
+    DateOnly? ExpiryDate, long PriceVnd, int Stock, string Description, string ImagePath)
 {
     public bool SoldOut => Stock == 0;
 
@@ -60,7 +60,7 @@ public sealed class ItemCatalog(PeekboxDbContext db)
     public async Task<ItemList> ListAsync(DateOnly deliveryDate, ItemFilter filter, Box box, CancellationToken cancellationToken = default)
     {
         var categories = await db.Categories.AsNoTracking()
-            .OrderBy(c => c.Id)
+            .OrderBy(c => c.SortOrder)
             .Select(c => new CategoryChip(c.Id, c.Name))
             .ToListAsync(cancellationToken);
 
@@ -93,7 +93,8 @@ public sealed class ItemCatalog(PeekboxDbContext db)
         {
             ItemSort.PriceAsc => products.OrderBy(p => p.PriceVnd).ThenBy(p => p.Id),
             ItemSort.PriceDesc => products.OrderByDescending(p => p.PriceVnd).ThenBy(p => p.Id),
-            ItemSort.ExpiryLatest => products.OrderByDescending(p => p.ExpiryDate).ThenBy(p => p.Id),
+            // Items with no expiry date (not food) come last: this sort is for comparing dates.
+            ItemSort.ExpiryLatest => products.OrderBy(p => p.ExpiryDate == null).ThenByDescending(p => p.ExpiryDate).ThenBy(p => p.Id),
             ItemSort.NameAz => products.OrderBy(p => p.Name).ThenBy(p => p.Id),
             _ => products.OrderBy(p => p.Id),
         };

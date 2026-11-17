@@ -22,7 +22,8 @@ public class OrderItem
 
     public int WeightGrams { get; set; }
 
-    public DateOnly ExpiryDate { get; set; }
+    // Null when the item has no expiry date (not food).
+    public DateOnly? ExpiryDate { get; set; }
 
     // Whole dong, tax included, when the order was placed.
     public long UnitPriceVnd { get; set; }
