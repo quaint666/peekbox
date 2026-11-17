@@ -25,7 +25,7 @@
 <p class="review-summary__fee meta">Phí giao hàng sẽ tính ở bước thanh toán, theo phường và ngày giao.</p>
 @if (outOfDate == 0)
 {
-    <p class="box-panel__note">Cả @box.Lines.Count món đều còn hạn đến sau ngày giao @VnDate.Day(box.DeliveryDate!.Value) cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</p>
+    <partial name="_InDateNote" model="new InDateNote(box.Lines, box.DeliveryDate!.Value)" />
 }
 @if (outOfDate > 0)
 {

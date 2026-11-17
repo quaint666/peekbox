@@ -1,0 +1,12 @@
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model InDateNote
+@* The in-date note (F22): written once for the builder's box and the review page. *@
+@if (Model.Dated == 0)
+{
+    <p class="box-panel__note">Các món trong hộp không có hạn dùng, nên không cần kiểm tra theo ngày giao.</p>
+}
+else
+{
+    <p class="box-panel__note">@(Model.Undated == 0 ? $"Cả {Model.Dated} món đều" : Model.Dated == 1 ? "1 món có hạn dùng" : $"{Model.Dated} món có hạn dùng đều") còn hạn đến sau ngày giao @VnDate.Day(Model.DeliveryDate) cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.@(Model.Undated > 0 ? $" {Model.Undated} món không có hạn dùng nên không cần kiểm tra." : "")</p>
+}

@@ -287,7 +287,7 @@
             }
             else if (outOfDateLines == 0)
             {
-                <p class="box-panel__note">Cả @box.Lines.Count món đều còn hạn đến sau ngày giao @VnDate.Day(Model.SavedDeliveryDate!.Value) cộng @BuilderLimits.ShelfMarginDays ngày dự phòng.</p>
+                <partial name="_InDateNote" model="new InDateNote(box.Lines, Model.SavedDeliveryDate!.Value)" />
             }
             else
             {
