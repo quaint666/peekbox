@@ -67,8 +67,8 @@ proxy's rate-limit bucket and the hamper cookie is not marked Secure), `AllowedH
 - Browsers: headless Chromium over CDP with a private profile, and WebKit through MiniBrowser and WebKitWebDriver. Take
   screenshots at the widths above in both themes, and record console errors, CSP reports and horizontal overflow. Check
   accessible names with `Accessibility.getPartialAXTree`. Use `Fetch.enable` to hold a request: that is how a hung
-  server and out-of-order answers are tested. Firefox only when geckodriver is installed; otherwise say it is
-  unchecked.
+  server and out-of-order answers are tested. Firefox the same way through WebDriver BiDi, its built-in remote
+  protocol (no geckodriver needed): open each page with `browsingContext.create`, or focus and Space do not work.
 - For every fix, a test that fails without it: break the code on purpose and confirm a check fails. A break that no
   test catches is a finding of its own.
 - Mark every claim `[verified]` (seen in real output in this session), `[inferred]` (reasoned, not seen) or
@@ -100,4 +100,4 @@ proxy's rate-limit bucket and the hamper cookie is not marked Secure), `AllowedH
 - Docs: README, sitemap, architecture, frontend plan, API contract, content and design READMEs match what is built;
   the mockup departures are listed in `design/design-notes.md`.
 - Still open after the first review: the deployment items, browser compatibility of the Popover API ("Xóa hộp", the
-  review summary) checked against current data, and the M3 pages in Firefox (driving it needs geckodriver, not installed).
+  review summary) checked against current data, and the M3 pages in Firefox (through WebDriver BiDi).
