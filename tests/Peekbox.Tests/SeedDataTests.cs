@@ -76,4 +76,21 @@ public class SeedDataTests
             Assert.Throws<JsonException>(() => SeedData.ParseWards(node.ToJsonString()));
         }
     }
+
+    // The same for hampers.json: a hamper without a budget or a packaging would show a wrong total.
+    [Theory]
+    [InlineData("occasions", typeof(SeedOccasion))]
+    [InlineData("hampers", typeof(SeedReadyHamper))]
+    public void A_missing_key_inside_the_first_occasion_or_hamper_stops_the_load(string list, Type record)
+    {
+        var keys = KeysRead(record);
+        Assert.NotEmpty(keys);
+
+        foreach (var key in keys)
+        {
+            var node = JsonNode.Parse(File.ReadAllText(SeedData.HampersFilePath))!.AsObject();
+            Assert.True(node[list]!.AsArray()[0]!.AsObject().Remove(key), $"{list}[0].{key} is not in the file");
+            Assert.Throws<JsonException>(() => SeedData.ParseHampers(node.ToJsonString()));
+        }
+    }
 }

@@ -20,6 +20,12 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
 
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 
+    public DbSet<Occasion> Occasions => Set<Occasion>();
+
+    public DbSet<ReadyHamper> ReadyHampers => Set<ReadyHamper>();
+
+    public DbSet<ReadyHamperItem> ReadyHamperItems => Set<ReadyHamperItem>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Accent-free search on the builder ("mut" finds "Mứt", "dak lak" finds "Đắk Lắk"). The extension comes with
@@ -122,6 +128,41 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
                 table.HasCheckConstraint("CK_OrderItems_Quantity", "\"Quantity\" > 0");
                 table.HasCheckConstraint("CK_OrderItems_UnitPriceVnd", "\"UnitPriceVnd\" >= 0");
             });
+        });
+
+        modelBuilder.Entity<Occasion>(occasion =>
+        {
+            occasion.Property(o => o.Id).HasMaxLength(40);
+            occasion.Property(o => o.Name).HasMaxLength(100);
+            occasion.Property(o => o.Title).HasMaxLength(200);
+            occasion.Property(o => o.Chip).HasMaxLength(100);
+            occasion.Property(o => o.Lead).HasMaxLength(1000);
+            occasion.Property(o => o.Accent).HasMaxLength(20);
+            occasion.Property(o => o.BloomyLink).HasMaxLength(200);
+            occasion.Property(o => o.ImagePath).HasMaxLength(300);
+        });
+
+        modelBuilder.Entity<ReadyHamper>(hamper =>
+        {
+            hamper.HasIndex(h => h.Slug).IsUnique();
+            hamper.Property(h => h.Slug).HasMaxLength(100);
+            hamper.Property(h => h.Name).HasMaxLength(200);
+            hamper.Property(h => h.ForWhom).HasMaxLength(100);
+            hamper.Property(h => h.PackagingId).HasMaxLength(40);
+            hamper.Property(h => h.ImagePath).HasMaxLength(300);
+            hamper.HasOne(h => h.Packaging).WithMany().HasForeignKey(h => h.PackagingId).OnDelete(DeleteBehavior.Restrict);
+            // A hamper can be on several occasion pages (one pool, decision 2026-11-17): a join table with the two keys.
+            hamper.HasMany(h => h.Occasions).WithMany(o => o.Hampers).UsingEntity("ReadyHamperOccasions");
+            hamper.ToTable(table => table.HasCheckConstraint("CK_ReadyHampers_BudgetVnd", "\"BudgetVnd\" > 0"));
+        });
+
+        modelBuilder.Entity<ReadyHamperItem>(line =>
+        {
+            line.HasKey(l => new { l.ReadyHamperId, l.ProductId });
+            // Deleting a ready hamper deletes its lines; an item that is in a ready hamper cannot be deleted by accident.
+            line.HasOne(l => l.ReadyHamper).WithMany(h => h.Items).HasForeignKey(l => l.ReadyHamperId).OnDelete(DeleteBehavior.Cascade);
+            line.HasOne(l => l.Product).WithMany().HasForeignKey(l => l.ProductId).OnDelete(DeleteBehavior.Restrict);
+            line.ToTable(table => table.HasCheckConstraint("CK_ReadyHamperItems_Quantity", "\"Quantity\" > 0"));
         });
 
         modelBuilder.Entity<HamperItem>(line =>

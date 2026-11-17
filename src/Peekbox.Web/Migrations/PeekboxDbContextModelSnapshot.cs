@@ -111,6 +111,54 @@ namespace Peekbox.Web.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.Occasion", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Accent")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("BloomyLink")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Chip")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Lead")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Occasions");
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -382,6 +430,79 @@ namespace Peekbox.Web.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.ReadyHamper", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("BudgetVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ForWhom")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("PackagingId")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PackagingId");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("ReadyHampers", t =>
+                        {
+                            t.HasCheckConstraint("CK_ReadyHampers_BudgetVnd", "\"BudgetVnd\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.ReadyHamperItem", b =>
+                {
+                    b.Property<int>("ReadyHamperId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ReadyHamperId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ReadyHamperItems", t =>
+                        {
+                            t.HasCheckConstraint("CK_ReadyHamperItems_Quantity", "\"Quantity\" > 0");
+                        });
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Ward", b =>
                 {
                     b.Property<int>("Id")
@@ -410,6 +531,21 @@ namespace Peekbox.Web.Migrations
                         {
                             t.HasCheckConstraint("CK_Wards_Ring", "\"Ring\" BETWEEN 1 AND 3");
                         });
+                });
+
+            modelBuilder.Entity("ReadyHamperOccasions", b =>
+                {
+                    b.Property<int>("HampersId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("OccasionsId")
+                        .HasColumnType("character varying(40)");
+
+                    b.HasKey("HampersId", "OccasionsId");
+
+                    b.HasIndex("OccasionsId");
+
+                    b.ToTable("ReadyHamperOccasions");
                 });
 
             modelBuilder.Entity("Peekbox.Web.Data.Hamper", b =>
@@ -489,6 +625,51 @@ namespace Peekbox.Web.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.ReadyHamper", b =>
+                {
+                    b.HasOne("Peekbox.Web.Data.Packaging", "Packaging")
+                        .WithMany()
+                        .HasForeignKey("PackagingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Packaging");
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.ReadyHamperItem", b =>
+                {
+                    b.HasOne("Peekbox.Web.Data.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Peekbox.Web.Data.ReadyHamper", "ReadyHamper")
+                        .WithMany("Items")
+                        .HasForeignKey("ReadyHamperId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ReadyHamper");
+                });
+
+            modelBuilder.Entity("ReadyHamperOccasions", b =>
+                {
+                    b.HasOne("Peekbox.Web.Data.ReadyHamper", null)
+                        .WithMany()
+                        .HasForeignKey("HampersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Peekbox.Web.Data.Occasion", null)
+                        .WithMany()
+                        .HasForeignKey("OccasionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Category", b =>
                 {
                     b.Navigation("Products");
@@ -500,6 +681,11 @@ namespace Peekbox.Web.Migrations
                 });
 
             modelBuilder.Entity("Peekbox.Web.Data.Order", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Peekbox.Web.Data.ReadyHamper", b =>
                 {
                     b.Navigation("Items");
                 });
