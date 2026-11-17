@@ -65,15 +65,23 @@ body{margin:0}
 
 <sc-if value="{{open}}" hint-placeholder-val="{{true}}">
 <div style="display:flex;flex-direction:column;gap:20px">
+<!-- suggested hampers: the occasion is chosen by the chips (the active campaign first); the hampers shown are the ones for the saved budget; the row is a scroll-snap carousel -->
 <div style="display:flex;flex-direction:column;gap:10px">
-<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:17px;font-weight:700">Hộp gợi ý cho Tết</h2><span style="font-size:13px;color:#4A5650">Bắt đầu nhanh, rồi sửa tùy ý</span></div>
-<div style="display:flex;gap:12px;overflow-x:auto;padding:2px 2px 8px">
-<sc-for list="{{starters}}" as="b" hint-placeholder-count="3">
-<div style="flex:none;width:230px;background:#FFFFFF;border:1px solid #DAD6C9;border-radius:14px;box-shadow:0 1px 3px rgba(31,42,36,0.07);padding:14px;display:flex;flex-direction:column;gap:8px">
-<div style="display:flex;gap:6px"><img src="{{b.i1}}" alt="" style="width:64px;height:64px;border-radius:8px;object-fit:cover;background:#DBDFD3"><img src="{{b.i2}}" alt="" style="width:64px;height:64px;border-radius:8px;object-fit:cover;background:#DBDFD3"><img src="{{b.i3}}" alt="" style="width:64px;height:64px;border-radius:8px;object-fit:cover;background:#DBDFD3"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:17px;font-weight:700">Hộp gợi ý</h2></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<sc-for list="{{occasions}}" as="o" hint-placeholder-count="3"><button aria-pressed="{{o.on}}" style="min-height:44px;padding:0 14px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:600;{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+<div style="font-size:13px;line-height:1.5;color:#4A5650">Hộp đến <strong style="color:#1F2A24">{{budget}}</strong>, theo ngân sách của bạn. Bắt đầu nhanh, rồi sửa tùy ý. <a href="Builder-m.dc.html" style="font-weight:600;color:#3F6B57">Xem mọi mức ngân sách</a></div>
+<div style="display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px">
+<sc-for list="{{starters}}" as="b" hint-placeholder-count="4">
+<div style="flex:none;width:230px;scroll-snap-align:start;background:#FFFFFF;border:1px solid #DAD6C9;border-radius:14px;box-shadow:0 1px 3px rgba(31,42,36,0.07);overflow:hidden;display:flex;flex-direction:column">
+<img src="{{b.photo}}" alt="" style="display:block;width:100%;aspect-ratio:16 / 10;object-fit:cover;background:#DBDFD3">
+<div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1">
+<span style="align-self:flex-start;padding:3px 9px;border-radius:999px;background:#F8E1DA;color:#1F2A24;font-size:12px;font-weight:600">{{b.who}}</span>
 <div style="font-size:15px;font-weight:600">{{b.name}}</div>
-<div style="font-size:13px;color:#4A5650">{{b.budget}} · {{b.count}}</div>
-<button style="min-height:44px;border:1px solid #3F6B57;border-radius:10px;background:transparent;color:#3F6B57;font-family:inherit;font-size:14px;font-weight:600">Dùng hộp này</button>
+<div style="font-size:13px;color:#4A5650">{{b.count}} · {{b.total}}</div>
+<button style="margin-top:auto;min-height:44px;border:1px solid #3F6B57;border-radius:10px;background:transparent;color:#3F6B57;font-family:inherit;font-size:14px;font-weight:600">Dùng hộp này</button>
+</div>
 </div>
 </sc-for>
 </div>
@@ -180,11 +188,18 @@ steps: [
   step("4", "Xem lại", "todo")
 ],
 starters: [
-{ name: "Hộp biếu gia đình", budget: "500.000đ", count: "4 món", i1: img("products/tra-sen.webp"), i2: img("products/hat-dieu.webp"), i3: img("products/mut-gung.webp") },
-{ name: "Hộp biếu đối tác", budget: "800.000đ", count: "5 món", i1: img("products/tra-shan-tuyet.webp"), i2: img("products/hat-macca.webp"), i3: img("products/mat-ong-nhan.webp") },
-{ name: "Hộp biếu đồng nghiệp", budget: "300.000đ", count: "4 món", i1: img("products/ca-phe-phin-giay.webp"), i2: img("products/keo-dua.webp"), i3: img("products/mit-say.webp") }
+// Hamper photos are stand-ins until the Gemini photos exist (same hampers as the Tết occasion page, 500.000đ).
+{ name: "Hộp Sum Vầy", who: "Biếu gia đình", count: "4 món", total: "485.000đ", photo: img("occasions/tet.webp") },
+{ name: "Hộp Lộc Xuân", who: "Biếu đồng nghiệp", count: "4 món", total: "495.000đ", photo: img("hero.webp") },
+{ name: "Hộp Khỏe Xuân", who: "Biếu ông bà", count: "3 món", total: "470.000đ", photo: img("packaging/box-hard.webp") },
+{ name: "Hộp Ba Miền", who: "Biếu bạn bè", count: "5 món", total: "490.000đ", photo: img("blog/chon-hop-qua-tet-theo-ngan-sach.webp") }
 ],
-presets: ["300.000đ", "500.000đ", "800.000đ", "1.000.000đ"],
+occasions: [
+{ label: "Tết", on: "true", style: "background:#B3382A;color:#FFFFFF;border:1px solid #B3382A" },
+{ label: "20/11", on: "false", style: "background:#FFFFFF;color:#1F2A24;border:1px solid #8A948E" },
+{ label: "8/3 và 20/10", on: "false", style: "background:#FFFFFF;color:#1F2A24;border:1px solid #8A948E" }
+],
+presets: ["300.000đ", "500.000đ", "800.000đ", "1 triệu", "2 triệu", "5 triệu", "10 triệu"],
 cats: [
 { label: "Tất cả", bg: "#3F6B57", fg: "#FFFFFF" },
 { label: "Bánh", bg: "transparent", fg: "#3F6B57" },
