@@ -41,10 +41,21 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 /* Step 1 (decision 2026-11-17): phone, one column; from 900 px the fields on one line and the notes under them. */
 .budget-card { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); }
 .budget-card__fields { display: flex; flex-direction: column; gap: var(--space-4); }
-.budget-card .input { font-size: var(--text-xl); font-weight: 600; }
+.budget-card .input { font-size: var(--text-lg); font-weight: 600; }   /* phone: 18 px, so "10.000.000đ" fits beside "Chọn nhanh"; 20 px from 900 px */
 .budget-card .field__error { margin: 0; }
 .budget-card__pick { display: flex; gap: var(--space-2); }
-.budget-card__pick .input { flex: 1; min-width: 0; }
+.budget-card__pick .input { flex: 1; min-width: 0; padding-inline: var(--space-3); }   /* phone: room for "10.000.000đ" beside the button */
+.budget-card__pick .picker-button { gap: 6px; padding: 0 10px; }
+/* So the longest amount ("10.000.000đ") fits beside "Chọn nhanh": phones up to 419 px drop the chevron (the wallet icon
+   and the label stay), and under 380 px the button goes under the field. Measured in Chromium and Firefox (Firefox's
+   text is a little wider: at 360 px it was cut by 10 px). */
+@media (max-width: 419px) {
+    .picker-button .icon:last-child { display: none; }
+}
+@media (max-width: 379px) {
+    .budget-card__pick { flex-wrap: wrap; }
+    .budget-card__pick .picker-button { flex: 1 1 100%; justify-content: center; }
+}
 .budget-card__save { min-height: 48px; }
 .budget-card__unsaved { margin: 0; padding: var(--space-2) var(--space-3); font-size: var(--text-sm); line-height: 1.5; }
 .budget-card__hint { font-size: var(--text-sm); }
@@ -146,7 +157,11 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .item-filters__search { grid-area: search; }
 .item-filters__category { grid-area: category; }
 .item-filters__sort { grid-area: sort; min-width: 0; }
-.item-filters__row noscript { display: contents; }
+/* Without scripts the "Lọc" button joins the grid. Only then: with scripts on, a <noscript> shown as contents prints its
+   markup as text. */
+@media (scripting: none) {
+    .item-filters__row noscript { display: contents; }
+}
 .item-filters__apply { grid-area: apply; }
 .item-filters__apply { align-self: flex-start; }
 .search-input { position: relative; }
@@ -171,8 +186,15 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .item-card--sold-out .item-card__img { filter: grayscale(1); opacity: 0.7; }
 /* In the box: a 2 px green border (1 px border plus 1 px inset shadow, so nothing moves) and a tag on the photo. */
 .item-card--in-box { border-color: var(--color-primary); box-shadow: inset 0 0 0 1px var(--color-primary), var(--shadow-card); }
-.item-card__photo { position: relative; }
-.item-card__tag { position: absolute; left: var(--space-2); top: var(--space-2); padding: 2px var(--space-2); border-radius: 999px; background: var(--color-primary); color: var(--color-on-primary); font-size: var(--text-2xs); font-weight: 700; }
+/* The status pill (H, 2026-11-17): green "✓ Trong hộp", a light green "Đủ hạn", grey "Không có hạn dùng" and "Hết hàng",
+   amber when the item expires before the delivery date. On a phone's grid card (photo on the left) it sits above the
+   name; where the card stands upright (rows, and the grid from 900 px) it sits on the photo's top-left corner. */
+.item-card { position: relative; }
+.item-card__tag { padding: 2px var(--space-2); border-radius: 999px; background: var(--color-primary); color: var(--color-on-primary); font-size: var(--text-2xs); font-weight: 700; line-height: 1.5; }
+.item-card__tag--ok { background: var(--color-tint); color: var(--color-on-tint); }
+.item-card__tag--muted { background: var(--color-border-soft); color: var(--color-muted); }
+.item-card__tag--warn { background: var(--color-warn-bg); color: var(--color-warn-text); }
+.item-grid--row .item-card__tag { position: absolute; left: var(--space-2); top: var(--space-2); max-width: calc(100% - 2 * var(--space-2)); box-shadow: var(--shadow-card); }
 
 /* "Tất cả": one sideways row per category (decision 2026-11-17). Phone cards are narrow and upright, without the brand
    and origin line (the item page has it). */
@@ -181,6 +203,7 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .item-row__title { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-2); margin: 0; font-size: var(--text-lg); }
 .item-row__count { font-size: var(--text-sm); font-weight: 400; color: var(--color-muted); }
 .item-row__in-box { padding: 0 var(--space-2); border-radius: 999px; background: var(--color-tint); color: var(--color-on-tint); font-size: var(--text-xs); font-weight: 700; }
+.item-row .row-buttons { display: none; }   /* a phone swipes the rows; the hint says so (decision 2026-11-17) */
 .item-row__all { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--color-primary-text); font-size: var(--text-sm); font-weight: 600; }
 .item-grid--row {
     display: flex;
@@ -188,6 +211,7 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
     padding: 2px 2px var(--space-2);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: 2px;   /* the snap line is the padding edge, so the row starts at 0 and ← is off */
     overscroll-behavior-x: contain;
 }
 .item-grid--row:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
@@ -235,7 +259,7 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .suggest__chip[aria-current='true'] { border-color: var(--chip-fill); background: var(--chip-fill); color: var(--color-on-primary); }
 .suggest__text { font-size: var(--text-sm); }
 .suggest__text a { color: var(--color-primary-text); font-weight: 600; }
-.suggest__row { display: flex; gap: var(--space-3); margin: 0; padding: 2px 2px var(--space-2); list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+.suggest__row { display: flex; gap: var(--space-3); margin: 0; padding: 2px 2px var(--space-2); list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 2px; overscroll-behavior-x: contain; }
 .suggest__row:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) {
     .suggest__row { scroll-behavior: smooth; }
@@ -339,11 +363,42 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 
 /* The items and "Hộp của bạn" side by side from 900 px; on a phone the panel is replaced by the bar below. */
 .builder-main { display: flex; flex-direction: column; gap: var(--space-5); }
+/* "Hộp của bạn" is a popover (decision 2026-11-17): on a phone it opens as a sheet from "Xem hộp"; from 900 px it is
+   shown beside the items whether open or not (the author rules below win over the browser's popover rules). */
 .box-panel { display: none; }
+.box-panel:popover-open {
+    position: fixed;
+    inset: auto 0 0;
+    width: 100%;
+    max-width: none;
+    max-height: 85dvh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-4) var(--space-5);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    color: var(--color-text);   /* not the browser's popover colours */
+    box-shadow: var(--shadow-pop);
+}
+.box-panel::backdrop { background: var(--color-backdrop); }
+.box-panel__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.box-panel__count { font-size: var(--text-md); font-weight: 400; color: var(--color-muted); }
+.box-panel__from { margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); background: var(--color-tint); color: var(--color-on-tint); font-size: var(--text-xs); line-height: 1.5; }
+/* The sheet: the lines scroll, the sums are one line (the block, the meter and the in-date note stay for wide screens). */
+.box-panel .box-lines { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; }
+.box-panel__compact { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); margin: 0; padding-top: var(--space-3); border-top: 1px solid var(--color-border-soft); font-size: var(--text-sm); }
+.box-panel__compact > strong { font-size: var(--text-xl); }
+.box-panel:popover-open .box-sums, .box-panel:popover-open .box-panel__note:not(.box-panel__note--warn) { display: none; }
 
 .box-panel__title { margin: 0; font-size: var(--text-xl); }
 .box-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
-.box-line { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border-soft); }
+.box-line { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: var(--space-3); row-gap: var(--space-2); align-items: start; padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border-soft); }
+.box-line > :not(.box-line__img) { grid-column: 2; }
+.box-line > .badge { justify-self: start; }
+.box-line__img { grid-row: 1 / span 3; width: 44px; height: 44px; border-radius: 8px; object-fit: cover; filter: var(--photo-filter); }   /* a thumbnail to recognise the item at a glance */
 .box-line__head { display: flex; justify-content: space-between; gap: var(--space-3); align-self: stretch; margin: 0; font-size: var(--text-md); }  /* 15px: from the mockup */
 .box-line__name { font-weight: 600; }
 .box-line__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); align-self: stretch; }
@@ -383,7 +438,31 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
     background: var(--color-surface);
     box-shadow: var(--shadow-bar);
 }
-.box-bar__sums { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); margin: 0; font-size: var(--text-sm); }
+.box-bar__sums { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-1) var(--space-3); margin: 0; font-size: var(--text-sm); }
+.box-bar__open { gap: var(--space-1); min-height: var(--tap-min); padding: 0 var(--space-3); }
+.box-bar__open .icon { width: 18px; height: 18px; }
+.box-bar__open ~ span { order: 3; flex-basis: 100%; }   /* "Còn lại …" under the button and the total */
+
+/* The toast after "Thêm", − or + (builder.ts): what changed and what is left, for a few seconds. */
+.box-toast {
+    position: fixed;
+    inset: auto auto var(--space-5) 50%;   /* undoes the browser's centring of a popover */
+    width: max-content;
+    max-width: calc(100vw - 2 * var(--space-4));
+    margin: 0;
+    border: 0;
+    padding: var(--space-3) var(--space-5);
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: var(--footer-bg);
+    color: var(--footer-brand);
+    box-shadow: var(--shadow-pop);
+    font-size: var(--text-md);
+    text-align: center;
+}
+@media (max-width: 899px) {
+    .box-toast { bottom: calc(var(--space-6) * 5); }   /* above the phone's box bar and the sheet's button */
+}
 .box-bar__total { font-size: var(--text-xl); }
 .box-bar .budget-meter, .box-bar .budget-meter::-webkit-meter-bar { height: 8px; }
 .box-bar__next { min-height: 48px; }
@@ -415,19 +494,43 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
     .item-card__img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 0; }
     .item-card__photo { border-radius: 0; }
     .item-card__body { flex: 1; padding: var(--space-4); }
+    .item-card__tag { position: absolute; left: var(--space-3); top: var(--space-3); max-width: calc(100% - 2 * var(--space-3)); box-shadow: var(--shadow-card); }
     .builder-main { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 28px; align-items: start; }  /* 390 and 28: measured on mockup 27 at 1440 px */
     .builder-main .item-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }   /* three a row at 1440, two at 900 */
     .packaging__options { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }   /* three a row, as in mockup 27 */
-    .box-panel { position: sticky; top: calc(var(--builder-steps-height) + var(--space-4)); display: flex; flex-direction: column; gap: 18px; padding: var(--space-5); border-radius: var(--radius-lg); }  /* 18px: from the mockup */
+    /* Beside the items, never taller than the screen: the lines scroll inside it, so the sums and "Tiếp tục" stay in view
+       (decision 2026-11-17). Undoes the browser's popover placement. */
+    .box-panel, .box-panel:popover-open {
+        position: sticky;
+        inset: auto;   /* before "top": the shorthand would reset it */
+        top: calc(var(--builder-steps-height) + var(--space-4));
+        width: auto;
+        max-height: calc(100dvh - var(--builder-steps-height) - 2 * var(--space-4));
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;   /* 18px: from the mockup */
+        padding: var(--space-5);
+        overflow: hidden;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-card);
+    }
+    .box-panel .box-lines { mask-image: linear-gradient(to bottom, black calc(100% - 24px), transparent); padding-right: var(--space-1); }   /* fades where it scrolls */
+    .box-panel__close, .box-panel__compact { display: none; }
     .box-bar { display: none; }
     .budget-card { padding: 22px var(--space-5); border-radius: var(--radius-lg); }   /* 22 px: the two-line mockup */
     .budget-card__fields { flex-direction: row; flex-wrap: wrap; align-items: flex-end; gap: var(--space-4) 20px; }
     .budget-card__budget { flex: 3 1 360px; }
+    .budget-card .input { font-size: var(--text-xl); }
+    .budget-card__pick .input { padding-inline: var(--space-4); }
+    .budget-card__pick .picker-button { gap: var(--space-2); padding: 0 14px; }
     .budget-card__date { flex: 2 1 220px; }
     /* A field with an error grows a line; the others stay at the top so the inputs line up. */
     .budget-card__fields:has(.field__error) { align-items: flex-start; }
     .budget-card__fields:has(.field__error) .budget-card__save { align-self: flex-start; margin-top: 29px; }   /* label height plus gap, measured */
     .item-row__head { flex-wrap: nowrap; }
+    .item-row .row-buttons:not([hidden]) { display: flex; }
     .item-grid--row { gap: var(--space-4); mask-image: linear-gradient(to right, black calc(100% - 64px), transparent);   /* the fade at the edge; only the alpha counts */ }
     .item-grid--row > li { width: 232px; }
     .item-grid--row .item-card__meta { display: block; }

@@ -54,9 +54,10 @@ public class BuilderRowsTests(PeekboxFixture fixture)
         await visitor.PostAsync("/builder/quantity", new() { ["slug"] = "tra-sen", ["quantity"] = "1" });
         var html = await visitor.PageAsync("/builder");
 
-        var card = Regex.Match(html, @"<li class=""card item-card[^""]*"" id=""mon-tra-sen"">[\s\S]*?</a>").Value;
+        var card = Regex.Match(html, @"<li class=""card item-card[^""]*"" id=""mon-tra-sen"">[\s\S]*?</h3>").Value;
         Assert.Contains("item-card--in-box", card);
         Assert.Contains("<span class=\"item-card__tag\">✓ Trong hộp</span>", card);
+        Assert.DoesNotContain("Đủ hạn", card);   // "Trong hộp" takes the status's place
         Assert.DoesNotContain("item-card--in-box", Regex.Match(html, @"<li class=""card item-card[^""]*"" id=""mon-tra-o-long"">").Value);
         Assert.Contains("<span class=\"item-row__in-box\">✓ 1 trong hộp</span>", Regex.Match(html, @"id=""hang-tra-ca-phe-ten"">[\s\S]*?</h3>").Value);
         Assert.Contains("<span class=\"picker-tile__in-box\" aria-label=\"1 món trong hộp\">✓ 1</span>", html);

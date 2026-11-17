@@ -94,6 +94,15 @@ function swap(selector: string, fresh: Document, after?: Element | null): void {
   }
 }
 
+// "Hộp của bạn" is the phone's sheet too: a sheet that is open stays open when the new panel comes in.
+function swapPanel(fresh: Document): void {
+  const wasOpen = document.querySelector('#hop-cua-ban:popover-open') !== null;
+  swap('#hop-cua-ban', fresh);
+  if (wasOpen) {
+    document.getElementById('hop-cua-ban')?.showPopover();
+  }
+}
+
 function applyPage(fresh: Document): void {
   for (const foot of fresh.querySelectorAll('.item-card .item-card__foot')) {
     const id = foot.closest('.item-card')?.id;
@@ -101,14 +110,14 @@ function applyPage(fresh: Document): void {
     old?.replaceWith(document.importNode(foot, true));
   }
 
-  // "Trong hộp" on a card: its border (the class) and the tag on its photo.
+  // "Trong hộp" on a card: its border (the class) and its status pill.
   for (const card of fresh.querySelectorAll<HTMLElement>('.item-card')) {
     const old = document.getElementById(card.id);
     if (old) {
       old.className = card.className;
-      const photo = card.querySelector('.item-card__photo');
-      if (photo) {
-        old.querySelector('.item-card__photo')?.replaceWith(document.importNode(photo, true));
+      const tag = card.querySelector('.item-card__tag');
+      if (tag) {
+        old.querySelector('.item-card__tag')?.replaceWith(document.importNode(tag, true));
       }
     }
   }
@@ -121,7 +130,7 @@ function applyPage(fresh: Document): void {
   }
   swap('#danh-muc .picker-panel__categories', fresh);
 
-  swap('#hop-cua-ban', fresh);
+  swapPanel(fresh);
   swap('.box-bar', fresh);
   swap('.cart-link', fresh);   // the header's count: the first item puts the hamper in the cart, the last takes it out
   // Step 3: the lock note while the box is empty, the packaging choices once it is not. Only one is on a page; the new
@@ -159,7 +168,29 @@ function refocus(place: Place, slug: string, step: string): void {
   }
 }
 
+const toast = document.getElementById('box-toast');
+let toastTimer = 0;
+
+// The same words, seen: the toast shows for a few seconds (screen readers hear the status instead).
+function showToast(text: string): void {
+  if (!toast) {
+    return;
+  }
+
+  toast.textContent = text;
+  // Shown again each time, so it comes above a sheet that was opened after it.
+  if (toast.matches(':popover-open')) {
+    toast.hidePopover();
+  }
+  toast.showPopover();
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => {
+    toast.hidePopover();
+  }, 3500);
+}
+
 function announce(text: string): void {
+  showToast(text);
   if (!status) {
     return;
   }
@@ -171,15 +202,21 @@ function announce(text: string): void {
   }, 50);
 }
 
-function message(name: string, asked: number, now: number): string {
+// What changed, in words: "Đã thêm Trà sen · còn 320.000đ." The amount left is read from the new panel the server sent.
+function message(name: string, before: number, asked: number, now: number): string {
   const left = document.querySelector('#hop-cua-ban .box-sums__row--left dd, #hop-cua-ban .box-sums__row--over dd')?.textContent?.trim() ?? '';
   const over = document.querySelector('#hop-cua-ban .box-sums__row--over') !== null;
-  const money = over ? `Vượt ngân sách ${left}.` : `Còn lại ${left}.`;
+  const money = over ? `vượt ngân sách ${left}` : `còn ${left}`;
   if (now !== asked) {
-    return `Không thêm được ${name}. ${money}`;
+    return `Không thêm được ${name} · ${money}.`;
   }
 
-  return now === 0 ? `Đã bỏ ${name} khỏi hộp. ${money}` : `${name}: ${now} trong hộp. ${money}`;
+  if (now === 0) {
+    return `Đã bỏ ${name} khỏi hộp · ${money}.`;
+  }
+
+  const count = now > 1 ? ` (${now} trong hộp)` : '';
+  return now > before ? `Đã thêm ${name}${count} · ${money}.` : `Đã bớt ${name}${count} · ${money}.`;
 }
 
 document.addEventListener('submit', (event) => {
@@ -199,6 +236,7 @@ document.addEventListener('submit', (event) => {
   const step = submitter.dataset['qtyStep'] ?? 'add';
   const asked = Number(submitter.value);
   const name = nameOf(slug);
+  const before = quantityIn(document, slug);
   sending = true;
   form.setAttribute('aria-busy', 'true');
 
@@ -206,7 +244,7 @@ document.addEventListener('submit', (event) => {
     .then(({ page: fresh }) => {
       applyPage(fresh);
       refocus(place, slug, step);
-      announce(message(name, Math.max(asked, 0), quantityIn(document, slug)));
+      announce(message(name, before, Math.max(asked, 0), quantityIn(document, slug)));
     })
     .catch(() => {
       // Anything unexpected: send the same form the plain way, so the page the server makes says what happened.
@@ -247,7 +285,7 @@ document.addEventListener('change', (event) => {
     try {
       const { page: fresh } = await fetchPage(form.action, { method: 'POST', body });
       if (asked === packagingAsked) {
-        swap('#hop-cua-ban', fresh);
+        swapPanel(fresh);
         swap('.box-bar', fresh);
         const total = document.querySelector('#hop-cua-ban .box-sums__row--total dd')?.textContent?.trim() ?? '';
         announce(`Đã chọn ${name}. Tổng cộng ${total}.`);

@@ -68,6 +68,8 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             // One hamper makes at most one order; an order is never deleted while a hamper points at it.
             hamper.HasIndex(h => h.OrderId).IsUnique();
             hamper.HasOne(h => h.Order).WithOne().HasForeignKey<Hamper>(h => h.OrderId).OnDelete(DeleteBehavior.Restrict);
+            // Deleting a ready hamper only forgets where a visitor's box came from.
+            hamper.HasOne(h => h.StartedFrom).WithMany().HasForeignKey(h => h.StartedFromId).OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<Packaging>(packaging =>

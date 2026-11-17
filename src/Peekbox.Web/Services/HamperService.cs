@@ -75,7 +75,10 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         }
 
         var quote = Pricing.Quote(hamper.BudgetVnd, lines, items, packaging?.FeeVnd ?? 0);
-        return new Box(hamper.BudgetVnd, hamper.DeliveryDate, boxLines, quote, lines, items, packaging);
+        var startedFrom = hamper.StartedFromId is { } from && rows.Count > 0
+            ? await db.ReadyHampers.Where(h => h.Id == from).Select(h => h.Name).SingleOrDefaultAsync(cancellationToken)
+            : null;
+        return new Box(hamper.BudgetVnd, hamper.DeliveryDate, boxLines, quote, lines, items, packaging) { StartedFrom = startedFrom };
     }
 
     // Saves the visitor's packaging (F33). False for an id that is not a packaging; nothing is saved then.
@@ -105,6 +108,7 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
     {
         await db.HamperItems.Where(l => l.HamperId == hamper.Id).ExecuteDeleteAsync(cancellationToken);
         hamper.PackagingId = null;
+        hamper.StartedFromId = null;
         hamper.UpdatedAt = clock.GetUtcNow();
         await db.SaveChangesAsync(cancellationToken);
     }
@@ -131,6 +135,7 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         var ids = await db.Products.Where(p => slugs.Contains(p.Slug)).ToDictionaryAsync(p => p.Slug, p => p.Id, cancellationToken);
         hamper.Items = card.Lines.Select(l => new HamperItem { ProductId = ids[l.Slug], Quantity = l.Quantity }).ToList();
         hamper.PackagingId = card.Packaging.Id;
+        hamper.StartedFromId = await db.ReadyHampers.Where(h => h.Slug == card.Slug).Select(h => (int?)h.Id).SingleAsync(cancellationToken);
         hamper.BudgetVnd = Math.Max(hamper.BudgetVnd, card.BudgetVnd);
         hamper.UpdatedAt = now;
         await db.SaveChangesAsync(cancellationToken);
@@ -171,6 +176,11 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         if (quantity <= 0)
         {
             db.HamperItems.Remove(line!);
+            // The last item out: the box no longer comes from a ready hamper.
+            if (!await db.HamperItems.AnyAsync(l => l.HamperId == hamper.Id && l.ProductId != product.Id, cancellationToken))
+            {
+                hamper.StartedFromId = null;
+            }
         }
         else if (line is null)
         {
@@ -204,6 +214,9 @@ public sealed record Box(
     long BudgetVnd, DateOnly? DeliveryDate, IReadOnlyList<BoxLine> Lines, Quote Quote,
     IReadOnlyList<HamperLine> HamperLines, IReadOnlyDictionary<string, PricedItem> Items, PackagingOption? Packaging)
 {
+    // The name of the ready hamper the box was filled from, while it holds items ("Bạn đang sửa Hộp Sum Vầy").
+    public string? StartedFrom { get; init; }
+
     public int Count => Lines.Sum(l => l.Quantity);
 
     // Lines whose item expires too early for the delivery date (F35): the review page blocks the order until they go.

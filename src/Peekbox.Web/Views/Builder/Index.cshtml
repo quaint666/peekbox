@@ -38,7 +38,7 @@
         var query = new Dictionary<string, string?>
         {
             ["category"] = items?.Category, ["q"] = items?.Search, ["sort"] = items is null ? null : ItemSorts.ToQuery(items.Sort),
-            ["inDate"] = items is { OnlyInDate: false } ? "false" : null, ["dip"] = ChosenOccasion(),
+            ["inDate"] = items is { OnlyInDate: false } ? "false" : null, ["fit"] = items is { FitBudget: true } ? "true" : null, ["dip"] = ChosenOccasion(),
         };
         foreach (var (key, value) in changes)
         {
@@ -125,13 +125,13 @@
     {
         var showAllQuery = new Dictionary<string, string?>
         {
-            ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = "false",
+            ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = "false", ["fit"] = items.FitBudget ? "true" : null,
         }.Where(p => !string.IsNullOrEmpty(p.Value));
         var showAll = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, showAllQuery) + Anchors.Link(Anchors.Items);
         // Where "Thêm", − and + post (BuilderController.Quantity), with the list's filters, so the visitor comes back to the same list.
         var listQuery = new Dictionary<string, string?>
         {
-            ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = items.OnlyInDate ? null : "false",
+            ["category"] = items.Category, ["q"] = items.Search, ["sort"] = ItemSorts.ToQuery(items.Sort), ["inDate"] = items.OnlyInDate ? null : "false", ["fit"] = items.FitBudget ? "true" : null,
         }.Where(p => !string.IsNullOrEmpty(p.Value));
         var quantityAction = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.QuantityPath, listQuery);
         var box = Model.Box!;
@@ -233,6 +233,11 @@
                     <input type="checkbox" id="in-date" name="inDate" value="true" checked="@items.OnlyInDate">
                     <input type="hidden" name="inDate" value="false">
                     <label for="in-date"><span>Chỉ món đủ hạn cho ngày giao <strong>@VnDate.Day(Model.SavedDeliveryDate!.Value)</strong></span></label>
+                </div>
+                @* "Vừa ngân sách": only the items that cost no more than what is left. Off unless ticked, so no hidden "false". *@
+                <div class="item-filters__check">
+                    <input type="checkbox" id="fit-budget" name="fit" value="true" checked="@items.FitBudget">
+                    <label for="fit-budget"><span>Chỉ món vừa ngân sách còn lại <strong>@Vnd.Format(Math.Max(0, box.Quote.RemainingVnd))</strong></span></label>
                 </div>
                 @* The chosen category and occasion, so a search, a sort or the checkbox keeps them. *@
                 <input type="hidden" name="category" value="@items.Category">
@@ -351,16 +356,25 @@
             }
         </section>
 
-        @* "Hộp của bạn" (F20, F21). Every number comes from the server (Pricing); this view only formats them. On a phone the
-           panel is replaced by the bar at the bottom of the screen. *@
-        <aside class="card box-panel" id="hop-cua-ban" aria-labelledby="box-title">
-            <h2 class="box-panel__title" id="box-title">Hộp của bạn</h2>
+        @* "Hộp của bạn" (F20, F21). Every number comes from the server (Pricing); this view only formats them. From 900 px it
+           stays beside the items and its list of lines scrolls inside it, so "Tiếp tục" is always on screen. On a phone it
+           is a popover: hidden until "Xem hộp" on the bar opens it as a sheet from the bottom (decision 2026-11-17). *@
+        <aside class="card box-panel" id="hop-cua-ban" aria-labelledby="box-title" popover>
+            <div class="box-panel__head">
+                <h2 class="box-panel__title" id="box-title"><span>Hộp của bạn</span>@if (box.Count > 0) {<span class="box-panel__count"> · @box.Count món</span>}</h2>
+                <button type="button" class="icon-btn box-panel__close" popovertarget="hop-cua-ban" popovertargetaction="hide" aria-label="Đóng"><partial name="_Icon" model='"close"' /></button>
+            </div>
+            @if (box.StartedFrom is { } from)
+            {
+                <p class="box-panel__from">Bạn đang sửa <strong>@from</strong>. Đổi món tùy ý; hạn dùng vẫn được kiểm tra.</p>
+            }
             @if (box.Lines.Count > 0)
             {
                 <ul class="box-lines">
                     @foreach (var line in box.Lines)
                     {
                         <li class="box-line" id="hop-@line.Slug">
+                            <img class="box-line__img" src="@line.ImagePath" alt="" width="508" height="508" loading="lazy">
                             <p class="box-line__head"><span class="box-line__name">@line.Name</span><span>@Vnd.Format(line.LineVnd)</span></p>
                             <div class="box-line__foot">
                                 <p class="box-line__meta">@line.WeightGrams g · @VnDate.Expiry(line.ExpiryDate)</p>
@@ -374,6 +388,8 @@
                     }
                 </ul>
             }
+            @* The sheet on a phone shows the sums on one line instead of the block below, so more lines fit. *@
+            <p class="box-panel__compact"><span>@box.Count món · @(box.Quote.OverBudget ? "Vượt" : "Còn lại") <strong>@Vnd.Format(box.LeftOrOverVnd)</strong></span><strong>@Vnd.Format(box.Quote.TotalVnd)</strong></p>
             <dl class="box-sums">
                 @if (box.Packaging is { } packaging)
                 {
@@ -422,7 +438,13 @@
 
         @* Phone: the box as a bar fixed to the bottom of the screen (mockups 26 and 27, phone). *@
         <div class="box-bar" aria-label="Tóm tắt hộp quà" role="region">
-            <p class="box-bar__sums"><span>@box.Count món · @(box.Quote.OverBudget ? "Vượt" : "Còn lại") <strong>@Vnd.Format(box.LeftOrOverVnd)</strong></span><strong class="box-bar__total">@Vnd.Format(box.Quote.TotalVnd)</strong></p>
+            <p class="box-bar__sums">
+                @if (box.Lines.Count > 0)
+                {
+                    <button type="button" class="btn btn--outline box-bar__open" popovertarget="hop-cua-ban"><partial name="_Icon" model='"chevron-up"' />Xem hộp (@box.Count)</button>
+                }
+                <span>@(box.Lines.Count > 0 ? "" : $"{box.Count} món · ")@(box.Quote.OverBudget ? "Vượt" : "Còn lại") <strong>@Vnd.Format(box.LeftOrOverVnd)</strong></span><strong class="box-bar__total">@Vnd.Format(box.Quote.TotalVnd)</strong>
+            </p>
             <meter class="budget-meter" min="0" max="@Math.Max(box.BudgetVnd, 1)" value="@box.Quote.GoodsVnd" aria-hidden="true"></meter>
             @if (box.Lines.Count > 0)
             {
@@ -435,7 +457,10 @@
             }
         </div>
 
-        @* builder.ts writes here what changed after "Thêm", − or +, for screen readers. *@
+        @* builder.ts writes here what changed after "Thêm", − or +, for screen readers, and shows the same words for a few
+           seconds in the toast (hidden from screen readers, which hear the status). *@
         <p class="visually-hidden" id="box-status" role="status"></p>
+        @* A manual popover, so it shows above the phone's open sheet (both are in the top layer; the last shown is on top). *@
+        <p class="box-toast" id="box-toast" aria-hidden="true" popover="manual"></p>
     }
 </div>

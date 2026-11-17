@@ -84,7 +84,10 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         Assert.Contains("Hiện 81 món trong 11 danh mục. 2 món hết hạn trước ngày giao đang được ẩn.", html);
         Assert.Matches(@"<a href=""/builder\?inDate=false#chon-mon"">Hiện cả 2 món</a>", html);
         Assert.Contains("Chỉ món đủ hạn cho ngày giao <strong>15/01/2027</strong>", html);
-        Assert.Contains("HSD 12/2027 · đủ hạn", html);   // Trà sen, 31/12/2027
+        // Trà sen, 31/12/2027: "Đủ hạn" on its photo, the month on one line under the name (H, 2026-11-17).
+        var traSen = Regex.Match(html, @"id=""mon-tra-sen"">[\s\S]*?</li>").Value;
+        Assert.Contains("<span class=\"item-card__tag item-card__tag--ok\">Đủ hạn</span>", traSen);
+        Assert.Contains("<span class=\"badge\">HSD 12/2027</span>", traSen);
         Assert.Equal("2", CurrentStep(html));
         Assert.Contains("<li class=\"builder-step builder-step--done\"><span class=\"builder-step__num\">1</span>", html);
     }
@@ -98,8 +101,10 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         Assert.Equal(83, CardNames(html).Count);
         Assert.Contains("Hiện 83 món trong 11 danh mục.", html);
         Assert.DoesNotContain("đang được ẩn", html);
-        Assert.Contains("HSD 10/01/2027, trước ngày giao", html);
-        Assert.Contains("HSD 18/01/2027, trước ngày giao", html);
+        // The two that expire too early: an amber status on the photo and the exact day on the amber line.
+        Assert.Equal(2, Regex.Matches(html, @"<span class=""item-card__tag item-card__tag--warn"">Hết hạn trước ngày giao</span>").Count);
+        Assert.Contains("<span class=\"badge badge--warn\">HSD 10/01/2027</span>", html);
+        Assert.Contains("<span class=\"badge badge--warn\">HSD 18/01/2027</span>", html);
         Assert.DoesNotMatch(@"<input[^>]*id=""in-date""[^>]*checked", html);
 
         // A ticked checkbox sends "true" and its hidden "false" (the framework's checkbox); the first value wins.
@@ -138,7 +143,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task A_sold_out_item_shows_Het_hang_instead_of_its_expiry()
+    public async Task A_sold_out_item_shows_Het_hang_as_its_status_and_keeps_its_expiry_line()
     {
         var token = await SavedHamperAsync(Delivery);
         var stockBefore = await fixture.WithDbAsync(db => db.Products.Where(p => p.Slug == "tra-sen").Select(p => p.Stock).SingleAsync());
@@ -149,9 +154,9 @@ public class BuilderItemsTests(PeekboxFixture fixture)
             var card = Regex.Match(html, @"<li class=""card item-card item-card--sold-out"" id=""mon-tra-sen"">[\s\S]*?</li>").Value;
 
             Assert.Contains("Trà sen", card);
-            Assert.Contains("<span class=\"badge badge--muted\">Hết hàng</span>", card);
+            Assert.Contains("<span class=\"item-card__tag item-card__tag--muted\">Hết hàng</span>", card);
             Assert.Contains("<button type=\"button\" class=\"btn btn--primary qty-add\" disabled>Hết hàng</button>", card);
-            Assert.DoesNotContain("HSD", card);
+            Assert.Contains("<span class=\"badge\">HSD 12/2027</span>", card);
             Assert.Single(Regex.Matches(html, "item-card--sold-out"));
         }
         finally
@@ -212,7 +217,7 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         var gifts = await PageAsync(token, "?category=qua-khong-an");
         Assert.Equal(9, CardNames(gifts).Count);
         Assert.Contains("Quà không phải đồ ăn: hiện 9 món.", gifts);
-        Assert.Equal(9, Regex.Matches(gifts, @"<span class=""badge badge--muted"">Không có hạn dùng</span>").Count);
+        Assert.Equal(9, Regex.Matches(gifts, @"<span class=""item-card__tag item-card__tag--muted"">Không có hạn dùng</span>").Count);
         Assert.DoesNotContain("HSD", Regex.Match(gifts, @"<ul class=""item-grid""[\s\S]*?</ul>").Value);
 
         var byExpiry = CardNames(await PageAsync(token, "?sort=expiry"));

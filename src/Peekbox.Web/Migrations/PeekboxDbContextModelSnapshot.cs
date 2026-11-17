@@ -66,6 +66,9 @@ namespace Peekbox.Web.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
 
+                    b.Property<int?>("StartedFromId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -80,6 +83,8 @@ namespace Peekbox.Web.Migrations
                         .IsUnique();
 
                     b.HasIndex("PackagingId");
+
+                    b.HasIndex("StartedFromId");
 
                     b.HasIndex("Token")
                         .IsUnique();
@@ -560,9 +565,16 @@ namespace Peekbox.Web.Migrations
                         .HasForeignKey("PackagingId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Peekbox.Web.Data.ReadyHamper", "StartedFrom")
+                        .WithMany()
+                        .HasForeignKey("StartedFromId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Order");
 
                     b.Navigation("Packaging");
+
+                    b.Navigation("StartedFrom");
                 });
 
             modelBuilder.Entity("Peekbox.Web.Data.HamperItem", b =>

@@ -18,7 +18,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // and nothing is saved. dip is the occasion of "Hộp gợi ý".
     [HttpGet(SiteLinks.BuilderPath)]
     [HttpHead(SiteLinks.BuilderPath)]
-    public async Task<IActionResult> Index(string? category, string? q, string? sort, string? chon, string? dip, bool inDate = true, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Index(string? category, string? q, string? sort, string? chon, string? dip, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
     {
         var picked = BudgetTiers.All.Cast<long?>().FirstOrDefault(t => t.ToString() == chon);
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
@@ -36,7 +36,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             // The cookie lasts 180 days, so a date saved earlier can be today or in the past by now. It shows the same
             // warning as typing such a date, and the items stay locked until a new date is saved (decision 2026-11-16).
             DateProblem = hamper.DeliveryDate < limits.Earliest ? DateProblem.TooEarly : DateProblem.None,
-        }, new ItemFilter(category, inDate, q, sort), cancellationToken);
+        }, new ItemFilter(category, inDate, q, sort, fit), cancellationToken);
         return View(model.Box is null ? model : model with { Suggestions = await SuggestionsAsync(model.Box.BudgetVnd, dip, cancellationToken) });
     }
 
@@ -125,7 +125,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // button the page showed as off, or a made-up request, changes nothing. An amount that is not a number is refused:
     // bound as 0, it would take the item out.
     [HttpPost(SiteLinks.QuantityPath)]
-    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -156,7 +156,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             return Redirect(SiteLinks.Cart.Href);
         }
 
-        var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false" }
+        var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false", ["fit"] = fit ? "true" : null }
             .Where(p => !string.IsNullOrEmpty(p.Value));
         var anchor = Anchors.Link(string.IsNullOrEmpty(slug) ? Anchors.Items : Anchors.ItemCard(slug));
         return Redirect(QueryHelpers.AddQueryString(SiteLinks.Builder.Href, back) + anchor);

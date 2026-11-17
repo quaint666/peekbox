@@ -76,6 +76,7 @@
     list-style: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: 2px;   /* the snap line is the padding edge, so the row starts at 0 and ← is off */
     overscroll-behavior-x: contain;
     touch-action: manipulation;
 }

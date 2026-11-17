@@ -45,13 +45,14 @@ public static class ItemSorts
 }
 
 // What the visitor asked for: the address of /builder, as the filter form sends it.
-public sealed record ItemFilter(string? Category = null, bool OnlyInDate = true, string? Search = null, string? Sort = null);
+// FitBudget: "Vừa ngân sách", only the items that cost no more than what is left of the budget.
+public sealed record ItemFilter(string? Category = null, bool OnlyInDate = true, string? Search = null, string? Sort = null, bool FitBudget = false);
 
 // What the item list of /builder shows. Category and Search are null when not used (an unknown category is dropped).
 // HiddenCount is how many matching items the "only items in date" checkbox hides (0 when it is off).
 public sealed record ItemList(
     IReadOnlyList<CategoryChip> Categories, string? Category, bool OnlyInDate, string? Search, ItemSort Sort,
-    IReadOnlyList<ItemCard> Items, int HiddenCount)
+    IReadOnlyList<ItemCard> Items, int HiddenCount, bool FitBudget = false)
 {
     // "Tất cả" with no search and the default order shows one sideways row per category (decision 2026-11-17); anything
     // else is one grid, since a sort across categories only makes sense as one list.
@@ -130,7 +131,14 @@ public sealed class ItemCatalog(PeekboxDbContext db)
             OverByVnd: box.OverByVnd(p.PriceVnd))).ToList();
 
         var shown = filter.OnlyInDate ? all.Where(i => i.InDate).ToList() : all;
-        return new ItemList(categories, category, filter.OnlyInDate, search, sort, shown, all.Count - shown.Count);
+        var hidden = all.Count - shown.Count;
+        if (filter.FitBudget)
+        {
+            // Costing exactly what is left fits, as in Pricing.StatusOf.
+            shown = shown.Where(i => i.PriceVnd <= box.Quote.RemainingVnd).ToList();
+        }
+
+        return new ItemList(categories, category, filter.OnlyInDate, search, sort, shown, hidden, filter.FitBudget);
     }
 
     // The item page (F26); null for an unknown slug. Every item has a page, sold out or not.

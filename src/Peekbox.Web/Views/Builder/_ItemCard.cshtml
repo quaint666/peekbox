@@ -4,29 +4,41 @@
     var item = Model.Item;
     var inBox = item.Quantity > 0;
 }
-@* One item (F16, F18, F20). A card in the box has a green border and "✓ Trong hộp" on its photo (decision 2026-11-17). *@
+@* One item (F16, F18, F20). A card in the box has a green border (decision 2026-11-17). *@
 <li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")@(inBox ? " item-card--in-box" : "")" id="@Anchors.ItemCard(item.Slug)">
     @* The photo and the name both open the item page. The photo's link is for the mouse only: hidden from screen readers
        and skipped by Tab, so the name's link is the one link they meet (alt is empty for the same reason). *@
-    <a class="item-card__photo" href="@SiteLinks.Item(item.Slug)" tabindex="-1" aria-hidden="true"><img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy">@if (inBox) {<span class="item-card__tag">✓ Trong hộp</span>}</a>
+    <a class="item-card__photo" href="@SiteLinks.Item(item.Slug)" tabindex="-1" aria-hidden="true"><img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy"></a>
     <div class="item-card__body">
-        <h3 class="item-card__name"><a class="item-card__link" href="@SiteLinks.Item(item.Slug)">@item.Name</a></h3>
-        <p class="item-card__meta meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
+        @* One status, on the photo's corner where the card stands upright (H, 2026-11-17), in this order: sold out, expires
+           before the delivery date, in the box, no expiry date, in date. It is text of the card, not of the photo's link
+           (which screen readers skip), so it is read before the name. *@
         @if (item.SoldOut)
         {
-            <span class="badge badge--muted">Hết hàng</span>
+            <span class="item-card__tag item-card__tag--muted">Hết hàng</span>
+        }
+        else if (!item.InDate)
+        {
+            <span class="item-card__tag item-card__tag--warn">Hết hạn trước ngày giao</span>
+        }
+        else if (inBox)
+        {
+            <span class="item-card__tag">✓ Trong hộp</span>
         }
         else if (item.ExpiryDate is null)
         {
-            <span class="badge badge--muted">@VnDate.NoExpiry</span>
-        }
-        else if (item.InDate)
-        {
-            <span class="badge">HSD @VnDate.Month(item.ExpiryDate.Value) · đủ hạn</span>
+            <span class="item-card__tag item-card__tag--muted">@VnDate.NoExpiry</span>
         }
         else
         {
-            <span class="badge badge--warn">HSD @VnDate.Day(item.ExpiryDate.Value), trước ngày giao</span>
+            <span class="item-card__tag item-card__tag--ok">Đủ hạn</span>
+        }
+        <h3 class="item-card__name"><a class="item-card__link" href="@SiteLinks.Item(item.Slug)">@item.Name</a></h3>
+        <p class="item-card__meta meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
+        @if (item.ExpiryDate is { } expiry)
+        {
+            @* One line: the month when in date, the day when it is too early (that is the number that matters then). *@
+            <span class="badge@(item.InDate ? "" : " badge--warn")">HSD @(item.InDate ? VnDate.Month(expiry) : VnDate.Day(expiry))</span>
         }
         <div class="item-card__foot">
             <p class="item-card__price">@Vnd.Format(item.PriceVnd)</p>
