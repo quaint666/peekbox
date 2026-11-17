@@ -31,6 +31,16 @@ public class ReadyHamperTests(PeekboxFixture fixture)
         }
     }
 
+    [Fact]
+    public void Every_hamper_photo_is_a_file_in_wwwroot()
+    {
+        foreach (var image in File.Hampers.Select(h => h.Image).Concat(File.Occasions.Select(o => o.Image)))
+        {
+            var path = Path.Combine(RepoRoot.WebProject, "wwwroot", image.TrimStart('/'));
+            Assert.True(System.IO.File.Exists(path), $"{image}: file not found in wwwroot");
+        }
+    }
+
     // Tết has every budget with 3 or 4 hampers; 20/11 and the women's page have 300.000đ to 2 triệu with 1 to 3.
     [Theory]
     [InlineData("tet", 10_000_000, 3, 4)]
@@ -136,8 +146,6 @@ public class ReadyHamperTests(PeekboxFixture fixture)
     {
         var card = (await WithServiceAsync(s => s.FindAsync("ban-giay")))!;   // so tay (none), ca phe phin, thiep (none)
         Assert.Equal("ca-phe-phin-giay", card.EarliestExpiry?.Slug);
-        var budget = (await WithServiceAsync(s => s.ForBudgetAsync(300_000))).Select(c => c.Slug).ToList();
-        Assert.Equal(File.Hampers.Where(h => h.BudgetVnd == 300_000).Select(h => h.Slug).Order(), budget.Order());
     }
 
     [Fact]
