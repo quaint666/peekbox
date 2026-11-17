@@ -1,0 +1,36 @@
+@using Peekbox.Web.Formatting
+@model UseHamperControl
+@{
+    var card = Model.Card;
+}
+@* "Thay hộp hiện tại?" (state 31): asked when the visitor's box already holds items. Only "Thay hộp" sends replace=true. *@
+@if (Model.Box is { Lines.Count: > 0 } box && card.SoldOut.Count == 0)
+{
+    <div class="confirm" id="@Anchors.HamperReplace(card.Slug)" popover role="dialog" aria-labelledby="@Anchors.HamperReplace(card.Slug)-ten">
+        <h2 class="confirm__title" id="@Anchors.HamperReplace(card.Slug)-ten">Thay hộp hiện tại?</h2>
+        <p class="confirm__text">Hộp của bạn đang có @box.Count món. Dùng <strong>@card.Name</strong> sẽ thay các món và kiểu đóng gói bằng của hộp này.</p>
+        <p class="confirm__text">
+            @if (box.BudgetVnd < card.BudgetVnd)
+            {
+                @:Ngân sách của bạn (@Vnd.Format(box.BudgetVnd)) thấp hơn hộp này, nên sẽ được nâng lên @Vnd.Format(card.BudgetVnd).
+            }
+            else
+            {
+                @:Ngân sách @Vnd.Format(box.BudgetVnd) vẫn được giữ.
+            }
+            @if (box.DeliveryDate is { } day)
+            {
+                @:Ngày giao @VnDate.Day(day) vẫn được giữ.
+            }
+        </p>
+        <div class="confirm__actions">
+            <button type="button" class="btn btn--outline" popovertarget="@Anchors.HamperReplace(card.Slug)" popovertargetaction="hide" autofocus>Giữ hộp của tôi</button>
+            <form method="post" action="@SiteLinks.UseHamperPath">
+                <input type="hidden" name="slug" value="@card.Slug">
+                <input type="hidden" name="from" value="@Model.From">
+                <input type="hidden" name="replace" value="true">
+                <button type="submit" class="btn btn--primary">Thay hộp</button>
+            </form>
+        </div>
+    </div>
+}

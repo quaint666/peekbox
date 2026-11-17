@@ -70,7 +70,7 @@
                         var card = group.Hampers[i];
                         var earliest = card.EarliestExpiry;
                         <li class="hamper" id="@Anchors.HamperCard(card.Slug)" aria-label="@card.Name, @(i + 1) / @group.Hampers.Count">
-                            <img class="hamper__photo" src="@card.ImagePath" alt="" width="1264" height="848" loading="lazy">
+                            <img class="hamper__photo" src="@card.ImagePath" alt="" width="570" height="380" loading="lazy">
                             <div class="hamper__body">
                                 <span class="hamper__who">@card.ForWhom</span>
                                 <h4 class="hamper__name">@card.Name</h4>
@@ -109,37 +109,7 @@
                                 <partial name="_UseHamper" model='new UseHamperControl(card, occasion.Id, Model.Box, "list")' />
                             </div>
 
-                            @if (Model.BoxHasItems && card.SoldOut.Count == 0)
-                            {
-                                var box = Model.Box!;
-                                <div class="confirm" id="@Anchors.HamperReplace(card.Slug)" popover role="dialog" aria-labelledby="@Anchors.HamperReplace(card.Slug)-ten">
-                                    <h2 class="confirm__title" id="@Anchors.HamperReplace(card.Slug)-ten">Thay hộp hiện tại?</h2>
-                                    <p class="confirm__text">Hộp của bạn đang có @box.Count món. Dùng <strong>@card.Name</strong> sẽ thay các món và kiểu đóng gói bằng của hộp này.</p>
-                                    <p class="confirm__text">
-                                        @if (box.BudgetVnd < card.BudgetVnd)
-                                        {
-                                            @:Ngân sách của bạn (@Vnd.Format(box.BudgetVnd)) thấp hơn hộp này, nên sẽ được nâng lên @Vnd.Format(card.BudgetVnd).
-                                        }
-                                        else
-                                        {
-                                            @:Ngân sách @Vnd.Format(box.BudgetVnd) vẫn được giữ.
-                                        }
-                                        @if (box.DeliveryDate is { } day)
-                                        {
-                                            @:Ngày giao @VnDate.Day(day) vẫn được giữ.
-                                        }
-                                    </p>
-                                    <div class="confirm__actions">
-                                        <button type="button" class="btn btn--outline" popovertarget="@Anchors.HamperReplace(card.Slug)" popovertargetaction="hide" autofocus>Giữ hộp của tôi</button>
-                                        <form method="post" action="@SiteLinks.UseHamperPath">
-                                            <input type="hidden" name="slug" value="@card.Slug">
-                                            <input type="hidden" name="from" value="@occasion.Id">
-                                            <input type="hidden" name="replace" value="true">
-                                            <button type="submit" class="btn btn--primary">Thay hộp</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            }
+                            <partial name="_ReplaceHamper" model='new UseHamperControl(card, occasion.Id, Model.Box, "ask")' />
                         </li>
                     }
                 </ul>

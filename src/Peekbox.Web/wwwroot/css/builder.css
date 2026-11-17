@@ -38,12 +38,91 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .builder-step__num { color: var(--color-text); }
 .builder-step__num::after { content: '.'; }
 
-.budget-card { display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-4); border-radius: var(--radius-md); }
+/* Step 1 (decision 2026-11-17): phone, one column; from 900 px the fields on one line and the notes under them. */
+.budget-card { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); }
+.budget-card__fields { display: flex; flex-direction: column; gap: var(--space-4); }
 .budget-card .input { font-size: var(--text-xl); font-weight: 600; }
 .budget-card .field__error { margin: 0; }
-.budget-card__amounts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.budget-card__date .btn { align-self: flex-start; margin-top: var(--space-2); }
-.budget-card__aside { display: none; margin: 0; font-size: var(--text-sm); line-height: 1.55; color: var(--color-muted); }  /* wide screens only, as in the mockups */
+.budget-card__pick { display: flex; gap: var(--space-2); }
+.budget-card__pick .input { flex: 1; min-width: 0; }
+.budget-card__save { min-height: 48px; }
+.budget-card__unsaved { margin: 0; padding: var(--space-2) var(--space-3); font-size: var(--text-sm); line-height: 1.5; }
+.budget-card__hint { font-size: var(--text-sm); }
+
+/* "Chọn nhanh" and "Danh mục": buttons that look like the fields next to them and open a panel (a popover, so Escape, a
+   tap outside and ✕ close it without a script). Phone: the panel is a sheet from the bottom. Wide: under its button
+   where the browser can anchor it, centred where it cannot (Firefox). */
+.picker-button { flex: none; gap: var(--space-2); min-height: 48px; padding: 0 14px; border-color: var(--color-input-border); color: var(--color-text); font-weight: 600; }
+.picker-button .icon { width: 18px; height: 18px; }
+.picker-button:popover-open, .picker-button[aria-expanded='true'] { background: var(--color-tint); }
+.picker-panel {
+    position: fixed;
+    inset: auto 0 0;
+    width: 100%;
+    max-width: none;
+    max-height: 85dvh;
+    margin: 0;
+    padding: var(--space-4) var(--space-4) var(--space-5);
+    overflow-y: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-pop);
+}
+.picker-panel::backdrop { background: var(--color-backdrop); }
+.picker-panel:popover-open { display: flex; flex-direction: column; gap: var(--space-3); }
+.picker-panel__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.picker-panel__title { margin: 0; font-size: var(--text-md); font-weight: 600; }
+.picker-panel__amounts, .picker-panel__categories { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+.picker-tile {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px var(--space-2);
+    min-height: 48px;
+    height: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    text-decoration: none;
+}
+.picker-tile--amount { justify-content: center; font-weight: 700; }
+.picker-tile[aria-current='true'] { padding: calc(var(--space-2) - 1px) calc(var(--space-3) - 1px); border: 2px solid var(--color-primary); background: var(--color-tint); color: var(--color-on-tint); }
+.picker-tile__name { flex: 1 1 60%; font-weight: 600; }
+.picker-tile__count { order: 3; flex-basis: 100%; font-size: var(--text-xs); color: var(--color-muted); }
+.picker-tile__in-box { padding: 0 var(--space-2); border-radius: 999px; background: var(--color-tint); color: var(--color-on-tint); font-size: var(--text-xs); font-weight: 700; }
+.picker-tile:active, .category-control:active { background: var(--color-tint); }
+@media (hover: hover) {
+    .picker-tile:hover, .category-control:hover { border-color: var(--color-primary-text); }
+    .picker-tile:active, .category-control:active { background: var(--color-tint); }
+}
+
+.item-filters__category { min-width: 0; }
+.category-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    min-height: 48px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font: inherit;
+    font-size: var(--text-base);
+    cursor: pointer;
+}
+.category-control > span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: start; }
+.category-control .icon { flex: none; width: 18px; height: 18px; }
+/* Chosen (state 35): green, the name, and a separate ✕ that goes straight back to "Tất cả". */
+.category-control--chosen { padding: 0; overflow: hidden; border-color: var(--color-primary); background: var(--color-tint); color: var(--color-on-tint); cursor: default; }
+.category-control__open { display: flex; flex: 1; align-items: center; gap: var(--space-2); min-width: 0; min-height: 46px; padding: 0 var(--space-3); border: 0; background: none; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+.category-control__clear { display: inline-flex; flex: none; align-items: center; justify-content: center; width: var(--tap-min); align-self: stretch; border-left: 1px solid var(--color-primary); color: inherit; }
+.category-control__open:focus-visible, .category-control__clear:focus-visible { outline-offset: -4px; }
 
 /* Shown until the budget and the date are saved (mockup 02). */
 .lock-note {
@@ -62,8 +141,13 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 /* Items (mockup state 26). Phone: chips scroll sideways, cards are a row with a small photo. */
 .items { display: flex; flex-direction: column; gap: var(--space-4); }
 .item-filters { display: flex; flex-direction: column; gap: var(--space-4); }
-.item-filters__row { display: flex; flex-direction: column; gap: var(--space-4); }
-.item-filters__sort { width: min(100%, 180px); }  /* 180 px: the menu width in the mockups */
+/* Phone: search on its own line, then "Danh mục" and "Sắp xếp" as two equal halves (decision 2026-11-17). */
+.item-filters__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: 'search search' 'category sort' 'apply apply'; gap: var(--space-4) var(--space-3); }
+.item-filters__search { grid-area: search; }
+.item-filters__category { grid-area: category; }
+.item-filters__sort { grid-area: sort; min-width: 0; }
+.item-filters__row noscript { display: contents; }
+.item-filters__apply { grid-area: apply; }
 .item-filters__apply { align-self: flex-start; }
 .search-input { position: relative; }
 .search-input .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--color-muted); pointer-events: none; }
@@ -74,14 +158,6 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .item-filters__check { display: flex; align-items: center; gap: var(--space-3); min-height: 48px; font-size: var(--text-sm); line-height: 1.4; }
 .item-filters__check input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--color-primary); }
 .item-filters__check label { display: flex; align-items: center; min-height: var(--tap-min); }  /* the label is the tap target: the box itself is 20 px. The text is in a span, so its spaces stay. */
-.chip-list { display: flex; gap: var(--space-2); overflow-x: auto; padding-bottom: 2px; }
-.chip-list .btn--chip { flex: none; padding: 0 var(--space-4); }
-.chip-list .btn--chip[aria-pressed='true'] { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
-.chip-list .btn--chip[aria-pressed='true']:active { background: var(--color-primary-pressed); }   /* the chosen chip reacts like a primary button */
-@media (hover: hover) {
-    .chip-list .btn--chip[aria-pressed='true']:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
-    .chip-list .btn--chip[aria-pressed='true']:active { background: var(--color-primary-pressed); }
-}
 .items__count { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); margin: 0; font-size: var(--text-sm); line-height: 1.5; color: var(--color-muted); }
 .items__count a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--color-primary-text); font-weight: 600; }
 
@@ -93,6 +169,91 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .item-card__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); align-self: stretch; margin-top: auto; padding-top: var(--space-2); }
 .item-card__price { margin: 0; font-weight: 700; }
 .item-card--sold-out .item-card__img { filter: grayscale(1); opacity: 0.7; }
+/* In the box: a 2 px green border (1 px border plus 1 px inset shadow, so nothing moves) and a tag on the photo. */
+.item-card--in-box { border-color: var(--color-primary); box-shadow: inset 0 0 0 1px var(--color-primary), var(--shadow-card); }
+.item-card__photo { position: relative; }
+.item-card__tag { position: absolute; left: var(--space-2); top: var(--space-2); padding: 2px var(--space-2); border-radius: 999px; background: var(--color-primary); color: var(--color-on-primary); font-size: var(--text-2xs); font-weight: 700; }
+
+/* "Tất cả": one sideways row per category (decision 2026-11-17). Phone cards are narrow and upright, without the brand
+   and origin line (the item page has it). */
+.item-row { display: flex; flex-direction: column; gap: var(--space-3); }
+.item-row__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+.item-row__title { flex: 1 1 auto; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-2); margin: 0; font-size: var(--text-lg); }
+.item-row__count { font-size: var(--text-sm); font-weight: 400; color: var(--color-muted); }
+.item-row__in-box { padding: 0 var(--space-2); border-radius: 999px; background: var(--color-tint); color: var(--color-on-tint); font-size: var(--text-xs); font-weight: 700; }
+.item-row__all { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--color-primary-text); font-size: var(--text-sm); font-weight: 600; }
+.item-grid--row {
+    display: flex;
+    gap: var(--space-3);
+    padding: 2px 2px var(--space-2);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+}
+.item-grid--row:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+    .item-grid--row { scroll-behavior: smooth; }
+}
+.item-grid--row > li { flex: none; width: 148px; scroll-snap-align: start; }
+.item-grid--row .item-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
+.item-grid--row .item-card__img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 0; }
+.item-grid--row .item-card__photo { border-radius: 0; }
+.item-grid--row .item-card__body { flex: 1; padding: var(--space-3); }
+.item-grid--row .item-card__name { font-size: var(--text-md); }
+.item-grid--row .item-card__meta { display: none; }
+.item-grid--row .item-card__foot { flex-direction: column; align-items: stretch; }
+.item-grid--row .qty-add, .item-grid--row .qty { width: 100%; justify-content: space-between; }
+.item-row__end a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: 100%;
+    min-height: 200px;
+    padding: var(--space-4);
+    border: 2px dashed var(--color-input-border);
+    border-radius: var(--radius-md);
+    color: var(--color-primary-text);
+    font-weight: 600;
+    text-align: center;
+}
+.item-row__position { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-xs); color: var(--color-muted); }
+.item-row__bar { width: 160px; height: 4px; border-radius: 2px; background: var(--color-border-soft); overflow: hidden; }
+.item-row__fill { display: block; width: 0; height: 100%; border-radius: 2px; background: var(--color-primary); }
+.rows-hint { margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); background: var(--color-tint); color: var(--color-on-tint); font-size: var(--text-sm); }
+
+/* "Hộp gợi ý" (F15): ready hampers for the saved budget, by occasion. */
+.suggest { display: flex; flex-direction: column; gap: var(--space-3); }
+.suggest__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.suggest__title { margin: 0; font-size: var(--text-lg); }
+.suggest__occasions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.suggest__chip { display: inline-flex; align-items: center; min-height: var(--tap-min); padding: 0 var(--space-4); border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); color: var(--color-text); font-size: var(--text-sm); font-weight: 600; text-decoration: none; }
+.suggest__chip--tet { --chip-fill: var(--accent-tet); }
+.suggest__chip--teachers { --chip-fill: var(--accent-teachers); }
+.suggest__chip--women { --chip-fill: var(--accent-women); }
+.suggest__chip[aria-current='true'] { border-color: var(--chip-fill); background: var(--chip-fill); color: var(--color-on-primary); }
+.suggest__text { font-size: var(--text-sm); }
+.suggest__text a { color: var(--color-primary-text); font-weight: 600; }
+.suggest__row { display: flex; gap: var(--space-3); margin: 0; padding: 2px 2px var(--space-2); list-style: none; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+.suggest__row:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+    .suggest__row { scroll-behavior: smooth; }
+}
+.suggest-card { flex: none; width: 78%; scroll-snap-align: start; display: flex; flex-direction: column; overflow: hidden; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); }
+.suggest-card__photo { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; background: var(--color-border-soft); filter: var(--photo-filter); }
+.suggest-card__body { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); padding: var(--space-3) 14px 14px; }
+.suggest-card__who { padding: 2px var(--space-2); border-radius: 999px; background: var(--color-border-soft); font-size: var(--text-2xs); font-weight: 600; }
+.suggest-card__who--tet { background: var(--occasion-soft-tet); }
+.suggest-card__who--teachers { background: var(--occasion-soft-teachers); }
+.suggest-card__who--women { background: var(--occasion-soft-women); }
+.suggest-card__name { margin: 0; font-size: var(--text-md); }
+.suggest-card__name a { color: inherit; text-decoration: none; }
+.suggest-card form { display: flex; align-self: stretch; margin-top: auto; }
+.suggest-card .hamper__use { width: 100%; margin-top: var(--space-2); }
+/* Outlined here, as drawn: the main button of the page is "Tiếp tục" in the box panel. */
+.suggest-card .hamper__use.btn--primary { background: transparent; color: var(--color-primary-text); border-color: var(--color-primary-text); }
+.suggest-card .hamper__sold { margin: 0; font-size: var(--text-xs); color: var(--color-danger-text); }
 
 /* The photo and the name are links to the item page. Pointing at either lifts the card, as the occasion cards on the
    home page do (design-notes, "Item card (builder)"): a primary border, a deeper shadow and a green, underlined name;
@@ -248,11 +409,7 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
     .builder-step[aria-current='step'] { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
     .builder-step--done { background: var(--color-tint); border-color: var(--color-primary); color: var(--color-on-tint); }
     .builder-step[aria-current='step'] .builder-step__num, .builder-step--done .builder-step__num { color: inherit; }
-    .budget-card__aside { display: block; flex: 1 1 260px; align-self: flex-end; }
-    .chip-list { flex-wrap: wrap; overflow-x: visible; }
-    .item-filters__row { flex-direction: row; align-items: flex-end; }
-    .item-filters__search { flex: 1; }
-    .item-filters__apply { align-self: flex-end; }
+    .item-filters__row { grid-template-columns: 200px minmax(0, 1fr) 180px auto; grid-template-areas: 'category search sort apply'; align-items: end; }   /* 200 and 180: the mockup at 1440 px */
     .item-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-5); }
     .item-card { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
     .item-card__img { width: 100%; height: auto; aspect-ratio: 1; border-radius: 0; }
@@ -263,8 +420,33 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
     .packaging__options { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }   /* three a row, as in mockup 27 */
     .box-panel { position: sticky; top: calc(var(--builder-steps-height) + var(--space-4)); display: flex; flex-direction: column; gap: 18px; padding: var(--space-5); border-radius: var(--radius-lg); }  /* 18px: from the mockup */
     .box-bar { display: none; }
-    .budget-card { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: var(--space-5); padding: var(--space-5); border-radius: var(--radius-lg); }
-    /* Widths measured from the mockup at 1440 px */
-    .budget-card__budget { flex: 1 1 260px; max-width: 380px; }
-    .budget-card__date { flex: 1 1 220px; max-width: 340px; }
+    .budget-card { padding: 22px var(--space-5); border-radius: var(--radius-lg); }   /* 22 px: the two-line mockup */
+    .budget-card__fields { flex-direction: row; flex-wrap: wrap; align-items: flex-end; gap: var(--space-4) 20px; }
+    .budget-card__budget { flex: 3 1 360px; }
+    .budget-card__date { flex: 2 1 220px; }
+    /* A field with an error grows a line; the others stay at the top so the inputs line up. */
+    .budget-card__fields:has(.field__error) { align-items: flex-start; }
+    .budget-card__fields:has(.field__error) .budget-card__save { align-self: flex-start; margin-top: 29px; }   /* label height plus gap, measured */
+    .item-row__head { flex-wrap: nowrap; }
+    .item-grid--row { gap: var(--space-4); mask-image: linear-gradient(to right, black calc(100% - 64px), transparent);   /* the fade at the edge; only the alpha counts */ }
+    .item-grid--row > li { width: 232px; }
+    .item-grid--row .item-card__meta { display: block; }
+    .item-grid--row .item-card__foot { flex-direction: row; align-items: center; }
+    .item-grid--row .qty-add, .item-grid--row .qty { width: auto; }
+    .suggest-card { width: calc((100% - 2 * var(--space-3)) / 3); }
+    .rows-hint { display: none; }
+}
+
+/* Wide: a panel opens under its button where the browser can anchor it; elsewhere the browser centres it. */
+@media (min-width: 900px) {
+    .picker-panel { inset: 0; width: min(600px, 100vw - 2 * var(--space-4)); height: fit-content; max-height: 80dvh; margin: auto; border-radius: var(--radius-lg); }
+    .picker-panel--budget { width: min(440px, 100vw - 2 * var(--space-4)); }
+    .picker-panel::backdrop { background: transparent; }
+    .picker-panel__amounts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .picker-panel__categories { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@supports (position-area: block-end) {
+    @media (min-width: 900px) {
+        .picker-panel { inset: auto; margin: var(--space-2) 0 0; position-area: block-end span-inline-end; position-try-fallbacks: flip-block, flip-inline; }
+    }
 }

@@ -47,6 +47,18 @@ public class OccasionPageTests(PeekboxFixture fixture)
         }
     }
 
+    // No repeated id, no reference to a missing id, every picture and form address real (the builder's checker).
+    [Fact]
+    public async Task Every_occasion_page_is_well_formed_with_and_without_a_box()
+    {
+        var withBox = await VisitorWithBoxAsync("300000");
+        foreach (var path in new[] { "/dip/tet", "/dip/20-11", "/dip/phu-nu" })
+        {
+            BuilderItemsTests.AssertWellFormed(path, await NewVisitor().PageAsync(path));
+            BuilderItemsTests.AssertWellFormed(path + " with a box", await withBox.PageAsync(path));
+        }
+    }
+
     [Fact]
     public async Task An_unknown_occasion_is_a_404()
     {

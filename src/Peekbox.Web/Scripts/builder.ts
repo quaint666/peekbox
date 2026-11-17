@@ -4,6 +4,7 @@
 // the add forms in the background so the page does not jump.
 
 import { fetchPage } from './lib/page.js';
+import { wireRows, type RowPosition } from './lib/rows.js';
 
 const filters = document.querySelector<HTMLFormElement>('form.item-filters');
 
@@ -100,12 +101,43 @@ function applyPage(fresh: Document): void {
     old?.replaceWith(document.importNode(foot, true));
   }
 
+  // "Trong hộp" on a card: its border (the class) and the tag on its photo.
+  for (const card of fresh.querySelectorAll<HTMLElement>('.item-card')) {
+    const old = document.getElementById(card.id);
+    if (old) {
+      old.className = card.className;
+      const photo = card.querySelector('.item-card__photo');
+      if (photo) {
+        old.querySelector('.item-card__photo')?.replaceWith(document.importNode(photo, true));
+      }
+    }
+  }
+
+  // The "✓ n" of each row's title and of the "Danh mục" panel.
+  for (const title of fresh.querySelectorAll('.item-row__title')) {
+    if (title.id) {
+      swap(`#${CSS.escape(title.id)}`, fresh);
+    }
+  }
+  swap('#danh-muc .picker-panel__categories', fresh);
+
   swap('#hop-cua-ban', fresh);
   swap('.box-bar', fresh);
   swap('.cart-link', fresh);   // the header's count: the first item puts the hamper in the cart, the last takes it out
-  // Step 3: the lock note while the box is empty, the packaging choices once it is not. Only one is on a page.
-  swap('#packaging-lock', fresh, document.querySelector('.item-grid'));
-  swap('#dong-goi', fresh, document.querySelector('.item-grid'));
+  // Step 3: the lock note while the box is empty, the packaging choices once it is not. Only one is on a page; the new
+  // one goes where the old one was.
+  const before = document.querySelector('#packaging-lock, #dong-goi')?.previousElementSibling ?? null;
+  swap('#packaging-lock', fresh, before);
+  swap('#dong-goi', fresh, before);
+
+  // "Hộp gợi ý": "Dùng hộp này" asks first once the box holds an item, and the question counts the items.
+  const strip = document.getElementById('goi-y');
+  const freshStrip = fresh.getElementById('goi-y');
+  if (strip && freshStrip) {
+    const copy = document.importNode(freshStrip, true);
+    strip.replaceWith(copy);
+    wireRows(copy);
+  }
 }
 
 // Focus goes back to the same button; when it is gone or off (− at 1 brings "Thêm" back, + turns off at the stock or
@@ -230,3 +262,87 @@ document.addEventListener('change', (event) => {
     }
   });
 });
+
+// ---- "Chọn nhanh" (decision 2026-11-17) ----
+// An amount only fills the field; the amber note says the budget in use stays the saved one until "Lưu". The tile is a
+// link that does the same without a script (/builder?chon=…); here it happens in place. Both texts come from the server
+// on the tile: the browser only copies them.
+const budget = document.querySelector<HTMLInputElement>('#budget');
+const unsaved = document.getElementById('chua-luu');
+const quick = document.getElementById('chon-nhanh');
+
+quick?.addEventListener('click', (event) => {
+  const tile = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a.picker-tile--amount') : null;
+  if (!tile || !budget || !unsaved) {
+    return;
+  }
+
+  event.preventDefault();
+  budget.value = tile.dataset['amount'] ?? '';
+  unsaved.textContent = tile.dataset['note'] ?? '';
+  unsaved.hidden = false;
+  for (const other of quick.querySelectorAll('a.picker-tile--amount')) {
+    if (other === tile) {
+      other.setAttribute('aria-current', 'true');
+    } else {
+      other.removeAttribute('aria-current');
+    }
+  }
+  quick.hidePopover();
+  budget.focus();
+});
+
+// Typing in the field makes the note about a picked amount untrue: it goes.
+budget?.addEventListener('input', () => {
+  if (unsaved) {
+    unsaved.hidden = true;
+  }
+});
+
+// ---- Rows (decision 2026-11-17) ----
+// The ← → buttons of every row (the categories and "Hộp gợi ý"); under a category row, the position: "1–3 / 8 món",
+// and "· đã xem hết" at the end, with the bar.
+function writePosition(row: HTMLElement, position: RowPosition): void {
+  const text = row.querySelector('[data-row-text]');
+  const fill = row.querySelector<HTMLElement>('[data-row-fill]');
+  if (!text || !fill) {
+    return;
+  }
+
+  const count = row.querySelectorAll('.item-card').length;
+  const last = Math.min(position.last, count);
+  const first = Math.min(position.first, last);
+  text.textContent = `${first}–${last} / ${count} món${position.atEnd ? ' · đã xem hết' : ''}`;
+  fill.style.width = `${(position.atEnd ? 1 : last / Math.max(count, 1)) * 100}%`;
+}
+
+wireRows(document, writePosition);
+
+// ---- The phone hint ----
+// "Vuốt sang trái…" shows on a phone until the first sideways swipe of a category row, remembered in the browser. With
+// storage blocked it shows on every visit, which is harmless.
+const HINT_KEY = 'peekbox-row-hint-seen';
+const hint = document.getElementById('vuot-hint');
+
+function hintSeen(): boolean {
+  try {
+    return window.localStorage.getItem(HINT_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+if (hint && !hintSeen() && window.matchMedia('(max-width: 899px)').matches) {
+  hint.hidden = false;
+  const done = (): void => {
+    hint.hidden = true;
+    try {
+      window.localStorage.setItem(HINT_KEY, '1');
+    } catch {
+      // nothing to remember it in
+    }
+  };
+  for (const track of document.querySelectorAll('.item-row [data-row-track]')) {
+    track.addEventListener('scroll', done, { once: true, passive: true });
+  }
+}

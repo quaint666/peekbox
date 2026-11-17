@@ -7,6 +7,8 @@ public static class Anchors
     public const string Items = "chon-mon";        // step 2 on /builder: the item list
     public const string Packaging = "dong-goi";    // step 3 on /builder
     public const string ItemBuy = "them";          // the add control on an item's page
+    public const string Suggestions = "goi-y";     // "Hộp gợi ý" on /builder
+    public const string BudgetCard = "buoc-1";     // step 1 on /builder: the budget and date card
 
     public static string ItemCard(string slug) => "mon-" + slug;   // one card in the item list
 

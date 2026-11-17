@@ -32,10 +32,6 @@ public sealed class ReadyHampers(PeekboxDbContext db)
     public async Task<ReadyHamperCard?> FindAsync(string slug, CancellationToken cancellationToken = default) =>
         (await CardsAsync(db.ReadyHampers.Where(h => h.Slug == slug), cancellationToken)).SingleOrDefault();
 
-    // The hampers of one budget, on any occasion, for the builder's "Hộp gợi ý" strip.
-    public Task<List<ReadyHamperCard>> ForBudgetAsync(long budgetVnd, CancellationToken cancellationToken = default) =>
-        CardsAsync(db.ReadyHampers.Where(h => h.BudgetVnd == budgetVnd), cancellationToken);
-
     private static async Task<List<ReadyHamperCard>> CardsAsync(IQueryable<ReadyHamper> hampers, CancellationToken cancellationToken)
     {
         var rows = await hampers.AsNoTracking()

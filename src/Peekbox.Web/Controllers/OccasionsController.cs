@@ -7,6 +7,9 @@ namespace Peekbox.Web.Controllers;
 
 public class OccasionsController(ReadyHampers readyHampers, HamperService hampers, BuilderLimits limits) : Controller
 {
+    // The "from" of the builder's "Hộp gợi ý" (an occasion id otherwise).
+    public const string FromBuilder = "builder";
+
     // One occasion page (/dip/tet): the hampers Peekbox put together for it, by budget (F15).
     [HttpGet(SiteLinks.OccasionsPath + "/{id}")]
     [HttpHead(SiteLinks.OccasionsPath + "/{id}")]
@@ -42,8 +45,10 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
             return NotFound();
         }
 
-        var occasion = card.OccasionIds.Contains(from) ? from! : card.OccasionIds[0];
-        var back = SiteLinks.Occasion(occasion) + Anchors.Link(Anchors.HamperCard(card.Slug));
+        // From the builder's "Hộp gợi ý" (from=builder) the visitor goes back there; from an occasion page, to the card.
+        var back = from == FromBuilder
+            ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Suggestions)
+            : SiteLinks.Occasion(card.OccasionIds.Contains(from) ? from! : card.OccasionIds[0]) + Anchors.Link(Anchors.HamperCard(card.Slug));
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         var hasItems = hamper is not null && (await hampers.BoxAsync(hamper, cancellationToken)).Lines.Count > 0;
         if (card.SoldOut.Count > 0 || (hasItems && !replace))

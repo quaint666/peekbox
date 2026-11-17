@@ -21,7 +21,6 @@
 .btn--lg { min-height: 52px; padding: 0 28px; font-size: var(--text-plus); }  /* main call-to-action buttons, as in the mockups */
 .btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
 .btn--outline { background: transparent; color: var(--color-primary-text); border-color: var(--color-primary-text); }
-.btn--chip { min-height: var(--tap-min); padding: 0 var(--space-3); border-radius: 999px; font-size: var(--text-sm); }  /* small pill button: quick amounts, category chips */
 .btn--danger { background: var(--color-danger); color: var(--color-on-danger); }
 .btn:disabled, .btn[aria-disabled='true'] { background: var(--color-border-soft); color: var(--color-muted); border-color: var(--color-border); cursor: not-allowed; }
 
@@ -269,3 +268,9 @@ select.input {
 .confirm__text { margin: 0 0 var(--space-5); font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
 .confirm__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 .confirm__actions .btn { min-height: var(--tap-min); }
+
+/* The ← → of a row (Scripts/lib/rows.ts shows them). Occasion pages and the builder. */
+.row-buttons { display: flex; gap: var(--space-2); }
+.row-buttons__btn { border-radius: 999px; background: var(--color-surface); color: var(--color-primary-text); border-color: var(--color-primary-text); touch-action: manipulation; }
+.row-buttons__btn:disabled { color: var(--color-muted); border-color: var(--color-border); cursor: default; }
+.row-buttons__btn .icon { width: 18px; height: 18px; }

@@ -1,0 +1,36 @@
+@using Peekbox.Web.Formatting
+@model ItemCardView
+@{
+    var item = Model.Item;
+    var inBox = item.Quantity > 0;
+}
+@* One item (F16, F18, F20). A card in the box has a green border and "✓ Trong hộp" on its photo (decision 2026-11-17). *@
+<li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")@(inBox ? " item-card--in-box" : "")" id="@Anchors.ItemCard(item.Slug)">
+    @* The photo and the name both open the item page. The photo's link is for the mouse only: hidden from screen readers
+       and skipped by Tab, so the name's link is the one link they meet (alt is empty for the same reason). *@
+    <a class="item-card__photo" href="@SiteLinks.Item(item.Slug)" tabindex="-1" aria-hidden="true"><img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy">@if (inBox) {<span class="item-card__tag">✓ Trong hộp</span>}</a>
+    <div class="item-card__body">
+        <h3 class="item-card__name"><a class="item-card__link" href="@SiteLinks.Item(item.Slug)">@item.Name</a></h3>
+        <p class="item-card__meta meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
+        @if (item.SoldOut)
+        {
+            <span class="badge badge--muted">Hết hàng</span>
+        }
+        else if (item.ExpiryDate is null)
+        {
+            <span class="badge badge--muted">@VnDate.NoExpiry</span>
+        }
+        else if (item.InDate)
+        {
+            <span class="badge">HSD @VnDate.Month(item.ExpiryDate.Value) · đủ hạn</span>
+        }
+        else
+        {
+            <span class="badge badge--warn">HSD @VnDate.Day(item.ExpiryDate.Value), trước ngày giao</span>
+        }
+        <div class="item-card__foot">
+            <p class="item-card__price">@Vnd.Format(item.PriceVnd)</p>
+            <partial name="_QuantityControl" model="new QuantityControl(Model.QuantityAction, item.Slug, item.Name, item.Quantity, item.Next, item.OverByVnd, item.SoldOut)" />
+        </div>
+    </div>
+</li>

@@ -16,8 +16,10 @@ export interface RowPosition {
 // Below a pixel of difference the row counts as at its end (scroll positions can be fractions).
 const EDGE = 1;
 
+// root: the page, or one row that was just swapped in (then it is wired itself).
 export function wireRows(root: ParentNode, onSettle?: (row: HTMLElement, position: RowPosition) => void): void {
-  for (const row of root.querySelectorAll<HTMLElement>('[data-row]')) {
+  const rows = root instanceof HTMLElement && root.matches('[data-row]') ? [root] : Array.from(root.querySelectorAll<HTMLElement>('[data-row]'));
+  for (const row of rows) {
     const track = row.querySelector<HTMLElement>('[data-row-track]');
     const prev = row.querySelector<HTMLButtonElement>('[data-row-prev]');
     const next = row.querySelector<HTMLButtonElement>('[data-row-next]');

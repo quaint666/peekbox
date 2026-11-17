@@ -21,6 +21,37 @@
         DateProblem.TooLate => "Ngày giao hàng muộn nhất là sau 1 năm kể từ hôm nay.",
         _ => null,
     };
+
+    // The amber note after a pick (state 36): the budget in use stays the saved one until "Lưu". Written here once; the
+    // tiles carry it for builder.ts, which only copies it (the browser never writes an amount).
+    string UnsavedNote(long picked) => Model.SavedBudgetVnd is { } saved
+        ? $"Chưa lưu: ngân sách đang dùng vẫn là {Vnd.Format(saved)}. Bấm Lưu để dùng {Vnd.Format(picked)}."
+        : $"Chưa lưu: bấm Lưu để dùng {Vnd.Format(picked)}.";
+
+    // The occasion of "Hộp gợi ý" when the visitor chose one; the first is the default and stays out of the address.
+    string? ChosenOccasion() => Model.Suggestions is { } sg && sg.Chosen.Id != sg.Occasions[0].Id ? sg.Chosen.Id : null;
+
+    // A link to this page with the list's filters as they are now, some of them changed (null drops one).
+    string ListLink(Dictionary<string, string?> changes, string anchor)
+    {
+        var items = Model.Items;
+        var query = new Dictionary<string, string?>
+        {
+            ["category"] = items?.Category, ["q"] = items?.Search, ["sort"] = items is null ? null : ItemSorts.ToQuery(items.Sort),
+            ["inDate"] = items is { OnlyInDate: false } ? "false" : null, ["dip"] = ChosenOccasion(),
+        };
+        foreach (var (key, value) in changes)
+        {
+            query[key] = value;
+        }
+
+        if (Model.Suggestions is { } sg && query["dip"] == sg.Occasions[0].Id)
+        {
+            query["dip"] = null;   // the default occasion
+        }
+
+        return Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, query.Where(p => !string.IsNullOrEmpty(p.Value))) + Anchors.Link(anchor);
+    }
 }
 
 @section Styles {
@@ -38,38 +69,53 @@
     @* Outside the head, so it stays at the top of the screen for the whole page (sticky only works inside its parent). *@
     <partial name="_BuilderSteps" model="currentStep" />
 
-    <form class="card budget-card" method="post" action="@SiteLinks.BuilderPath" asp-antiforgery="true">
-        @* Pressing Enter in a field presses the first submit button of the form. This hidden one comes first, so Enter means "Lưu" and not the first quick amount. *@
-        <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Lưu</button>
-
-        <div class="field budget-card__budget">
-            <label class="field__label" for="budget">Ngân sách của bạn</label>
-            <input class="input" id="budget" name="budget" type="text" inputmode="numeric" autocomplete="off" value="@Model.BudgetText" aria-invalid="@(budgetError is null ? null : "true")" aria-describedby="@(budgetError is null ? null : "budget-error")">
-            @if (budgetError is not null)
-            {
-                <p class="field__error" id="budget-error">@budgetError</p>
-            }
-            <div class="budget-card__amounts">
-                @foreach (var amount in BuilderViewModel.QuickAmounts)
+    @* Step 1 (F14, decision 2026-11-17): the budget field with "Chọn nhanh", the date and "Lưu" on one line, the notes
+       under them. "Chọn nhanh" only fills the field: its amounts are links (/builder?chon=800000) that work without a
+       script, and builder.ts fills the field in place. Nothing is saved without "Lưu". *@
+    <form class="card budget-card" id="@Anchors.BudgetCard" method="post" action="@SiteLinks.BuilderPath" asp-antiforgery="true">
+        <div class="budget-card__fields">
+            <div class="field budget-card__budget">
+                <label class="field__label" for="budget">Ngân sách của bạn</label>
+                <div class="budget-card__pick">
+                    <input class="input" id="budget" name="budget" type="text" inputmode="numeric" autocomplete="off" value="@Model.BudgetText" aria-invalid="@(budgetError is null ? null : "true")" aria-describedby="@(budgetError is null ? null : "budget-error")">
+                    <button type="button" class="btn btn--outline picker-button" popovertarget="chon-nhanh"><partial name="_Icon" model='"wallet"' /><span>Chọn nhanh</span><partial name="_Icon" model='"chevron-down"' /></button>
+                </div>
+                @if (budgetError is not null)
                 {
-                    <button type="submit" class="btn btn--outline btn--chip" name="quickAmount" value="@amount">@Vnd.Format(amount)</button>
+                    <p class="field__error" id="budget-error">@budgetError</p>
                 }
             </div>
+
+            <div class="field budget-card__date">
+                <label class="field__label" for="delivery-date">Ngày giao hàng</label>
+                <input class="input" id="delivery-date" name="deliveryDate" type="date" value="@Model.DeliveryDateText" aria-invalid="@(dateError is null ? null : "true")" aria-describedby="@(dateError is null ? null : "delivery-date-error")">
+                @if (dateError is not null)
+                {
+                    <p class="field__error" id="delivery-date-error">@dateError</p>
+                }
+            </div>
+
+            <button type="submit" class="btn btn--primary budget-card__save">Lưu</button>
         </div>
 
-        <div class="field budget-card__date">
-            <label class="field__label" for="delivery-date">Ngày giao hàng</label>
-            <input class="input" id="delivery-date" name="deliveryDate" type="date" value="@Model.DeliveryDateText" aria-invalid="@(dateError is null ? null : "true")" aria-describedby="@(dateError is null ? null : "delivery-date-error")">
-            @if (dateError is not null)
-            {
-                <p class="field__error" id="delivery-date-error">@dateError</p>
-            }
-            <p class="budget-card__hint meta">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</p>
-            <button type="submit" class="btn btn--primary">Lưu</button>
-        </div>
-
-        <p class="budget-card__aside">Đặt ngân sách trước, rồi chọn món. Tổng tiền do hệ thống tính và luôn hiện ở bên phải.</p>
+        <p class="alert alert--warn budget-card__unsaved" id="chua-luu" role="status" hidden="@(Model.PickedBudgetVnd is null)">@(Model.PickedBudgetVnd is { } picked ? UnsavedNote(picked) : "")</p>
+        <p class="budget-card__hint meta">Chúng tôi dùng ngày giao để kiểm tra hạn sử dụng của từng món. Tổng tiền do hệ thống tính và luôn hiện ở bên phải.</p>
     </form>
+
+    <div class="picker-panel picker-panel--budget" id="chon-nhanh" popover role="dialog" aria-labelledby="chon-nhanh-ten">
+        <div class="picker-panel__head">
+            <h2 class="picker-panel__title" id="chon-nhanh-ten">Chọn nhanh ngân sách</h2>
+            <button type="button" class="icon-btn" popovertarget="chon-nhanh" popovertargetaction="hide" aria-label="Đóng"><partial name="_Icon" model='"close"' /></button>
+        </div>
+        <ul class="picker-panel__amounts">
+            @foreach (var amount in BudgetTiers.All)
+            {
+                var current = Model.BudgetText == Vnd.Format(amount);
+                <li><a class="picker-tile picker-tile--amount" href="@ListLink(new() { ["chon"] = amount.ToString(System.Globalization.CultureInfo.InvariantCulture) }, Anchors.BudgetCard)" aria-current="@(current ? "true" : null)" data-amount="@Vnd.Format(amount)" data-note="@UnsavedNote(amount)">@Vnd.Short(amount)</a></li>
+            }
+        </ul>
+        <p class="meta">Bấm một mức để điền vào ô ngân sách. Ngân sách chỉ đổi khi bạn bấm Lưu.</p>
+    </div>
 
     @if (items is null)
     {
@@ -103,14 +149,65 @@
         <section class="items" id="@Anchors.Items" aria-labelledby="items-title">
             <h2 class="visually-hidden" id="items-title">Chọn món</h2>
 
-            @* A plain GET form: search, sort, the checkbox and the chips reload the page with the filters in the address
-               (works without scripts). Every filter is in the form, so changing one keeps the others. *@
+            @if (Model.Suggestions is { } suggestions)
+            {
+                <section class="suggest" id="@Anchors.Suggestions" aria-labelledby="goi-y-ten" data-row>
+                    <div class="suggest__head">
+                        <h2 class="suggest__title" id="goi-y-ten">Hộp gợi ý</h2>
+                        <div class="row-buttons" hidden>
+                            <button type="button" class="icon-btn row-buttons__btn" data-row-prev aria-label="Hộp gợi ý trước"><partial name="_Icon" model='"arrow-left"' /></button>
+                            <button type="button" class="icon-btn row-buttons__btn" data-row-next aria-label="Hộp gợi ý sau"><partial name="_Icon" model='"arrow"' /></button>
+                        </div>
+                    </div>
+                    <ul class="suggest__occasions" aria-label="Dịp">
+                        @foreach (var o in suggestions.Occasions)
+                        {
+                            <li><a class="suggest__chip suggest__chip--@o.Accent" href="@ListLink(new() { ["dip"] = o.Id }, Anchors.Suggestions)" aria-current="@(o.Id == suggestions.Chosen.Id ? "true" : null)">@o.Name</a></li>
+                        }
+                    </ul>
+                    <p class="suggest__text meta">
+                        Hộp đến <strong>@Vnd.Format(suggestions.BudgetVnd)</strong>, theo ngân sách của bạn. Bắt đầu nhanh, rồi sửa tùy ý.
+                        <a href="@SiteLinks.Occasion(suggestions.Chosen.Id)">Xem mọi mức ngân sách</a>
+                    </p>
+                    <ul class="suggest__row" data-row-track tabindex="0" aria-label="Hộp gợi ý @suggestions.Chosen.Name">
+                        @foreach (var card in suggestions.Hampers)
+                        {
+                            <li class="suggest-card">
+                                <img class="suggest-card__photo" src="@card.ImagePath" alt="" width="570" height="380" loading="lazy">
+                                <div class="suggest-card__body">
+                                    <span class="suggest-card__who suggest-card__who--@suggestions.Chosen.Accent">@card.ForWhom</span>
+                                    <h3 class="suggest-card__name"><a href="@(SiteLinks.Occasion(suggestions.Chosen.Id) + Anchors.Link(Anchors.HamperCard(card.Slug)))">@card.Name</a></h3>
+                                    <p class="meta">@card.Count món · @Vnd.Format(card.Quote.TotalVnd)</p>
+                                    <partial name="_UseHamper" model='new UseHamperControl(card, Peekbox.Web.Controllers.OccasionsController.FromBuilder, box, "goi-y")' />
+                                    <partial name="_ReplaceHamper" model='new UseHamperControl(card, Peekbox.Web.Controllers.OccasionsController.FromBuilder, box, "ask")' />
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </section>
+            }
+
+            @* A plain GET form: search, sort and the checkbox reload the page with the filters in the address (works without
+               scripts). "Danh mục" is a button that opens a panel of links, each keeping the other filters. *@
             <form class="item-filters" method="get" action="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">
-                @* Enter in the search box presses the first submit button of the form. This hidden one comes first, so Enter
-                   searches instead of pressing the "Tất cả" chip. *@
+                @* Enter in the search box presses the first submit button of the form: this hidden one. *@
                 <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Tìm</button>
 
                 <div class="item-filters__row">
+                    <div class="field item-filters__category">
+                        <span class="field__label" id="danh-muc-nhan">Danh mục</span>
+                        @if (items.Chosen is { } chosen)
+                        {
+                            <div class="category-control category-control--chosen">
+                                <button type="button" class="category-control__open" popovertarget="danh-muc" aria-labelledby="danh-muc-nhan danh-muc-gia-tri"><partial name="_Icon" model='"grid"' /><span id="danh-muc-gia-tri">@chosen.Name</span></button>
+                                <a class="category-control__clear" href="@ListLink(new() { ["category"] = null }, Anchors.Items)" aria-label="Bỏ danh mục @chosen.Name, xem tất cả"><partial name="_Icon" model='"close"' /></a>
+                            </div>
+                        }
+                        else
+                        {
+                            <button type="button" class="category-control" popovertarget="danh-muc" aria-labelledby="danh-muc-nhan danh-muc-gia-tri"><partial name="_Icon" model='"grid"' /><span id="danh-muc-gia-tri">Tất cả</span><partial name="_Icon" model='"chevron-down"' /></button>
+                        }
+                    </div>
                     <div class="field item-filters__search">
                         <label class="field__label" for="item-search">Tìm món</label>
                         <div class="search-input">
@@ -137,20 +234,28 @@
                     <input type="hidden" name="inDate" value="false">
                     <label for="in-date"><span>Chỉ món đủ hạn cho ngày giao <strong>@VnDate.Day(Model.SavedDeliveryDate!.Value)</strong></span></label>
                 </div>
-                <div class="chip-list">
-                    <button type="submit" class="btn btn--outline btn--chip" name="category" value="" aria-pressed="@(items.Category is null ? "true" : "false")">Tất cả</button>
-                    @foreach (var chip in items.Categories)
-                    {
-                        <button type="submit" class="btn btn--outline btn--chip" name="category" value="@chip.Id" aria-pressed="@(chip.Id == items.Category ? "true" : "false")">@chip.Name</button>
-                    }
-                </div>
-                @* The chosen category, for a send that is not a chip (search, sort, checkbox). It comes AFTER the chips: a pressed
-                   chip sends its value first, and model binding takes the first value. *@
+                @* The chosen category and occasion, so a search, a sort or the checkbox keeps them. *@
                 <input type="hidden" name="category" value="@items.Category">
+                <input type="hidden" name="dip" value="@ChosenOccasion()">
             </form>
 
+            <div class="picker-panel picker-panel--category" id="danh-muc" popover role="dialog" aria-labelledby="danh-muc-ten">
+                <div class="picker-panel__head">
+                    <h2 class="picker-panel__title" id="danh-muc-ten">Chọn danh mục</h2>
+                    <button type="button" class="icon-btn" popovertarget="danh-muc" popovertargetaction="hide" aria-label="Đóng"><partial name="_Icon" model='"close"' /></button>
+                </div>
+                <ul class="picker-panel__categories">
+                    <li><a class="picker-tile" href="@ListLink(new() { ["category"] = null }, Anchors.Items)" aria-current="@(items.Category is null ? "true" : null)"><span class="picker-tile__name">Tất cả</span><span class="picker-tile__count">@items.TotalCount món</span></a></li>
+                    @foreach (var chip in items.Categories)
+                    {
+                        <li><a class="picker-tile" href="@ListLink(new() { ["category"] = chip.Id }, Anchors.Items)" aria-current="@(chip.Id == items.Category ? "true" : null)"><span class="picker-tile__name">@chip.Name</span><span class="picker-tile__count">@chip.Count món</span>@if (chip.InBox > 0) {<span class="picker-tile__in-box" aria-label="@chip.InBox món trong hộp">✓ @chip.InBox</span>}</a></li>
+                    }
+                </ul>
+                <p class="meta">Bấm một danh mục để xem ngay các món của nó. Dấu ✓ là số món của danh mục đã có trong hộp.</p>
+            </div>
+
             <p class="items__count">
-                <span>Hiện @items.Items.Count món.@if (items.HiddenCount > 0) {<text> @items.HiddenCount món hết hạn trước ngày giao đang được ẩn.</text>}</span>
+                <span>@(items.Chosen is { } shown ? $"{shown.Name}: hiện {items.Items.Count} món." : items.AsRows ? $"Hiện {items.Items.Count} món trong {items.Items.Select(i => i.CategoryId).Distinct().Count()} danh mục." : $"Hiện {items.Items.Count} món.")@if (items.HiddenCount > 0) {<text> @items.HiddenCount món hết hạn trước ngày giao đang được ẩn.</text>}</span>
                 @if (items.HiddenCount > 0)
                 {
                     <a href="@showAll">Hiện cả @items.HiddenCount món</a>
@@ -167,41 +272,50 @@
                 </div>
             }
 
-            <ul class="item-grid">
-                @foreach (var item in items.Items)
+            @if (items.AsRows)
+            {
+                @* "Tất cả": one sideways row per category, in the panel's order (decision 2026-11-17). The phone hint shows
+                   until the first swipe (builder.ts remembers it in the browser). *@
+                <p class="rows-hint" id="vuot-hint" hidden>Vuốt sang trái để xem thêm món trong mỗi danh mục</p>
+                @foreach (var chip in items.Categories)
                 {
-                    <li class="card item-card@(item.SoldOut ? " item-card--sold-out" : "")" id="@Anchors.ItemCard(item.Slug)">
-                        @* The photo and the name both open the item page. The photo's link is for the mouse only: hidden from
-                           screen readers and skipped by Tab, so the name's link is the one link they meet (alt is empty for
-                           the same reason: the name is right below). *@
-                        <a class="item-card__photo" href="@SiteLinks.Item(item.Slug)" tabindex="-1" aria-hidden="true"><img class="item-card__img" src="@item.ImagePath" alt="" width="508" height="508" loading="lazy"></a>
-                        <div class="item-card__body">
-                            <h3 class="item-card__name"><a class="item-card__link" href="@SiteLinks.Item(item.Slug)">@item.Name</a></h3>
-                            <p class="item-card__meta meta">@item.Brand · @item.WeightGrams g<br>Xuất xứ: @item.Origin</p>
-                            @if (item.SoldOut)
-                            {
-                                <span class="badge badge--muted">Hết hàng</span>
-                            }
-                            else if (item.ExpiryDate is null)
-                            {
-                                <span class="badge badge--muted">@VnDate.NoExpiry</span>
-                            }
-                            else if (item.InDate)
-                            {
-                                <span class="badge">HSD @VnDate.Month(item.ExpiryDate.Value) · đủ hạn</span>
-                            }
-                            else
-                            {
-                                <span class="badge badge--warn">HSD @VnDate.Day(item.ExpiryDate.Value), trước ngày giao</span>
-                            }
-                            <div class="item-card__foot">
-                                <p class="item-card__price">@Vnd.Format(item.PriceVnd)</p>
-                                <partial name="_QuantityControl" model="new QuantityControl(quantityAction, item.Slug, item.Name, item.Quantity, item.Next, item.OverByVnd, item.SoldOut)" />
+                    var rowItems = items.Items.Where(i => i.CategoryId == chip.Id).ToList();
+                    if (rowItems.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var rowId = "hang-" + chip.Id;
+                    var seeAll = ListLink(new() { ["category"] = chip.Id }, Anchors.Items);
+                    <section class="item-row" id="@rowId" aria-labelledby="@rowId-ten" data-row>
+                        <div class="item-row__head">
+                            <h3 class="item-row__title" id="@rowId-ten">@chip.Name <span class="item-row__count">@rowItems.Count món</span>@if (chip.InBox > 0) {<span class="item-row__in-box">✓ @chip.InBox trong hộp</span>}</h3>
+                            <a class="item-row__all" href="@seeAll">Xem tất cả</a>
+                            <div class="row-buttons" hidden>
+                                <button type="button" class="icon-btn row-buttons__btn" data-row-prev aria-label="@chip.Name: món trước"><partial name="_Icon" model='"arrow-left"' /></button>
+                                <button type="button" class="icon-btn row-buttons__btn" data-row-next aria-label="@chip.Name: món sau"><partial name="_Icon" model='"arrow"' /></button>
                             </div>
                         </div>
-                    </li>
+                        <ul class="item-grid item-grid--row" data-row-track tabindex="0" aria-label="@chip.Name">
+                            @foreach (var item in rowItems)
+                            {
+                                <partial name="_ItemCard" model="new ItemCardView(item, quantityAction)" />
+                            }
+                            <li class="item-row__end"><a href="@seeAll">Xem tất cả @chip.Name<partial name="_Icon" model='"arrow"' /></a></li>
+                        </ul>
+                        <div class="item-row__position" aria-hidden="true"><span class="item-row__bar"><span class="item-row__fill" data-row-fill></span></span><span data-row-text>@rowItems.Count món</span></div>
+                    </section>
                 }
-            </ul>
+            }
+            else
+            {
+                <ul class="item-grid">
+                    @foreach (var item in items.Items)
+                    {
+                        <partial name="_ItemCard" model="new ItemCardView(item, quantityAction)" />
+                    }
+                </ul>
+            }
 
             @if (box.Lines.Count == 0)
             {
