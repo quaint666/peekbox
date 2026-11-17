@@ -20,6 +20,8 @@ public static class Icons
             new Label("HSD", "15", "18", "8.6")),
         // Arrow on the occasion buttons: a little thicker than the line icons, as in the mockup.
         ["arrow"] = new Custom("0 0 24 24", "2.2", ["M5 12h14M13 6l6 6-6 6"], null),
+        // The same arrow the other way: "Hộp trước" on the rows of an occasion page.
+        ["arrow-left"] = new Custom("0 0 24 24", "2.2", ["M19 12H5M11 6l-6 6 6 6"], null),
     };
 
     private static readonly Dictionary<string, string> Paths = new()
@@ -47,6 +49,10 @@ public static class Icons
         // The review page's summary sheet on a phone (mockup 29): "Xem tổng kết" and "Thu gọn".
         ["chevron-up"] = "M6 15l6-6 6 6",
         ["chevron-down"] = "M6 9l6 6 6-6",
+        // "Danh mục" on the builder: four tiles.
+        ["grid"] = "M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h6v6h-6z",
+        // A link that leaves the site (Bloomy, on the occasion pages).
+        ["external"] = "M14 4h6v6 M20 4l-9 9 M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5",
     };
 
     public static string Path(string name) => Paths[name];

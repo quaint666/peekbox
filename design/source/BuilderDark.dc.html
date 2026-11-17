@@ -50,24 +50,17 @@ a{color:#9EC3A5}a:hover{color:#BFE3CF}
 
 <div style="max-width:1200px;margin:0 auto;padding:28px 32px 56px;display:flex;flex-direction:column;gap:28px">
 
-<!-- step 1: budget + date -->
-<div style="background:#1B201C;border:1px solid #343B36;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.45);padding:24px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end">
-<div style="display:flex;flex-direction:column;gap:8px;flex:1 1 260px">
-<label for="budget" style="font-size:14px;font-weight:600">Ngân sách của bạn</label>
-<input id="budget" value="{{budget}}" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #6E776F;border-radius:10px;font-family:inherit;font-size:20px;font-weight:600;color:#EEF0EA;background:#1B201C">
-<div style="display:flex;flex-wrap:wrap;gap:8px">
-<sc-for list="{{presets}}" as="p" hint-placeholder-count="4">
-<button style="min-height:44px;padding:0 14px;border:1px solid #9EC3A5;border-radius:999px;background:transparent;color:#9EC3A5;font-family:inherit;font-size:14px;font-weight:600">{{p}}</button>
-</sc-for>
+<!-- step 1: budget + date, desktop: the fields and "Lưu" on one line, the notes on one line under them -->
+<div style="background:#1B201C;border:1px solid #343B36;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.45);padding:22px 24px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-wrap:wrap;gap:16px 20px;align-items:flex-end">
+<div style="display:flex;flex-direction:column;gap:8px;flex:3 1 360px;min-width:0"><label for="budget" style="font-size:14px;font-weight:600">Ngân sách của bạn</label><div style="position:relative;display:flex;gap:8px"><input id="budget" value="{{budget}}" style="flex:1 1 auto;min-width:0;width:100%;box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #6E776F;border-radius:10px;font-family:inherit;font-size:20px;font-weight:600;color:#EEF0EA;background:#1B201C"><button aria-expanded="{{budgetOpen}}" aria-controls="chon-nhanh" style="flex:none;box-sizing:border-box;min-height:48px;padding:0 14px;display:inline-flex;align-items:center;gap:8px;border:1px solid #6E776F;border-radius:10px;background:{{budgetBtnBg}};color:#EEF0EA;font-family:inherit;font-size:15px;font-weight:600"><span style="color:#9EC3A5;display:inline-flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex:none"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14.5" r="1"/></svg></span>Chọn nhanh<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-left:auto;transform:rotate({{budgetRot}})"><path d="M6 9l6 6 6-6"/></svg></button><sc-if value="{{budgetPanel}}" hint-placeholder-val="{{false}}"><div role="dialog" style="position:absolute;top:calc(100% + 8px);left:0;z-index:5;width:440px;box-sizing:border-box;background:#1B201C;border:1px solid #343B36;border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,0.6);padding:18px;display:flex;flex-direction:column;gap:14px;color:#EEF0EA"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h4 style="margin:0;font-size:15px;font-weight:600">Chọn nhanh ngân sách</h4><button aria-label="Đóng" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #343B36;border-radius:10px;background:#1B201C;color:#EEF0EA"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+<sc-for list="{{amounts}}" as="a" hint-placeholder-count="7"><button aria-pressed="{{a.current}}" style="box-sizing:border-box;min-height:48px;border-radius:12px;{{a.style}};font-family:inherit;font-size:15px;font-weight:600">{{a.label}}</button></sc-for>
+</div><p style="margin:0;font-size:13px;line-height:1.5;color:#AEB5AC">Bấm một mức để điền vào ô ngân sách. Ngân sách chỉ đổi khi bạn bấm Lưu.</p></div></sc-if></div></div>
+<div style="display:flex;flex-direction:column;gap:8px;flex:2 1 220px;min-width:0"><label for="date" style="font-size:14px;font-weight:600">Ngày giao hàng</label><input id="date" value="{{date}}" style="width:100%;box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #6E776F;border-radius:10px;font-family:inherit;font-size:20px;font-weight:600;color:#EEF0EA;background:#1B201C"></div>
+<button style="flex:none;min-height:48px;padding:0 24px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600">Lưu</button>
 </div>
-</div>
-<div style="display:flex;flex-direction:column;gap:8px;flex:1 1 220px">
-<label for="date" style="font-size:14px;font-weight:600">Ngày giao hàng</label>
-<input id="date" value="{{date}}" style="box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #6E776F;border-radius:10px;font-family:inherit;font-size:20px;font-weight:600;color:#EEF0EA;background:#1B201C">
-<div style="font-size:13px;color:#AEB5AC">Chúng tôi dùng ngày này để kiểm tra hạn sử dụng của từng món.</div>
-<button style="align-self:flex-start;min-height:44px;padding:0 24px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600">Lưu</button>
-</div>
-<div style="flex:1 1 260px;font-size:14px;line-height:1.55;color:#AEB5AC">Đặt ngân sách trước, rồi chọn món. Tổng tiền do hệ thống tính và luôn hiện ở bên phải.</div>
+<sc-if value="{{unsaved}}" hint-placeholder-val="{{false}}"><div role="status" style="padding:8px 12px;border-radius:10px;background:#3A3016;color:#F2D98A;font-size:13px;font-weight:600;line-height:1.45">Chưa lưu: ngân sách đang dùng vẫn là 500.000đ. Bấm Lưu để dùng 800.000đ.</div></sc-if>
+<p style="margin:0;font-size:13px;line-height:1.5;color:#AEB5AC">Chúng tôi dùng ngày giao để kiểm tra hạn sử dụng của từng món. Tổng tiền do hệ thống tính và luôn hiện ở bên phải.</p>
 </div>
 
 <!-- 02: steps 2 and 3 are locked; nothing is drawn below the note -->
@@ -80,52 +73,80 @@ a{color:#9EC3A5}a:hover{color:#BFE3CF}
 
 <!-- step 2: items -->
 <div style="flex:999 1 620px;min-width:0;display:flex;flex-direction:column;gap:20px">
+<!-- suggested hampers: the occasion is chosen by the chips (the active campaign first); the hampers shown are the ones for the saved budget; the row is a scroll-snap carousel -->
 <div style="display:flex;flex-direction:column;gap:10px">
-<div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:17px;font-weight:700">Hộp gợi ý cho Tết</h2><span style="font-size:13px;color:#AEB5AC">Bắt đầu nhanh, rồi sửa tùy ý</span></div>
-<div style="display:flex;gap:12px;overflow-x:auto;padding:2px 2px 8px">
-<sc-for list="{{starters}}" as="b" hint-placeholder-count="3">
-<div style="flex:none;width:250px;background:#1B201C;border:1px solid #343B36;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.45);padding:14px;display:flex;flex-direction:column;gap:8px">
-<div style="display:flex;gap:6px"><img src="{{b.i1}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#2A302C"><img src="{{b.i2}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#2A302C"><img src="{{b.i3}}" alt="" style="width:70px;height:70px;border-radius:8px;object-fit:cover;background:#2A302C"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:17px;font-weight:700">Hộp gợi ý</h2><div style="display:flex;gap:6px"><button aria-label="Hộp trước" style="width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid #343B36;background:#1B201C;color:#EEF0EA"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button aria-label="Hộp sau" style="width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid #9EC3A5;background:#1B201C;color:#9EC3A5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<sc-for list="{{occasions}}" as="o" hint-placeholder-count="3"><button aria-pressed="{{o.on}}" style="min-height:44px;padding:0 14px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:600;{{o.style}}">{{o.label}}</button></sc-for>
+</div>
+<div style="font-size:13px;line-height:1.5;color:#AEB5AC">Hộp đến <strong style="color:#EEF0EA">{{budget}}</strong>, theo ngân sách của bạn. Bắt đầu nhanh, rồi sửa tùy ý. <a href="BuilderDark.dc.html" style="font-weight:600;color:#9EC3A5">Xem mọi mức ngân sách</a></div>
+<div style="display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px">
+<sc-for list="{{starters}}" as="b" hint-placeholder-count="4">
+<div style="flex:none;width:250px;scroll-snap-align:start;background:#1B201C;border:1px solid #343B36;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.45);overflow:hidden;display:flex;flex-direction:column">
+<img src="{{b.photo}}" alt="" style="display:block;width:100%;aspect-ratio:16 / 10;object-fit:cover;background:#2A302C">
+<div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1">
+<span style="align-self:flex-start;padding:3px 9px;border-radius:999px;background:#3A211C;color:#EEF0EA;font-size:12px;font-weight:600">{{b.who}}</span>
 <div style="font-size:15px;font-weight:600">{{b.name}}</div>
-<div style="font-size:13px;color:#AEB5AC">{{b.budget}} · {{b.count}}</div>
-<button style="min-height:44px;border:1px solid #9EC3A5;border-radius:10px;background:transparent;color:#9EC3A5;font-family:inherit;font-size:14px;font-weight:600">Dùng hộp này</button>
+<div style="font-size:13px;color:#AEB5AC">{{b.count}} · {{b.total}}</div>
+<button style="margin-top:auto;min-height:44px;border:1px solid #9EC3A5;border-radius:10px;background:transparent;color:#9EC3A5;font-family:inherit;font-size:14px;font-weight:600">Dùng hộp này</button>
+</div>
 </div>
 </sc-for>
 </div>
 </div>
-<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end"><div style="flex:1 1 280px;display:flex;flex-direction:column;gap:6px;min-width:0"><label for="q" style="font-size:13px;font-weight:600">Tìm món</label><div style="position:relative"><span style="position:absolute;left:14px;top:15px;pointer-events:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#AEB5AC" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><input id="q" type="search" placeholder="Tên món, thương hiệu, xuất xứ"  style="box-sizing:border-box;width:100%;min-height:48px;padding:0 14px 0 42px;border:1px solid #6E776F;border-radius:10px;font-family:inherit;font-size:16px;background:#1B201C;color:#EEF0EA"></div></div><div style="display:flex;flex-direction:column;gap:6px"><label for="sort" style="font-size:13px;font-weight:600">Sắp xếp</label><select id="sort" style="box-sizing:border-box;min-height:48px;padding:0 12px;border:1px solid #6E776F;border-radius:10px;font-family:inherit;font-size:15px;background:#1B201C;color:#EEF0EA"><option>Mặc định</option><option>Giá thấp đến cao</option><option>Giá cao đến thấp</option><option>Hạn dùng xa nhất</option><option>Tên A đến Z</option></select></div><label style="display:flex;align-items:center;gap:10px;min-height:48px;font-size:14px;line-height:1.4"><input type="checkbox" checked style="flex:none;width:20px;height:20px;accent-color:#9EC3A5"><span>Chỉ món đủ hạn cho ngày giao <strong>15/01/2027</strong></span></label></div>
-<div style="display:flex;flex-wrap:wrap;gap:8px">
-<sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
-<button style="min-height:44px;padding:0 16px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:600;border:1px solid #9EC3A5;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button>
-</sc-for>
-</div>
-<div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:14px;color:#AEB5AC;line-height:1.5"><span>Hiện 6 món. 2 món hết hạn trước ngày giao đang được ẩn.</span><button style="min-height:44px;padding:0 4px;border:0;background:none;color:#9EC3A5;font-family:inherit;font-size:14px;font-weight:600;text-decoration:underline">Hiện cả 2 món</button></div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end"><div style="position:relative;min-width:200px;display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;font-weight:600">Danh mục</span><sc-if value="{{notChosen}}" hint-placeholder-val="{{true}}"><button aria-expanded="{{catOpen}}" aria-controls="danh-muc" style="box-sizing:border-box;width:100%;min-height:48px;padding:0 14px;display:flex;align-items:center;gap:8px;border:1px solid #6E776F;border-radius:10px;background:{{catBtnBg}};color:#EEF0EA;font-family:inherit;font-size:15px;text-align:left"><span style="color:#9EC3A5;display:inline-flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="flex:none"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></span>Tất cả<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-left:auto;transform:rotate({{catRot}})"><path d="M6 9l6 6 6-6"/></svg></button></sc-if><sc-if value="{{chosen}}" hint-placeholder-val="{{false}}"><div style="box-sizing:border-box;width:100%;min-height:48px;display:flex;align-items:stretch;border-radius:10px;border:2px solid #9EC3A5;background:#1D2B24;color:#BFE3CF;overflow:hidden"><button aria-expanded="false" aria-controls="danh-muc" style="flex:1;min-width:0;padding:0 12px;display:flex;align-items:center;gap:8px;border:0;background:none;color:inherit;font-family:inherit;font-size:15px;font-weight:600;text-align:left"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="flex:none"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>Socola</button><button aria-label="Bỏ chọn Socola, xem tất cả danh mục" style="flex:none;width:44px;border:0;border-left:1px solid currentColor;background:none;color:inherit;display:inline-flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></sc-if><sc-if value="{{catPanel}}" hint-placeholder-val="{{false}}"><div role="dialog" style="position:absolute;top:calc(100% + 8px);left:0;z-index:5;width:600px;box-sizing:border-box;background:#1B201C;border:1px solid #343B36;border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,0.6);padding:18px;display:flex;flex-direction:column;gap:14px;color:#EEF0EA"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h4 style="margin:0;font-size:15px;font-weight:600">Chọn danh mục</h4><button aria-label="Đóng" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #343B36;border-radius:10px;background:#1B201C;color:#EEF0EA"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+<sc-for list="{{tiles}}" as="t" hint-placeholder-count="12"><a href="Builder.dc.html" aria-current="{{t.current}}" style="box-sizing:border-box;min-height:52px;padding:8px 12px;border-radius:12px;{{t.style}};display:flex;justify-content:space-between;align-items:center;gap:6px;text-decoration:none"><span style="display:flex;flex-direction:column;gap:2px;font-size:14px;font-weight:600;line-height:1.25">{{t.name}}<span style="font-size:12px;font-weight:400;color:#AEB5AC">{{t.count}}</span></span><sc-if value="{{t.hasIn}}" hint-placeholder-val="{{false}}"><span style="flex:none;display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;background:#1D2B24;color:#BFE3CF;font-size:11px;font-weight:700"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>{{t.inBox}}</span></sc-if></a></sc-for>
+</div><p style="margin:0;font-size:13px;line-height:1.5;color:#AEB5AC">Bấm một danh mục để xem ngay các món của nó. Dấu ✓ là số món của danh mục đã có trong hộp.</p></div></sc-if></div><div style="flex:1 1 280px;display:flex;flex-direction:column;gap:6px;min-width:0"><label for="q" style="font-size:13px;font-weight:600">Tìm món</label><div style="position:relative"><span style="position:absolute;left:14px;top:15px;pointer-events:none;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#AEB5AC" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><input id="q" type="search" placeholder="Tên món, thương hiệu, xuất xứ"  style="box-sizing:border-box;width:100%;min-height:48px;padding:0 14px 0 42px;border:1px solid #6E776F;border-radius:10px;font-family:inherit;font-size:16px;background:#1B201C;color:#EEF0EA"></div></div><div style="display:flex;flex-direction:column;gap:6px"><label for="sort" style="font-size:13px;font-weight:600">Sắp xếp</label><select id="sort" style="box-sizing:border-box;min-height:48px;padding:0 12px;border:1px solid #6E776F;border-radius:10px;font-family:inherit;font-size:15px;background:#1B201C;color:#EEF0EA"><option>Mặc định</option><option>Giá thấp đến cao</option><option>Giá cao đến thấp</option><option>Hạn dùng xa nhất</option><option>Tên A đến Z</option></select></div><label style="display:flex;align-items:center;gap:10px;min-height:48px;font-size:14px;line-height:1.4"><input type="checkbox" checked style="flex:none;width:20px;height:20px;accent-color:#9EC3A5"><span>Chỉ món đủ hạn cho ngày giao <strong>15/01/2027</strong></span></label></div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-size:14px;color:#AEB5AC;line-height:1.5"><span>{{countText}}</span><sc-if value="{{hiddenSome}}" hint-placeholder-val="{{true}}"><button style="min-height:44px;padding:0 4px;border:0;background:none;color:#9EC3A5;font-family:inherit;font-size:14px;font-weight:600;text-decoration:underline">Hiện cả 2 món</button></sc-if></div>
 
-<!-- item cards: the photo and the name are links to the item page; the add control is a separate button -->
-<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
-<sc-for list="{{items}}" as="it" hint-placeholder-count="6">
-<div style="background:#1B201C;border:1px solid #343B36;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.45);overflow:hidden;display:flex;flex-direction:column">
-<a href="Item.dc.html" style="display:block;overflow:hidden"><img src="{{it.img}}" alt="{{it.name}}" style="display:block;width:100%;aspect-ratio:1 / 1;object-fit:cover;background:#2A302C"></a>
-<div style="padding:16px;display:flex;flex-direction:column;gap:8px;flex:1">
-<a href="Item.dc.html" style="font-size:17px;font-weight:600;line-height:1.3;color:#EEF0EA;text-decoration:none">{{it.name}}</a>
-<div style="font-size:13px;color:#AEB5AC;line-height:1.5">{{it.brand}} · {{it.weight}}<br>Xuất xứ: {{it.origin}}</div>
-<div style="align-self:flex-start;padding:5px 10px;border-radius:999px;background:#1D2B24;color:#BFE3CF;font-size:12px;font-weight:600">HSD {{it.expiry}} · đủ hạn</div>
-<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px">
-<strong style="font-size:16px">{{it.price}}</strong>
-<sc-if value="{{it.added}}" hint-placeholder-val="{{false}}">
-<span style="display:inline-flex;align-items:stretch;border:1px solid #9EC3A5;border-radius:10px;overflow:hidden;background:#1B201C;color:#BFE3CF"><button aria-label="Bớt một {{it.name}}" style="width:44px;height:44px;border:0;background:none;color:#BFE3CF;font-family:inherit;font-size:20px;line-height:1">−</button><span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:0 4px;background:#1D2B24;font-size:15px;font-weight:700">{{it.qty}}</span><button aria-label="Thêm một {{it.name}}" style="width:44px;height:44px;border:0;background:none;color:#BFE3CF;font-family:inherit;font-size:20px;line-height:1">+</button></span>
-</sc-if>
-<sc-if value="{{it.canAdd}}" hint-placeholder-val="{{true}}">
-<button style="min-height:44px;padding:0 18px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:14px;font-weight:600">Thêm</button>
-</sc-if>
-<sc-if value="{{it.over}}" hint-placeholder-val="{{false}}">
-<button disabled style="min-height:44px;padding:0 14px;border:0;border-radius:10px;background:#2A302C;color:#AEB5AC;font-family:inherit;font-size:13px;font-weight:600">{{it.overText}}</button>
-</sc-if>
+<sc-if value="{{showRows}}" hint-placeholder-val="{{true}}"><!-- items: on "Tất cả" (no search, default sort) one sideways row per category (decision 2026-11-17). Each row: the
+name, the count, how many of its items are in the box, "Xem tất cả" (presses that category's chip), arrows (desktop),
+the cards, an end tile, and the position under it. A category, a search or another sort shows the grid instead. -->
+<div style="display:flex;flex-direction:column;gap:36px">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+<section aria-label="{{r.name}}" style="display:flex;flex-direction:column;gap:12px;min-width:0">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+<h3 style="margin:0;font-size:19px;font-weight:600;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">{{r.name}}<span style="font-size:14px;font-weight:400;color:#AEB5AC">{{r.count}}</span><sc-if value="{{r.hasIn}}" hint-placeholder-val="{{false}}"><span style="align-self:center;display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;background:#1D2B24;color:#BFE3CF;font-size:12px;font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>{{r.inBox}} trong hộp</span></sc-if></h3>
+<div style="display:flex;align-items:center;gap:10px"><a href="BuilderDark.dc.html" style="white-space:nowrap;color:#9EC3A5;font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px">Xem tất cả</a><button aria-label="Món trước" disabled style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid #343B36;background:#1B201C;color:#5F675F"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button aria-label="Món sau" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid #9EC3A5;background:#1B201C;color:#9EC3A5"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
 </div>
-</div>
-</div>
+<div style="display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 10px;scrollbar-width:none;mask-image:linear-gradient(to right,#000 calc(100% - 64px),transparent)">
+<sc-for list="{{r.cards}}" as="x" hint-placeholder-count="4">
+<div style="flex:none;width:232px;scroll-snap-align:start;background:#1B201C;border:{{x.border}};border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.45);overflow:hidden;display:flex;flex-direction:column">
+<div style="position:relative"><a href="ItemDark.dc.html" style="display:block"><img src="{{x.img}}" alt="{{x.name}}" style="display:block;width:100%;aspect-ratio:1 / 1;object-fit:cover;background:#2A302C"></a>
+<sc-if value="{{x.added}}" hint-placeholder-val="{{false}}"><span style="position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:999px;background:#3F6B57;color:#FFFFFF;font-size:12px;font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Trong hộp</span></sc-if></div>
+<div style="padding:14px;display:flex;flex-direction:column;gap:7px;flex:1">
+<a href="ItemDark.dc.html" style="font-size:16px;font-weight:600;line-height:1.3;color:#EEF0EA;text-decoration:none">{{x.name}}</a><div style="font-size:13px;color:#AEB5AC;line-height:1.45">{{x.brand}} · {{x.weight}}<br>{{x.origin}}</div>
+<sc-if value="{{x.dated}}" hint-placeholder-val="{{true}}"><div style="align-self:flex-start;padding:4px 9px;border-radius:999px;background:#1D2B24;color:#BFE3CF;font-size:12px;font-weight:600">HSD {{x.expiry}}</div></sc-if>
+<sc-if value="{{x.undated}}" hint-placeholder-val="{{false}}"><div style="align-self:flex-start;padding:4px 9px;border-radius:999px;background:#2A302C;color:#AEB5AC;font-size:12px;font-weight:600">Không có hạn dùng</div></sc-if>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:6px"><strong style="font-size:15px">{{x.price}}</strong>
+<sc-if value="{{x.added}}" hint-placeholder-val="{{false}}"><span style="display:inline-flex;justify-content:space-between;align-items:stretch;border:1px solid #9EC3A5;background:#1B201C;color:#BFE3CF;border-radius:10px;overflow:hidden"><button aria-label="Bớt một {{x.name}}" style="width:40px;height:44px;border:0;background:none;color:inherit;font-family:inherit;font-size:20px;line-height:1">−</button><span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;background:#1D2B24;font-size:15px;font-weight:700">1</span><button aria-label="Thêm một {{x.name}}" style="width:40px;height:44px;border:0;background:none;color:inherit;font-family:inherit;font-size:20px;line-height:1">+</button></span></sc-if>
+<sc-if value="{{x.canAdd}}" hint-placeholder-val="{{true}}"><button style="min-height:44px;padding:0 16px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:14px;font-weight:600">Thêm</button></sc-if>
+<sc-if value="{{x.over}}" hint-placeholder-val="{{false}}"><button disabled style="min-height:44px;padding:0 10px;border:0;border-radius:10px;background:#2A302C;color:#AEB5AC;font-family:inherit;font-size:12px;font-weight:600">{{x.overText}}</button></sc-if>
+</div></div></div>
 </sc-for>
+<a href="BuilderDark.dc.html" style="flex:none;width:170px;scroll-snap-align:start;box-sizing:border-box;border:2px dashed #4F6B5A;background:#17201A;color:#BFE3CF;border-radius:14px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:10px;padding:20px;text-decoration:none"><span style="font-size:13px;color:#AEB5AC">{{r.count}}</span><span style="font-size:17px;font-weight:600;line-height:1.3">Xem tất cả<br>{{r.name}}</span><span style="width:40px;height:40px;border-radius:999px;background:#3F6B57;color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
 </div>
+<sc-if value="{{r.more}}" hint-placeholder-val="{{true}}"><div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#AEB5AC"><div style="flex:1;max-width:160px;height:4px;border-radius:4px;background:#343B36;overflow:hidden"><div style="width:{{r.share}};height:100%;border-radius:4px;background:#3F6B57"></div></div><span>{{r.pos}}</span></div></sc-if>
+</section>
+</sc-for>
+</div></sc-if>
+<!-- a chosen category: its items as a grid (the earlier layout) -->
+<sc-if value="{{showGrid}}" hint-placeholder-val="{{false}}"><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+<sc-for list="{{gridCards}}" as="x" hint-placeholder-count="3">
+<div style="background:#1B201C;border:{{x.border}};border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.45);overflow:hidden;display:flex;flex-direction:column">
+<div style="position:relative"><a href="ItemDark.dc.html" style="display:block"><img src="{{x.img}}" alt="{{x.name}}" style="display:block;width:100%;aspect-ratio:1 / 1;object-fit:cover;background:#2A302C"></a>
+<sc-if value="{{x.added}}" hint-placeholder-val="{{false}}"><span style="position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:999px;background:#3F6B57;color:#FFFFFF;font-size:12px;font-weight:600"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Trong hộp</span></sc-if></div>
+<div style="padding:14px;display:flex;flex-direction:column;gap:7px;flex:1">
+<a href="ItemDark.dc.html" style="font-size:16px;font-weight:600;line-height:1.3;color:#EEF0EA;text-decoration:none">{{x.name}}</a><div style="font-size:13px;color:#AEB5AC;line-height:1.45">{{x.brand}} · {{x.weight}}<br>{{x.origin}}</div>
+<sc-if value="{{x.dated}}" hint-placeholder-val="{{true}}"><div style="align-self:flex-start;padding:4px 9px;border-radius:999px;background:#1D2B24;color:#BFE3CF;font-size:12px;font-weight:600">HSD {{x.expiry}}</div></sc-if>
+<sc-if value="{{x.undated}}" hint-placeholder-val="{{false}}"><div style="align-self:flex-start;padding:4px 9px;border-radius:999px;background:#2A302C;color:#AEB5AC;font-size:12px;font-weight:600">Không có hạn dùng</div></sc-if>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:6px"><strong style="font-size:15px">{{x.price}}</strong>
+<sc-if value="{{x.added}}" hint-placeholder-val="{{false}}"><span style="display:inline-flex;justify-content:space-between;align-items:stretch;border:1px solid #9EC3A5;background:#1B201C;color:#BFE3CF;border-radius:10px;overflow:hidden"><button aria-label="Bớt một {{x.name}}" style="width:40px;height:44px;border:0;background:none;color:inherit;font-family:inherit;font-size:20px;line-height:1">−</button><span style="display:inline-flex;align-items:center;justify-content:center;min-width:30px;background:#1D2B24;font-size:15px;font-weight:700">1</span><button aria-label="Thêm một {{x.name}}" style="width:40px;height:44px;border:0;background:none;color:inherit;font-family:inherit;font-size:20px;line-height:1">+</button></span></sc-if>
+<sc-if value="{{x.canAdd}}" hint-placeholder-val="{{true}}"><button style="min-height:44px;padding:0 16px;border:0;border-radius:10px;background:#3F6B57;color:#FFFFFF;font-family:inherit;font-size:14px;font-weight:600">Thêm</button></sc-if>
+<sc-if value="{{x.over}}" hint-placeholder-val="{{false}}"><button disabled style="min-height:44px;padding:0 10px;border:0;border-radius:10px;background:#2A302C;color:#AEB5AC;font-family:inherit;font-size:12px;font-weight:600">{{x.overText}}</button></sc-if>
+</div></div></div>
+</sc-for>
+</div></sc-if>
 
 <!-- step 3: packaging; locked (only the note) until the box holds at least one item -->
 <sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
@@ -207,12 +228,129 @@ const step = (n, label, state) => ({ n, label,
 // added: the pill (− n +); canAdd: "Thêm"; over: the disabled "Vượt X" (in 27 only 80.000đ is left)
 const item = (name, file, brand, weight, origin, expiry, price, inBox, overText) => ({ name, img: img("products/" + file), brand, weight, origin, expiry, price,
   added: filled && inBox, qty: "1", canAdd: !(filled && inBox) && !(filled && overText), over: filled && !!overText, overText: overText || "" });
+
+// The catalogue in date for 15/01/2027 (from content/data/products.json): slug, name, category, brand, weight, origin,
+// expiry (MM/yyyy, empty for items that are not food), price text, price, photo.
+const CATALOGUE = [
+["banh-quy-yen-mach", "Bánh quy yến mạch", "banh", "Thương hiệu D", "200 g", "TP.HCM", "06/2027", "85.000đ", 85000, "products/banh-quy-yen-mach.webp"],
+["banh-pia", "Bánh pía mini", "banh", "Thương hiệu G", "300 g", "Sóc Trăng", "04/2027", "120.000đ", 120000, "products/banh-pia.webp"],
+["banh-gung", "Bánh gừng", "banh", "Thương hiệu H", "150 g", "Hà Nội", "05/2027", "70.000đ", 70000, "products/banh-gung.webp"],
+["banh-dau-xanh", "Bánh đậu xanh", "banh", "Thương hiệu H", "200 g", "Hải Dương", "01/2027", "65.000đ", 65000, "products/banh-dau-xanh.webp"],
+["tra-sen", "Trà sen", "tra-ca-phe", "Thương hiệu A", "100 g", "Hà Nội", "12/2027", "180.000đ", 180000, "products/tra-sen.webp"],
+["tra-o-long", "Trà ô long", "tra-ca-phe", "Thương hiệu A", "100 g", "Lâm Đồng", "11/2027", "160.000đ", 160000, "products/tra-o-long.webp"],
+["tra-shan-tuyet", "Trà shan tuyết", "tra-ca-phe", "Thương hiệu A", "100 g", "Hà Giang", "12/2027", "220.000đ", 220000, "products/tra-shan-tuyet.webp"],
+["ca-phe-rang-xay", "Cà phê rang xay", "tra-ca-phe", "Thương hiệu E", "250 g", "Đắk Lắk", "02/2028", "120.000đ", 120000, "products/ca-phe.webp"],
+["ca-phe-phin-giay", "Cà phê phin giấy", "tra-ca-phe", "Thương hiệu E", "150 g", "Lâm Đồng", "01/2028", "95.000đ", 95000, "products/ca-phe-phin-giay.webp"],
+["hat-dieu-rang-muoi", "Hạt điều rang muối", "hat-trai-cay-say", "Thương hiệu B", "250 g", "Bình Phước", "08/2027", "150.000đ", 150000, "products/hat-dieu.webp"],
+["hat-macca", "Hạt macca", "hat-trai-cay-say", "Thương hiệu B", "200 g", "Đắk Lắk", "09/2027", "190.000đ", 190000, "products/hat-macca.webp"],
+["mit-say", "Mít sấy", "hat-trai-cay-say", "Thương hiệu F", "150 g", "Tiền Giang", "07/2027", "80.000đ", 80000, "products/mit-say.webp"],
+["xoai-say-deo", "Xoài sấy dẻo", "hat-trai-cay-say", "Thương hiệu F", "200 g", "Đồng Tháp", "06/2027", "95.000đ", 95000, "products/xoai-say.webp"],
+["hong-treo-gio", "Hồng treo gió", "hat-trai-cay-say", "Thương hiệu F", "200 g", "Lâm Đồng", "02/2027", "140.000đ", 140000, "products/hong-treo-gio.webp"],
+["mut-gung", "Mứt gừng", "mut-keo", "Thương hiệu C", "200 g", "Huế", "03/2027", "90.000đ", 90000, "products/mut-gung.webp"],
+["keo-dua", "Kẹo dừa", "mut-keo", "Thương hiệu F", "150 g", "Bến Tre", "06/2027", "55.000đ", 55000, "products/keo-dua.webp"],
+["mut-dau", "Mứt dâu", "mut-keo", "Thương hiệu C", "250 g", "Lâm Đồng", "05/2027", "105.000đ", 105000, "products/mut-dau.webp"],
+["mut-hat-sen", "Mứt hạt sen", "mut-keo", "Thương hiệu C", "250 g", "Đồng Tháp", "02/2027", "130.000đ", 130000, "products/mut-hat-sen.webp"],
+["mat-ong-hoa-nhan", "Mật ong hoa nhãn", "mat-ong-dac-san", "Thương hiệu G", "250 g", "Hưng Yên", "12/2028", "160.000đ", 160000, "products/mat-ong-nhan.webp"],
+["mat-ong-hoa-ca-phe", "Mật ong hoa cà phê", "mat-ong-dac-san", "Thương hiệu G", "250 g", "Đắk Lắk", "10/2028", "150.000đ", 150000, "products/mat-ong-ca-phe.webp"],
+["muoi-tom-tay-ninh", "Muối tôm Tây Ninh", "mat-ong-dac-san", "Thương hiệu H", "100 g", "Tây Ninh", "08/2027", "50.000đ", 50000, "products/muoi-tom.webp"],
+["tieu-den-phu-quoc", "Tiêu đen Phú Quốc", "mat-ong-dac-san", "Thương hiệu G", "100 g", "Phú Quốc", "10/2027", "85.000đ", 85000, "products/tieu-den.webp"],
+["banh-quy-hop-thiec", "Bánh quy bơ hộp thiếc", "banh", "Thương hiệu D", "454 g", "Bình Dương", "09/2027", "165.000đ", 165000, "products/banh-quy-hop-thiec.webp"],
+["banh-com", "Bánh cốm", "banh", "Thương hiệu C", "300 g", "Hà Nội", "02/2027", "70.000đ", 70000, "products/banh-com.webp"],
+["banh-in", "Bánh in", "banh", "Thương hiệu C", "250 g", "Huế", "03/2027", "60.000đ", 60000, "products/banh-in.webp"],
+["banh-ngoi-hanh-nhan", "Bánh ngói hạnh nhân", "banh", "Thương hiệu D", "150 g", "TP.HCM", "05/2027", "95.000đ", 95000, "products/banh-ngoi-hanh-nhan.webp"],
+["tra-lai", "Trà lài", "tra-ca-phe", "Thương hiệu A", "100 g", "Thái Nguyên", "01/2028", "70.000đ", 70000, "products/tra-lai.webp"],
+["tra-atiso", "Trà atisô túi lọc", "tra-ca-phe", "Thương hiệu A", "200 g", "Lâm Đồng", "12/2027", "85.000đ", 85000, "products/tra-atiso.webp"],
+["tra-hoa-cuc", "Trà hoa cúc", "tra-ca-phe", "Thương hiệu A", "50 g", "Hưng Yên", "11/2027", "80.000đ", 80000, "products/tra-hoa-cuc.webp"],
+["tra-o-long-hop-go", "Trà ô long hộp gỗ", "tra-ca-phe", "Thương hiệu B", "200 g", "Lâm Đồng", "06/2028", "450.000đ", 450000, "products/tra-o-long-hop-go.webp"],
+["tra-shan-tuyet-co-thu", "Trà shan tuyết cổ thụ", "tra-ca-phe", "Thương hiệu B", "200 g", "Hà Giang", "06/2028", "950.000đ", 950000, "products/tra-shan-tuyet-co-thu.webp"],
+["ca-phe-arabica-cau-dat", "Cà phê Arabica Cầu Đất", "tra-ca-phe", "Thương hiệu E", "250 g", "Lâm Đồng", "10/2027", "180.000đ", 180000, "products/ca-phe-arabica-cau-dat.webp"],
+["ca-phe-chon", "Cà phê chồn", "tra-ca-phe", "Thương hiệu E", "250 g", "Đắk Lắk", "12/2027", "650.000đ", 650000, "products/ca-phe-chon.webp"],
+["hat-oc-cho", "Hạt óc chó", "hat-trai-cay-say", "Thương hiệu B", "250 g", "Điện Biên", "09/2027", "220.000đ", 220000, "products/hat-oc-cho.webp"],
+["hanh-nhan", "Hạnh nhân rang", "hat-trai-cay-say", "Thương hiệu B", "250 g", "Úc (nhập khẩu)", "09/2027", "190.000đ", 190000, "products/hanh-nhan.webp"],
+["hat-de-cuoi", "Hạt dẻ cười", "hat-trai-cay-say", "Thương hiệu B", "250 g", "Mỹ (nhập khẩu)", "08/2027", "230.000đ", 230000, "products/hat-de-cuoi.webp"],
+["hat-bi", "Hạt bí", "hat-trai-cay-say", "Thương hiệu F", "300 g", "Đắk Lắk", "07/2027", "85.000đ", 85000, "products/hat-bi.webp"],
+["hat-dua", "Hạt dưa đỏ", "hat-trai-cay-say", "Thương hiệu F", "300 g", "Long An", "07/2027", "60.000đ", 60000, "products/hat-dua.webp"],
+["hat-hon-hop", "Hạt hỗn hợp", "hat-trai-cay-say", "Thương hiệu B", "500 g", "TP.HCM", "08/2027", "260.000đ", 260000, "products/hat-hon-hop.webp"],
+["chuoi-say", "Chuối sấy", "hat-trai-cay-say", "Thương hiệu F", "150 g", "Bến Tre", "05/2027", "55.000đ", 55000, "products/chuoi-say.webp"],
+["cha-la", "Chà là sấy", "hat-trai-cay-say", "Thương hiệu F", "300 g", "Ả Rập Xê Út (nhập khẩu)", "10/2027", "120.000đ", 120000, "products/cha-la.webp"],
+["nho-kho", "Nho khô", "hat-trai-cay-say", "Thương hiệu F", "200 g", "Ninh Thuận", "08/2027", "75.000đ", 75000, "products/nho-kho.webp"],
+["dau-tay-say", "Dâu tây sấy", "hat-trai-cay-say", "Thương hiệu F", "100 g", "Lâm Đồng", "06/2027", "90.000đ", 90000, "products/dau-tay-say.webp"],
+["khoai-lang-say", "Khoai lang sấy", "hat-trai-cay-say", "Thương hiệu F", "200 g", "Lâm Đồng", "05/2027", "65.000đ", 65000, "products/khoai-lang-say.webp"],
+["mut-dua", "Mứt dừa", "mut-keo", "Thương hiệu C", "250 g", "Bến Tre", "02/2027", "70.000đ", 70000, "products/mut-dua.webp"],
+["mut-me", "Mứt me", "mut-keo", "Thương hiệu C", "250 g", "Ninh Thuận", "04/2027", "75.000đ", 75000, "products/mut-me.webp"],
+["keo-cu-do", "Kẹo cu đơ", "mut-keo", "Thương hiệu G", "200 g", "Hà Tĩnh", "04/2027", "55.000đ", 55000, "products/keo-cu-do.webp"],
+["keo-gung", "Kẹo gừng", "mut-keo", "Thương hiệu G", "150 g", "Huế", "06/2027", "50.000đ", 50000, "products/keo-gung.webp"],
+["keo-siu-chau", "Kẹo sìu châu", "mut-keo", "Thương hiệu G", "200 g", "Nam Định", "05/2027", "60.000đ", 60000, "products/keo-siu-chau.webp"],
+["socola-den-ben-tre", "Socola đen Bến Tre", "socola", "Thương hiệu H", "100 g", "Bến Tre", "05/2027", "95.000đ", 95000, "products/socola-den-ben-tre.webp"],
+["socola-hanh-nhan", "Socola hạnh nhân", "socola", "Thương hiệu H", "150 g", "TP.HCM", "05/2027", "120.000đ", 120000, "products/socola-hanh-nhan.webp"],
+["socola-hop-qua", "Socola hộp quà", "socola", "Thương hiệu H", "250 g", "TP.HCM", "07/2027", "380.000đ", 380000, "products/socola-hop-qua.webp"],
+["yen-sao-50g", "Yến sào tinh chế 50 g", "suc-khoe", "Thương hiệu A", "50 g", "Khánh Hòa", "12/2028", "1.500.000đ", 1500000, "products/yen-sao-50g.webp"],
+["yen-sao-100g", "Yến sào tinh chế 100 g", "suc-khoe", "Thương hiệu A", "100 g", "Khánh Hòa", "12/2028", "2.900.000đ", 2900000, "products/yen-sao-100g.webp"],
+["nuoc-yen-6-hu", "Nước yến hộp 6 hũ", "suc-khoe", "Thương hiệu A", "420 g", "Khánh Hòa", "06/2027", "240.000đ", 240000, "products/nuoc-yen-6-hu.webp"],
+["hong-sam", "Hồng sâm lát tẩm mật", "suc-khoe", "Thương hiệu A", "120 g", "Hàn Quốc (nhập khẩu)", "03/2028", "1.200.000đ", 1200000, "products/hong-sam.webp"],
+["dong-trung-ha-thao", "Đông trùng hạ thảo sấy", "suc-khoe", "Thương hiệu A", "20 g", "Lâm Đồng", "06/2028", "850.000đ", 850000, "products/dong-trung-ha-thao.webp"],
+["linh-chi", "Nấm linh chi đỏ", "suc-khoe", "Thương hiệu A", "250 g", "Lâm Đồng", "06/2028", "420.000đ", 420000, "products/linh-chi.webp"],
+["mat-ong-rung", "Mật ong rừng U Minh", "mat-ong-dac-san", "Thương hiệu E", "700 g", "Cà Mau", "06/2028", "280.000đ", 280000, "products/mat-ong-rung.webp"],
+["kho-bo", "Khô bò", "dac-san-man", "Thương hiệu G", "250 g", "Đà Nẵng", "04/2027", "180.000đ", 180000, "products/kho-bo.webp"],
+["cha-bong", "Chà bông heo", "dac-san-man", "Thương hiệu G", "200 g", "TP.HCM", "03/2027", "120.000đ", 120000, "products/cha-bong.webp"],
+["tom-kho", "Tôm khô Cà Mau", "dac-san-man", "Thương hiệu G", "250 g", "Cà Mau", "06/2027", "420.000đ", 420000, "products/tom-kho.webp"],
+["lap-xuong", "Lạp xưởng tươi", "dac-san-man", "Thương hiệu G", "500 g", "Sóc Trăng", "02/2027", "150.000đ", 150000, "products/lap-xuong.webp"],
+["thit-gac-bep", "Thịt trâu gác bếp", "dac-san-man", "Thương hiệu G", "250 g", "Điện Biên", "05/2027", "350.000đ", 350000, "products/thit-gac-bep.webp"],
+["ca-com-kho", "Cá cơm khô", "dac-san-man", "Thương hiệu G", "200 g", "Phú Quốc", "05/2027", "110.000đ", 110000, "products/ca-com-kho.webp"],
+["gao-st25", "Gạo ST25 2 kg", "nhu-yeu-pham-tet", "Thương hiệu F", "2000 g", "Sóc Trăng", "08/2027", "90.000đ", 90000, "products/gao-st25.webp"],
+["nuoc-mam-nhi", "Nước mắm nhĩ", "nhu-yeu-pham-tet", "Thương hiệu E", "600 g", "Phú Quốc", "06/2028", "120.000đ", 120000, "products/nuoc-mam-nhi.webp"],
+["dau-lac", "Dầu lạc ép", "nhu-yeu-pham-tet", "Thương hiệu E", "500 g", "Nghệ An", "12/2027", "120.000đ", 120000, "products/dau-lac.webp"],
+["mien-dong", "Miến dong", "nhu-yeu-pham-tet", "Thương hiệu F", "500 g", "Bắc Kạn", "09/2027", "55.000đ", 55000, "products/mien-dong.webp"],
+["nuoc-ep-nho", "Nước ép nho", "do-uong", "Thương hiệu E", "750 g", "Ninh Thuận", "12/2027", "140.000đ", 140000, "products/nuoc-ep-nho.webp"],
+["sua-hat", "Sữa hạt óc chó", "do-uong", "Thương hiệu E", "1200 g", "Hà Nội", "04/2027", "150.000đ", 150000, "products/sua-hat.webp"],
+["siro-dau", "Siro dâu", "do-uong", "Thương hiệu E", "650 g", "Lâm Đồng", "10/2027", "95.000đ", 95000, "products/siro-dau.webp"],
+["nen-thom", "Nến thơm", "qua-khong-an", "Thương hiệu G", "180 g", "Đà Lạt", "", "120.000đ", 120000, "products/nen-thom.webp"],
+["tinh-dau", "Tinh dầu sả chanh", "qua-khong-an", "Thương hiệu G", "30 g", "Quảng Trị", "", "90.000đ", 90000, "products/tinh-dau.webp"],
+["so-tay-but", "Sổ tay và bút", "qua-khong-an", "Thương hiệu H", "300 g", "Hà Nội", "", "150.000đ", 150000, "products/so-tay-but.webp"],
+["khan-lua", "Khăn lụa", "qua-khong-an", "Thương hiệu H", "80 g", "Hà Đông (Hà Nội)", "", "350.000đ", 350000, "products/khan-lua.webp"],
+["am-chen-bat-trang", "Ấm chén Bát Tràng", "qua-khong-an", "Thương hiệu H", "1200 g", "Bát Tràng (Hà Nội)", "", "650.000đ", 650000, "products/am-chen-bat-trang.webp"],
+["ly-su", "Ly sứ", "qua-khong-an", "Thương hiệu H", "350 g", "Bát Tràng (Hà Nội)", "", "120.000đ", 120000, "products/ly-su.webp"],
+["lich-tet", "Lịch Tết 2027", "qua-khong-an", "Thương hiệu H", "400 g", "TP.HCM", "", "80.000đ", 80000, "products/lich-tet.webp"],
+["bao-li-xi", "Bao lì xì", "qua-khong-an", "Thương hiệu H", "50 g", "TP.HCM", "", "30.000đ", 30000, "products/bao-li-xi.webp"],
+["thiep", "Thiệp viết tay", "qua-khong-an", "Thương hiệu H", "30 g", "TP.HCM", "", "25.000đ", 25000, "products/thiep.webp"]
+];
+const CATS = [["banh", "Bánh"], ["tra-ca-phe", "Trà và cà phê"], ["hat-trai-cay-say", "Hạt và trái cây sấy"], ["mut-keo", "Mứt và kẹo"], ["mat-ong-dac-san", "Mật ong và đặc sản"], ["socola", "Socola"], ["suc-khoe", "Sức khỏe"], ["dac-san-man", "Đặc sản mặn"], ["nhu-yeu-pham-tet", "Nhu yếu phẩm Tết"], ["do-uong", "Đồ uống"], ["qua-khong-an", "Quà không phải đồ ăn"]];
+const IN_BOX = filled ? ["tra-sen", "hat-dieu-rang-muoi", "mut-gung"] : [];   // the box of stage 27
+const LEFT = filled ? 80000 : 500000;
+const VISIBLE = 3;   // whole cards in view at the start of a row
+const toCard = (e) => { const inBox = IN_BOX.includes(e[0]); const over = !inBox && e[8] > LEFT;
+  return { name: e[1], brand: e[3], weight: e[4], origin: e[5], expiry: e[6], dated: !!e[6], undated: !e[6], price: e[7], img: img(e[9]),
+    added: inBox, canAdd: !inBox && !over, over, overText: over ? "Vượt " + (e[8] - LEFT).toLocaleString("vi-VN") + "đ" : "",
+    border: inBox ? "2px solid #3F6B57" : "1px solid #343B36" }; };
+const rows = CATS.map(([id, name]) => { const its = CATALOGUE.filter((e) => e[2] === id); const inBox = its.filter((e) => IN_BOX.includes(e[0])).length;
+  return { id, name, count: its.length + " món", inBox, hasIn: inBox > 0, cards: its.map(toCard), more: its.length > VISIBLE,
+    share: Math.round(100 * VISIBLE / its.length) + "%", pos: "1–" + VISIBLE + " / " + its.length + " món" }; });
+
+// Which moment of the pickers this board draws (option B, decision 2026-11-17): "rows" (nothing open), "category-open",
+// "budget-open", "chosen" (Socola picked: the grid of that category) or "picked" (800.000đ picked, not saved yet).
+const view = "rows";
+const chosen = view === "chosen";
+const PRESET_LIST = ["300.000đ", "500.000đ", "800.000đ", "1 triệu", "2 triệu", "5 triệu", "10 triệu"];
+const fieldBudget = view === "picked" ? "800.000đ" : "500.000đ";
+const ON = "border:2px solid #9EC3A5;background:#1D2B24;color:#BFE3CF", OFF = "border:1px solid #343B36;background:#121513;color:#EEF0EA";
+const allTile = { name: "Tất cả", count: CATALOGUE.length + " món", hasIn: false, inBox: 0, current: chosen ? "false" : "page", style: chosen ? OFF : ON };
+const tiles = [allTile].concat(rows.map((r) => ({ name: r.name, count: r.count, hasIn: r.hasIn, inBox: r.inBox, current: chosen && r.id === "socola" ? "page" : "false",
+  style: chosen && r.id === "socola" ? ON : OFF })));
+const amounts = PRESET_LIST.map((p) => ({ label: p, current: String(p === fieldBudget), style: p === fieldBudget ? ON : OFF }));
+const socola = rows.find((r) => r.id === "socola");
 return {
+view, chosen, notChosen: !chosen, showRows: !chosen, showGrid: chosen, gridCards: socola.cards,
+catOpen: String(view === "category-open"), budgetOpen: String(view === "budget-open"), catPanel: view === "category-open", budgetPanel: view === "budget-open",
+catRot: view === "category-open" ? "180deg" : "0deg", budgetRot: view === "budget-open" ? "180deg" : "0deg",
+catBtnBg: view === "category-open" ? "#1D2B24" : "#1B201C", budgetBtnBg: view === "budget-open" ? "#1D2B24" : "#1B201C",
+unsaved: view === "picked", tiles, amounts,
+countText: chosen ? "Socola: hiện 3 món." : "Hiện 81 món trong 11 danh mục. 2 món hết hạn trước ngày giao đang được ẩn.", hiddenSome: !chosen,
+sheet: false && (view === "category-open" || view === "budget-open"), sheetCat: view === "category-open", sheetBudget: view === "budget-open", sheetTop: view === "budget-open" ? "300px" : "560px",
 locked: stage === "02",
 open: stage !== "02",
 empty: stage === "26",
 filled,
-budget: stage === "02" ? "" : "500.000đ",
+budget: stage === "02" ? "" : fieldBudget,
 date: stage === "02" ? "" : "15/01/2027",
 steps: [
   step("1", "Ngân sách", stage === "02" ? "current" : "done"),
@@ -221,33 +359,20 @@ steps: [
   step("4", "Xem lại", "todo")
 ],
 starters: [
-{ name: "Hộp biếu gia đình", budget: "500.000đ", count: "4 món", i1: img("products/tra-sen.webp"), i2: img("products/hat-dieu.webp"), i3: img("products/mut-gung.webp") },
-{ name: "Hộp biếu đối tác", budget: "800.000đ", count: "5 món", i1: img("products/tra-shan-tuyet.webp"), i2: img("products/hat-macca.webp"), i3: img("products/mat-ong-nhan.webp") },
-{ name: "Hộp biếu đồng nghiệp", budget: "300.000đ", count: "4 món", i1: img("products/ca-phe-phin-giay.webp"), i2: img("products/keo-dua.webp"), i3: img("products/mit-say.webp") }
+// Hamper photos are stand-ins until the Gemini photos exist (same hampers as the Tết occasion page, 500.000đ).
+{ name: "Hộp Sum Vầy", who: "Biếu gia đình", count: "4 món", total: "485.000đ", photo: img("occasions/tet.webp") },
+{ name: "Hộp Lộc Xuân", who: "Biếu đồng nghiệp", count: "4 món", total: "495.000đ", photo: img("hero.webp") },
+{ name: "Hộp Khỏe Xuân", who: "Biếu ông bà", count: "3 món", total: "470.000đ", photo: img("packaging/box-hard.webp") },
+{ name: "Hộp Ba Miền", who: "Biếu bạn bè", count: "5 món", total: "490.000đ", photo: img("blog/chon-hop-qua-tet-theo-ngan-sach.webp") }
 ],
-presets: ["300.000đ", "500.000đ", "800.000đ", "1.000.000đ"],
-cats: [
-{ label: "Tất cả", bg: "#3F6B57", fg: "#FFFFFF" },
-{ label: "Bánh", bg: "transparent", fg: "#9EC3A5" },
-{ label: "Trà và cà phê", bg: "transparent", fg: "#9EC3A5" },
-{ label: "Hạt và trái cây sấy", bg: "transparent", fg: "#9EC3A5" },
-{ label: "Mứt và kẹo", bg: "transparent", fg: "#9EC3A5" },
-{ label: "Mật ong và đặc sản", bg: "transparent", fg: "#9EC3A5" }
+occasions: [
+{ label: "Tết", on: "true", style: "background:#5A1D16;color:#FFFFFF;border:1px solid #F2A193" },
+{ label: "20/11", on: "false", style: "background:#121513;color:#EEF0EA;border:1px solid #343B36" },
+{ label: "8/3 và 20/10", on: "false", style: "background:#121513;color:#EEF0EA;border:1px solid #343B36" }
 ],
-// The "only items in date" box is ticked, so no out-of-date item is drawn (state 04 shows that card).
-items: [
-item("Trà sen", "tra-sen.webp", "Thương hiệu A", "100 g", "Hà Nội", "12/2027", "180.000đ", true),
-item("Hạt điều rang muối", "hat-dieu.webp", "Thương hiệu B", "250 g", "Bình Phước", "08/2027", "150.000đ", true),
-item("Mứt gừng", "mut-gung.webp", "Thương hiệu C", "200 g", "Huế", "03/2027", "90.000đ", true),
-item("Mít sấy", "mit-say.webp", "Thương hiệu F", "150 g", "Tiền Giang", "07/2027", "80.000đ", false),
-item("Cà phê rang xay", "ca-phe.webp", "Thương hiệu E", "250 g", "Đắk Lắk", "02/2028", "120.000đ", false, "Vượt 40.000đ"),
-item("Kẹo dừa", "keo-dua.webp", "Thương hiệu F", "150 g", "Bến Tre", "06/2027", "55.000đ", false)
-],
-lines: [
-{ name: "Trà sen", weight: "100 g", expiry: "12/2027", price: "180.000đ" },
-{ name: "Hạt điều rang muối", weight: "250 g", expiry: "08/2027", price: "150.000đ" },
-{ name: "Mứt gừng", weight: "200 g", expiry: "03/2027", price: "90.000đ" }
-],
+presets: ["300.000đ", "500.000đ", "800.000đ", "1 triệu", "2 triệu", "5 triệu", "10 triệu"],
+cats: [{ label: "Tất cả", bg: "#3F6B57", fg: "#FFFFFF", has: false, n: "", bubble: "" }].concat(rows.map((r) => ({ label: r.name, bg: "transparent", fg: "#9EC3A5", has: r.hasIn, n: String(r.inBox), bubble: "background:#9EC3A5;color:#121513" }))),
+rows,
 packs: [
 { name: "Hộp giấy kraft", img: img("packaging/box-kraft.webp"), text: "Giấy tái chế, buộc dây gai. Hợp quà công ty.", fee: "Miễn phí", ring: "5px solid #9EC3A5", border: "2px solid #9EC3A5", bg: "#1D2B24" },
 { name: "Hộp cứng có nơ", img: img("packaging/box-hard.webp"), text: "Hộp cứng, lót giấy, nơ vải. Hợp quà Tết.", fee: "+40.000đ", ring: "1.5px solid #6E776F", border: "1px solid #343B36", bg: "#1B201C" },

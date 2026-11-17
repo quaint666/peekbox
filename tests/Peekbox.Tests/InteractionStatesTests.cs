@@ -88,7 +88,8 @@ public class InteractionStatesTests
     [InlineData(".cart-link", true, true)]
     [InlineData(".site-nav a", true, false)]
     [InlineData(".cta__button", true, true)]
-    [InlineData(".chip-list .btn--chip[aria-pressed='true']", true, true)]
+    [InlineData(".picker-tile", true, true)]
+    [InlineData(".category-control", true, true)]
     public void Each_control_has_its_hover_and_pressed_look(string control, bool hover, bool pressed)
     {
         var selectors = Rules().SelectMany(r => r.Selector.Split(',').Select(s => s.Trim())).ToList();

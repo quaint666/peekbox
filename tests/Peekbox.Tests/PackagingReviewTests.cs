@@ -168,6 +168,23 @@ public class PackagingReviewTests(PeekboxFixture fixture)
         Assert.Equal("/builder", (await (await VisitorAsync()).GetAsync("/builder/review")).Headers.Location?.OriginalString);
     }
 
+    // Items with no expiry date are not counted as checked: the note names how many were checked and says the others need
+    // no check; a box of only such items says no check is needed (decision 2026-11-17).
+    [Fact]
+    public async Task The_in_date_note_does_not_count_items_with_no_expiry_date_as_checked()
+    {
+        var mixed = Summary(Text(await (await VisitorAsync(("tra-sen", 1), ("nen-thom", 1), ("so-tay-but", 1))).PageAsync("/builder/review")));
+        Assert.Contains("1 món có hạn dùng còn hạn đến sau ngày giao 15/01/2027 cộng 7 ngày dự phòng. 2 món không có hạn dùng nên không cần kiểm tra.", mixed);
+        Assert.DoesNotContain("Cả 3 món", mixed);
+        var two = Summary(Text(await (await VisitorAsync(("tra-sen", 1), ("hat-macca", 1), ("nen-thom", 1))).PageAsync("/builder/review")));
+        Assert.Contains("2 món có hạn dùng đều còn hạn đến sau ngày giao 15/01/2027 cộng 7 ngày dự phòng. 1 món không có hạn dùng nên không cần kiểm tra.", two);
+        Assert.Contains("<span class=\"badge badge--muted\">Không có hạn dùng</span>", Line(Text(await (await VisitorAsync(("nen-thom", 1))).PageAsync("/builder/review")), "Nến thơm"));
+
+        var undated = Summary(Text(await (await VisitorAsync(("nen-thom", 1))).PageAsync("/builder/review")));
+        Assert.Contains("Các món trong hộp không có hạn dùng, nên không cần kiểm tra theo ngày giao.", undated);
+        Assert.DoesNotContain("đều còn hạn", undated);
+    }
+
     [Fact]
     public async Task The_review_page_shows_the_hamper_read_only_with_the_summary()
     {

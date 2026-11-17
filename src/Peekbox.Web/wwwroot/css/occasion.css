@@ -1,0 +1,181 @@
+/* The occasion pages (F15; mockups 13 to 15, states 31 and 32). The accent class picks the occasion's colours from
+   tokens.css; the main buttons stay sage on every page (decision 2026-11-17). */
+
+.occ--tet { --occ-ink: var(--occasion-ink-tet); --occ-panel: var(--occasion-panel-tet); --occ-tint: var(--occasion-tint-tet); --occ-soft: var(--occasion-soft-tet); --occ-line: var(--occasion-line-tet); }
+.occ--teachers { --occ-ink: var(--occasion-ink-teachers); --occ-panel: var(--occasion-panel-teachers); --occ-tint: var(--occasion-tint-teachers); --occ-soft: var(--occasion-soft-teachers); --occ-line: var(--occasion-line-teachers); }
+.occ--women { --occ-ink: var(--occasion-ink-women); --occ-panel: var(--occasion-panel-women); --occ-tint: var(--occasion-tint-women); --occ-soft: var(--occasion-soft-women); --occ-line: var(--occasion-line-women); }
+
+.occ { background: var(--occ-tint); }
+
+/* Hero: the occasion's deep colour with a glow of its second colour, and a line of it underneath. White text in both
+   themes: the panel is dark in both. */
+.occ-hero {
+    background:
+        radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--occ-line) 45%, transparent), transparent 42%),
+        radial-gradient(circle at 6% 100%, color-mix(in srgb, var(--occ-line) 18%, transparent), transparent 38%),
+        var(--occ-panel);
+    color: var(--color-on-primary);
+    border-bottom: var(--space-1) solid var(--occ-line);
+}
+.occ-hero__inner { display: flex; flex-direction: column; gap: var(--space-5); padding-block: var(--space-5) var(--space-6); }
+.occ-hero__text { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+.occ-hero__crumbs { font-size: var(--text-sm); }
+.occ-hero__crumbs a, .occ-hero__others a { color: inherit; }
+.occ-hero__chip {
+    margin: 0;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 999px;
+    background: var(--color-on-primary);
+    color: var(--occasion-button-ink);
+    font-size: var(--text-xs);
+    font-weight: 700;
+}
+.occ-hero__title { margin: 0; font-size: var(--text-hero-sm); line-height: 1.2; }
+.occ-hero__lead { margin: 0; font-size: var(--text-base); line-height: 1.65; }
+.occ-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.occ-hero__start { gap: var(--space-2); border-radius: 999px; background: var(--color-on-primary); color: var(--occasion-button-ink); }
+.occ-hero__start .icon { width: 18px; height: 18px; }
+.occ-hero__others { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); font-size: var(--text-sm); }
+.occ-hero__others a { display: inline-flex; align-items: center; min-height: var(--tap-min); font-size: var(--text-md); font-weight: 600; }
+.occ-hero__photo { width: 100%; aspect-ratio: 4 / 3; height: auto; border-radius: var(--radius-lg); object-fit: cover; filter: var(--photo-filter); }
+
+/* Budget chips: plain links to the rows below. */
+.occ-budgets { background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.occ-budgets__inner { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding-block: var(--space-4); }
+.occ-budgets__label { margin-right: var(--space-1); font-size: var(--text-sm); font-weight: 600; }
+.occ-budgets__chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-min);
+    padding: 0 var(--space-4);
+    border: 1px solid var(--occ-ink);
+    border-radius: 999px;
+    color: var(--occ-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.occ-list { display: flex; flex-direction: column; gap: var(--space-3); padding-block: var(--space-6) var(--space-5); }
+.occ-list__title { margin: 0; font-size: var(--text-2xl); }
+.occ-list__text { margin: 0 0 var(--space-4); font-size: var(--text-base); line-height: 1.6; color: var(--color-muted); }
+
+/* One budget: a heading and a row that scrolls sideways and snaps to each card. */
+.occ-tier { display: flex; flex-direction: column; gap: var(--space-4); padding-block: var(--space-4); scroll-margin-top: var(--space-4); }
+.occ-tier__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.occ-tier__title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0; font-size: var(--title-sm); font-weight: 600; }
+.occ-tier__mark { width: 6px; height: var(--space-5); border-radius: 3px; background: var(--occ-ink); }
+.occ-tier__count { font-size: var(--text-md); font-weight: 400; color: var(--color-muted); }
+
+
+.occ-row {
+    display: flex;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 2px 2px var(--space-3);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 2px;   /* the snap line is the padding edge, so the row starts at 0 and ← is off */
+    overscroll-behavior-x: contain;
+    touch-action: manipulation;
+}
+.occ-row:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+    .occ-row { scroll-behavior: smooth; }
+}
+
+/* A hamper card: about one and a bit on a phone, 3¼ on a wide screen. */
+.hamper {
+    flex: none;
+    width: 82%;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+}
+.hamper__photo { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; background: var(--color-border-soft); filter: var(--photo-filter); }   /* the hamper photos are 3:2 */
+.hamper__body { flex: 1; display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4); }
+.hamper__who { align-self: flex-start; padding: var(--space-1) 10px; border-radius: 999px; background: var(--occ-soft); color: var(--color-text); font-size: var(--text-2xs); font-weight: 600; }
+.hamper__name { margin: 0; font-size: var(--text-lg); line-height: 1.3; }
+.hamper__items { margin: 0; font-size: var(--text-sm); line-height: 1.55; }
+.hamper__expiry { margin: 0; font-size: var(--text-2xs); font-weight: 600; color: var(--color-on-tint); }
+.hamper__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin: auto 0 0;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-border-soft);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+}
+.hamper__total strong { font-size: var(--text-lg); color: var(--color-text); }
+.hamper__use { width: 100%; }
+.hamper form { display: flex; }
+.hamper__sold { margin: 0; font-size: var(--text-xs); line-height: 1.5; color: var(--color-danger-text); }
+.hamper__more {
+    align-self: center;
+    min-height: var(--tap-min);
+    padding: 0 var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--color-primary-text);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* "Xem từng món" (state 32): a wider question box with the items. */
+.hamper-items { width: min(100% - 2 * var(--space-4), 520px); max-height: calc(100dvh - 2 * var(--space-4)); overflow-y: auto; display: none; flex-direction: column; gap: var(--space-3); }
+.hamper-items:popover-open { display: flex; }
+.hamper-items__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border-soft); }
+.hamper-items__title { margin: 0; font-size: var(--text-xl); }
+.hamper-items__list { margin: 0; padding: 0; list-style: none; }
+.hamper-items__line { display: flex; justify-content: space-between; gap: var(--space-3); padding-block: var(--space-3); border-bottom: 1px solid var(--color-border-soft); font-size: var(--text-md); }
+.hamper-items__line > div { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+.hamper-items__sum { display: flex; justify-content: space-between; }
+.hamper-items .hamper__total { margin-top: 0; border-top: 0; padding-top: 0; }
+.hamper-items .hamper__total strong { font-size: var(--title-sm); }
+
+/* "Tặng kèm hoa?" (20/11 and the women's page). */
+.occ-bloomy { padding-block: var(--space-2) var(--space-6); }
+.occ-bloomy__card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4) 28px;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 6px solid var(--occ-ink);
+    border-radius: var(--radius-md);
+}
+.occ-bloomy__card > div { flex: 1 1 320px; display: flex; flex-direction: column; gap: 6px; }
+.occ-bloomy__title { margin: 0; font-size: var(--text-xl); font-weight: 600; }
+.occ-bloomy__text { margin: 0; font-size: var(--text-md); line-height: 1.6; color: var(--color-muted); }
+.occ-bloomy .btn { gap: var(--space-2); }
+.occ-bloomy .icon { width: 16px; height: 16px; }
+
+@media (hover: hover) {
+    .occ-budgets__chip:hover { background: var(--occ-soft); }
+}
+
+@media (min-width: 900px) {
+    .occ-hero__inner { flex-direction: row; align-items: center; gap: 40px; padding-block: 40px 48px; }
+    .occ-hero__text { flex: 1 1 460px; }
+    .occ-hero__title { font-size: var(--text-hero); }
+    .occ-hero__lead { font-size: var(--text-plus); }
+    .occ-hero__photo { flex: 1 1 420px; min-width: 0; max-width: 520px; }
+    .occ-list__title { font-size: var(--title-lg); }
+    .occ-row { gap: 20px; }
+    .hamper { width: calc((100% - 3 * 20px) / 3.25); }
+}

@@ -9,29 +9,50 @@ using Peekbox.Web.Services;
 
 namespace Peekbox.Web.Controllers;
 
-public class BuilderController(BuilderLimits limits, HamperService hampers, ItemCatalog catalog) : Controller
+public class BuilderController(BuilderLimits limits, HamperService hampers, ItemCatalog catalog, ReadyHampers readyHampers) : Controller
 {
     // The page of the hamper builder (/builder). It shows the saved budget and date, found by the cookie, and once both
     // are saved, the items. The filter form sends the category, the "only items in date" checkbox, the search words (q)
     // and the sort in the address. HEAD as well, as link checkers and uptime monitors ask (the home page already answers it).
+    // chon is an amount picked from "Chọn nhanh" (one of BudgetTiers.All; anything else is ignored): it fills the field
+    // and nothing is saved. dip is the occasion of "Hộp gợi ý".
     [HttpGet(SiteLinks.BuilderPath)]
     [HttpHead(SiteLinks.BuilderPath)]
-    public async Task<IActionResult> Index(string? category, string? q, string? sort, bool inDate = true, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Index(string? category, string? q, string? sort, string? chon, string? dip, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
     {
+        var picked = BudgetTiers.All.Cast<long?>().FirstOrDefault(t => t.ToString() == chon);
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is null)
         {
-            return View(new BuilderViewModel());
+            return View(new BuilderViewModel { BudgetText = picked is { } p ? Vnd.Format(p) : "", PickedBudgetVnd = picked });
         }
 
-        return View(await WithItemsAsync(hamper, new BuilderViewModel
+        var model = await WithItemsAsync(hamper, new BuilderViewModel
         {
-            BudgetText = Vnd.Format(hamper.BudgetVnd),
+            BudgetText = Vnd.Format(picked ?? hamper.BudgetVnd),
+            SavedBudgetVnd = hamper.BudgetVnd,
+            PickedBudgetVnd = picked == hamper.BudgetVnd ? null : picked,
             DeliveryDateText = hamper.DeliveryDate?.ToString(BuilderLimits.DateFormat, CultureInfo.InvariantCulture) ?? "",
             // The cookie lasts 180 days, so a date saved earlier can be today or in the past by now. It shows the same
             // warning as typing such a date, and the items stay locked until a new date is saved (decision 2026-11-16).
             DateProblem = hamper.DeliveryDate < limits.Earliest ? DateProblem.TooEarly : DateProblem.None,
-        }, new ItemFilter(category, inDate, q, sort), cancellationToken));
+        }, new ItemFilter(category, inDate, q, sort, fit), cancellationToken);
+        return View(model.Box is null ? model : model with { Suggestions = await SuggestionsAsync(model.Box.BudgetVnd, dip, cancellationToken) });
+    }
+
+    // "Hộp gợi ý": the hampers of one occasion (the first when dip is not one) at the highest of its budgets that fits the
+    // saved one, so 5 triệu on 20/11 (which stops at 2 triệu) shows the 2 triệu hampers. Null under the lowest budget.
+    private async Task<Suggestions?> SuggestionsAsync(long budgetVnd, string? dip, CancellationToken cancellationToken)
+    {
+        var occasions = await readyHampers.OccasionsAsync(cancellationToken);
+        if (occasions.Count == 0 || budgetVnd < BudgetTiers.All[0])
+        {
+            return null;
+        }
+
+        var chosen = occasions.FirstOrDefault(o => o.Id == dip) ?? occasions[0];
+        var group = (await readyHampers.PageAsync(chosen.Id, cancellationToken))?.Groups.LastOrDefault(g => g.BudgetVnd <= budgetVnd);
+        return group is null ? null : new Suggestions(occasions, chosen, group.BudgetVnd, group.Hampers);
     }
 
     private bool ItemsOpen(Hamper? hamper) => limits.ItemsOpen(hamper?.DeliveryDate);
@@ -104,7 +125,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // button the page showed as off, or a made-up request, changes nothing. An amount that is not a number is refused:
     // bound as 0, it would take the item out.
     [HttpPost(SiteLinks.QuantityPath)]
-    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -135,19 +156,18 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             return Redirect(SiteLinks.Cart.Href);
         }
 
-        var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false" }
+        var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false", ["fit"] = fit ? "true" : null }
             .Where(p => !string.IsNullOrEmpty(p.Value));
         var anchor = Anchors.Link(string.IsNullOrEmpty(slug) ? Anchors.Items : Anchors.ItemCard(slug));
         return Redirect(QueryHelpers.AddQueryString(SiteLinks.Builder.Href, back) + anchor);
     }
 
-    // "Lưu" and the quick amounts both end here. A wrong value saves nothing: the page comes back with a warning
+    // "Lưu" ends here ("Chọn nhanh" only fills the field). A wrong value saves nothing: the page comes back with a warning
     // under the field and what the visitor typed. A good one is saved, and the visitor goes back to /builder (post, then redirect).
     [HttpPost(SiteLinks.BuilderPath)]
     public async Task<IActionResult> Index(BuilderForm form, CancellationToken cancellationToken)
     {
-        // A quick amount button sends its own amount; it wins over what is typed in the field.
-        var budgetText = string.IsNullOrWhiteSpace(form.QuickAmount) ? form.Budget : form.QuickAmount;
+        var budgetText = form.Budget;
         var budgetProblem = limits.ParseBudget(budgetText, out var budget);
         var dateProblem = limits.ParseDate(form.DeliveryDate, out var date);
 
@@ -158,6 +178,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             return View(await WithItemsAsync(saved, new BuilderViewModel
             {
                 BudgetText = budgetProblem == BudgetProblem.None ? Vnd.Format(budget) : budgetText ?? "",
+                SavedBudgetVnd = saved?.BudgetVnd,
                 DeliveryDateText = form.DeliveryDate ?? "",
                 BudgetProblem = budgetProblem,
                 DateProblem = dateProblem,

@@ -58,6 +58,17 @@ public static class SiteLinks
 
     public static string Order(string token) => $"{OrdersPath}/{Uri.EscapeDataString(token)}";
 
+    // The occasion pages (F15): /dip/tet, /dip/20-11, /dip/phu-nu. The id is the occasion's key in content/data/hampers.json.
+    public const string OccasionsPath = "/dip";
+
+    public static string Occasion(string id) => $"{OccasionsPath}/{Uri.EscapeDataString(id)}";
+
+    // "Dùng hộp này" on an occasion page.
+    public const string UseHamperPath = "/dip/dung-hop";
+
+    // Bloomy, the flower shop of the same team: the occasion pages link to it (decision 2026-11-17).
+    public const string Bloomy = "https://bloomy.quaintshomelabdomain.uk";
+
     public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, About, Commitments, Blog, Track];
     public static readonly IReadOnlyList<SiteLink> FooterExplore = [About, Commitments, Blog, Track];
     public static readonly IReadOnlyList<SiteLink> FooterLegal = [Terms, Privacy];

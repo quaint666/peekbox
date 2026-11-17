@@ -1,0 +1,132 @@
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model OccasionViewModel
+@{
+    var occasion = Model.Page.Occasion;
+    ViewData["Title"] = occasion.Title;
+    ViewData["FullWidth"] = true;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/occasion.css" asp-append-version="true">
+}
+
+@section Scripts {
+    <script type="module" src="~/js/occasion.js" asp-append-version="true"></script>
+}
+
+@* An occasion page (F15; mockups 13 to 15, states 31 and 32). The colours come from the accent key (occasion.css). *@
+<div class="occ occ--@occasion.Accent">
+    <section class="occ-hero">
+        <div class="container occ-hero__inner">
+            <div class="occ-hero__text">
+                <nav class="occ-hero__crumbs" aria-label="Vị trí"><a href="@SiteLinks.Home.Href">@SiteLinks.Home.Label</a> / @occasion.Name</nav>
+                <p class="occ-hero__chip">@occasion.Chip</p>
+                <h1 class="occ-hero__title">@occasion.Title</h1>
+                <p class="occ-hero__lead">@occasion.Lead</p>
+                <div class="occ-hero__actions">
+                    <a class="btn btn--lg occ-hero__start" href="@SiteLinks.Builder.Href">Tự tạo hộp từ đầu<partial name="_Icon" model='"arrow"' /></a>
+                    <span class="occ-hero__others">Dịp khác:
+                        @foreach (var other in Model.Others)
+                        {
+                            <a href="@SiteLinks.Occasion(other.Id)">@other.Name</a>
+                        }
+                    </span>
+                </div>
+            </div>
+            <img class="occ-hero__photo" src="@occasion.ImagePath" alt="" width="1264" height="848">
+        </div>
+    </section>
+
+    <nav class="occ-budgets" aria-label="Ngân sách">
+        <div class="container occ-budgets__inner">
+            <span class="occ-budgets__label">Ngân sách:</span>
+            @foreach (var group in Model.Page.Groups)
+            {
+                <a class="occ-budgets__chip" href="@Anchors.Link(Anchors.Budget(group.BudgetVnd))">@Vnd.Short(group.BudgetVnd)</a>
+            }
+        </div>
+    </nav>
+
+    <div class="container occ-list">
+        <h2 class="occ-list__title">Hộp Peekbox chọn sẵn</h2>
+        <p class="occ-list__text">Tổng của mỗi hộp đã gồm đóng gói và không vượt mức ngân sách. "Dùng hộp này" cho các món vào hộp của bạn để sửa tiếp.</p>
+
+        @foreach (var group in Model.Page.Groups)
+        {
+            var headingId = Anchors.Budget(group.BudgetVnd) + "-ten";
+            <section class="occ-tier" id="@Anchors.Budget(group.BudgetVnd)" aria-labelledby="@headingId" data-row>
+                <div class="occ-tier__head">
+                    <h3 class="occ-tier__title" id="@headingId"><span class="occ-tier__mark" aria-hidden="true"></span>Ngân sách @Vnd.Format(group.BudgetVnd) <span class="occ-tier__count">· @group.Hampers.Count hộp</span></h3>
+                    @* Shown by occasion.ts; without a script the row still scrolls by swipe, wheel and scrollbar. *@
+                    <div class="row-buttons" hidden>
+                        <button type="button" class="icon-btn row-buttons__btn" data-row-prev aria-label="Hộp trước"><partial name="_Icon" model='"arrow-left"' /></button>
+                        <button type="button" class="icon-btn row-buttons__btn" data-row-next aria-label="Hộp sau"><partial name="_Icon" model='"arrow"' /></button>
+                    </div>
+                </div>
+                <ul class="occ-row" data-row-track tabindex="0" aria-label="Hộp ngân sách @Vnd.Format(group.BudgetVnd)">
+                    @for (var i = 0; i < group.Hampers.Count; i++)
+                    {
+                        var card = group.Hampers[i];
+                        var earliest = card.EarliestExpiry;
+                        <li class="hamper" id="@Anchors.HamperCard(card.Slug)" aria-label="@card.Name, @(i + 1) / @group.Hampers.Count">
+                            <img class="hamper__photo" src="@card.ImagePath" alt="" width="570" height="380" loading="lazy">
+                            <div class="hamper__body">
+                                <span class="hamper__who">@card.ForWhom</span>
+                                <h4 class="hamper__name">@card.Name</h4>
+                                <p class="meta">@card.Count món · @card.Packaging.Name</p>
+                                <p class="hamper__items">@string.Join(", ", card.Lines.Select(l => l.Quantity > 1 ? $"{l.Name} × {l.Quantity}" : l.Name))</p>
+                                <p class="hamper__expiry">@(earliest is { ExpiryDate: { } date } ? $"Hạn sớm nhất: {VnDate.Month(date)} ({earliest.Name})" : VnDate.NoExpiry)</p>
+                                <p class="hamper__total"><span>Tổng (đã gồm thuế)</span><strong>@Vnd.Format(card.Quote.TotalVnd)</strong></p>
+                                <partial name="_UseHamper" model='new UseHamperControl(card, occasion.Id, Model.Box, "card")' />
+                                <button type="button" class="hamper__more" popovertarget="@Anchors.HamperItems(card.Slug)">Xem từng món</button>
+                            </div>
+
+                            <div class="confirm hamper-items" id="@Anchors.HamperItems(card.Slug)" popover role="dialog" aria-labelledby="@Anchors.HamperItems(card.Slug)-ten">
+                                <div class="hamper-items__head">
+                                    <div>
+                                        <p class="meta">@card.ForWhom · @card.Count món</p>
+                                        <h2 class="hamper-items__title" id="@Anchors.HamperItems(card.Slug)-ten">@card.Name</h2>
+                                    </div>
+                                    <button type="button" class="icon-btn" popovertarget="@Anchors.HamperItems(card.Slug)" popovertargetaction="hide" aria-label="Đóng"><partial name="_Icon" model='"close"' /></button>
+                                </div>
+                                <ul class="hamper-items__list">
+                                    @foreach (var line in card.Lines)
+                                    {
+                                        <li class="hamper-items__line">
+                                            <div>
+                                                <strong>@line.Name@(line.Quantity > 1 ? $" × {line.Quantity}" : "")</strong>
+                                                <p class="meta">@line.Brand · @line.WeightGrams g · Xuất xứ: @line.Origin</p>
+                                                <span class="badge@(line.ExpiryDate is null ? " badge--muted" : "")">@VnDate.Expiry(line.ExpiryDate)</span>
+                                            </div>
+                                            <span>@Vnd.Format(line.PriceVnd * line.Quantity)</span>
+                                        </li>
+                                    }
+                                </ul>
+                                <p class="hamper-items__sum meta"><span>Đóng gói: @card.Packaging.Name</span><span>@Vnd.Format(card.Packaging.FeeVnd)</span></p>
+                                <p class="hamper__total"><span>Tổng (đã gồm thuế)</span><strong>@Vnd.Format(card.Quote.TotalVnd)</strong></p>
+                                <p class="meta">Hạn dùng được kiểm tra theo ngày giao khi các món vào hộp của bạn. Món không có hạn dùng (như nến thơm) không cần kiểm tra.</p>
+                                <partial name="_UseHamper" model='new UseHamperControl(card, occasion.Id, Model.Box, "list")' />
+                            </div>
+
+                            <partial name="_ReplaceHamper" model='new UseHamperControl(card, occasion.Id, Model.Box, "ask")' />
+                        </li>
+                    }
+                </ul>
+            </section>
+        }
+    </div>
+
+    @if (occasion.BloomyLink is { } bloomy)
+    {
+        <section class="container occ-bloomy" aria-labelledby="bloomy-ten">
+            <div class="occ-bloomy__card">
+                <div>
+                    <h2 class="occ-bloomy__title" id="bloomy-ten">Tặng kèm hoa?</h2>
+                    <p class="occ-bloomy__text">Bloomy là tiệm hoa cùng nhóm làm ra Peekbox. Hoa được đặt và giao riêng trên trang của Bloomy.</p>
+                </div>
+                <a class="btn btn--outline" href="@SiteLinks.Bloomy" rel="noopener">@bloomy<partial name="_Icon" model='"external"' /></a>
+            </div>
+        </section>
+    }
+</div>

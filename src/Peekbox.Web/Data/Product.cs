@@ -19,7 +19,8 @@ public class Product
 
     public required string Origin { get; set; }
 
-    public DateOnly ExpiryDate { get; set; }
+    // Null for an item that is not food (a candle, a tea set): it has no expiry date and the shelf-life rule skips it.
+    public DateOnly? ExpiryDate { get; set; }
 
     // Whole dong, tax included.
     public long PriceVnd { get; set; }

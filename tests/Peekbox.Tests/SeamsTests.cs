@@ -66,10 +66,14 @@ public class SeamsTests
         var code = Read(Path.Combine(RepoRoot.WebProject, "Scripts", "builder.ts"));
         var applyPage = Regex.Match(code, @"function applyPage\(fresh: Document\): void \{([\s\S]*?)\n\}").Groups[1].Value;
 
-        foreach (var part in new[] { "'#hop-cua-ban'", "'.box-bar'", "'.cart-link'", "'#packaging-lock'", "'#dong-goi'" })
+        foreach (var part in new[] { "'.box-bar'", "'.cart-link'", "'#packaging-lock'", "'#dong-goi'" })
         {
             Assert.Contains($"swap({part}, fresh", applyPage);
         }
+
+        // "Hộp của bạn" goes through swapPanel, which swaps it and keeps the phone's sheet open.
+        Assert.Contains("swapPanel(fresh)", applyPage);
+        Assert.Contains("swap('#hop-cua-ban', fresh)", Regex.Match(code, @"function swapPanel\(fresh: Document\): void \{([\s\S]*?)\n\}").Groups[1].Value);
     }
 
     [Fact]

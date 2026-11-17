@@ -119,4 +119,13 @@ public class BuilderLimitsTests
     {
         Assert.Equal(expected, BuilderLimits.IsInDate(DateOnly.Parse(expiry), new DateOnly(2027, 1, 15)));
     }
+
+    // An item that is not food (a candle, a tea set) has no expiry date and is in date for any delivery date.
+    [Fact]
+    public void An_item_with_no_expiry_date_is_always_in_date()
+    {
+        Assert.True(BuilderLimits.IsInDate((DateOnly?)null, new DateOnly(2027, 1, 15)));
+        Assert.True(BuilderLimits.IsInDate((DateOnly?)null, new DateOnly(2099, 12, 31)));
+        Assert.False(BuilderLimits.IsInDate((DateOnly?)new DateOnly(2027, 1, 22), new DateOnly(2027, 1, 15)));   // a date still counts
+    }
 }

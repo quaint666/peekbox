@@ -28,6 +28,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<BuilderLimits>();
 builder.Services.AddScoped<HamperService>();
 builder.Services.AddScoped<ItemCatalog>();
+builder.Services.AddScoped<ReadyHampers>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddSingleton<RateLimits>();
 

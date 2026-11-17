@@ -78,7 +78,7 @@
             {
                 @* The whole card is one link. The button inside is only its label: a link inside a link is not allowed. *@
                 <li class="occasions__item">
-                    <a class="occasion occasion--@occasion.Accent" href="@SiteLinks.Builder.Href">
+                    <a class="occasion occasion--@occasion.Accent" href="@SiteLinks.Occasion(occasion.Id)">
                         <div class="occasion__photo"><img class="occasion__img" src="~/images/occasions/@occasion.Image" alt="" width="1264" height="848" loading="lazy"></div>
                         <div class="occasion__panel">
                             <span class="occasion__chip">@occasion.Chip</span>

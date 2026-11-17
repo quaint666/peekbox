@@ -21,7 +21,6 @@
 .btn--lg { min-height: 52px; padding: 0 28px; font-size: var(--text-plus); }  /* main call-to-action buttons, as in the mockups */
 .btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
 .btn--outline { background: transparent; color: var(--color-primary-text); border-color: var(--color-primary-text); }
-.btn--chip { min-height: var(--tap-min); padding: 0 var(--space-3); border-radius: 999px; font-size: var(--text-sm); }  /* small pill button: quick amounts, category chips */
 .btn--danger { background: var(--color-danger); color: var(--color-on-danger); }
 .btn:disabled, .btn[aria-disabled='true'] { background: var(--color-border-soft); color: var(--color-muted); border-color: var(--color-border); cursor: not-allowed; }
 
@@ -123,7 +122,7 @@ select.input {
   color: var(--color-on-tint);
 }
 .badge--warn { background: var(--color-warn-bg); color: var(--color-warn-text); }
-.badge--muted { background: var(--color-border-soft); color: var(--color-muted); }  /* a fact that turns something off, e.g. "Hết hàng" */
+.badge--muted { background: var(--color-border-soft); color: var(--color-muted); }  /* a plain fact: "Hết hàng", "Không có hạn dùng" */
 .badge--danger { background: var(--color-danger-bg); color: var(--color-danger-text); }
 
 /* ---------- Site header ---------- */
@@ -253,3 +252,25 @@ select.input {
   .site-footer__brand, .site-footer__contact { grid-column: auto; }
 }
 
+/* A question before something that cannot be undone ("Xóa hộp" in the cart, "Thay hộp" on an occasion page): a popover
+   in the middle of the screen over a dimmed page (the browser places it there), so it works without a script. */
+.confirm {
+    width: min(100% - 2 * var(--space-4), 400px);
+    padding: var(--space-5);
+    border: 0;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-pop);
+}
+.confirm::backdrop { background: var(--color-backdrop); }
+.confirm__title { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
+.confirm__text { margin: 0 0 var(--space-5); font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
+.confirm__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+.confirm__actions .btn { min-height: var(--tap-min); }
+
+/* The ← → of a row (Scripts/lib/rows.ts shows them). Occasion pages and the builder. */
+.row-buttons { display: flex; gap: var(--space-2); }
+.row-buttons__btn { border-radius: 999px; background: var(--color-surface); color: var(--color-primary-text); border-color: var(--color-primary-text); touch-action: manipulation; }
+.row-buttons__btn:disabled { color: var(--color-muted); border-color: var(--color-border); cursor: default; }
+.row-buttons__btn .icon { width: 18px; height: 18px; }

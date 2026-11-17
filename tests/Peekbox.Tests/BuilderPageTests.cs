@@ -45,18 +45,22 @@ public class BuilderPageTests(PeekboxFixture fixture)
         Assert.All(steps.Skip(1), s => Assert.DoesNotContain("aria-current", s.Current));
     }
 
+    // "Chọn nhanh" (decision 2026-11-17): a button on the budget field's line that opens the seven amounts. Each is a
+    // link that only fills the field (/builder?chon=…); nothing in the panel sends the form.
     [Fact]
-    public async Task The_quick_amounts_are_the_four_from_the_spec_and_each_is_a_submit_button()
+    public async Task Chon_nhanh_opens_the_seven_amounts_as_links_that_fill_the_field()
     {
-        var form = FormIn(await GetBuilderAsync());
+        var html = await GetBuilderAsync();
+        Assert.Contains("<button type=\"button\" class=\"btn btn--outline picker-button\" popovertarget=\"chon-nhanh\">", FormIn(html));
 
         // Written out here on purpose: a test that read the same list would agree with a typo in it.
-        var amounts = Regex.Matches(form, @"<button type=""submit"" class=""btn btn--outline btn--chip"" name=""quickAmount"" value=""(\d+)"">([^<]*)</button>")
-            .Select(m => (Value: m.Groups[1].Value, Label: m.Groups[2].Value)).ToList();
-
+        var amounts = Regex.Matches(html, @"<a class=""picker-tile picker-tile--amount"" href=""/builder\?chon=(\d+)#buoc-1""[^>]*data-amount=""([^""]+)""[^>]*>([^<]*)</a>")
+            .Select(m => (m.Groups[1].Value, m.Groups[2].Value, m.Groups[3].Value)).ToList();
         Assert.Equal(
-            [("300000", "300.000đ"), ("500000", "500.000đ"), ("800000", "800.000đ"), ("1000000", "1.000.000đ")],
+            [("300000", "300.000đ", "300.000đ"), ("500000", "500.000đ", "500.000đ"), ("800000", "800.000đ", "800.000đ"), ("1000000", "1.000.000đ", "1 triệu"),
+             ("2000000", "2.000.000đ", "2 triệu"), ("5000000", "5.000.000đ", "5 triệu"), ("10000000", "10.000.000đ", "10 triệu")],
             amounts);
+        Assert.Contains("Bấm một mức để điền vào ô ngân sách. Ngân sách chỉ đổi khi bạn bấm Lưu.", html);
     }
 
     [Fact]
@@ -65,7 +69,7 @@ public class BuilderPageTests(PeekboxFixture fixture)
         var html = await GetBuilderAsync();
         var form = FormIn(html);
 
-        Assert.Contains("<form class=\"card budget-card\" method=\"post\" action=\"/builder\">", html);
+        Assert.Contains("<form class=\"card budget-card\" id=\"buoc-1\" method=\"post\" action=\"/builder\">", html);
         Assert.Contains("name=\"__RequestVerificationToken\"", html);
         Assert.Matches(@"<input class=""input"" id=""budget"" name=""budget"" type=""text"" inputmode=""numeric"" autocomplete=""off"" value=""""\s*/?>", form);
         Assert.Matches(@"<input class=""input"" id=""delivery-date"" name=""deliveryDate"" type=""date"" value=""""\s*/?>", form);
@@ -74,15 +78,13 @@ public class BuilderPageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task Pressing_Enter_in_a_field_means_Cap_nhat_not_the_first_quick_amount()
+    public async Task Pressing_Enter_in_a_field_means_Luu_and_the_form_has_no_other_submit_button()
     {
-        // The browser presses the first submit button of the form. It must be the hidden "Lưu", before any quick amount.
+        // The browser presses the first submit button of the form: "Lưu". "Chọn nhanh" is a plain button.
         var form = FormIn(await GetBuilderAsync());
 
-        var firstButton = Regex.Match(form, @"<button[^>]*>[^<]*</button>").Value;
-
-        Assert.Contains("visually-hidden", firstButton);
-        Assert.Contains("Lưu", firstButton);
-        Assert.DoesNotContain("quickAmount", firstButton);
+        var submits = Regex.Matches(form, @"<button type=""submit""[^>]*>([^<]*)</button>").Select(m => m.Groups[1].Value).ToList();
+        Assert.Equal(["Lưu"], submits);
+        Assert.Equal(Regex.Matches(form, "<button ").Count, submits.Count + Regex.Matches(form, @"<button type=""button""").Count);
     }
 }

@@ -75,7 +75,10 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         }
 
         var quote = Pricing.Quote(hamper.BudgetVnd, lines, items, packaging?.FeeVnd ?? 0);
-        return new Box(hamper.BudgetVnd, hamper.DeliveryDate, boxLines, quote, lines, items, packaging);
+        var startedFrom = hamper.StartedFromId is { } from && rows.Count > 0
+            ? await db.ReadyHampers.Where(h => h.Id == from).Select(h => h.Name).SingleOrDefaultAsync(cancellationToken)
+            : null;
+        return new Box(hamper.BudgetVnd, hamper.DeliveryDate, boxLines, quote, lines, items, packaging) { StartedFrom = startedFrom };
     }
 
     // Saves the visitor's packaging (F33). False for an id that is not a packaging; nothing is saved then.
@@ -105,8 +108,38 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
     {
         await db.HamperItems.Where(l => l.HamperId == hamper.Id).ExecuteDeleteAsync(cancellationToken);
         hamper.PackagingId = null;
+        hamper.StartedFromId = null;
         hamper.UpdatedAt = clock.GetUtcNow();
         await db.SaveChangesAsync(cancellationToken);
+    }
+
+    // "Dùng hộp này" (F15): the ready hamper's items and packaging replace what is in the visitor's box. A budget lower
+    // than the hamper's is raised to it; a higher one and the delivery date are kept. A visitor with no hamper yet gets
+    // one with the hamper's budget and no date. The rules of SetQuantityAsync are not run here: the caller has checked
+    // the stock (ReadyHamperCard.SoldOut), and an item that expires too early for the date is shown and blocked by the
+    // builder and the review page, as after a date change (decision 2026-11-17).
+    public async Task<Hamper> UseReadyHamperAsync(Hamper? hamper, ReadyHamperCard card, CancellationToken cancellationToken = default)
+    {
+        var now = clock.GetUtcNow();
+        if (hamper is null)
+        {
+            hamper = new Hamper { Token = SecretToken.New(), CreatedAt = now };
+            db.Hampers.Add(hamper);
+        }
+        else
+        {
+            await db.HamperItems.Where(l => l.HamperId == hamper.Id).ExecuteDeleteAsync(cancellationToken);
+        }
+
+        var slugs = card.Lines.Select(l => l.Slug).ToList();
+        var ids = await db.Products.Where(p => slugs.Contains(p.Slug)).ToDictionaryAsync(p => p.Slug, p => p.Id, cancellationToken);
+        hamper.Items = card.Lines.Select(l => new HamperItem { ProductId = ids[l.Slug], Quantity = l.Quantity }).ToList();
+        hamper.PackagingId = card.Packaging.Id;
+        hamper.StartedFromId = await db.ReadyHampers.Where(h => h.Slug == card.Slug).Select(h => (int?)h.Id).SingleAsync(cancellationToken);
+        hamper.BudgetVnd = Math.Max(hamper.BudgetVnd, card.BudgetVnd);
+        hamper.UpdatedAt = now;
+        await db.SaveChangesAsync(cancellationToken);
+        return hamper;
     }
 
     // Sets how many of an item are in the hamper (F20). 0 or less takes it out. Going up is allowed only when the last
@@ -143,6 +176,11 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         if (quantity <= 0)
         {
             db.HamperItems.Remove(line!);
+            // The last item out: the box no longer comes from a ready hamper.
+            if (!await db.HamperItems.AnyAsync(l => l.HamperId == hamper.Id && l.ProductId != product.Id, cancellationToken))
+            {
+                hamper.StartedFromId = null;
+            }
         }
         else if (line is null)
         {
@@ -164,7 +202,7 @@ public enum QuantityChange { Done, UnknownItem, NotAllowed }
 // One line of "Hộp của bạn" and of the review page. InDate is false when the delivery date changed after the item went
 // in (the review page blocks it, F35); NextStatus says whether one more fits (it turns the + button off).
 public sealed record BoxLine(
-    string Slug, string Name, string Brand, string Origin, string ImagePath, int WeightGrams, DateOnly ExpiryDate,
+    string Slug, string Name, string Brand, string Origin, string ImagePath, int WeightGrams, DateOnly? ExpiryDate,
     long PriceVnd, int Quantity, long LineVnd, bool InDate, ItemStatus NextStatus);
 
 // One packaging choice (F33).
@@ -176,6 +214,9 @@ public sealed record Box(
     long BudgetVnd, DateOnly? DeliveryDate, IReadOnlyList<BoxLine> Lines, Quote Quote,
     IReadOnlyList<HamperLine> HamperLines, IReadOnlyDictionary<string, PricedItem> Items, PackagingOption? Packaging)
 {
+    // The name of the ready hamper the box was filled from, while it holds items ("Bạn đang sửa Hộp Sum Vầy").
+    public string? StartedFrom { get; init; }
+
     public int Count => Lines.Sum(l => l.Quantity);
 
     // Lines whose item expires too early for the delivery date (F35): the review page blocks the order until they go.

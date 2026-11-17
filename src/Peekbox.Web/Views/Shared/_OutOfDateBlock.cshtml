@@ -10,6 +10,6 @@
     <partial name="_Icon" model='"warning"' />
     <div>
         <h2 class="review-block__title" id="block-title">Chưa thể đặt hàng: @outOfDate.Count món hết hạn trước ngày giao</h2>
-        <p class="review-block__text">@string.Join(", ", outOfDate.Select(l => $"{l.Name} hết hạn ngày {VnDate.Day(l.ExpiryDate)}")), còn ngày giao của bạn là @VnDate.Day(Model.DeliveryDate!.Value). Mỗi món cần còn hạn thêm @BuilderLimits.ShelfMarginDays ngày dự phòng sau ngày giao. Hãy bỏ @(outOfDate.Count == 1 ? "món này" : "các món này") hoặc đổi ngày giao để tiếp tục.</p>
+        <p class="review-block__text">@string.Join(", ", outOfDate.Select(l => $"{l.Name} hết hạn ngày {VnDate.Day(l.ExpiryDate!.Value)}")), còn ngày giao của bạn là @VnDate.Day(Model.DeliveryDate!.Value). Mỗi món cần còn hạn thêm @BuilderLimits.ShelfMarginDays ngày dự phòng sau ngày giao. Hãy bỏ @(outOfDate.Count == 1 ? "món này" : "các món này") hoặc đổi ngày giao để tiếp tục.</p>
     </div>
 </section>

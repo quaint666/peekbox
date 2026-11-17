@@ -1,0 +1,25 @@
+@using Peekbox.Web.Navigation
+@model UseHamperControl
+@{
+    var card = Model.Card;
+}
+@* "Dùng hộp này" (F15). Short of an item: the button is off and says why. A box with items: the button opens "Thay hộp
+   hiện tại?" (state 31). Otherwise it fills the box at once. *@
+@if (card.SoldOut.Count > 0)
+{
+    var reasonId = $"{Anchors.HamperCard(card.Slug)}-{Model.Place}-ly-do";
+    <p class="hamper__sold" id="@reasonId">@string.Join(", ", card.SoldOut.Select(l => l.Name)) đang hết hàng. Bạn vẫn có thể tự tạo hộp với các món còn lại.</p>
+    <button type="button" class="btn hamper__use" disabled aria-describedby="@reasonId">Tạm chưa dùng được</button>
+}
+else if (Model.Box is { Lines.Count: > 0 })
+{
+    <button type="button" class="btn btn--primary hamper__use" popovertarget="@Anchors.HamperReplace(card.Slug)">Dùng hộp này</button>
+}
+else
+{
+    <form method="post" action="@SiteLinks.UseHamperPath">
+        <input type="hidden" name="slug" value="@card.Slug">
+        <input type="hidden" name="from" value="@Model.From">
+        <button type="submit" class="btn btn--primary hamper__use">Dùng hộp này</button>
+    </form>
+}

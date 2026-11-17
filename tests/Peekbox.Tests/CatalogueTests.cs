@@ -33,6 +33,18 @@ public class CatalogueTests(PeekboxFixture fixture)
         }
     }
 
+    // Only the items that are not food have no expiry date, and every one of them does not (decision 2026-11-17).
+    [Fact]
+    public void Exactly_the_items_that_are_not_food_have_no_expiry_date()
+    {
+        foreach (var p in File.Products)
+        {
+            Assert.True((p.Category == "qua-khong-an") == (p.ExpiryDate is null), $"{p.Slug}: category {p.Category}, expiry {p.ExpiryDate}");
+        }
+
+        Assert.Equal(9, File.Products.Count(p => p.ExpiryDate is null));
+    }
+
     [Fact]
     public void Every_image_path_points_at_a_file_in_wwwroot()
     {

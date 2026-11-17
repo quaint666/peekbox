@@ -146,6 +146,19 @@ public class ItemPageTests(PeekboxFixture fixture)
         Assert.Contains("data-qty-step=\"add\">Thêm vào hộp</button>", Bar(html));   // the phone bar has the same control
     }
 
+    // A candle has no expiry date: the facts and the table say so, and the note explains why nothing is checked.
+    [Fact]
+    public async Task An_item_with_no_expiry_date_says_so_instead_of_checking_the_date()
+    {
+        var html = Text(await (await VisitorAsync(Delivery)).PageAsync("nen-thom"));
+
+        Assert.Contains("Không có hạn dùng</li>", html);
+        Assert.Contains("<div><dt>Hạn sử dụng</dt><dd>Không có hạn dùng</dd></div>", html);
+        Assert.Contains("Món này không phải đồ ăn nên không có hạn dùng và không cần kiểm tra theo ngày giao.", html);
+        Assert.DoesNotContain("Đủ hạn cho ngày giao", html);
+        Assert.Contains("aria-label=\"Thêm Nến thơm vào hộp\" data-qty-step=\"add\">Thêm vào hộp</button>", BuyCard(html));
+    }
+
     [Fact]
     public async Task Adding_from_the_item_page_comes_back_to_it_with_the_pill()
     {

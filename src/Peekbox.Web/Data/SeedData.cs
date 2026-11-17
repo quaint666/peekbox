@@ -21,6 +21,9 @@ public static class SeedData
     // The packaging choices, from content/data/packaging.json (copied as Seed/packaging.json).
     public static string PackagingFilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "packaging.json");
 
+    // The occasions and the ready hampers, from content/data/hampers.json (copied as Seed/hampers.json).
+    public static string HampersFilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "hampers.json");
+
     // The delivery wards, from content/data/wards.json (copied as Seed/wards.json).
     public static string WardsFilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "wards.json");
 
@@ -39,6 +42,11 @@ public static class SeedData
         ParseWards(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
 
     public static SeedWardsFile? ParseWards(string json) => JsonSerializer.Deserialize<SeedWardsFile>(json, JsonOptions);
+
+    public static SeedHampersFile LoadHampers(string path) =>
+        ParseHampers(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
+
+    public static SeedHampersFile? ParseHampers(string json) => JsonSerializer.Deserialize<SeedHampersFile>(json, JsonOptions);
 
     // Safe to run again: a table that already has rows is left alone.
     public static void Run(DbContext context)
@@ -62,7 +70,7 @@ public static class SeedData
 
         if (!context.Set<Category>().Any())
         {
-            context.Set<Category>().AddRange(file.Categories.Select(c => new Category { Id = c.Id, Name = c.NameVi }));
+            context.Set<Category>().AddRange(file.Categories.Select((c, i) => new Category { Id = c.Id, Name = c.NameVi, SortOrder = i }));
         }
 
         if (!context.Set<Product>().Any())
@@ -84,6 +92,43 @@ public static class SeedData
         }
 
         context.SaveChanges();
+
+        if (!context.Set<Occasion>().Any())
+        {
+            SeedHampers(context, LoadHampers(HampersFilePath));
+        }
+    }
+
+    // After the items, the packaging and the occasions are saved, since a hamper points at all three. A slug, a
+    // packaging or an occasion the file names but the database does not have stops the start, as a broken file does.
+    private static void SeedHampers(DbContext context, SeedHampersFile file)
+    {
+        var occasions = file.Occasions.Select((o, i) => new Occasion
+        {
+            Id = o.Id, Name = o.Name, Title = o.Title, Chip = o.Chip, Lead = o.Lead, Accent = o.Accent, ImagePath = o.Image, BloomyLink = o.BloomyLink, SortOrder = i,
+        }).ToDictionary(o => o.Id);
+        context.Set<Occasion>().AddRange(occasions.Values);
+
+        var products = context.Set<Product>().ToDictionary(p => p.Slug, p => p.Id);
+        var packaging = context.Set<Packaging>().Select(p => p.Id).ToHashSet();
+        context.Set<ReadyHamper>().AddRange(file.Hampers.Select((h, i) => new ReadyHamper
+        {
+            Slug = h.Slug,
+            Name = h.Name,
+            ForWhom = h.For,
+            BudgetVnd = h.BudgetVnd,
+            PackagingId = packaging.Contains(h.Packaging) ? h.Packaging : throw new InvalidOperationException($"{h.Slug}: unknown packaging {h.Packaging}"),
+            ImagePath = h.Image,
+            SortOrder = i,
+            Occasions = h.Occasions.Select(o => occasions.GetValueOrDefault(o) ?? throw new InvalidOperationException($"{h.Slug}: unknown occasion {o}")).ToList(),
+            Items = h.Items.Select(item => new ReadyHamperItem
+            {
+                ProductId = products.TryGetValue(item.Item, out var id) ? id : throw new InvalidOperationException($"{h.Slug}: unknown item {item.Item}"),
+                Quantity = item.Quantity,
+            }).ToList(),
+        }));
+
+        context.SaveChanges();
     }
 }
 
@@ -97,6 +142,16 @@ public sealed record SeedPackagingFile(List<SeedPackaging> Packaging);
 
 public sealed record SeedPackaging(string Id, string NameVi, string DescVi, long FeeVnd, string Image);
 
+// The shape of content/data/hampers.json. The banner text is for the season banner (F05) and is not read yet.
+public sealed record SeedHampersFile(List<SeedOccasion> Occasions, List<SeedReadyHamper> Hampers);
+
+public sealed record SeedOccasion(string Id, string Name, string Title, string Chip, string Lead, string Accent, string Image, string? BloomyLink);
+
+public sealed record SeedReadyHamper(
+    string Slug, string Name, string For, long BudgetVnd, string Packaging, List<string> Occasions, string Image, List<SeedReadyHamperItem> Items);
+
+public sealed record SeedReadyHamperItem(string Item, int Quantity);
+
 // The shape of content/data/wards.json.
 public sealed record SeedWardsFile(List<SeedWard> Wards);
 
@@ -109,7 +164,7 @@ public sealed record SeedProduct(
     string Brand,
     int WeightG,
     string Origin,
-    DateOnly ExpiryDate,
+    DateOnly? ExpiryDate,   // null for an item that is not food; the key must still be there
     long PriceVnd,
     int Stock,
     string DescriptionVi,

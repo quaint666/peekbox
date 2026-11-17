@@ -14,7 +14,7 @@ The site is **Vietnamese only** (decided 2026-11-11). The English text in these 
 | `data/products.json` | 24 sample products (names in both languages, brand, weight, origin, expiry date, price, stock, short description, image) | Sample data |
 | `data/packaging.json` | The 3 packaging options and their sample fees | Sample data |
 | `data/home.json` | The Vietnamese text of the home page, read by the site | Draft |
-| `data/campaigns.json` | Tết 2027, 20/11 and 8/3: banners in both languages, accent colour, starter boxes | Draft, dates are placeholders |
+| `data/hampers.json` | The three occasion pages (Tết, 20/11, 8/3 và 20/10: heading, lead, accent key, Bloomy link text, season banner text) and 44 ready hampers (budget, packaging, items, occasions, photo); totals are worked out from current prices, not stored | Draft; the season banner text is not read yet (F05) |
 
 ## Things to know before using any of it
 

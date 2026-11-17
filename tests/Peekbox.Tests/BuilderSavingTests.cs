@@ -27,6 +27,9 @@ public class BuilderSavingTests(PeekboxFixture fixture)
             return await SendAsync(request);
         }
 
+        // A page as decoded text (the tests compare words, not entities).
+        public async Task<string> PageAsync(string url) => WebUtility.HtmlDecode(await (await GetAsync(url)).Content.ReadAsStringAsync());
+
         // Opens /builder first (to get the anti-forgery cookie and token), then posts the fields.
         public async Task<HttpResponseMessage> PostAsync(Dictionary<string, string> fields, bool withAntiForgeryToken = true)
         {
@@ -121,18 +124,36 @@ public class BuilderSavingTests(PeekboxFixture fixture)
         Assert.NotEqual(first.Token, second.Token);
     }
 
+    // Picking from "Chọn nhanh" fills the field and saves nothing; the amber note says so (state 36, decision 2026-11-17).
     [Fact]
-    public async Task A_quick_amount_is_saved_instead_of_what_is_typed_and_saves_a_typed_date_too()
+    public async Task A_picked_amount_fills_the_field_with_a_note_and_saves_nothing()
     {
         var visitor = NewVisitor();
-        var date = TodayInVietnam.AddDays(10);
+        await visitor.PostAsync(new() { ["budget"] = "500000", ["deliveryDate"] = Iso(TodayInVietnam.AddDays(10)) });
 
-        var response = await visitor.PostAsync(new() { ["budget"] = "123", ["quickAmount"] = "800000", ["deliveryDate"] = Iso(date) });
+        var html = await visitor.PageAsync("/builder?chon=800000");
+        Assert.Matches(@"id=""budget"" name=""budget"" type=""text"" inputmode=""numeric"" autocomplete=""off"" value=""800.000đ""", html);
+        Assert.Contains("<p class=\"alert alert--warn budget-card__unsaved\" id=\"chua-luu\" role=\"status\">Chưa lưu: ngân sách đang dùng vẫn là 500.000đ. Bấm Lưu để dùng 800.000đ.</p>", html);
+        Assert.Equal(500_000, (await HamperAsync(visitor.Token!)).BudgetVnd);
+
+        // The saved amount, or an amount that is not one of the seven, shows no note and changes nothing.
+        foreach (var chon in new[] { "500000", "123456", "abc" })
+        {
+            var page = await visitor.PageAsync($"/builder?chon={chon}");
+            Assert.Contains("value=\"500.000đ\"", page);
+            Assert.Matches(@"id=""chua-luu"" role=""status"" hidden=""hidden""></p>", page);
+        }
+    }
+
+    // The old quick amount buttons saved at once; a request that still sends one saves what is in the field.
+    [Fact]
+    public async Task A_quick_amount_sent_by_an_old_form_is_ignored_and_the_typed_budget_is_saved()
+    {
+        var visitor = NewVisitor();
+        var response = await visitor.PostAsync(new() { ["budget"] = "123", ["quickAmount"] = "800000", ["deliveryDate"] = Iso(TodayInVietnam.AddDays(10)) });
 
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-        var hamper = await HamperAsync(visitor.Token!);
-        Assert.Equal(800_000, hamper.BudgetVnd);
-        Assert.Equal(date, hamper.DeliveryDate);
+        Assert.Equal(123, (await HamperAsync(visitor.Token!)).BudgetVnd);
     }
 
     [Fact]

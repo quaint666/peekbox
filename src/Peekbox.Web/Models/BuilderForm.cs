@@ -7,6 +7,4 @@ public sealed class BuilderForm
     public string? Budget { get; set; }
 
     public string? DeliveryDate { get; set; }
-
-    public string? QuickAmount { get; set; }
 }

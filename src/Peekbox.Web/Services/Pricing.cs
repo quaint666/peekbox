@@ -5,7 +5,7 @@ namespace Peekbox.Web.Services;
 public enum ItemStatus { Ok, SoldOut, ExpiredForDate, OverBudget }
 
 // The facts about an item that the money and expiry rules need.
-public sealed record PricedItem(string Slug, long PriceVnd, DateOnly ExpiryDate, int Stock);
+public sealed record PricedItem(string Slug, long PriceVnd, DateOnly? ExpiryDate, int Stock);
 
 // One line of the hamper: an item and how many.
 public sealed record HamperLine(string Slug, int Quantity);

@@ -17,13 +17,17 @@
             </p>
             <div class="review-line__details">
                 <p class="review-line__meta meta">@line.Brand · @line.WeightGrams g · Xuất xứ @line.Origin</p>
-                @if (line.InDate)
+                @if (line.ExpiryDate is null)
                 {
-                    <span class="badge">HSD @VnDate.Month(line.ExpiryDate) · đủ hạn</span>
+                    <span class="badge badge--muted">@VnDate.NoExpiry</span>
+                }
+                else if (line.InDate)
+                {
+                    <span class="badge">HSD @VnDate.Month(line.ExpiryDate.Value) · đủ hạn</span>
                 }
                 else
                 {
-                    <span class="badge badge--danger">HSD @VnDate.Day(line.ExpiryDate), hết hạn trước ngày giao</span>
+                    <span class="badge badge--danger">HSD @VnDate.Day(line.ExpiryDate.Value), hết hạn trước ngày giao</span>
                 }
             </div>
             @if (!line.InDate)
