@@ -30,6 +30,33 @@ public class SecurityHeaderTests(PeekboxFixture fixture)
     }
 
     [Fact]
+    public void The_policy_allows_exactly_these_sources_and_no_others()
+    {
+        // Typed out on purpose, a second copy of ContentSecurityPolicy.Value: widening the policy (another site,
+        // 'unsafe-inline', a wildcard, a dropped directive) must show up in this file's diff, which the owner reviews.
+        var expected = new Dictionary<string, string>
+        {
+            ["default-src"] = "'self'",
+            ["script-src"] = "'self'",
+            ["style-src"] = "'self'",
+            ["img-src"] = "'self' data:",
+            ["font-src"] = "'self'",
+            ["connect-src"] = "'self'",
+            ["object-src"] = "'none'",
+            ["base-uri"] = "'self'",
+            ["form-action"] = "'self'",
+            ["frame-ancestors"] = "'none'",
+        };
+
+        var actual = ContentSecurityPolicy.Value
+            .Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Select(directive => directive.Split(' ', 2))
+            .ToDictionary(parts => parts[0], parts => parts.Length > 1 ? parts[1] : "");
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
     public void The_policy_blocks_inline_scripts_and_styles()
     {
         // A policy that allows 'unsafe-inline' would defeat the rule.
