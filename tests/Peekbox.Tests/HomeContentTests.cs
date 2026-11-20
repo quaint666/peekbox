@@ -28,13 +28,29 @@ public class HomeContentTests
     public void Every_occasion_accent_has_a_css_rule_that_sets_its_colour()
     {
         // The page turns the accent into a CSS class (.occasion--tet and so on). home.css is the one place that
-        // says which accents exist; an accent without a rule would show a card with no panel colour and no chip colour.
+        // says which accents exist; an accent without a rule would show a card with no chip colour, no dot and no arrow colour.
         var css = File.ReadAllText(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "home.css"));
 
         Assert.All(Content.Occasions, o =>
             Assert.True(
                 Regex.IsMatch(css, $@"\.occasion--{Regex.Escape(o.Accent)}\s*\{{[^}}]*--occasion-color\s*:"),
                 $"home.json has the accent \"{o.Accent}\" but home.css has no .occasion--{o.Accent} rule that sets --occasion-color"));
+    }
+
+    // The card colour is the accent in light mode and the lighter ink in dark mode, so it is written in three places of
+    // tokens.css (light, and the two dark blocks) and the dark ones must not be forgotten (decision 2026-11-20).
+    [Fact]
+    public void Every_occasion_accent_has_its_card_colour_in_light_and_in_both_dark_blocks()
+    {
+        var tokens = File.ReadAllText(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "tokens.css"));
+        var css = File.ReadAllText(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "home.css"));
+
+        Assert.All(Content.Occasions, o =>
+        {
+            var token = $"--occasion-card-{o.Accent}";
+            Assert.Equal(3, Regex.Matches(tokens, $@"{Regex.Escape(token)}\s*:").Count);
+            Assert.Contains($"var({token})", css);
+        });
     }
 
     [Fact]
@@ -57,7 +73,7 @@ public class HomeContentTests
         };
         texts.AddRange(Content.Promises.SelectMany(c => new[] { c.Icon, c.Title, c.Text }));
         texts.AddRange(Content.Steps.SelectMany(c => new[] { c.Title, c.Text }));
-        texts.AddRange(Content.Occasions.SelectMany(o => new[] { o.Name, o.Accent, o.Chip, o.Button, o.Image, o.Text }));
+        texts.AddRange(Content.Occasions.SelectMany(o => new[] { o.Name, o.Accent, o.Chip, o.Image, o.Text }));
 
         Assert.All(texts, text =>
         {

@@ -47,6 +47,6 @@ public sealed record HomePromise(string Icon, string Title, string Text);
 // A title with a short text: a step.
 public sealed record HomeCard(string Title, string Text);
 
-// An occasion card: Id is the occasion's key in content/data/hampers.json, and the card opens its page. The accent is a key (tet, teachers, women), not a colour; the colours are in home.css and tokens.css.
-// Chip is the date label, Button the text of the white button, Image a file name in wwwroot/images/occasions/.
-public sealed record HomeOccasion(string Id, string Name, string Accent, string Chip, string Button, string Image, string Text);
+// An occasion card: Id is the occasion's key in content/data/hampers.json, and the card opens its page. The accent is a key (tet, valentine, women, midautumn, teachers, christmas), not a colour; the colours are in home.css and tokens.css.
+// Chip is the date label, Image a file name in wwwroot/images/occasions/.
+public sealed record HomeOccasion(string Id, string Name, string Accent, string Chip, string Image, string Text);

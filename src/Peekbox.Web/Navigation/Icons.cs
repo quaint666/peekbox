@@ -11,14 +11,7 @@ public static class Icons
 
     private static readonly Dictionary<string, Custom> Customs = new()
     {
-        // Date-stamp ticket with "HSD" and a tick, from the home mockup (Home.dc.html). The text takes its colour
-        // from the icon (currentColor), so the dark theme works without extra rules.
-        ["stamp"] = new Custom(
-            "0 0 30 38",
-            "1.7",
-            ["M4 3h6a5 3.2 0 0 0 10 0h6v32h-6a5 3.2 0 0 0-10 0H4z", "m10.5 24.5 3.2 3.2 6-6.4"],
-            new Label("HSD", "15", "18", "8.6")),
-        // Arrow on the occasion buttons: a little thicker than the line icons, as in the mockup.
+        // Arrow on the occasion cards: a little thicker than the line icons.
         ["arrow"] = new Custom("0 0 24 24", "2.2", ["M5 12h14M13 6l6 6-6 6"], null),
         // The same arrow the other way: "Hộp trước" on the rows of an occasion page.
         ["arrow-left"] = new Custom("0 0 24 24", "2.2", ["M19 12H5M11 6l-6 6 6 6"], null),
@@ -44,6 +37,8 @@ public static class Icons
         ["alert-circle"] = "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M12 7v6 M12 16.5h.01",
         ["warning"] = "M12 3 2 20h20L12 3z M12 10v4 M12 17.5v.1",
         ["shield"] = "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z M8.5 12l2.5 2.5 4.5-5",
+        // A hamper: the count on a home card.
+        ["box"] = "M3 8l9-5 9 5v8l-9 5-9-5z M3 8l9 5 9-5 M12 13v8",
         ["truck"] = "M3 6h11v10H3z M14 9h4l3 3v4h-7 M7.5 15.7a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6z M17.5 15.7a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6z",
         ["card"] = "M5 6h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z M3 10h18",
         // The review page's summary sheet on a phone (mockup 29): "Xem tổng kết" and "Thu gọn".

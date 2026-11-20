@@ -33,7 +33,6 @@
   --color-tint: #E3EFE7;           /* chosen state */
   --color-on-tint: #25513E;
   --color-success-border: #9CC3AB; /* the edge of the green "order received" banner (mockup 07) */
-  --color-hero-top: #EAF0E4;       /* top of the home hero gradient */
   --color-warn-bg: #FFF1CC;
   --color-warn-text: #7A4F00;
   --color-warn-border: #E0B84A;   /* the edge of the amber note (state 07, an item sold out at checkout) */
@@ -62,7 +61,7 @@
   /* Seasonal accents: Tết, 20/11, 8/3, Valentine, Trung thu, Giáng sinh */
   --accent-tet: #B3382A;
   --accent-teachers: #5F4A7A;
-  --accent-women: #A8345E;
+  --accent-women: #8A2550;   /* a little deeper than before (2026-11-20): further from Tết's red and Valentine's rose */
   --accent-valentine: #D81B60;
   --accent-midautumn: #8A5A00;
   --accent-christmas: #2E6B45;
@@ -99,10 +98,17 @@
   --occasion-line-christmas: #8FCB9F;
   --occasion-ink-tet: #B3382A;
   --occasion-ink-teachers: #5F4A7A;
-  --occasion-ink-women: #A8345E;
+  --occasion-ink-women: #8A2550;
   --occasion-ink-valentine: #BE1F4F;   /* deeper than the accent: the accent is 3.9:1 on the soft tag colour, this is 4.7:1 */
   --occasion-ink-midautumn: #8A5A00;
   --occasion-ink-christmas: #2E6B45;
+  /* The colour of an occasion card on the home page: the accent, and in dark mode the lighter ink. */
+  --occasion-card-tet: var(--accent-tet);
+  --occasion-card-teachers: var(--accent-teachers);
+  --occasion-card-women: var(--accent-women);
+  --occasion-card-valentine: var(--accent-valentine);
+  --occasion-card-midautumn: var(--accent-midautumn);
+  --occasion-card-christmas: var(--accent-christmas);
 
   /* Type */
   --font-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -163,7 +169,6 @@
     --color-tint: #1D2B24;
     --color-on-tint: #BFE3CF;
     --color-success-border: #3D6B54;
-    --color-hero-top: #171B18;
     --color-warn-bg: #3A3016;
     --color-warn-text: #F2D98A;
     --color-warn-border: #6B5A22;
@@ -200,6 +205,12 @@
     --occasion-ink-valentine: #FF6F91;
     --occasion-ink-midautumn: #E8C170;
     --occasion-ink-christmas: #9FD3AE;
+    --occasion-card-tet: var(--occasion-ink-tet);
+    --occasion-card-teachers: var(--occasion-ink-teachers);
+    --occasion-card-women: var(--occasion-ink-women);
+    --occasion-card-valentine: var(--occasion-ink-valentine);
+    --occasion-card-midautumn: var(--occasion-ink-midautumn);
+    --occasion-card-christmas: var(--occasion-ink-christmas);
     --footer-bg: #1B201C;
     --footer-text: #AEB5AC;
     --footer-brand: #9EC3A5;
@@ -227,7 +238,6 @@
   --color-tint: #1D2B24;
   --color-on-tint: #BFE3CF;
   --color-success-border: #3D6B54;
-  --color-hero-top: #171B18;
   --color-warn-bg: #3A3016;
   --color-warn-text: #F2D98A;
   --color-warn-border: #6B5A22;
@@ -264,6 +274,12 @@
   --occasion-ink-valentine: #FF6F91;
   --occasion-ink-midautumn: #E8C170;
   --occasion-ink-christmas: #9FD3AE;
+  --occasion-card-tet: var(--occasion-ink-tet);
+  --occasion-card-teachers: var(--occasion-ink-teachers);
+  --occasion-card-women: var(--occasion-ink-women);
+  --occasion-card-valentine: var(--occasion-ink-valentine);
+  --occasion-card-midautumn: var(--occasion-ink-midautumn);
+  --occasion-card-christmas: var(--occasion-ink-christmas);
   --footer-bg: #1B201C;
   --footer-text: #AEB5AC;
   --footer-brand: #9EC3A5;
