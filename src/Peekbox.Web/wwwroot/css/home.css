@@ -173,9 +173,12 @@
 /* Hover only where there is a mouse, and the photo only moves when the visitor has not asked for reduced motion. */
 @media (hover: hover) {
     .occasion:hover .occasion__name { color: var(--occasion-color); }
+    .occasion:hover .occasion__go { background: var(--occasion-color); color: var(--color-surface); }   /* the disc fills with the accent */
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .occasion:hover .occasion__img { transform: scale(1.04); }
+    .occasion__go { transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out; }
+    .occasion:hover .occasion__go { transform: translateX(2px); }
 }
 
 .cta { background: var(--color-band); color: var(--color-on-primary); padding-block: var(--space-6); }
