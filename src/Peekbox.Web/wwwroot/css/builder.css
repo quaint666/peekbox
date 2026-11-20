@@ -127,7 +127,8 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
     font-size: var(--text-base);
     cursor: pointer;
 }
-.category-control > span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: start; }
+/* One line: "Quà không phải đồ ăn" ends in "…" when it does not fit (the whole name is in the panel and in the button's title). */
+.category-control > span, .category-control__open > span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: start; }
 .category-control .icon { flex: none; width: 18px; height: 18px; }
 /* Chosen (state 35): green, the name, and a separate ✕ that goes straight back to "Tất cả". */
 .category-control--chosen { padding: 0; overflow: hidden; border-color: var(--color-primary); background: var(--color-tint); color: var(--color-on-tint); cursor: default; }
