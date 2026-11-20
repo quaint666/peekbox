@@ -173,4 +173,13 @@ public class SeamsTests
 
     private static SortedDictionary<string, string> Values(string block) =>
         new(Regex.Matches(block, @"(--[\w-]+):\s*([^;]+);").ToDictionary(m => m.Groups[1].Value, m => m.Groups[2].Value.Trim()));
+
+    // Links within a page (the budget chips on an occasion page) glide, and only for a visitor who has not asked for less motion.
+    [Fact]
+    public void Links_within_a_page_scroll_smoothly_only_when_motion_is_welcome()
+    {
+        var css = Read(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "base.css"));
+
+        Assert.Matches(@"@media \(prefers-reduced-motion: no-preference\)\s*\{\s*html\s*\{\s*scroll-behavior: smooth;", css);
+    }
 }
