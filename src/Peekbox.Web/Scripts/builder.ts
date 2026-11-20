@@ -1,7 +1,8 @@
 // The builder page in the browser. The page works without this file: the item filters are a plain GET form (without
 // scripts a "Lọc" button sends it), and "Thêm", − and + are plain POST forms that reload the page. This file sends the
-// filters as soon as the checkbox or the sort menu changes (the search box with Enter, not on every letter), and sends
-// the add forms in the background so the page does not jump.
+// filters as soon as the checkbox or the sort menu changes, filters the list while the visitor types in the search
+// box (a moment after the last letter, no Enter needed), and sends the add forms in the background so the page does
+// not jump.
 
 import { fetchPage } from './lib/page.js';
 import { wireRows, type RowPosition } from './lib/rows.js';
@@ -50,6 +51,89 @@ filters?.addEventListener('focusout', (event) => {
     filters.requestSubmit();
   }
 });
+
+// ---- Live search ----
+// While the visitor types in "Tìm món", the same GET the form would send is fetched in the background and the block of
+// results (#ket-qua: the count, the "no match" card and the rows or the grid) is swapped for the one in the answer. The
+// server does the matching, so "banh" finds "Bánh gừng" exactly as it does after Enter, and this file never works out
+// anything. Without this file Enter and the "Lọc" button send the form the plain way.
+const SEARCH_DELAY_MS = 250;
+const search = document.getElementById('item-search');
+let searchTimer = 0;
+let searchSerial = 0;
+let searchRequest: AbortController | null = null;
+
+function stopSearch(): void {
+  window.clearTimeout(searchTimer);
+  searchRequest?.abort();
+  searchSerial += 1;
+}
+
+function searchNow(): void {
+  if (!filters) {
+    return;
+  }
+
+  const query = new URLSearchParams(Array.from(new FormData(filters), ([name, value]) => [name, String(value)]));
+  const url = new URL(filters.action);
+  url.search = query.toString();
+
+  stopSearch();
+  const serial = searchSerial;
+  searchRequest = new AbortController();
+  fetchPage(url, { signal: searchRequest.signal })
+    .then(({ page: fresh }) => {
+      // Only the newest request may change the page: a slow answer to "ba" must not replace the one for "banh".
+      const results = document.getElementById('ket-qua');
+      if (serial !== searchSerial || !results) {
+        return;
+      }
+
+      swap('#ket-qua', fresh);
+      const shown = document.getElementById('ket-qua');
+      if (shown) {
+        wireRows(shown, writePosition);
+        wireHint();
+        say(shown.querySelector('.items__count span')?.textContent?.trim() ?? '');
+      }
+
+      // The address now says what is on screen, so reload and Back keep the search.
+      window.history.replaceState(null, '', url);
+    })
+    .catch(() => {
+      // Cancelled, timed out or the server said no: the list stays as it was. Enter still sends the form.
+    });
+}
+
+function searchSoon(): void {
+  window.clearTimeout(searchTimer);
+  searchTimer = window.setTimeout(searchNow, SEARCH_DELAY_MS);
+}
+
+if (search instanceof HTMLInputElement) {
+  // A letter being composed (Telex, VNI) is not final yet: wait for the composition to end.
+  search.addEventListener('input', (event) => {
+    if (!(event instanceof InputEvent && event.isComposing)) {
+      searchSoon();
+    }
+  });
+  search.addEventListener('compositionend', searchSoon);
+  // The × of a search box: some browsers announce it with this event (and only for emptying, so Enter, which also
+  // raises it in some browsers, does not start a second request).
+  search.addEventListener('search', () => {
+    if (search.value === '') {
+      searchSoon();
+    }
+  });
+  // Enter searches at once instead of waiting out the delay. Sent the plain way it would only open the same address
+  // again and add a step to Back; the live answer is already what that page would show.
+  search.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.isComposing) {
+      event.preventDefault();
+      searchNow();
+    }
+  });
+}
 
 // ---- "Thêm", − and + (F20) ----
 // The form is sent in the background. The server answers as it does without scripts: it saves, then redirects to the
@@ -192,6 +276,11 @@ function showToast(text: string): void {
 
 function announce(text: string): void {
   showToast(text);
+  say(text);
+}
+
+// The status line that screen readers hear, without the toast.
+function say(text: string): void {
   if (!status) {
     return;
   }
@@ -361,7 +450,6 @@ wireRows(document, writePosition);
 // "Vuốt sang trái…" shows on a phone until the first sideways swipe of a category row, remembered in the browser. With
 // storage blocked it shows on every visit, which is harmless.
 const HINT_KEY = 'peekbox-row-hint-seen';
-const hint = document.getElementById('vuot-hint');
 
 function hintSeen(): boolean {
   try {
@@ -371,7 +459,12 @@ function hintSeen(): boolean {
   }
 }
 
-if (hint && !hintSeen() && window.matchMedia('(max-width: 899px)').matches) {
+function wireHint(): void {
+  const hint = document.getElementById('vuot-hint');
+  if (!hint || hintSeen() || !window.matchMedia('(max-width: 899px)').matches) {
+    return;
+  }
+
   hint.hidden = false;
   const done = (): void => {
     hint.hidden = true;
@@ -385,3 +478,5 @@ if (hint && !hintSeen() && window.matchMedia('(max-width: 899px)').matches) {
     track.addEventListener('scroll', done, { once: true, passive: true });
   }
 }
+
+wireHint();

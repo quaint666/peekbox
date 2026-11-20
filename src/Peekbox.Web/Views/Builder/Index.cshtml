@@ -228,7 +228,7 @@
                         <div class="search-input">
                             <partial name="_Icon" model='"search"' />
                             <input class="input" id="item-search" name="q" type="search" value="@items.Search" maxlength="@ItemCatalog.SearchMaxLength" placeholder="Tên món, thương hiệu, xuất xứ" autocomplete="off">
-                        </div>
+                    </div>
                     </div>
                     <div class="field item-filters__sort">
                         <label class="field__label" for="item-sort">Sắp xếp</label>
@@ -274,68 +274,72 @@
                 <p class="meta">Bấm một danh mục để xem ngay các món của nó. Dấu ✓ là số món của danh mục đã có trong hộp.</p>
             </div>
 
-            <p class="items__count">
-                <span>@(items.Chosen is { } shown ? $"{shown.Name}: hiện {items.Items.Count} món." : items.AsRows ? $"Hiện {items.Items.Count} món trong {items.Items.Select(i => i.CategoryId).Distinct().Count()} danh mục." : $"Hiện {items.Items.Count} món.")@if (items.HiddenCount > 0) {<text> @items.HiddenCount món hết hạn trước ngày giao đang được ẩn.</text>}</span>
-                @if (items.HiddenCount > 0)
-                {
-                    <a href="@showAll">Hiện cả @items.HiddenCount món</a>
-                }
-            </p>
-
-            @if (items.Items.Count == 0)
-            {
-                @* Mockup state 04. "Xóa bộ lọc" goes back to the plain list: all categories, no search, default order. *@
-                <div class="card no-match">
-                    <p class="no-match__title">@(items.Search is null ? "Không có món nào phù hợp" : $"Không có món nào khớp \"{items.Search}\"")</p>
-                    <p class="no-match__text">Thử bỏ bộ lọc hoặc tìm bằng từ khác.</p>
-                    <a class="btn btn--outline" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">Xóa bộ lọc</a>
-                </div>
-            }
-
-            @if (items.AsRows)
-            {
-                @* "Tất cả": one sideways row per category, in the panel's order (decision 2026-11-17). The phone hint shows
-                   until the first swipe (builder.ts remembers it in the browser). *@
-                <p class="rows-hint" id="vuot-hint" hidden>Vuốt sang trái để xem thêm món trong mỗi danh mục</p>
-                @foreach (var chip in items.Categories)
-                {
-                    var rowItems = items.Items.Where(i => i.CategoryId == chip.Id).ToList();
-                    if (rowItems.Count == 0)
+            @* Everything the search, the sort and the filters change: the count, the "no match" card and the rows or the grid.
+               builder.ts swaps this whole block in as the visitor types (decision 2026-11-20). *@
+            <div class="items__results" id="ket-qua">
+                <p class="items__count">
+                    <span>@(items.Chosen is { } shown ? $"{shown.Name}: hiện {items.Items.Count} món." : items.AsRows ? $"Hiện {items.Items.Count} món trong {items.Items.Select(i => i.CategoryId).Distinct().Count()} danh mục." : $"Hiện {items.Items.Count} món.")@if (items.HiddenCount > 0) {<text> @items.HiddenCount món hết hạn trước ngày giao đang được ẩn.</text>}</span>
+                    @if (items.HiddenCount > 0)
                     {
-                        continue;
+                        <a href="@showAll">Hiện cả @items.HiddenCount món</a>
                     }
+                </p>
 
-                    var rowId = "hang-" + chip.Id;
-                    var seeAll = ListLink(new() { ["category"] = chip.Id }, Anchors.Items);
-                    <section class="item-row" id="@rowId" aria-labelledby="@rowId-ten" data-row>
-                        <div class="item-row__head">
-                            <h3 class="item-row__title" id="@rowId-ten">@chip.Name <span class="item-row__count">@rowItems.Count món</span>@if (chip.InBox > 0) {<span class="item-row__in-box">✓ @chip.InBox trong hộp</span>}</h3>
-                            <a class="item-row__all" href="@seeAll">Xem tất cả</a>
-                            <div class="row-buttons" hidden>
-                                <button type="button" class="icon-btn row-buttons__btn" data-row-prev aria-label="@chip.Name: món trước"><partial name="_Icon" model='"arrow-left"' /></button>
-                                <button type="button" class="icon-btn row-buttons__btn" data-row-next aria-label="@chip.Name: món sau"><partial name="_Icon" model='"arrow"' /></button>
+                @if (items.Items.Count == 0)
+                {
+                    @* Mockup state 04. "Xóa bộ lọc" goes back to the plain list: all categories, no search, default order. *@
+                    <div class="card no-match">
+                        <p class="no-match__title">@(items.Search is null ? "Không có món nào phù hợp" : $"Không có món nào khớp \"{items.Search}\"")</p>
+                        <p class="no-match__text">Thử bỏ bộ lọc hoặc tìm bằng từ khác.</p>
+                        <a class="btn btn--outline" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Items))">Xóa bộ lọc</a>
+                    </div>
+                }
+
+                @if (items.AsRows)
+                {
+                    @* "Tất cả": one sideways row per category, in the panel's order (decision 2026-11-17). The phone hint shows
+                       until the first swipe (builder.ts remembers it in the browser). *@
+                    <p class="rows-hint" id="vuot-hint" hidden>Vuốt sang trái để xem thêm món trong mỗi danh mục</p>
+                    @foreach (var chip in items.Categories)
+                    {
+                        var rowItems = items.Items.Where(i => i.CategoryId == chip.Id).ToList();
+                        if (rowItems.Count == 0)
+                        {
+                            continue;
+                        }
+
+                        var rowId = "hang-" + chip.Id;
+                        var seeAll = ListLink(new() { ["category"] = chip.Id }, Anchors.Items);
+                        <section class="item-row" id="@rowId" aria-labelledby="@rowId-ten" data-row>
+                            <div class="item-row__head">
+                                <h3 class="item-row__title" id="@rowId-ten">@chip.Name <span class="item-row__count">@rowItems.Count món</span>@if (chip.InBox > 0) {<span class="item-row__in-box">✓ @chip.InBox trong hộp</span>}</h3>
+                                <a class="item-row__all" href="@seeAll">Xem tất cả</a>
+                                <div class="row-buttons" hidden>
+                                    <button type="button" class="icon-btn row-buttons__btn" data-row-prev aria-label="@chip.Name: món trước"><partial name="_Icon" model='"arrow-left"' /></button>
+                                    <button type="button" class="icon-btn row-buttons__btn" data-row-next aria-label="@chip.Name: món sau"><partial name="_Icon" model='"arrow"' /></button>
+                                </div>
                             </div>
-                        </div>
-                        <ul class="item-grid item-grid--row" data-row-track tabindex="0" aria-label="@chip.Name">
-                            @foreach (var item in rowItems)
-                            {
-                                <partial name="_ItemCard" model="new ItemCardView(item, quantityAction)" />
-                            }
-                            <li class="item-row__end"><a href="@seeAll">Xem tất cả @chip.Name<partial name="_Icon" model='"arrow"' /></a></li>
-                        </ul>
-                        <div class="item-row__position" aria-hidden="true"><span class="item-row__bar"><span class="item-row__fill" data-row-fill></span></span><span data-row-text>@rowItems.Count món</span></div>
-                    </section>
-                }
-            }
-            else
-            {
-                <ul class="item-grid">
-                    @foreach (var item in items.Items)
-                    {
-                        <partial name="_ItemCard" model="new ItemCardView(item, quantityAction)" />
+                            <ul class="item-grid item-grid--row" data-row-track tabindex="0" aria-label="@chip.Name">
+                                @foreach (var item in rowItems)
+                                {
+                                    <partial name="_ItemCard" model="new ItemCardView(item, quantityAction)" />
+                                }
+                                <li class="item-row__end"><a href="@seeAll">Xem tất cả @chip.Name<partial name="_Icon" model='"arrow"' /></a></li>
+                            </ul>
+                            <div class="item-row__position" aria-hidden="true"><span class="item-row__bar"><span class="item-row__fill" data-row-fill></span></span><span data-row-text>@rowItems.Count món</span></div>
+                        </section>
                     }
-                </ul>
-            }
+                }
+                else
+                {
+                    <ul class="item-grid">
+                        @foreach (var item in items.Items)
+                        {
+                            <partial name="_ItemCard" model="new ItemCardView(item, quantityAction)" />
+                        }
+                    </ul>
+                }
+            </div>
 
             @if (box.Lines.Count == 0)
             {

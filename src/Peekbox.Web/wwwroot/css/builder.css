@@ -186,6 +186,7 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .item-filters__check { display: flex; align-items: center; gap: var(--space-3); min-height: 48px; font-size: var(--text-sm); line-height: 1.4; }
 .item-filters__check input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--color-primary); }
 .item-filters__check label { display: flex; align-items: center; min-height: var(--tap-min); }  /* the label is the tap target: the box itself is 20 px. The text is in a span, so its spaces stay. */
+.items__results { display: flex; flex-direction: column; gap: var(--space-4); }
 .items__count { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); margin: 0; font-size: var(--text-sm); line-height: 1.5; color: var(--color-muted); }
 .items__count a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--color-primary-text); font-weight: 600; }
 
