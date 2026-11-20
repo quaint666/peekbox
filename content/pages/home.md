@@ -12,7 +12,7 @@ The Vietnamese text of the home page now lives in one place: `content/data/home.
 
 **Seasonal banner (set under Campaigns):** Tết 2027: pick your hamper and delivery date early for the best choice
 
-**Small pill above the headline:** Gifts for every occasion
+**Small pill above the headline:** one dot per occasion, then "6 occasions of the year" on a phone and the six names from 640 px
 
 **Headline:** A gift hamper where you see every item inside
 

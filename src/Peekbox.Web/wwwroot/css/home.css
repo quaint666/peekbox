@@ -32,10 +32,19 @@
 }
 .hero__inner { position: relative; padding-top: 300px; padding-bottom: var(--space-6); }   /* after the photo in the page, so it paints over it */
 .hero__badge { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 14px; font-size: var(--text-xs); line-height: 1.2; }  /* 6px, 14px, 13px and 1.2: from the mockup */
-.hero__dot { width: var(--space-2); height: var(--space-2); border-radius: 50%; }
-.hero__dot--tet { background: var(--accent-tet); }
-.hero__dot--teachers { background: var(--accent-teachers); }
-.hero__dot--women { background: var(--accent-women); }
+.hero__dot { width: var(--space-2); height: var(--space-2); border-radius: 50%; flex: none; }
+/* The card colours: the accent in the light theme, the lighter ink in the dark one, so the dots stay visible in both. */
+.hero__dot--tet { background: var(--occasion-card-tet); }
+.hero__dot--valentine { background: var(--occasion-card-valentine); }
+.hero__dot--women { background: var(--occasion-card-women); }
+.hero__dot--midautumn { background: var(--occasion-card-midautumn); }
+.hero__dot--teachers { background: var(--occasion-card-teachers); }
+.hero__dot--christmas { background: var(--occasion-card-christmas); }
+.hero__pill-long { display: none; }
+@media (min-width: 640px) {
+    .hero__pill-short { display: none; }
+    .hero__pill-long { display: inline; }
+}
 .hero__title { margin: var(--space-4) 0; font-size: var(--text-hero-sm); line-height: 1.2; text-wrap: balance; }   /* no one word left alone on the last line */
 .hero__lead { font-size: var(--text-base); line-height: 1.65; color: var(--color-muted); margin: 0 0 var(--space-5); }
 .hero__actions { display: flex; flex-direction: column; gap: var(--space-3); }

@@ -71,6 +71,20 @@ public class HomePageTests(PeekboxFixture fixture)
         }
     }
 
+    // Written out on purpose (see the card test): the six accents in the order of the cards, the count for a phone and
+    // the names for a wide screen. The pill is not a list of three any more.
+    [Fact]
+    public async Task The_pill_has_one_dot_per_occasion_the_count_for_a_phone_and_the_names_for_a_wide_screen()
+    {
+        var html = await GetHomeAsync();
+
+        var pill = Regex.Match(html, @"<p class=""badge hero__badge"">(.*?)</p>", RegexOptions.Singleline).Groups[1].Value;
+        var dots = Regex.Matches(pill, @"hero__dot hero__dot--(\w+)""").Select(m => m.Groups[1].Value);
+        Assert.Equal(["tet", "valentine", "women", "midautumn", "teachers", "christmas"], dots);
+        Assert.Contains("<span class=\"hero__pill-short\">6 dịp lễ trong năm</span>", pill);
+        Assert.Contains("<span class=\"hero__pill-long\">Tết · Valentine · 8/3 · Trung thu · 20/11 · Giáng sinh</span>", pill);
+    }
+
     [Fact]
     public async Task The_hero_is_a_photo_with_its_text_over_it_and_no_inline_style()
     {

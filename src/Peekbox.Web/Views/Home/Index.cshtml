@@ -21,10 +21,13 @@
     <div class="container hero__inner">
         <div class="hero__copy">
             <p class="badge hero__badge">
-                <span class="hero__dot hero__dot--tet" aria-hidden="true"></span>
-                <span class="hero__dot hero__dot--teachers" aria-hidden="true"></span>
-                <span class="hero__dot hero__dot--women" aria-hidden="true"></span>
-                @Model.Content.Pill
+                @* One dot per occasion in the occasion's colour. A phone has room for the count ("6 dịp lễ trong năm"), a wide screen for the names (home.css). *@
+                @foreach (var occasion in Model.Content.Occasions)
+                {
+                    <span class="hero__dot hero__dot--@occasion.Accent" aria-hidden="true"></span>
+                }
+                <span class="hero__pill-short">@Model.Content.Occasions.Count @Model.Content.Pill</span>
+                <span class="hero__pill-long">@string.Join(" · ", Model.Content.Occasions.Select(o => o.Name))</span>
             </p>
             <h1 class="hero__title">@Model.Content.Title</h1>
             <p class="hero__lead">@Model.Content.Lead</p>
