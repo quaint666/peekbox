@@ -298,3 +298,21 @@ select.input {
     color: var(--color-text);
 }
 .card-go .icon { width: 18px; height: 18px; }
+
+/* The season banner (F05), on the home page and the builder: a soft tint of the season's colour with its ink (the same pair
+   as the chips and tags on the occasion pages), not a solid block. The modifier is the occasion's accent key. */
+.season-banner--tet { --banner-bg: var(--occasion-soft-tet); --banner-ink: var(--occasion-ink-tet); }
+.season-banner--teachers { --banner-bg: var(--occasion-soft-teachers); --banner-ink: var(--occasion-ink-teachers); }
+.season-banner--women { --banner-bg: var(--occasion-soft-women); --banner-ink: var(--occasion-ink-women); }
+.season-banner--valentine { --banner-bg: var(--occasion-soft-valentine); --banner-ink: var(--occasion-ink-valentine); }
+.season-banner--midautumn { --banner-bg: var(--occasion-soft-midautumn); --banner-ink: var(--occasion-ink-midautumn); }
+.season-banner--christmas { --banner-bg: var(--occasion-soft-christmas); --banner-ink: var(--occasion-ink-christmas); }
+.season-banner { background: var(--banner-bg); color: var(--banner-ink); padding: var(--space-2) 0; text-align: center; font-size: var(--text-sm); line-height: 1.6; }
+.season-banner__text { margin: 0; }
+.season-banner__go { display: inline-flex; align-items: center; gap: 6px; color: inherit; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.season-banner__go .icon { width: 14px; height: 14px; }
+.season-banner__go:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@media (hover: hover) {
+    .season-banner__go:hover { text-decoration: underline; }
+}
+

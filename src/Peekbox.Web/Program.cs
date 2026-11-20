@@ -33,6 +33,9 @@ builder.Services.AddScoped<ReadyHampers>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddSingleton<RateLimits>();
 
+// The season banner (Banner:Occasion names the occasion whose banner shows, empty for none). See Services/SeasonBanner.cs.
+builder.Services.AddSingleton(new CurrentBanner(SeasonBanner.Load(builder.Configuration["Banner:Occasion"], SeedData.HampersFilePath)));
+
 // Demo mode (Demo:Enabled): the site runs for people to look at, and the checkout takes no order. See Services/DemoMode.cs.
 builder.Services.AddSingleton(new DemoMode(builder.Configuration.GetValue<bool>("Demo:Enabled")));
 

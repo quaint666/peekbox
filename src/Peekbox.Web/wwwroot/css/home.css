@@ -1,16 +1,4 @@
 /* HOME: layout of the home page only. */
-/* The season banner: a soft tint of the season's colour with its ink (the same pair as the chips and tags on the occasion
-   pages), not a solid block. The modifier picks the season; another season adds its own line. */
-.home-banner--tet { --banner-bg: var(--occasion-soft-tet); --banner-ink: var(--occasion-ink-tet); }
-.home-banner { background: var(--banner-bg); color: var(--banner-ink); padding: var(--space-2) 0; text-align: center; font-size: var(--text-sm); line-height: 1.6; }
-.home-banner__text { margin: 0; }
-.home-banner__go { display: inline-flex; align-items: center; gap: 6px; color: inherit; font-weight: 600; text-decoration: none; white-space: nowrap; }
-.home-banner__go .icon { width: 14px; height: 14px; }
-.home-banner__go:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
-@media (hover: hover) {
-    .home-banner__go:hover { text-decoration: underline; }
-}
-
 /* Hero (decision 2026-11-20, replaced the same day). The photo fills the section and is left clear: the text sits on a solid
    card over it, so it is always on the card colour and no gradient or mask is needed. On a phone the photo is the top and
    the card overlaps its lower part; from 900px the photo fills the section and the card sits at the left. The photo's size

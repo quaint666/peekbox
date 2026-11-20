@@ -5,7 +5,7 @@ namespace Peekbox.Web.Content;
 // The Vietnamese text of the home page. It lives in content/data/home.json (one
 // copy); the project copies it next to the app as Content/home.json, and it is
 // read once, when the app starts. One copy is shared by every request, so it is
-// read-only (IReadOnlyList, a record). The season banner is not here: it comes from the campaign (F05).
+// read-only (IReadOnlyList, a record). The season banner is not here: it comes from the occasion (Services/SeasonBanner.cs).
 public sealed record HomeContent(
     string Pill,
     string Title,

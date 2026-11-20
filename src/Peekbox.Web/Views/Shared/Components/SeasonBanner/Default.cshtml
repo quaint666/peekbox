@@ -1,0 +1,8 @@
+@using Peekbox.Web.Services
+@model SeasonBanner
+@* The season banner (F05): the occasion's chip in bold, its line, and a link to its page. The colours come from the accent (components.css). *@
+<div class="season-banner season-banner--@Model.Accent">
+    <div class="container">
+        <p class="season-banner__text"><strong>@Model.Chip:</strong> @Model.Text <a class="season-banner__go" href="@SiteLinks.Occasion(Model.OccasionId)">Xem hộp @Model.Name<partial name="_Icon" model='"arrow"' /></a></p>
+    </div>
+</div>

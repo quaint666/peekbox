@@ -28,16 +28,6 @@ public class HomePageTests(PeekboxFixture fixture)
         Assert.Contains(content.Lead, html);
     }
 
-    [Fact]
-    public async Task Home_has_the_season_banner_above_the_header_with_a_link_to_the_season_page()
-    {
-        var html = await GetHomeAsync();
-
-        var banner = html.IndexOf("<div class=\"home-banner home-banner--tet\">", StringComparison.Ordinal);
-        Assert.InRange(banner, 0, html.IndexOf("<header class=\"site-header\">", StringComparison.Ordinal));
-        Assert.Matches(@"<strong>Mùa Tết 2027:</strong> đặt sớm để còn nhiều lựa chọn\s*<a class=""home-banner__go"" href=""/dip/tet"">Xem hộp Tết", html);
-    }
-
     // Written out here on purpose: a test that read home.json or the database would agree with a typo in either.
     // The count and the budget range are worked out from the hampers in the database (ReadyHampers.SummariesAsync).
     private static readonly (string Accent, string Href, string Chip, string Name, string Photo, string Range, string Count)[] Cards =

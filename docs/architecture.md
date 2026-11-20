@@ -137,6 +137,7 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
   - `ConnectionStrings__Default`: the database.
   - `ForwardedHeaders__Hops`: how many proxies are in front of the app (0, the default, believes no `X-Forwarded-*` header; staging is 2: nginx, then cloudflared). The app must then be reachable only through the proxy, because the callers are not checked. It makes the rate limits count per visitor and the hamper cookie `Secure`.
   - `AllowedHosts`: the host names, separated by `;`. Include `localhost` when a container health check calls the app on its own address.
+  - `Banner__Occasion`: the id of the occasion whose season banner shows on the home page and the builder (`tet`, `valentine`, `phu-nu`, `trung-thu`, `20-11` or `giang-sinh`); empty, the default, shows none. A value that is not an occasion stops the app at start. The line itself is the occasion's `banner` in `content/data/hampers.json`. This is the stand-in for the admin's switch.
   - `Demo__Enabled`: `true` on a copy people only look at: the checkout shows "Đây là bản xem thử" and takes no order; everything else works.
   - `GET /healthz`: 200 `ok` when the database answers, else 503.
 - Decided since: the rate limits (20 orders and 10 order lookups per 15 minutes per address, `RateLimits`, called from the controllers so a refused request still gets its page with a Vietnamese note).

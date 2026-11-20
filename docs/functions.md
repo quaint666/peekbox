@@ -12,7 +12,7 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F02 | Dropped (2026-11-11): the site is Vietnamese only, so there is no language switch. The number is kept so the other F-numbers do not change | all | – |
 | F03 | Light/dark button; follows the system by default; the choice is remembered | all | M |
 | F04 | Footer on every customer page and every state: brand line, Khám phá (Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng), Pháp lý (Điều khoản, Chính sách bảo mật), contact [placeholders]. The one exception is the phone share sheet, which shows only the screen | all | M |
-| F05 | Campaign banner (Tết 2027, 20/11, 8/3) shown within its dates | Home, Builder | S |
+| F05 | Season banner for one occasion, switched on by the owner (for now the setting `Banner__Occasion`), no dates | Home, Builder | S |
 | F06 | Floating contact button: Zalo, phone, email, support hours [placeholders] | all | S |
 | F07 | Back-to-top button after scrolling | all | C |
 | F67 | Hover, keyboard-focus, pressed and disabled looks for buttons, links, fields, cards and table rows; hover only where a mouse exists; movement is dropped for "reduce motion" (see the Interaction states board) | all | M |
