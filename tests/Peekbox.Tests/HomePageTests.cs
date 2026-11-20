@@ -37,26 +37,61 @@ public class HomePageTests(PeekboxFixture fixture)
         Assert.InRange(banner, 0, html.IndexOf("<header class=\"site-header\">", StringComparison.Ordinal));
     }
 
+    // Written out here on purpose: a test that read home.json or the database would agree with a typo in either.
+    // The count and the budget range are worked out from the hampers in the database (ReadyHampers.SummariesAsync).
+    private static readonly (string Accent, string Href, string Chip, string Name, string Photo, string Range, string Count)[] Cards =
+    [
+        ("tet", "/dip/tet", "Mùa Tết 2027", "Tết", "/images/occasions/tet.webp", "300.000đ – 10 triệu", "25 hộp gợi ý"),
+        ("valentine", "/dip/valentine", "Ngày Valentine", "Valentine", "/images/occasions/valentine.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
+        ("women", "/dip/phu-nu", "Ngày Quốc tế Phụ nữ", "8/3", "/images/occasions/8-3.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
+        ("midautumn", "/dip/trung-thu", "Tết Trung thu", "Trung thu", "/images/occasions/trung-thu.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
+        ("teachers", "/dip/20-11", "Ngày Nhà giáo Việt Nam", "20/11", "/images/occasions/20-11.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
+        ("christmas", "/dip/giang-sinh", "Mùa Giáng sinh", "Giáng sinh", "/images/occasions/giang-sinh.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
+    ];
+
     [Fact]
-    public async Task Each_occasion_card_is_one_link_to_its_occasion_page_with_a_decorative_photo_and_a_button_label()
+    public async Task Each_occasion_card_is_one_link_to_its_page_with_a_decorative_photo_the_chip_the_name_and_the_two_facts()
     {
         var html = await GetHomeAsync();
 
         var cards = Regex.Matches(html, @"<a class=""occasion occasion--(\w+)"" href=""([^""]+)"">([\s\S]*?)</a>").ToList();
-        Assert.Equal(["tet", "teachers", "women"], cards.Select(c => c.Groups[1].Value));
-        Assert.Equal(["/dip/tet", "/dip/20-11", "/dip/phu-nu"], cards.Select(c => c.Groups[2].Value));
-
-        // Written out here on purpose: a test that read home.json would agree with a typo in it.
-        string[] buttons = ["Tạo hộp cho Tết", "Tạo hộp cho 20/11", "Tạo hộp cho 8/3"];
-        string[] photos = ["/images/occasions/tet.webp", "/images/occasions/20-11.webp", "/images/occasions/8-3.webp"];
+        Assert.Equal(Cards.Select(c => c.Accent), cards.Select(c => c.Groups[1].Value));
+        Assert.Equal(Cards.Select(c => c.Href), cards.Select(c => c.Groups[2].Value));
         for (var i = 0; i < cards.Count; i++)
         {
             var card = cards[i].Groups[3].Value;
-            Assert.Matches($@"<span class=""occasion__button"">{Regex.Escape(buttons[i])}\s*<svg", card);
             var src = Regex.Match(card, @"<img[^>]*\ssrc=""([^""]+)""[^>]*\salt=""""").Groups[1].Value;
-            Assert.Equal(photos[i], BuilderItemsTests.Unfingerprinted(src));
-            Assert.DoesNotContain("<a ", card);   // a link inside a link is not allowed; the button is only a label
+            Assert.Equal(Cards[i].Photo, BuilderItemsTests.Unfingerprinted(src));
+            Assert.Contains($"<span class=\"occasion__chip\">{Cards[i].Chip}</span>", card);
+            Assert.Matches($@"<h3 class=""occasion__name""><span class=""occasion__dot"" aria-hidden=""true""></span>{Regex.Escape(Cards[i].Name)}</h3>", card);
+            Assert.Matches($@"<span class=""occasion__go"" aria-hidden=""true"">\s*<svg", card);   // the arrow is decoration: the link's name is its text
+            Assert.Contains($"<strong>{Cards[i].Range}</strong>", card);
+            Assert.Contains($"{Cards[i].Count}</li>", card);
+            Assert.DoesNotContain("<a ", card);   // a link inside a link is not allowed
         }
+    }
+
+    [Fact]
+    public async Task The_hero_is_a_photo_with_its_text_over_it_and_no_inline_style()
+    {
+        var html = await GetHomeAsync();
+        var content = HomeContent.Load(HomeContent.FilePath);
+
+        var hero = Regex.Match(html, @"<section class=""hero"">[\s\S]*?</section>").Value;
+        var photo = Regex.Match(hero, @"<img class=""hero__image"" src=""([^""]+)""[^>]*\salt=""([^""]*)""");
+        Assert.Equal("/images/hero.webp", BuilderItemsTests.Unfingerprinted(photo.Groups[1].Value));
+        Assert.Equal(content.ImageAlt, photo.Groups[2].Value);
+        Assert.Contains("<div class=\"container hero__inner\"><div class=\"hero__copy\">", Regex.Replace(hero, @">\s+<", "><"));
+        Assert.DoesNotContain("style=", hero);   // the CSP forbids inline styles
+    }
+
+    [Fact]
+    public async Task The_third_promise_is_the_shield_with_a_check()
+    {
+        var html = await GetHomeAsync();
+
+        var promises = Regex.Matches(html, @"<span class=""promise__icon"">\s*<svg class=""icon icon--(\S+?)""").Select(m => m.Groups[1].Value).ToList();
+        Assert.Equal(["eye", "wallet", "shield"], promises);
     }
 
     // The expected links are written out here on purpose. A test that read SiteLinks would agree with a typo in SiteLinks.

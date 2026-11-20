@@ -14,8 +14,12 @@
 }
 
 <section class="hero">
+    @* The photo is the section's background, so it is first and out of the text's way; home.css fades it into the page colour. *@
+    <img class="hero__image" src="~/images/hero.webp" asp-append-version="true"
+         width="1200" height="896"
+         alt="@Model.Content.ImageAlt">
     <div class="container hero__inner">
-        <div>
+        <div class="hero__copy">
             <p class="badge hero__badge">
                 <span class="hero__dot hero__dot--tet" aria-hidden="true"></span>
                 <span class="hero__dot hero__dot--teachers" aria-hidden="true"></span>
@@ -29,9 +33,6 @@
                 <a class="btn btn--lg btn--outline" href="@SiteLinks.Commitments.Href">@Model.Content.SecondaryButton</a>
             </div>
         </div>
-        <img class="hero__image" src="~/images/hero.webp" asp-append-version="true"
-             width="1200" height="896"
-             alt="@Model.Content.ImageAlt">
     </div>
 </section>
 
@@ -76,16 +77,23 @@
         <ul class="occasions__list">
             @foreach (var occasion in Model.Content.Occasions)
             {
-                @* The whole card is one link. The button inside is only its label: a link inside a link is not allowed. *@
+                @* The whole card is one link; what is inside it is text and decoration, never another link. *@
                 <li class="occasions__item">
                     <a class="occasion occasion--@occasion.Accent" href="@SiteLinks.Occasion(occasion.Id)">
-                        <div class="occasion__photo"><img class="occasion__img" src="~/images/occasions/@occasion.Image" alt="" width="1264" height="848" loading="lazy"></div>
-                        <div class="occasion__panel">
+                        <div class="occasion__photo">
+                            <img class="occasion__img" src="~/images/occasions/@occasion.Image" alt="" width="1264" height="848" loading="lazy">
                             <span class="occasion__chip">@occasion.Chip</span>
-                            <h3 class="occasion__name">@occasion.Name</h3>
-                            <p class="occasion__text">@occasion.Text</p>
-                            <span class="occasion__button">@occasion.Button<partial name="_Icon" model='"arrow"' /></span>
+                            <span class="occasion__go" aria-hidden="true"><partial name="_Icon" model='"arrow"' /></span>
                         </div>
+                        <h3 class="occasion__name"><span class="occasion__dot" aria-hidden="true"></span>@occasion.Name</h3>
+                        <p class="occasion__text">@occasion.Text</p>
+                        @if (Model.Summaries.TryGetValue(occasion.Id, out var summary))
+                        {
+                            <ul class="occasion__meta">
+                                <li><partial name="_Icon" model='"wallet"' /><strong>@summary.BudgetRange</strong></li>
+                                <li><partial name="_Icon" model='"box"' />@summary.HamperCount hộp gợi ý</li>
+                            </ul>
+                        }
                     </a>
                 </li>
             }

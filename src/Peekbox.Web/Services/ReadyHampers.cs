@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Data;
+using Peekbox.Web.Formatting;
 
 namespace Peekbox.Web.Services;
 
@@ -13,6 +14,17 @@ public sealed class ReadyHampers(PeekboxDbContext db)
             .OrderBy(o => o.SortOrder)
             .Select(o => new OccasionLink(o.Id, o.Name, o.Accent))
             .ToListAsync(cancellationToken);
+
+    // What each home card says about its occasion: how many ready hampers there are and the lowest and highest budget
+    // (decision 2026-11-20). An occasion with no hamper has no entry.
+    public async Task<Dictionary<string, OccasionSummary>> SummariesAsync(CancellationToken cancellationToken = default)
+    {
+        var rows = await db.Occasions.AsNoTracking()
+            .Where(o => o.Hampers.Any())
+            .Select(o => new { o.Id, Count = o.Hampers.Count(), Lowest = o.Hampers.Min(h => h.BudgetVnd), Highest = o.Hampers.Max(h => h.BudgetVnd) })
+            .ToListAsync(cancellationToken);
+        return rows.ToDictionary(r => r.Id, r => new OccasionSummary(r.Count, r.Lowest, r.Highest));
+    }
 
     // One occasion page: its text and its hampers grouped by budget, lowest first. Null for an unknown occasion.
     public async Task<OccasionPage?> PageAsync(string id, CancellationToken cancellationToken = default)
@@ -62,6 +74,12 @@ public sealed class ReadyHampers(PeekboxDbContext db)
 
 // An occasion as the links between the pages and the builder's chips need it.
 public sealed record OccasionLink(string Id, string Name, string Accent);
+
+// The count and the budget range on a home card: "300.000đ – 10 triệu".
+public sealed record OccasionSummary(int HamperCount, long LowestVnd, long HighestVnd)
+{
+    public string BudgetRange => $"{Vnd.Short(LowestVnd)} – {Vnd.Short(HighestVnd)}";
+}
 
 public sealed record OccasionPage(Occasion Occasion, IReadOnlyList<BudgetGroup> Groups);
 

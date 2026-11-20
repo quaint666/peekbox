@@ -62,7 +62,7 @@ public class OccasionPageTests(PeekboxFixture fixture)
     [Fact]
     public async Task An_unknown_occasion_is_a_404()
     {
-        Assert.Equal(HttpStatusCode.NotFound, (await NewVisitor().GetAsync("/dip/giang-sinh")).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await NewVisitor().GetAsync("/dip/khong-co")).StatusCode);
     }
 
     [Fact]
@@ -77,12 +77,17 @@ public class OccasionPageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task Only_the_20_11_and_womens_pages_link_to_Bloomy()
+    public async Task Only_the_20_11_womens_and_Valentine_pages_link_to_Bloomy()
     {
         const string bloomy = "href=\"https://bloomy.quaintshomelabdomain.uk\"";
-        Assert.DoesNotContain(bloomy, await NewVisitor().PageAsync("/dip/tet"));
+        foreach (var occasion in new[] { "tet", "trung-thu", "giang-sinh" })
+        {
+            Assert.DoesNotContain(bloomy, await NewVisitor().PageAsync("/dip/" + occasion));
+        }
+
         Assert.Contains(bloomy, await NewVisitor().PageAsync("/dip/20-11"));
         Assert.Contains("Xem hoa 8/3 và 20/10 trên Bloomy", await NewVisitor().PageAsync("/dip/phu-nu"));
+        Assert.Contains("Xem hoa Valentine trên Bloomy", await NewVisitor().PageAsync("/dip/valentine"));
     }
 
     [Fact]
@@ -189,9 +194,10 @@ public class OccasionPageTests(PeekboxFixture fixture)
     {
         var visitor = await VisitorWithBoxAsync("300000");
         var response = await visitor.PostAsync("/dip/dung-hop", new() { ["slug"] = "hoa-giay", ["from"] = "https://example.com" });
-        Assert.Equal("/dip/20-11#hop-hoa-giay", response.Headers.Location?.OriginalString);
-        response = await visitor.PostAsync("/dip/dung-hop", new() { ["slug"] = "hoa-giay", ["from"] = "phu-nu" });
+        // Not from the request: the first of the hamper's own occasions in the site's order (8/3 comes before 20/11).
         Assert.Equal("/dip/phu-nu#hop-hoa-giay", response.Headers.Location?.OriginalString);
+        response = await visitor.PostAsync("/dip/dung-hop", new() { ["slug"] = "hoa-giay", ["from"] = "20-11" });
+        Assert.Equal("/dip/20-11#hop-hoa-giay", response.Headers.Location?.OriginalString);
     }
 
     [Fact]

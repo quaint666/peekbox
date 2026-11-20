@@ -21,7 +21,7 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F10 | Loading skeletons while data loads | Builder, Item | C |
 | **Home** | | | |
 | F11 | Hero with the promise and a button to start a hamper | Home | M |
-| F12 | "How it works" steps and the three occasion cards | Home | M |
+| F12 | "How it works" steps and the six occasion cards | Home | M |
 | F13 | Banner "you have an unfinished hamper": continue or start over | Home, Builder | S |
 | **Builder** | | | |
 | F14 | Set the budget (typed, or quick amounts 300.000 / 500.000 / 800.000 / 1.000.000đ) and the delivery date | Builder | M |

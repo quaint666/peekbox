@@ -4,6 +4,9 @@
 .occ--tet { --occ-ink: var(--occasion-ink-tet); --occ-panel: var(--occasion-panel-tet); --occ-tint: var(--occasion-tint-tet); --occ-soft: var(--occasion-soft-tet); --occ-line: var(--occasion-line-tet); }
 .occ--teachers { --occ-ink: var(--occasion-ink-teachers); --occ-panel: var(--occasion-panel-teachers); --occ-tint: var(--occasion-tint-teachers); --occ-soft: var(--occasion-soft-teachers); --occ-line: var(--occasion-line-teachers); }
 .occ--women { --occ-ink: var(--occasion-ink-women); --occ-panel: var(--occasion-panel-women); --occ-tint: var(--occasion-tint-women); --occ-soft: var(--occasion-soft-women); --occ-line: var(--occasion-line-women); }
+.occ--valentine { --occ-ink: var(--occasion-ink-valentine); --occ-panel: var(--occasion-panel-valentine); --occ-tint: var(--occasion-tint-valentine); --occ-soft: var(--occasion-soft-valentine); --occ-line: var(--occasion-line-valentine); }
+.occ--midautumn { --occ-ink: var(--occasion-ink-midautumn); --occ-panel: var(--occasion-panel-midautumn); --occ-tint: var(--occasion-tint-midautumn); --occ-soft: var(--occasion-soft-midautumn); --occ-line: var(--occasion-line-midautumn); }
+.occ--christmas { --occ-ink: var(--occasion-ink-christmas); --occ-panel: var(--occasion-panel-christmas); --occ-tint: var(--occasion-tint-christmas); --occ-soft: var(--occasion-soft-christmas); --occ-line: var(--occasion-line-christmas); }
 
 .occ { background: var(--occ-tint); }
 

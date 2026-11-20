@@ -42,7 +42,7 @@ public class CatalogueTests(PeekboxFixture fixture)
             Assert.True((p.Category == "qua-khong-an") == (p.ExpiryDate is null), $"{p.Slug}: category {p.Category}, expiry {p.ExpiryDate}");
         }
 
-        Assert.Equal(9, File.Products.Count(p => p.ExpiryDate is null));
+        Assert.Equal(27, File.Products.Count(p => p.ExpiryDate is null));
     }
 
     [Fact]

@@ -1,5 +1,5 @@
 {
-  "_note": "Ready hampers (F15) and the three occasion pages. Totals are not stored: the page works them out from current prices, packaging included. The banner text is for the season banner (F05, later) and is not read yet. The hamper photos are drafts.",
+  "_note": "Ready hampers (F15) and the six occasion pages. Totals are not stored: the page works them out from current prices, packaging included. The banner text is for the season banner (F05, later) and is not read yet. The hamper photos are drafts.",
   "occasions": [
     {
       "id": "tet",
@@ -10,6 +10,39 @@
       "image": "/images/occasions/tet.webp",
       "lead": "Peekbox chọn sẵn vài hộp cho mỗi mức ngân sách. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp. Hạn dùng vẫn được kiểm tra theo ngày giao.",
       "banner": "Mùa Tết 2027: chọn hộp quà và ngày giao sớm để còn nhiều lựa chọn",
+      "bloomy_link": null
+    },
+    {
+      "id": "valentine",
+      "name": "Valentine",
+      "title": "Hộp quà Valentine",
+      "chip": "Ngày Valentine",
+      "accent": "valentine",
+      "image": "/images/occasions/valentine.webp",
+      "lead": "Hộp quà ngọt ngào cho người thương, gọn và có hạn dùng rõ ràng. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
+      "banner": "Valentine: chọn một hộp quà ngọt ngào và ngày giao sớm",
+      "bloomy_link": "Xem hoa Valentine trên Bloomy"
+    },
+    {
+      "id": "phu-nu",
+      "name": "8/3 và 20/10",
+      "title": "Hộp quà 8/3 và 20/10",
+      "chip": "Ngày Phụ nữ",
+      "accent": "women",
+      "image": "/images/occasions/8-3.webp",
+      "lead": "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ, dùng cho cả 8/3 và 20/10. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
+      "banner": "8/3: chọn món quà ý nghĩa cho mẹ, vợ, bạn gái và đồng nghiệp",
+      "bloomy_link": "Xem hoa 8/3 và 20/10 trên Bloomy"
+    },
+    {
+      "id": "trung-thu",
+      "name": "Trung thu",
+      "title": "Hộp quà Trung thu",
+      "chip": "Tết Trung thu",
+      "accent": "midautumn",
+      "image": "/images/occasions/trung-thu.webp",
+      "lead": "Hộp quà đoàn viên: bánh, trà và món nhâm nhi cho cả nhà. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp. Bánh trung thu có hạn dùng ngắn, nên hạn dùng được kiểm tra theo ngày giao.",
+      "banner": "Trung thu: bánh và trà cho đêm rằm, đặt sớm để kịp ngày giao",
       "bloomy_link": null
     },
     {
@@ -24,15 +57,15 @@
       "bloomy_link": "Xem hoa 20/11 trên Bloomy"
     },
     {
-      "id": "phu-nu",
-      "name": "8/3 và 20/10",
-      "title": "Hộp quà 8/3 và 20/10",
-      "chip": "Ngày Phụ nữ",
-      "accent": "women",
-      "image": "/images/occasions/8-3.webp",
-      "lead": "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ, dùng cho cả 8/3 và 20/10. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
-      "banner": "8/3: chọn món quà ý nghĩa cho mẹ, vợ, bạn gái và đồng nghiệp",
-      "bloomy_link": "Xem hoa 8/3 và 20/10 trên Bloomy"
+      "id": "giang-sinh",
+      "name": "Giáng sinh",
+      "title": "Hộp quà Giáng sinh",
+      "chip": "Mùa Giáng sinh",
+      "accent": "christmas",
+      "image": "/images/occasions/giang-sinh.webp",
+      "lead": "Hộp quà ấm áp cho gia đình, bạn bè và đồng nghiệp cuối năm. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
+      "banner": "Giáng sinh: chọn hộp quà ấm áp và đặt sớm để kịp ngày 25/12",
+      "bloomy_link": null
     }
   ],
   "hampers": [
@@ -885,11 +918,11 @@
           "quantity": 1
         },
         {
-          "item": "banh-quy-yen-mach",
+          "item": "tra-lai",
           "quantity": 1
         },
         {
-          "item": "keo-dua",
+          "item": "the-danh-dau-sach",
           "quantity": 1
         }
       ]
@@ -939,7 +972,7 @@
           "quantity": 1
         },
         {
-          "item": "banh-quy-bo",
+          "item": "tra-gao-lut",
           "quantity": 1
         }
       ]
@@ -981,7 +1014,7 @@
       "image": "/images/hampers/mua-thu.webp",
       "items": [
         {
-          "item": "ca-phe-arabica-cau-dat",
+          "item": "tra-sen",
           "quantity": 1
         },
         {
@@ -989,7 +1022,7 @@
           "quantity": 1
         },
         {
-          "item": "hat-dieu-rang-muoi",
+          "item": "mat-ong-hoa-ca-phe",
           "quantity": 1
         }
       ]
@@ -1018,7 +1051,7 @@
           "quantity": 1
         },
         {
-          "item": "hat-oc-cho",
+          "item": "but-may",
           "quantity": 1
         }
       ]
@@ -1048,7 +1081,7 @@
           "quantity": 1
         },
         {
-          "item": "socola-den-ben-tre",
+          "item": "ca-phe-phin-giay",
           "quantity": 1
         }
       ]
@@ -1090,7 +1123,7 @@
       "image": "/images/hampers/an-yen.webp",
       "items": [
         {
-          "item": "nuoc-yen-6-hu",
+          "item": "tra-shan-tuyet",
           "quantity": 1
         },
         {
@@ -1131,7 +1164,7 @@
           "quantity": 1
         },
         {
-          "item": "nuoc-yen-6-hu",
+          "item": "but-may",
           "quantity": 1
         },
         {
@@ -1139,7 +1172,7 @@
           "quantity": 1
         },
         {
-          "item": "hat-macca",
+          "item": "ly-giu-nhiet",
           "quantity": 1
         },
         {
@@ -1385,6 +1418,1761 @@
         },
         {
           "item": "khan-lua",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-cuc",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "dau-ngot",
+      "name": "Hộp Dâu Ngọt",
+      "for": "Tặng người yêu",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/dau-ngot.webp",
+      "items": [
+        {
+          "item": "socola-den-ben-tre",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        },
+        {
+          "item": "dau-tay-say",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "loi-yeu",
+      "name": "Hộp Lời Yêu",
+      "for": "Tặng bạn gái",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/loi-yeu.webp",
+      "items": [
+        {
+          "item": "socola-hanh-nhan",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-socola",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "tim-hong",
+      "name": "Hộp Tim Hồng",
+      "for": "Tặng người yêu",
+      "budget_vnd": 500000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/tim-hong.webp",
+      "items": [
+        {
+          "item": "socola-truffle-hop-tim",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "hai-minh",
+      "name": "Hộp Hai Mình",
+      "for": "Tặng vợ, tặng chồng",
+      "budget_vnd": 800000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/hai-minh.webp",
+      "items": [
+        {
+          "item": "socola-truffle-hop-tim",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        },
+        {
+          "item": "socola-den-ben-tre",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "mai-yeu",
+      "name": "Hộp Mãi Yêu",
+      "for": "Tặng vợ, tặng chồng",
+      "budget_vnd": 1000000,
+      "packaging": "rattan",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/mai-yeu.webp",
+      "items": [
+        {
+          "item": "socola-truffle-hop-tim",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom",
+          "quantity": 1
+        },
+        {
+          "item": "ly-su",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hanh-nhan",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "doi-ta",
+      "name": "Hộp Đôi Ta",
+      "for": "Tặng người đặc biệt",
+      "budget_vnd": 2000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/doi-ta.webp",
+      "items": [
+        {
+          "item": "am-chen-bat-trang",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long-hop-go",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "socola-truffle-hop-tim",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "am-ap",
+      "name": "Hộp Ấm Áp",
+      "for": "Tặng bạn bè",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/am-ap.webp",
+      "items": [
+        {
+          "item": "cacao-nong",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-gung-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "keo-gay",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "bong-tuyet",
+      "name": "Hộp Bông Tuyết",
+      "for": "Tặng đồng nghiệp",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/bong-tuyet.webp",
+      "items": [
+        {
+          "item": "socola-den-ben-tre",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-gung-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "keo-gay",
+          "quantity": 1
+        },
+        {
+          "item": "keo-dua",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "dem-dong",
+      "name": "Hộp Đêm Đông",
+      "for": "Tặng gia đình",
+      "budget_vnd": 500000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/dem-dong.webp",
+      "items": [
+        {
+          "item": "cacao-nong",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-gung-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hanh-nhan",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "cay-thong",
+      "name": "Hộp Cây Thông",
+      "for": "Tặng gia đình",
+      "budget_vnd": 800000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/cay-thong.webp",
+      "items": [
+        {
+          "item": "vong-thong-mini",
+          "quantity": 1
+        },
+        {
+          "item": "cacao-nong",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-gung-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hanh-nhan",
+          "quantity": 1
+        },
+        {
+          "item": "hat-macca",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "dem-thanh",
+      "name": "Hộp Đêm Thánh",
+      "for": "Quà công ty",
+      "budget_vnd": 1000000,
+      "packaging": "rattan",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/dem-thanh.webp",
+      "items": [
+        {
+          "item": "nen-thom",
+          "quantity": 1
+        },
+        {
+          "item": "cacao-nong",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-hop-thiec",
+          "quantity": 1
+        },
+        {
+          "item": "vong-thong-mini",
+          "quantity": 1
+        },
+        {
+          "item": "hat-oc-cho",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-hoa-nhan",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "ong-gia-noel",
+      "name": "Hộp Ông Già Noel",
+      "for": "Quà công ty",
+      "budget_vnd": 2000000,
+      "packaging": "rattan",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/ong-gia-noel.webp",
+      "items": [
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long-hop-go",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-rung",
+          "quantity": 1
+        },
+        {
+          "item": "hat-hon-hop",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-gung-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "hat-oc-cho",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "doan-vien",
+      "name": "Hộp Đoàn Viên",
+      "for": "Tặng gia đình",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/doan-vien.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-deo",
+          "quantity": 1
+        },
+        {
+          "item": "den-ong-sao",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "trang-ram",
+      "name": "Hộp Trăng Rằm",
+      "for": "Tặng bạn bè",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/trang-ram.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-hat-sen",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-cuc",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "den-sao",
+      "name": "Hộp Đèn Sao",
+      "for": "Quà cho các bé",
+      "budget_vnd": 500000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/den-sao.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-deo",
+          "quantity": 1
+        },
+        {
+          "item": "den-ong-sao",
+          "quantity": 1
+        },
+        {
+          "item": "siro-dau",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-cuc",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "pha-co",
+      "name": "Hộp Phá Cỗ",
+      "for": "Tặng gia đình",
+      "budget_vnd": 500000,
+      "packaging": "kraft",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/pha-co.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-thap-cam",
+          "quantity": 1
+        },
+        {
+          "item": "tra-lai",
+          "quantity": 1
+        },
+        {
+          "item": "cha-la",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "tra-trang",
+      "name": "Hộp Trà Trăng",
+      "for": "Tặng ông bà",
+      "budget_vnd": 800000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/tra-trang.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-hat-sen",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trung-thu-thap-cam",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-cuc",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "sum-hop",
+      "name": "Hộp Sum Họp",
+      "for": "Quà công ty",
+      "budget_vnd": 800000,
+      "packaging": "rattan",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/sum-hop.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-thap-cam",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trung-thu-deo",
+          "quantity": 1
+        },
+        {
+          "item": "tra-lai",
+          "quantity": 1
+        },
+        {
+          "item": "den-ong-sao",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-cuc",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "trung-thu-ve",
+      "name": "Hộp Trung Thu Về",
+      "for": "Quà công ty",
+      "budget_vnd": 1000000,
+      "packaging": "rattan",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/trung-thu-ve.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-thap-cam",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trung-thu-hat-sen",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trung-thu-deo",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long",
+          "quantity": 1
+        },
+        {
+          "item": "tra-lai",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "vang-trang",
+      "name": "Hộp Vầng Trăng",
+      "for": "Biếu người lớn",
+      "budget_vnd": 2000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/vang-trang.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-thap-cam",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trung-thu-hat-sen",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long-hop-go",
+          "quantity": 1
+        },
+        {
+          "item": "am-chen-bat-trang",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-hoa-nhan",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "hoa-nhai",
+      "name": "Hộp Hoa Nhài",
+      "for": "Tặng mẹ",
+      "budget_vnd": 500000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "phu-nu"
+      ],
+      "image": "/images/hampers/hoa-nhai.webp",
+      "items": [
+        {
+          "item": "tra-lai",
+          "quantity": 1
+        },
+        {
+          "item": "kem-duong-tay",
+          "quantity": 1
+        },
+        {
+          "item": "xa-phong-thao-moc",
+          "quantity": 1
+        },
+        {
+          "item": "tra-dau-biec",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "sen-hong",
+      "name": "Hộp Sen Hồng",
+      "for": "Tặng vợ",
+      "budget_vnd": 1000000,
+      "packaging": "rattan",
+      "occasions": [
+        "phu-nu"
+      ],
+      "image": "/images/hampers/sen-hong.webp",
+      "items": [
+        {
+          "item": "tui-vai-theu",
+          "quantity": 1
+        },
+        {
+          "item": "tra-sen",
+          "quantity": 1
+        },
+        {
+          "item": "xa-phong-thao-moc",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hanh-nhan",
+          "quantity": 1
+        },
+        {
+          "item": "kem-duong-tay",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "chi-em",
+      "name": "Hộp Chị Em",
+      "for": "Tặng đồng nghiệp nữ",
+      "budget_vnd": 1000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "phu-nu"
+      ],
+      "image": "/images/hampers/chi-em.webp",
+      "items": [
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "tra-dau-biec",
+          "quantity": 1
+        },
+        {
+          "item": "kem-duong-tay",
+          "quantity": 1
+        },
+        {
+          "item": "xa-phong-thao-moc",
+          "quantity": 1
+        },
+        {
+          "item": "mut-dau",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "nu-hoang",
+      "name": "Hộp Nữ Hoàng",
+      "for": "Tặng mẹ",
+      "budget_vnd": 2000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "phu-nu"
+      ],
+      "image": "/images/hampers/nu-hoang.webp",
+      "items": [
+        {
+          "item": "khan-lua",
+          "quantity": 1
+        },
+        {
+          "item": "nuoc-yen-6-hu",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long-hop-go",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "tui-vai-theu",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "yen-hong",
+      "name": "Hộp Yến Hồng",
+      "for": "Tặng mẹ, tặng vợ",
+      "budget_vnd": 2000000,
+      "packaging": "rattan",
+      "occasions": [
+        "phu-nu"
+      ],
+      "image": "/images/hampers/yen-hong.webp",
+      "items": [
+        {
+          "item": "yen-sao-50g",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "phan-trang",
+      "name": "Hộp Phấn Trắng",
+      "for": "Tặng thầy",
+      "budget_vnd": 500000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "20-11"
+      ],
+      "image": "/images/hampers/phan-trang.webp",
+      "items": [
+        {
+          "item": "but-may",
+          "quantity": 1
+        },
+        {
+          "item": "hop-but-go",
+          "quantity": 1
+        },
+        {
+          "item": "the-danh-dau-sach",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "trang-sach",
+      "name": "Hộp Trang Sách",
+      "for": "Tặng cô",
+      "budget_vnd": 800000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "20-11"
+      ],
+      "image": "/images/hampers/trang-sach.webp",
+      "items": [
+        {
+          "item": "so-tay-but",
+          "quantity": 1
+        },
+        {
+          "item": "ly-giu-nhiet",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long-tui-loc",
+          "quantity": 1
+        },
+        {
+          "item": "tra-atiso",
+          "quantity": 1
+        },
+        {
+          "item": "hop-but-go",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "can-man",
+      "name": "Hộp Cần Mẫn",
+      "for": "Tặng thầy",
+      "budget_vnd": 1000000,
+      "packaging": "rattan",
+      "occasions": [
+        "20-11"
+      ],
+      "image": "/images/hampers/can-man.webp",
+      "items": [
+        {
+          "item": "ca-phe-rang-xay",
+          "quantity": 1
+        },
+        {
+          "item": "but-may",
+          "quantity": 1
+        },
+        {
+          "item": "ly-giu-nhiet",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long",
+          "quantity": 1
+        },
+        {
+          "item": "so-tay-but",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "tri-an-lon",
+      "name": "Hộp Tri Ân Lớn",
+      "for": "Quà chung của lớp",
+      "budget_vnd": 2000000,
+      "packaging": "rattan",
+      "occasions": [
+        "20-11"
+      ],
+      "image": "/images/hampers/tri-an-lon.webp",
+      "items": [
+        {
+          "item": "am-chen-bat-trang",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long-hop-go",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-hoa-nhan",
+          "quantity": 1
+        },
+        {
+          "item": "but-may",
+          "quantity": 1
+        },
+        {
+          "item": "ly-giu-nhiet",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "dua-do",
+      "name": "Hộp Đưa Đò",
+      "for": "Tặng thầy cô",
+      "budget_vnd": 2000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "20-11"
+      ],
+      "image": "/images/hampers/dua-do.webp",
+      "items": [
+        {
+          "item": "tra-shan-tuyet-co-thu",
+          "quantity": 1
+        },
+        {
+          "item": "but-may",
+          "quantity": 1
+        },
+        {
+          "item": "so-tay-but",
+          "quantity": 1
+        },
+        {
+          "item": "ly-su",
+          "quantity": 1
+        },
+        {
+          "item": "khan-lua",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "tinh-dau",
+      "name": "Hộp Tình Đầu",
+      "for": "Tặng người mình thích",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/tinh-dau.webp",
+      "items": [
+        {
+          "item": "socola-sua-hat-phi",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-socola",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "hoa-hong",
+      "name": "Hộp Hoa Hồng",
+      "for": "Tặng bạn gái",
+      "budget_vnd": 500000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/hoa-hong.webp",
+      "items": [
+        {
+          "item": "hoa-hong-say",
+          "quantity": 1
+        },
+        {
+          "item": "socola-trang-dau",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "nu-cuoi",
+      "name": "Hộp Nụ Cười",
+      "for": "Tặng bạn trai",
+      "budget_vnd": 500000,
+      "packaging": "kraft",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/nu-cuoi.webp",
+      "items": [
+        {
+          "item": "banh-quy-trai-tim",
+          "quantity": 1
+        },
+        {
+          "item": "socola-den-ben-tre",
+          "quantity": 1
+        },
+        {
+          "item": "mut-dau",
+          "quantity": 1
+        },
+        {
+          "item": "tra-sen",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "dem-lang-man",
+      "name": "Hộp Đêm Lãng Mạn",
+      "for": "Tặng vợ",
+      "budget_vnd": 800000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/dem-lang-man.webp",
+      "items": [
+        {
+          "item": "nen-thom-hoa-hong",
+          "quantity": 1
+        },
+        {
+          "item": "socola-truffle-hop-tim",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-socola",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "cap-doi",
+      "name": "Hộp Cặp Đôi",
+      "for": "Tặng cặp đôi",
+      "budget_vnd": 800000,
+      "packaging": "rattan",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/cap-doi.webp",
+      "items": [
+        {
+          "item": "ly-doi",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        },
+        {
+          "item": "mut-dau",
+          "quantity": 1
+        },
+        {
+          "item": "socola-sua-hat-phi",
+          "quantity": 1
+        },
+        {
+          "item": "dau-tay-say",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "anh-va-em",
+      "name": "Hộp Anh Và Em",
+      "for": "Tặng người yêu",
+      "budget_vnd": 1000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/anh-va-em.webp",
+      "items": [
+        {
+          "item": "ly-doi",
+          "quantity": 1
+        },
+        {
+          "item": "hop-nhac",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        },
+        {
+          "item": "socola-trang-dau",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-socola",
+          "quantity": 1
+        },
+        {
+          "item": "dau-tay-say",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "yeu-mai",
+      "name": "Hộp Yêu Mãi",
+      "for": "Tặng vợ",
+      "budget_vnd": 1000000,
+      "packaging": "rattan",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/yeu-mai.webp",
+      "items": [
+        {
+          "item": "khan-lua",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "tram-nam",
+      "name": "Hộp Trăm Năm",
+      "for": "Tặng vợ, tặng chồng",
+      "budget_vnd": 2000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/tram-nam.webp",
+      "items": [
+        {
+          "item": "nuoc-yen-6-hu",
+          "quantity": 1
+        },
+        {
+          "item": "khan-lua",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "am-chen-bat-trang",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-hong",
+          "quantity": 1
+        },
+        {
+          "item": "mut-dau",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "mua-yeu",
+      "name": "Hộp Mùa Yêu",
+      "for": "Tặng người yêu",
+      "budget_vnd": 2000000,
+      "packaging": "rattan",
+      "occasions": [
+        "valentine"
+      ],
+      "image": "/images/hampers/mua-yeu.webp",
+      "items": [
+        {
+          "item": "hop-nhac",
+          "quantity": 1
+        },
+        {
+          "item": "gau-bong-nho",
+          "quantity": 1
+        },
+        {
+          "item": "socola-truffle-hop-tim",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom-hoa-hong",
+          "quantity": 1
+        },
+        {
+          "item": "am-chen-bat-trang",
+          "quantity": 1
+        },
+        {
+          "item": "khan-lua",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "tuan-loc",
+      "name": "Hộp Tuần Lộc",
+      "for": "Tặng bạn bè",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/tuan-loc.webp",
+      "items": [
+        {
+          "item": "tat-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "socola-xu-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "ca-phe-rang-xay",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "tat-do",
+      "name": "Hộp Tất Đỏ",
+      "for": "Tặng bạn bè",
+      "budget_vnd": 500000,
+      "packaging": "kraft",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/tat-do.webp",
+      "items": [
+        {
+          "item": "tat-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "keo-nama-socola",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-gung-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "socola-xu-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "tra-gung-mat-ong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "chuong-vang",
+      "name": "Hộp Chuông Vàng",
+      "for": "Tặng đồng nghiệp",
+      "budget_vnd": 500000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/chuong-vang.webp",
+      "items": [
+        {
+          "item": "tra-gung-mat-ong",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trai-cay-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        },
+        {
+          "item": "keo-gay",
+          "quantity": 1
+        },
+        {
+          "item": "socola-den-ben-tre",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "ngoi-sao",
+      "name": "Hộp Ngôi Sao",
+      "for": "Tặng gia đình",
+      "budget_vnd": 800000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/ngoi-sao.webp",
+      "items": [
+        {
+          "item": "nen-thom-que",
+          "quantity": 1
+        },
+        {
+          "item": "hop-nhac",
+          "quantity": 1
+        },
+        {
+          "item": "socola-xu-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "tra-gung-mat-ong",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-gung-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "cacao-nong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "tuyet-roi",
+      "name": "Hộp Tuyết Rơi",
+      "for": "Tặng đồng nghiệp",
+      "budget_vnd": 800000,
+      "packaging": "rattan",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/tuyet-roi.webp",
+      "items": [
+        {
+          "item": "banh-quy-gung-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "cacao-nong",
+          "quantity": 1
+        },
+        {
+          "item": "thiep",
+          "quantity": 1
+        },
+        {
+          "item": "keo-nama-socola",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-hoa-nhan",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "lua-am",
+      "name": "Hộp Lửa Ấm",
+      "for": "Tặng gia đình",
+      "budget_vnd": 1000000,
+      "packaging": "rattan",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/lua-am.webp",
+      "items": [
+        {
+          "item": "nen-thom-que",
+          "quantity": 1
+        },
+        {
+          "item": "tra-gung-mat-ong",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trai-cay-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-hoa-nhan",
+          "quantity": 1
+        },
+        {
+          "item": "socola-den-ben-tre",
+          "quantity": 1
+        },
+        {
+          "item": "hat-oc-cho",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "ban-tiec",
+      "name": "Hộp Bàn Tiệc",
+      "for": "Quà công ty",
+      "budget_vnd": 1000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/ban-tiec.webp",
+      "items": [
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "banh-quy-hop-thiec",
+          "quantity": 1
+        },
+        {
+          "item": "vong-thong-mini",
+          "quantity": 1
+        },
+        {
+          "item": "nuoc-ep-nho",
+          "quantity": 1
+        },
+        {
+          "item": "keo-gay",
+          "quantity": 1
+        },
+        {
+          "item": "tra-gung-mat-ong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "an-lanh",
+      "name": "Hộp Đêm An Lành",
+      "for": "Quà công ty",
+      "budget_vnd": 2000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/an-lanh.webp",
+      "items": [
+        {
+          "item": "tra-o-long-hop-go",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-rung",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trai-cay-giang-sinh",
+          "quantity": 1
+        },
+        {
+          "item": "hop-nhac",
+          "quantity": 1
+        },
+        {
+          "item": "hat-oc-cho",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "chu-cuoi",
+      "name": "Hộp Chú Cuội",
+      "for": "Quà cho các bé",
+      "budget_vnd": 500000,
+      "packaging": "kraft",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/chu-cuoi.webp",
+      "items": [
+        {
+          "item": "trong-ech",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trung-thu-deo",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-cuc",
+          "quantity": 1
+        },
+        {
+          "item": "nuoc-ep-nho",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "ruoc-den",
+      "name": "Hộp Rước Đèn",
+      "for": "Quà cho các bé",
+      "budget_vnd": 800000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/ruoc-den.webp",
+      "items": [
+        {
+          "item": "den-keo-quan",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trung-thu-tuyet-xoai",
+          "quantity": 1
+        },
+        {
+          "item": "siro-dau",
+          "quantity": 1
+        },
+        {
+          "item": "tra-atiso",
+          "quantity": 1
+        },
+        {
+          "item": "mut-buoi",
+          "quantity": 1
+        },
+        {
+          "item": "hat-sen-say",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "ngam-trang",
+      "name": "Hộp Ngắm Trăng",
+      "for": "Tặng gia đình",
+      "budget_vnd": 1000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/ngam-trang.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-chay",
+          "quantity": 1
+        },
+        {
+          "item": "tra-hoa-cuc",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom",
+          "quantity": 1
+        },
+        {
+          "item": "hat-oc-cho",
+          "quantity": 1
+        },
+        {
+          "item": "mut-buoi",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-hoa-nhan",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "cung-trang",
+      "name": "Hộp Cung Trăng",
+      "for": "Quà công ty",
+      "budget_vnd": 1000000,
+      "packaging": "rattan",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/cung-trang.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-yen-sao",
+          "quantity": 1
+        },
+        {
+          "item": "tra-lai",
+          "quantity": 1
+        },
+        {
+          "item": "hat-sen-say",
+          "quantity": 1
+        },
+        {
+          "item": "mut-buoi",
+          "quantity": 1
+        },
+        {
+          "item": "den-ong-sao",
+          "quantity": 1
+        },
+        {
+          "item": "siro-dau",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "nguyet-quang",
+      "name": "Hộp Nguyệt Quang",
+      "for": "Biếu người lớn",
+      "budget_vnd": 2000000,
+      "packaging": "hard-bow",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/nguyet-quang.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-yen-sao",
+          "quantity": 1
+        },
+        {
+          "item": "tra-shan-tuyet",
+          "quantity": 1
+        },
+        {
+          "item": "am-chen-bat-trang",
+          "quantity": 1
+        },
+        {
+          "item": "hat-oc-cho",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-hoa-nhan",
+          "quantity": 1
+        },
+        {
+          "item": "nuoc-ep-nho",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "thu-vang",
+      "name": "Hộp Thu Vàng",
+      "for": "Quà công ty",
+      "budget_vnd": 2000000,
+      "packaging": "rattan",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/thu-vang.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-yen-sao",
+          "quantity": 1
+        },
+        {
+          "item": "banh-trung-thu-thap-cam",
+          "quantity": 1
+        },
+        {
+          "item": "tra-o-long-hop-go",
+          "quantity": 1
+        },
+        {
+          "item": "khan-lua",
+          "quantity": 1
+        },
+        {
+          "item": "cha-la",
+          "quantity": 1
+        },
+        {
+          "item": "mat-ong-hoa-nhan",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "phep-mau",
+      "name": "Hộp Phép Màu",
+      "for": "Tặng gia đình",
+      "budget_vnd": 2000000,
+      "packaging": "rattan",
+      "occasions": [
+        "giang-sinh"
+      ],
+      "image": "/images/hampers/phep-mau.webp",
+      "items": [
+        {
+          "item": "hop-nhac",
+          "quantity": 1
+        },
+        {
+          "item": "socola-hop-qua",
+          "quantity": 1
+        },
+        {
+          "item": "nen-thom-que",
+          "quantity": 1
+        },
+        {
+          "item": "tra-shan-tuyet-co-thu",
+          "quantity": 1
+        },
+        {
+          "item": "keo-gay",
+          "quantity": 1
+        },
+        {
+          "item": "cacao-nong",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "slug": "chi-hang",
+      "name": "Hộp Chị Hằng",
+      "for": "Tặng bạn bè",
+      "budget_vnd": 300000,
+      "packaging": "kraft",
+      "occasions": [
+        "trung-thu"
+      ],
+      "image": "/images/hampers/chi-hang.webp",
+      "items": [
+        {
+          "item": "banh-trung-thu-tuyet-xoai",
           "quantity": 1
         },
         {

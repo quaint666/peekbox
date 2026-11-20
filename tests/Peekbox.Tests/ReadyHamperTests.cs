@@ -46,6 +46,9 @@ public class ReadyHamperTests(PeekboxFixture fixture)
     [InlineData("tet", 10_000_000, 3, 4)]
     [InlineData("20-11", 2_000_000, 1, 3)]
     [InlineData("phu-nu", 2_000_000, 1, 3)]
+    [InlineData("valentine", 2_000_000, 1, 3)]
+    [InlineData("trung-thu", 2_000_000, 1, 3)]
+    [InlineData("giang-sinh", 2_000_000, 1, 3)]
     public void Each_occasion_has_its_budgets_and_hampers_per_budget(string occasion, long highest, int fewest, int most)
     {
         var counts = File.Hampers.Where(h => h.Occasions.Contains(occasion)).GroupBy(h => h.BudgetVnd).ToDictionary(g => g.Key, g => g.Count());
@@ -53,6 +56,35 @@ public class ReadyHamperTests(PeekboxFixture fixture)
         foreach (var (budget, count) in counts)
         {
             Assert.InRange(count, fewest, most);
+        }
+    }
+
+    // The last day a hamper of each occasion can be delivered, written out here on purpose (a test that read the occasions
+    // would agree with a wrong date). Every item of every hamper must still be in date on that day, with the shelf margin,
+    // so a ready hamper is never offered with an item that has gone off by then. 20/11 and Tết are the next ones from
+    // 2026-11-20; Trung thu 2027 is the 15th of the 8th lunar month, about 15/09/2027.
+    [Theory]
+    [InlineData("tet", 2027, 2, 3)]
+    [InlineData("valentine", 2027, 2, 12)]
+    [InlineData("phu-nu", 2027, 3, 6)]
+    [InlineData("trung-thu", 2027, 9, 10)]
+    [InlineData("20-11", 2027, 11, 18)]
+    [InlineData("giang-sinh", 2026, 12, 22)]
+    public void Every_hamper_is_in_date_on_the_last_delivery_day_of_its_occasion(string occasion, int year, int month, int day)
+    {
+        var delivery = new DateOnly(year, month, day);
+        var products = SeedData.Load(SeedData.FilePath).Products.ToDictionary(p => p.Slug);
+        var hampers = File.Hampers.Where(h => h.Occasions.Contains(occasion)).ToList();
+
+        Assert.NotEmpty(hampers);
+        foreach (var hamper in hampers)
+        {
+            foreach (var line in hamper.Items)
+            {
+                var expiry = products[line.Item].ExpiryDate;
+                Assert.True(expiry is null || BuilderLimits.IsInDate(expiry.Value, delivery),
+                    $"{hamper.Slug}: {line.Item} expires {expiry}, which is too soon for {delivery} plus the shelf margin");
+            }
         }
     }
 
@@ -138,7 +170,7 @@ public class ReadyHamperTests(PeekboxFixture fixture)
         // The hamper on two pages is on both.
         Assert.Contains("hoa-giay", slugs);
         Assert.Contains("hoa-giay", (await WithServiceAsync(s => s.PageAsync("20-11")))!.Groups.SelectMany(g => g.Hampers).Select(c => c.Slug));
-        Assert.Null(await WithServiceAsync(s => s.PageAsync("giang-sinh")));
+        Assert.Null(await WithServiceAsync(s => s.PageAsync("khong-co")));
     }
 
     [Fact]

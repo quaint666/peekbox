@@ -10,20 +10,35 @@
     margin: 0;
 }
 
+/* Hero (decision 2026-11-20). The photo is the background and fades into the page colour, so the text is always dark on
+   the page colour (dark mode: light on its own page colour). The fade is a mask on the photo itself, so the page colour
+   shows through and there is no extra layer. On a phone the photo is the top of the section and the text starts over its
+   lower part; from 900px the photo is the right side and the fade runs from the left. The photo's size is fixed by the
+   rules here, so the width and height attributes only reserve the space. */
 .hero {
-    background: linear-gradient(var(--color-hero-top), var(--color-bg));
-    padding-block: var(--space-6);
+    position: relative;
+    overflow: hidden;
+    background: var(--color-bg);
 }
-.hero__inner { display: grid; gap: var(--space-5); }
+.hero__image {
+    position: absolute;
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    object-position: 58% 0;
+    -webkit-mask-image: linear-gradient(0deg, transparent 0%, transparent 8%, color-mix(in srgb, black 40%, transparent) 30%, black 62%);
+    mask-image: linear-gradient(0deg, transparent 0%, transparent 8%, color-mix(in srgb, black 40%, transparent) 30%, black 62%);
+}
+.hero__inner { position: relative; padding-top: 300px; padding-bottom: var(--space-6); }   /* after the photo in the page, so it paints over it */
 .hero__badge { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 14px; font-size: var(--text-xs); line-height: 1.2; }  /* 6px, 14px, 13px and 1.2: from the mockup */
 .hero__dot { width: var(--space-2); height: var(--space-2); border-radius: 50%; }
 .hero__dot--tet { background: var(--accent-tet); }
 .hero__dot--teachers { background: var(--accent-teachers); }
 .hero__dot--women { background: var(--accent-women); }
-.hero__title { margin: var(--space-4) 0; font-size: var(--text-hero-sm); line-height: 1.2; }
+.hero__title { margin: var(--space-4) 0; font-size: var(--text-hero-sm); line-height: 1.2; text-wrap: balance; }   /* no one word left alone on the last line */
 .hero__lead { font-size: var(--text-base); line-height: 1.65; color: var(--color-muted); margin: 0 0 var(--space-5); }
 .hero__actions { display: flex; flex-direction: column; gap: var(--space-3); }
-.hero__image { width: 100%; height: auto; border-radius: var(--radius-lg); }
 
 .promises {
     /* the page colour, not a white band: the home page uses two backgrounds, not three */
@@ -44,7 +59,6 @@
     color: var(--color-on-tint);
 }
 .promise__icon .icon { width: 24px; height: 24px; }
-.promise__icon .icon--stamp { width: 28px; height: 36px; }  /* the stamp is taller than the line icons; sizes from the mockup */
 .promise__title { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
 .promise__text { margin: 0; font-size: var(--text-sm); line-height: 1.65; color: var(--color-muted); }
 
@@ -70,65 +84,84 @@
 .occasions__inner { display: flex; flex-direction: column; gap: var(--space-4); }
 .occasions__title { margin: 0; }
 .occasions__subtitle { margin: var(--space-2) 0 0; font-size: var(--text-sm); line-height: 1.6; color: var(--color-muted); }
-.occasions__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
-.occasions__item { display: flex; }
 
-/* One card = one link: a photo on top, a colour panel below. The first card (Tết) is the large one. */
-.occasion {
-    flex: 1;
+/* Occasion cards (decision 2026-11-20). Phone: one row that scrolls sideways, each card about four fifths of the width so
+   the next one shows; it bleeds to the screen edge and the first card still lines up with the page. From 900px: a grid of three. */
+.occasions__list {
+    list-style: none;
+    margin: 0 calc(-1 * var(--space-4));
+    padding: 0 var(--space-4) var(--space-2);
     display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--occasion-panel);
-    color: var(--color-on-primary);   /* white in both modes; the panel is dark in both */
-    text-decoration: none;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-pop);
-    transition: transform 200ms ease;
+    gap: var(--space-3);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--space-4);
+    overscroll-behavior-x: contain;
 }
-/* The accent key picks two colours: the chip text and the panel. The test in HomeContentTests reads these rules. */
-.occasion--tet { --occasion-color: var(--accent-tet); --occasion-panel: var(--occasion-panel-tet); }
-.occasion--teachers { --occasion-color: var(--accent-teachers); --occasion-panel: var(--occasion-panel-teachers); }
-.occasion--women { --occasion-color: var(--accent-women); --occasion-panel: var(--occasion-panel-women); }
+.occasions__item { flex: 0 0 82%; scroll-snap-align: start; display: flex; }
 
-/* Photo heights have no size token: plain numbers from the mockup (phone 220 for Tết, 180 for the others). */
-.occasion__photo { position: relative; flex: none; height: 180px; overflow: hidden; }
-.occasions__item:first-child .occasion__photo { height: 220px; }
-.occasion__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 200ms ease; }
+/* The dots under the row, where the browser draws them itself (Chromium); elsewhere the row still scrolls by swipe, wheel and keyboard. */
+@supports (scroll-marker-group: after) {
+    .occasions__list { scroll-marker-group: after; }
+    .occasions__list::scroll-marker-group { display: flex; justify-content: center; gap: var(--space-2); padding-top: var(--space-3); }
+    .occasions__item::scroll-marker { content: ''; width: var(--space-2); height: var(--space-2); border-radius: 999px; background: var(--color-input-border); }
+    .occasions__item::scroll-marker:target-current { width: var(--space-5); background: var(--color-primary); }
+}
 
-.occasion__panel { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-5); }
+/* The accent key picks one colour for the chip text, the dot, the arrow and the meta icons: the accent in light mode, the
+   lighter ink in dark mode (tokens.css). The test in HomeContentTests reads these rules. */
+.occasion--tet { --occasion-color: var(--occasion-card-tet); }
+.occasion--teachers { --occasion-color: var(--occasion-card-teachers); }
+.occasion--women { --occasion-color: var(--occasion-card-women); }
+.occasion--valentine { --occasion-color: var(--occasion-card-valentine); }
+.occasion--midautumn { --occasion-color: var(--occasion-card-midautumn); }
+.occasion--christmas { --occasion-color: var(--occasion-card-christmas); }
+
+.occasion { flex: 1; display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-text); text-decoration: none; }
+.occasion__photo { position: relative; overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); background: var(--color-border-soft); }
+.occasion__img { display: block; width: 100%; height: auto; aspect-ratio: 7 / 5; object-fit: cover; transition: transform 200ms ease; }   /* height: auto, or the height attribute wins over the ratio */
+/* The subject of these four photos sits to the right, so the crop keeps the right edge. */
+.occasion--women .occasion__img, .occasion--teachers .occasion__img, .occasion--midautumn .occasion__img, .occasion--christmas .occasion__img { object-position: 100% 50%; }
 .occasion__chip {
+    position: absolute;
+    left: 14px;   /* 14px, like the hero badge */
+    top: 14px;
     padding: var(--space-1) var(--space-3);
     border-radius: 999px;
-    background: var(--color-on-primary);   /* a white pill, whatever the mode */
+    background: var(--color-surface);
     color: var(--occasion-color);
     font-size: var(--text-sm);
     font-weight: 700;
+    box-shadow: var(--shadow-card);
 }
-.occasion__name { margin: 0; font-size: var(--text-xl); line-height: 1.2; }
-.occasions__item:first-child .occasion__name { font-size: var(--text-2xl); }
-.occasion__text { margin: 0; font-size: var(--text-sm); line-height: 1.6; }
-.occasion__button {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: var(--tap-min);
-    padding: 0 var(--space-4);
-    border-radius: 999px;
-    background: var(--color-on-primary);
-    color: var(--occasion-button-ink);   /* fixed dark ink: --color-text turns light in dark mode */
-    font-size: var(--text-base);
-    font-weight: 700;
+/* A faint disc with the accent arrow, no outline: it says "opens" without competing with the photo. */
+.occasion__go {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+    color: var(--occasion-color);
 }
-.occasion__button .icon { width: 18px; height: 18px; transition: transform 200ms ease; }
+.occasion__go .icon { width: 18px; height: 18px; }
+.occasion__name { display: flex; align-items: center; gap: var(--space-2); margin: 0; font-size: var(--text-xl); line-height: 1.25; }
+.occasion__dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--occasion-color); }
+.occasion__text { margin: 0; font-size: var(--text-base); line-height: 1.6; color: var(--color-muted); }
+/* The two facts, one under the other on a phone (the budget range is long) and side by side from 900px. */
+.occasion__meta { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: var(--text-base); }
+.occasion__meta li { display: inline-flex; align-items: center; gap: 6px; }
+.occasion__meta .icon { flex: none; width: 16px; height: 16px; color: var(--occasion-color); }
 
-/* Hover only where there is a mouse, and the movement only when the visitor has not asked for reduced motion
-   (design-notes: "with reduce motion on, movement is dropped"). The rule in base.css only stops animations. */
+/* Hover only where there is a mouse, and the photo only moves when the visitor has not asked for reduced motion. */
+@media (hover: hover) {
+    .occasion:hover .occasion__name { color: var(--occasion-color); }
+}
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .occasion:hover { transform: translateY(calc(-1 * var(--space-1))); }
-    .occasion:hover .occasion__img { transform: scale(1.05); }
-    .occasion:hover .occasion__button .icon { transform: translateX(var(--space-1)); }
+    .occasion:hover .occasion__img { transform: scale(1.04); }
 }
 
 .cta { background: var(--color-band); color: var(--color-on-primary); padding-block: var(--space-6); }
@@ -143,8 +176,17 @@
 #main + .site-footer { margin-top: 0; }   /* the green strip touches the footer, as in the mockup; other pages keep the gap */
 
 @media (min-width: 900px) {
-    .hero { padding-block: calc(var(--space-6) + var(--space-5)); }
-    .hero__inner { grid-template-columns: 1.25fr 1fr; align-items: center; gap: var(--space-6); }
+    .hero { min-height: 600px; display: flex; align-items: center; }
+    .hero__image {
+        inset: 0 0 0 26%;
+        width: 74%;
+        height: 100%;
+        object-position: 60% 50%;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, color-mix(in srgb, black 8%, transparent) 34%, color-mix(in srgb, black 55%, transparent) 56%, black 80%);
+        mask-image: linear-gradient(90deg, transparent 0%, color-mix(in srgb, black 8%, transparent) 34%, color-mix(in srgb, black 55%, transparent) 56%, black 80%);
+    }
+    .hero__inner { padding-block: calc(var(--space-6) + var(--space-3)); }
+    .hero__copy { max-width: 600px; }
     .hero__title { font-size: clamp(var(--text-3xl), 4vw, var(--text-hero)); }
     .hero__lead { font-size: var(--text-lg); }
     .hero__actions { flex-direction: row; }
@@ -161,18 +203,11 @@
     .occasions__inner { gap: var(--space-5); }
     .occasions__title { font-size: var(--text-2xl); }
     .occasions__subtitle { font-size: var(--text-base); }
-    .occasions__list { display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: 1fr 1fr; gap: var(--space-5); }
-    .occasions__item:first-child { grid-row: span 2; }
-    /* The two small cards: photo on the left (38%), panel on the right. */
-    .occasion { min-height: 260px; }
-    .occasions__item:not(:first-child) .occasion { flex-direction: row; }
-    .occasions__item:not(:first-child) .occasion__photo { flex: 0 0 38%; height: auto; }
-    .occasions__item:not(:first-child) .occasion__panel { flex: 1; justify-content: center; gap: var(--space-2); padding: var(--space-5) var(--space-6); }
-    /* The large Tết card: the photo takes the free height above the panel (at least 300 px). */
-    .occasions__item:first-child .occasion { min-height: 0; }
-    .occasions__item:first-child .occasion__photo { flex: 1 1 auto; height: auto; min-height: 300px; }
-    .occasions__item:first-child .occasion__panel { padding: var(--space-6); }
-    .occasions__item:first-child .occasion__text { font-size: var(--text-base); }
+    .occasions__list { margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6) var(--space-5); overflow: visible; scroll-snap-type: none; }
+    .occasions__list::scroll-marker-group { display: none; }
+    .occasions__item { flex: initial; }
+    .occasion__text { font-size: var(--text-sm); }
+    .occasion__meta { flex-direction: row; flex-wrap: wrap; gap: 4px var(--space-4); font-size: var(--text-sm); }
     .cta { padding-block: calc(var(--space-6) + var(--space-4)); }
     .cta__inner { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-5); }
     .cta__text { font-size: var(--text-2xl); line-height: 1.3; }
