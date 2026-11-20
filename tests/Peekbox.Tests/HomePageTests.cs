@@ -29,12 +29,13 @@ public class HomePageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task Home_has_the_season_banner_above_the_header()
+    public async Task Home_has_the_season_banner_above_the_header_with_a_link_to_the_season_page()
     {
         var html = await GetHomeAsync();
 
-        var banner = html.IndexOf("<p class=\"home-banner\">", StringComparison.Ordinal);
+        var banner = html.IndexOf("<div class=\"home-banner home-banner--tet\">", StringComparison.Ordinal);
         Assert.InRange(banner, 0, html.IndexOf("<header class=\"site-header\">", StringComparison.Ordinal));
+        Assert.Matches(@"<strong>Mùa Tết 2027:</strong> đặt sớm để còn nhiều lựa chọn\s*<a class=""home-banner__go"" href=""/dip/tet"">Xem hộp Tết", html);
     }
 
     // Written out here on purpose: a test that read home.json or the database would agree with a typo in either.
@@ -69,6 +70,20 @@ public class HomePageTests(PeekboxFixture fixture)
             Assert.Contains($"{Cards[i].Count}</li>", card);
             Assert.DoesNotContain("<a ", card);   // a link inside a link is not allowed
         }
+    }
+
+    // Written out on purpose (see the card test): the six accents in the order of the cards, the count for a phone and
+    // the names for a wide screen. The pill is not a list of three any more.
+    [Fact]
+    public async Task The_pill_has_one_dot_per_occasion_the_count_for_a_phone_and_the_names_for_a_wide_screen()
+    {
+        var html = await GetHomeAsync();
+
+        var pill = Regex.Match(html, @"<p class=""badge hero__badge"">(.*?)</p>", RegexOptions.Singleline).Groups[1].Value;
+        var dots = Regex.Matches(pill, @"hero__dot hero__dot--(\w+)""").Select(m => m.Groups[1].Value);
+        Assert.Equal(["tet", "valentine", "women", "midautumn", "teachers", "christmas"], dots);
+        Assert.Contains("<span class=\"hero__pill-short\">6 dịp lễ trong năm</span>", pill);
+        Assert.Contains("<span class=\"hero__pill-long\">Tết · Valentine · 8/3 · Trung thu · 20/11 · Giáng sinh</span>", pill);
     }
 
     [Fact]

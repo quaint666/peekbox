@@ -10,7 +10,11 @@
 
 @section Banner {
     @* TODO(F05, M5): the banner text should come from the active campaign, not be typed here. *@
-    <p class="home-banner">Mùa Tết 2027: chọn hộp quà và ngày giao sớm để còn nhiều lựa chọn</p>
+    <div class="home-banner home-banner--tet">
+        <div class="container">
+            <p class="home-banner__text"><strong>Mùa Tết 2027:</strong> đặt sớm để còn nhiều lựa chọn <a class="home-banner__go" href="@SiteLinks.Occasion("tet")">Xem hộp Tết<partial name="_Icon" model='"arrow"' /></a></p>
+        </div>
+    </div>
 }
 
 <section class="hero">
@@ -21,10 +25,13 @@
     <div class="container hero__inner">
         <div class="hero__copy">
             <p class="badge hero__badge">
-                <span class="hero__dot hero__dot--tet" aria-hidden="true"></span>
-                <span class="hero__dot hero__dot--teachers" aria-hidden="true"></span>
-                <span class="hero__dot hero__dot--women" aria-hidden="true"></span>
-                @Model.Content.Pill
+                @* One dot per occasion in the occasion's colour. A phone has room for the count ("6 dịp lễ trong năm"), a wide screen for the names (home.css). *@
+                @foreach (var occasion in Model.Content.Occasions)
+                {
+                    <span class="hero__dot hero__dot--@occasion.Accent" aria-hidden="true"></span>
+                }
+                <span class="hero__pill-short">@Model.Content.Occasions.Count @Model.Content.Pill</span>
+                <span class="hero__pill-long">@string.Join(" · ", Model.Content.Occasions.Select(o => o.Name))</span>
             </p>
             <h1 class="hero__title">@Model.Content.Title</h1>
             <p class="hero__lead">@Model.Content.Lead</p>

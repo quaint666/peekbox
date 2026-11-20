@@ -7,7 +7,7 @@ fill_in: the team story is a placeholder
 # Tiếng Việt
 
 ## Giới thiệu Peekbox
-Peekbox giúp bạn chọn và đặt hộp quà vào các dịp lễ lớn: Tết, 20/11 và 8/3. Điểm khác biệt là bạn nhìn thấy rõ từng món bên trong hộp và luôn kiểm soát được ngân sách của mình.
+Peekbox giúp bạn chọn và đặt hộp quà vào các dịp lễ trong năm: Tết, Valentine, 8/3, Trung thu, 20/11 và Giáng sinh. Điểm khác biệt là bạn nhìn thấy rõ từng món bên trong hộp và luôn kiểm soát được ngân sách của mình.
 
 [CÂU CHUYỆN CỦA NHÓM: vì sao làm Peekbox, ai làm, đang ở đâu.]
 
@@ -24,7 +24,7 @@ Khi bạn chọn ngày giao, hệ thống so hạn sử dụng của từng món
 # English
 
 ## About Peekbox
-Peekbox helps you choose and order gift hampers for the big holidays: Tết, 20/11 and 8/3. What makes it different is that you see every item inside the hamper and stay in control of your budget.
+Peekbox helps you choose and order gift hampers for the holidays of the year: Tết, Valentine's Day, 8/3, Mid-Autumn, 20/11 and Christmas. What makes it different is that you see every item inside the hamper and stay in control of your budget.
 
 [THE TEAM'S STORY: why Peekbox exists, who builds it, where it stands.]
 

@@ -43,7 +43,6 @@
   --color-field-error: #A32A1E;    /* the message and the border of a form field with an error; dark mode is lighter (issue #44) */
   --color-option-off: #FFFFFF;     /* an unchosen option in a choice list */
   --color-focus: #3F6B57;
-  --color-banner: #B3382A;         /* the seasonal strip above the header */
   --color-band: #3F6B57;           /* the wide green band near the end of the home page */
   --photo-filter: none;            /* photos (not the logo or icons) */
 
@@ -178,7 +177,6 @@
     --color-field-error: #FF6B5E;
     --color-option-off: #121513;
     --color-focus: #9EC3A5;
-    --color-banner: #8E3024;   /* wide colour blocks are deeper on a dark page; buttons keep the brighter green */
     --color-band: #2F5242;
     --photo-filter: brightness(0.9);   /* the light photo backgrounds glare on a dark page */
     --occasion-panel-tet: #5A1D16;
@@ -247,7 +245,6 @@
   --color-field-error: #FF6B5E;
   --color-option-off: #121513;
   --color-focus: #9EC3A5;
-  --color-banner: #8E3024;   /* wide colour blocks are deeper on a dark page; buttons keep the brighter green */
   --color-band: #2F5242;
   --photo-filter: brightness(0.9);   /* the light photo backgrounds glare on a dark page */
   --occasion-panel-tet: #5A1D16;
