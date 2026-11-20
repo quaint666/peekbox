@@ -357,7 +357,7 @@ function showToast(text: string): void {
 // The toast shows what changed on one line and what is left on the next ("\n"); a screen reader hears the two as sentences.
 function announce(text: string): void {
   showToast(text);
-  say(text.replace('\n', '. '));
+  say(text.replace(/\n/g, '. '));
 }
 
 // The status line that screen readers hear, without the toast.
