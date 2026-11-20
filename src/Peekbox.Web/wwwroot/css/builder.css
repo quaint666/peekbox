@@ -351,6 +351,36 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
     .item-card:has(.item-card__photo:hover, .item-card__link:hover) .item-card__img { transform: scale(1.05); }
 }
 
+/* The ring of an added card is drawn on a layer of its own, inside the card's edge: it does not share the card's own
+   animation (the entrance after a search) and is not cut off in the rows, which hide what overflows. */
+.item-card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+
+/* Motion on the cards (decision 2026-11-20). A: a photo fades in once, as the heroes do. C: after a search the cards that
+   come in rise a little and fade in one after another (builder.ts puts .is-entering on #ket-qua; the first seven are
+   staggered, the rest come in with the eighth). B: a card that got one more of its item shows a ring once (.is-added),
+   the − n + control that appears pops in (.is-new), and the header's cart and the phone's "Xem hộp" button grow once (.is-bump); builder.ts adds
+   these after the new numbers are on screen. All of it only for visitors who have not asked for less motion. */
+@keyframes card-photo-in { from { opacity: 0; } }
+@keyframes card-in { from { opacity: 0; transform: translateY(6px); } }
+@keyframes card-added { from { box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--color-primary) 45%, transparent); } to { box-shadow: inset 0 0 0 0 transparent; } }
+@keyframes qty-pop { from { opacity: 0; transform: scale(0.9); } }
+@keyframes count-bump { 40% { transform: scale(1.06); } }
+@media (prefers-reduced-motion: no-preference) {
+    .item-card__img { animation: card-photo-in var(--motion-photo) ease-out; }
+    .items__results.is-entering .item-card__img { animation: none; }
+    .items__results.is-entering .item-card { animation: card-in var(--motion-enter) ease-out backwards; animation-delay: calc(var(--i, 7) * var(--motion-stagger)); }
+    .items__results.is-entering .item-card:nth-child(1) { --i: 0; }
+    .items__results.is-entering .item-card:nth-child(2) { --i: 1; }
+    .items__results.is-entering .item-card:nth-child(3) { --i: 2; }
+    .items__results.is-entering .item-card:nth-child(4) { --i: 3; }
+    .items__results.is-entering .item-card:nth-child(5) { --i: 4; }
+    .items__results.is-entering .item-card:nth-child(6) { --i: 5; }
+    .items__results.is-entering .item-card:nth-child(7) { --i: 6; }
+    .item-card.is-added::after { animation: card-added var(--motion-ring) ease-out; }
+    .qty.is-new { animation: qty-pop var(--motion-fast) ease-out; }
+    .is-bump { animation: count-bump var(--motion-bump) ease-out; }
+}
+
 /* The add control (mockups 26, 27 and state 04): "Thêm", the − n + pill, or a disabled button that says why. */
 .qty-add { min-height: var(--tap-min); padding: 0 18px; font-size: var(--text-sm); white-space: normal; text-align: center; }  /* 18px: from the mockup */
 .qty-add:disabled { padding: 0 14px; font-size: var(--text-xs); }  /* "Vượt X" and the other reasons: 14px and 13px in the mockup */

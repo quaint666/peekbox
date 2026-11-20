@@ -141,6 +141,7 @@ function searchNow(): void {
       swap('#ket-qua', fresh);
       const shown = document.getElementById('ket-qua');
       if (shown) {
+        shown.classList.add('is-entering');   // the cards come in softly (builder.css)
         wireRows(shown, writePosition);
         wireHint();
         say(shown.querySelector('.items__count span')?.textContent?.trim() ?? '');
@@ -371,6 +372,36 @@ function say(text: string): void {
   }, 50);
 }
 
+// ---- The answer to an add (decision 2026-11-20) ----
+// A card that got one more of its item shows a soft ring once, the − n + control that appears when the first one is added
+// pops in, and the header's cart and the phone's "Xem hộp" button grow once. Only the CSS moves (and only for visitors who
+// have not asked for less motion); this adds the classes once the new numbers are on screen. A class added again does not
+// restart an animation, so it is taken off and put back.
+function replay(element: Element | null, name: string): void {
+  if (!element) {
+    return;
+  }
+
+  element.classList.remove(name);
+  void (element as HTMLElement).offsetWidth;
+  element.classList.add(name);
+}
+
+function celebrate(place: Place, slug: string, before: number, now: number): void {
+  if (now <= before) {
+    return;
+  }
+
+  replay(document.getElementById(`mon-${slug}`), 'is-added');
+  if (before === 0) {
+    replay(controlRoot(place, slug)?.querySelector('.qty') ?? null, 'is-new');
+  }
+
+  for (const counter of document.querySelectorAll('.cart-link, .box-bar__open')) {
+    replay(counter, 'is-bump');
+  }
+}
+
 // What changed, in words: "Đã thêm Trà sen · còn 320.000đ." The amount left is read from the new panel the server sent.
 function message(name: string, before: number, asked: number, now: number): string {
   const left = document.querySelector('#hop-cua-ban .box-sums__row--left dd, #hop-cua-ban .box-sums__row--over dd')?.textContent?.trim() ?? '';
@@ -414,6 +445,7 @@ document.addEventListener('submit', (event) => {
       applyPage(fresh);
       refocus(place, slug, step);
       announce(message(name, before, Math.max(asked, 0), quantityIn(document, slug)));
+      celebrate(place, slug, before, quantityIn(document, slug));
     })
     .catch(() => {
       // Anything unexpected: send the same form the plain way, so the page the server makes says what happened.

@@ -147,6 +147,16 @@
   --z-menu: 10;                    /* the phone menu, open under the header */
   --z-skip-link: 100;              /* "Bỏ qua và vào nội dung", above everything */
 
+  /* Motion on the product cards (decision 2026-11-20). Every use is inside @media (prefers-reduced-motion:
+     no-preference), so visitors who asked for less motion see none of it. */
+  --motion-press: 100ms;           /* a pressed card shrinking (phone) */
+  --motion-fast: 150ms;            /* the − n + control appearing */
+  --motion-enter: 220ms;           /* a card coming in after a search */
+  --motion-bump: 250ms;            /* a counter growing once */
+  --motion-photo: 450ms;           /* a photo fading in, as the heroes do */
+  --motion-ring: 600ms;            /* the ring round a card that was just added to */
+  --motion-stagger: 35ms;          /* the pause between one card and the next */
+
   /* Layout: the pages switch to their wide layout at 900px and the header at 1100px. A media query cannot read a
      variable, so those two numbers are written in each file's @media line; change them everywhere at once. */
   --container-max: 1264px;   /* 1200 px of content plus the 32 px padding on each side, as in the mockups */

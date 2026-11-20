@@ -316,3 +316,15 @@ select.input {
     .season-banner__go:hover { text-decoration: underline; }
 }
 
+
+/* Press feedback for a touch screen (decision 2026-11-20). A phone has no hover, so a card shrinks a little while a link in it
+   is pressed. Only the links trigger it, as the hover looks do, so a card never looks pressed where it is not a link. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .item-card:has(.item-card__photo:active, .item-card__link:active),
+  .suggest-card:has(a:active),
+  .hamper:has(a:active),
+  .hp-rel__link:active {
+    transform: scale(0.985);
+    transition-duration: var(--motion-press);
+  }
+}
