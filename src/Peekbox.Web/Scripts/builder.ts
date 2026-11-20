@@ -63,6 +63,54 @@ let searchTimer = 0;
 let searchSerial = 0;
 let searchRequest: AbortController | null = null;
 
+// The box stays under the step strip on a phone while it has words or the cursor, from the moment its place has gone up
+// under the strip until the end of the list has too (the CSS is .search-pin.is-pinned). The box keeps its place in the page
+// with a height, so pinning moves nothing else.
+const phone = window.matchMedia('(max-width: 899px)');
+const searchField = document.querySelector<HTMLElement>('.item-filters__search');
+const searchPin = searchField?.querySelector<HTMLElement>('.search-pin') ?? null;
+let pinFrame = 0;
+
+function isPinned(): boolean {
+  return searchPin?.classList.contains('is-pinned') === true;
+}
+
+function setPinned(on: boolean): void {
+  if (!searchField || !searchPin || on === isPinned()) {
+    return;
+  }
+
+  if (on) {
+    searchField.style.height = `${searchField.getBoundingClientRect().height}px`;
+  }
+
+  searchPin.classList.toggle('is-pinned', on);
+  searchPin.querySelector('label')?.classList.toggle('visually-hidden', on);
+  if (!on) {
+    searchField.style.height = '';
+  }
+}
+
+function updatePin(): void {
+  pinFrame = 0;
+  const steps = document.querySelector('.builder-steps');
+  const results = document.getElementById('ket-qua');
+  if (!searchField || !(search instanceof HTMLInputElement) || !steps || !results || !phone.matches) {
+    setPinned(false);
+    return;
+  }
+
+  const top = steps.getBoundingClientRect().bottom;
+  const used = search.value !== '' || document.activeElement === search;
+  setPinned(used && searchField.getBoundingClientRect().top < top && results.getBoundingClientRect().bottom > top);
+}
+
+function schedulePin(): void {
+  if (pinFrame === 0) {
+    pinFrame = window.requestAnimationFrame(updatePin);
+  }
+}
+
 function stopSearch(): void {
   window.clearTimeout(searchTimer);
   searchRequest?.abort();
@@ -80,6 +128,7 @@ function searchNow(): void {
 
   stopSearch();
   const serial = searchSerial;
+  const typing = document.activeElement === search;
   searchRequest = new AbortController();
   fetchPage(url, { signal: searchRequest.signal })
     .then(({ page: fresh }) => {
@@ -95,6 +144,12 @@ function searchNow(): void {
         wireRows(shown, writePosition);
         wireHint();
         say(shown.querySelector('.items__count span')?.textContent?.trim() ?? '');
+        // On a phone the first answer scrolls the list up under the box; once the box is pinned the list is already there.
+        if (typing && phone.matches && !isPinned()) {
+          shown.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        }
+
+        schedulePin();
       }
 
       // The address now says what is on screen, so reload and Back keep the search.
@@ -110,9 +165,17 @@ function searchSoon(): void {
   searchTimer = window.setTimeout(searchNow, SEARCH_DELAY_MS);
 }
 
+window.addEventListener('scroll', schedulePin, { passive: true });
+window.addEventListener('resize', schedulePin);
+phone.addEventListener('change', schedulePin);
+
 if (search instanceof HTMLInputElement) {
+  search.addEventListener('focus', schedulePin);
+  search.addEventListener('blur', schedulePin);
+  schedulePin();
   // A letter being composed (Telex, VNI) is not final yet: wait for the composition to end.
   search.addEventListener('input', (event) => {
+    schedulePin();
     if (!(event instanceof InputEvent && event.isComposing)) {
       searchSoon();
     }
@@ -131,8 +194,24 @@ if (search instanceof HTMLInputElement) {
     if (event.key === 'Enter' && !event.isComposing) {
       event.preventDefault();
       searchNow();
+      // The keyboard's search key: on a touch screen the keyboard goes away so the list can be seen.
+      if (window.matchMedia('(pointer: coarse)').matches) {
+        search.blur();
+      }
     }
   });
+
+  // A touch screen's keyboard covers half of the screen. A tap anywhere outside the box closes it (a tap on a button or
+  // a link still does what it says), and so does the start of a swipe, when the browser takes the touch over to scroll
+  // the page (pointercancel). Some browsers keep the keyboard open on a tap on plain text, so this is done here.
+  const closeKeyboard = (event: PointerEvent): void => {
+    const inside = event.target instanceof Node && searchPin?.contains(event.target);
+    if (event.pointerType === 'touch' && document.activeElement === search && !inside) {
+      search.blur();
+    }
+  };
+  document.addEventListener('pointerup', closeKeyboard);
+  document.addEventListener('pointercancel', closeKeyboard);
 }
 
 // ---- "Thêm", − and + (F20) ----

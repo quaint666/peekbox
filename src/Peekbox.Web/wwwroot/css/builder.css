@@ -180,6 +180,23 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .search-input { position: relative; }
 .search-input .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--color-muted); pointer-events: none; }
 .search-input .input { padding-left: 42px; }  /* room for the icon, as in the mockup */
+/* Phone: the search box stays under the step strip while it has words or the cursor, so the list can be read and changed
+   without scrolling back (decision 2026-11-20). builder.ts adds .is-pinned and keeps the box's place in the page with a
+   height. Pinned, the box is its 48px (.input) with --space-3 above and below; the list scrolls to just under it. */
+:root { --search-pin-height: calc(48px + 2 * var(--space-3)); }
+.search-pin { display: flex; flex-direction: column; gap: 6px; }   /* 6px, as .field */
+.search-pin.is-pinned {
+    position: fixed;
+    top: var(--builder-steps-height);
+    left: var(--space-4);
+    right: var(--space-4);
+    z-index: var(--z-steps);
+    box-sizing: border-box;
+    height: var(--search-pin-height);
+    padding: var(--space-3) 0;
+    border-image: linear-gradient(to top, var(--color-border) 1px, var(--color-bg) 1px) fill 0 / 0 / 0 100vmax;
+}
+#ket-qua { scroll-margin-top: var(--search-pin-height); }
 .no-match { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); text-align: center; }
 .no-match__title { margin: 0; font-size: var(--text-lg); font-weight: 700; }
 .no-match__text { margin: 0; color: var(--color-muted); }

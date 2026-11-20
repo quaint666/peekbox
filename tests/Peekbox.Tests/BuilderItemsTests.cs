@@ -219,6 +219,8 @@ public class BuilderItemsTests(PeekboxFixture fixture)
             var block = html[open..html.IndexOf("id=\"packaging-lock\"", open, StringComparison.Ordinal)];
             Assert.Contains("class=\"items__count\"", block);
             Assert.DoesNotContain("id=\"item-search\"", block);
+            // The box and its label sit in one wrapper, which builder.ts pins under the step strip on a phone.
+            Assert.Matches(@"<div class=""search-pin"">\s*<label class=""field__label"" for=""item-search"">Tìm món</label>[\s\S]*?id=""item-search""", html);
             Assert.DoesNotContain("<form", block.Replace("<form class=\"qty", "").Replace("<form class=\"qty-add-form", ""));
             Assert.Single(Regex.Matches(html, "id=\"ket-qua\""));
         }

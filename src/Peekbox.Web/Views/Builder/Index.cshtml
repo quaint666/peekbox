@@ -224,11 +224,14 @@
                         }
                     </div>
                     <div class="field item-filters__search">
-                        <label class="field__label" for="item-search">Tìm món</label>
-                        <div class="search-input">
-                            <partial name="_Icon" model='"search"' />
-                            <input class="input" id="item-search" name="q" type="search" value="@items.Search" maxlength="@ItemCatalog.SearchMaxLength" placeholder="Tên món, thương hiệu, xuất xứ" autocomplete="off">
-                    </div>
+                        @* The wrapper is what builder.ts pins under the step strip on a phone while the visitor searches. *@
+                        <div class="search-pin">
+                            <label class="field__label" for="item-search">Tìm món</label>
+                            <div class="search-input">
+                                <partial name="_Icon" model='"search"' />
+                                <input class="input" id="item-search" name="q" type="search" value="@items.Search" maxlength="@ItemCatalog.SearchMaxLength" placeholder="Tên món, thương hiệu, xuất xứ" autocomplete="off">
+                            </div>
+                        </div>
                     </div>
                     <div class="field item-filters__sort">
                         <label class="field__label" for="item-sort">Sắp xếp</label>
