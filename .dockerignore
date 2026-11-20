@@ -1,0 +1,15 @@
+# Keep the build context to what the Dockerfile copies, and keep local build output and secrets out of it.
+**/bin
+**/obj
+**/node_modules
+**/.vs
+.git
+.github
+.env
+.env.*
+design
+docs
+tests
+**/*.md
+# Built by the "assets" stage; a local copy could be stale.
+src/Peekbox.Web/wwwroot/js

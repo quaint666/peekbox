@@ -1,0 +1,150 @@
+# Peekbox images.
+#
+# Every pull request and every push to main builds both images (the web site and the migration bundle, see the
+# Dockerfile) and checks them against a throwaway Postgres. Only a push to main also publishes them to GitHub's registry
+# (GHCR), tagged with the first 12 characters of the commit. There is deliberately no `latest` tag: deployment pins an
+# exact tag and digest, and deploying is a manual step. CI never deploys and holds no secrets of its own: it pushes with
+# the run's built-in GITHUB_TOKEN. On main the last step writes the tag and both digests into the run summary.
+#
+# The tests are in test.yml (the required check); this workflow is about the images.
+
+name: images
+
+on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+  push:
+    branches: [main]
+    # A push that changes only docs builds nothing: the images never contain them.
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      APP_IMAGE: ghcr.io/${{ github.repository }}
+      MIGRATE_IMAGE: ghcr.io/${{ github.repository }}-migrate
+      CI_NAME: peekbox-ci-${{ github.run_id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Compute the image tag (first 12 characters of the commit)
+        env:
+          SHA: ${{ github.sha }}
+        run: echo "TAG=${SHA:0:12}" >> "$GITHUB_ENV"
+
+      - name: Build the web and migration images
+        run: |
+          docker build --provenance=false -t "$APP_IMAGE:$TAG" .
+          docker build --provenance=false --target migrate -t "$MIGRATE_IMAGE:$TAG" .
+
+      - name: Start a throwaway Postgres on a private network
+        run: |
+          docker rm -f "$CI_NAME-web" "$CI_NAME-pg" 2>/dev/null || true
+          docker network rm "$CI_NAME" 2>/dev/null || true
+          docker network create "$CI_NAME"
+          docker run -d --name "$CI_NAME-pg" --network "$CI_NAME" \
+            --memory=512m --memory-swap=512m \
+            -e POSTGRES_USER=peekbox -e POSTGRES_PASSWORD=ci -e POSTGRES_DB=peekbox \
+            postgres:18
+          for i in $(seq 1 60); do
+            docker exec "$CI_NAME-pg" pg_isready -h 127.0.0.1 -U peekbox -d peekbox && break
+            sleep 1
+          done
+          docker exec "$CI_NAME-pg" pg_isready -h 127.0.0.1 -U peekbox -d peekbox
+
+      # The migration image reaches the database only through ConnectionStrings__Default, the way the compose stack
+      # will. It fills the EMPTY tables with the sample content, and a second run must change nothing.
+      - name: Run the migration image twice
+        run: |
+          migrate() {
+            docker run --rm --network "$CI_NAME" \
+              -e ConnectionStrings__Default="Host=$CI_NAME-pg;Username=peekbox;Password=ci;Database=peekbox" \
+              "$MIGRATE_IMAGE:$TAG"
+          }
+          migrate | tail -3
+          OUT=$(migrate 2>&1)
+          echo "$OUT" | tail -3
+          echo "$OUT" | grep -q 'No migrations were applied'
+          FILLED=$(docker exec "$CI_NAME-pg" psql -U peekbox -tAc \
+            'select (select count(*) from "Products") > 0 and (select count(*) from "ReadyHampers") > 0 and (select count(*) from "Occasions") > 0')
+          echo "products, ready hampers and occasions all filled: $FILLED"
+          [ "$FILLED" = t ]
+
+      - name: Fail-fast check, the site refuses to start with no connection string
+        run: |
+          CODE=0
+          OUT=$(docker run --rm "$APP_IMAGE:$TAG" 2>&1) || CODE=$?
+          echo "$OUT" | tail -3
+          echo "exit code: $CODE"
+          [ "$CODE" -ne 0 ]
+          echo "$OUT" | grep -q "connection string 'Default' is missing"
+
+      # The settings are the ones staging will use (docs/architecture.md, section 10). The health check calls
+      # localhost, because AllowedHosts names the site and localhost only.
+      - name: Smoke test, health check, a page, the host check and the demo checkout
+        run: |
+          docker run -d --name "$CI_NAME-web" --network "$CI_NAME" \
+            --memory=256m --memory-swap=256m \
+            -e ConnectionStrings__Default="Host=$CI_NAME-pg;Username=peekbox;Password=ci;Database=peekbox" \
+            -e ForwardedHeaders__Hops=2 -e 'AllowedHosts=peekbox-staging.example;localhost' -e Demo__Enabled=true \
+            "$APP_IMAGE:$TAG"
+          get() { docker exec "$CI_NAME-web" wget -qO- --header="Host: $1" "http://127.0.0.1:8080$2"; }
+          for i in $(seq 1 30); do
+            docker exec "$CI_NAME-web" wget -qO- http://localhost:8080/healthz && break
+            sleep 1
+          done
+          echo
+          [ "$(docker exec "$CI_NAME-web" wget -qO- http://localhost:8080/healthz)" = ok ]
+          get peekbox-staging.example / | grep -q '300.000'
+          get peekbox-staging.example /checkout | grep -q 'Đây là bản xem thử'
+          CODE=0; get evil.example / >/dev/null 2>&1 || CODE=$?
+          echo "a host that is not allowed: wget exit code $CODE"
+          [ "$CODE" -ne 0 ]
+          [ "$(docker exec "$CI_NAME-web" id -u)" != 0 ]
+          docker exec "$CI_NAME-web" sh -c 'TZ=Asia/Ho_Chi_Minh date +%z' | grep -q '+0700'
+
+      - name: Show the web logs if something above failed
+        if: failure()
+        run: docker logs "$CI_NAME-web" 2>&1 | tail -40 || true
+
+      - name: Log in and push both images (main only)
+        if: github.ref == 'refs/heads/main'
+        env:
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$REGISTRY_TOKEN" | docker login "$REGISTRY" -u "${{ github.actor }}" --password-stdin
+          docker push "$APP_IMAGE:$TAG"
+          docker push "$MIGRATE_IMAGE:$TAG"
+          APP_DIGEST=$(docker image inspect --format '{{index .RepoDigests 0}}' "$APP_IMAGE:$TAG")
+          MIGRATE_DIGEST=$(docker image inspect --format '{{index .RepoDigests 0}}' "$MIGRATE_IMAGE:$TAG")
+          {
+            echo '### Pin this build'
+            echo
+            echo "tag: \`$TAG\`"
+            echo
+            echo '```'
+            echo "$APP_DIGEST"
+            echo "$MIGRATE_DIGEST"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "$APP_DIGEST"
+          echo "$MIGRATE_DIGEST"
+
+      - name: Clean up
+        if: always()
+        run: |
+          docker rm -f "$CI_NAME-web" "$CI_NAME-pg" 2>/dev/null || true
+          docker network rm "$CI_NAME" 2>/dev/null || true
+          docker logout "$REGISTRY" || true
+          docker rmi "$APP_IMAGE:$TAG" "$MIGRATE_IMAGE:$TAG" 2>/dev/null || true

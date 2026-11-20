@@ -167,8 +167,18 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
 
 - A real form produced by the tag helpers, with the validation scripts and the policy, in a browser.
 - The Arch build (the Arch packages are runtime 10.0.14, our EF packages are pinned at 10.0.15): for the teammate to confirm on Arch.
-- A Docker image for Peekbox (base image names, pinning, health check), and a real proxy in front: the headers are tested with a made-up chain, not yet through the Cloudflare tunnel.
+- A real proxy in front: the headers are tested with a made-up chain, not yet through the Cloudflare tunnel. The images are checked on the build machine (below), not yet on the staging host.
 - A normal index for accent-free search once the catalogue is large (`unaccent` is not an immutable function, so it needs a wrapper before it can be indexed): not tried.
+
+### The images (checked 2026-11-20, Docker 29.10 on Fedora 45)
+
+- `Dockerfile` makes two images: `docker build -t peekbox .` (the site) and `docker build --target migrate -t peekbox-migrate .` (the EF migration bundle, self-contained for `linux-musl-x64`). Base images are pinned by tag and digest: Node 26.13.1, .NET SDK 10.0.404, ASP.NET and runtime-deps 10.0.15 (the EF packages are 10.0.15), all Alpine 3.24.
+- Both run as the base image's unprivileged `app` user. The site listens on 8080. The site was 258 MB and the migration image 266 MB; the site used 95 MiB after start and a few requests, under a 256 MB limit (not a load test).
+- **Alpine has what we use**, each seen in a running container: `wget` (busybox, for a health check), ICU and tzdata after `apk add icu-libs icu-data-full tzdata` with `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false` (the home page shows `300.000đ – 10 triệu`, and `Asia/Ho_Chi_Minh` gives +0700), and `krb5-libs` (without it the database driver prints "Cannot load library libgssapi_krb5.so.2" on every connection).
+- **The migration image** reads `ConnectionStrings__Default` like the site (the bundle starts the app's own host), so it carries `appsettings.json`, `Content/` and `Seed/`. It creates and updates the tables and fills only EMPTY tables; a second run says "No migrations were applied".
+- **A health check inside the container must call `localhost`**, not `127.0.0.1`: `AllowedHosts` names the site and `localhost`, so `wget http://127.0.0.1:8080/healthz` gets a 400.
+- `.github/workflows/images.yml` builds both on every pull request and checks them against a throwaway PostgreSQL (migrate twice, fail-fast without a connection string, then health check, a page, the host check, the demo checkout, a non-root user and the time zone). Only a push to `main` publishes, tagged with the first 12 characters of the commit, never `latest`, and writes the digests into the run summary. Deployment is a manual step.
+- Seen and not investigated: the site exits with code 139 (not 134) when the connection string is missing; the check only needs a non-zero code.
 
 ## 12. Writing C#: the compiler and habits
 
