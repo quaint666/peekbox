@@ -133,7 +133,12 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
 - How an order is paid, and how items are held for an unpaid order.
 - The email sender (F61): no email is sent yet, so no page says one was.
 - How the project is run for the lecturer; the deployed site via Docker comes later.
-- **Before any deployment** (found in the 2026-11-17 review, parked until then): forwarded headers (without them every visitor has the proxy's address, so the rate limits are shared by the whole site, and the hamper cookie is not marked Secure), `AllowedHosts`, and a health endpoint.
+- **Deployment settings** (decided 2026-11-20; the Docker image and the publish workflow are a separate change). Each is an environment variable, written `A__B` for `A:B`:
+  - `ConnectionStrings__Default`: the database.
+  - `ForwardedHeaders__Hops`: how many proxies are in front of the app (0, the default, believes no `X-Forwarded-*` header; staging is 2: nginx, then cloudflared). The app must then be reachable only through the proxy, because the callers are not checked. It makes the rate limits count per visitor and the hamper cookie `Secure`.
+  - `AllowedHosts`: the host names, separated by `;`. Include `localhost` when a container health check calls the app on its own address.
+  - `Demo__Enabled`: `true` on a copy people only look at: the checkout shows "Đây là bản xem thử" and takes no order; everything else works.
+  - `GET /healthz`: 200 `ok` when the database answers, else 503.
 - Decided since: the rate limits (20 orders and 10 order lookups per 15 minutes per address, `RateLimits`, called from the controllers so a refused request still gets its page with a Vietnamese note).
 
 ## 11. Checked, and not checked yet
@@ -151,7 +156,7 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
   - a caller that is not a trusted proxy: the headers are ignored;
   - `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` with no code: applied;
   - the host from `X-Forwarded-Host` is used only when `XForwardedHost` is enabled.
-  In .NET 10 `ForwardedHeadersOptions.KnownNetworks` is obsolete (ASPDEPR005); use `KnownIPNetworks`. Nothing is configured in Peekbox yet.
+  In .NET 10 `ForwardedHeadersOptions.KnownNetworks` is obsolete (ASPDEPR005); use `KnownIPNetworks`. Peekbox: `ForwardedHeaders:Hops` (section 10) sets `ForwardLimit` and clears both lists, so the number of hops picks the visitor out of the header (`DeploymentTests`).
 - **Razor views and analyzers.** Views are compiled under the same rules as C#: in a `.cshtml`, an un-awaited call (CS4014) and a null dereference (CS8602) were build errors and an unused variable (CS0219) a warning. Of four ASP.NET analyzer probes only ASP0019 (`Headers.Add` instead of `Append`) fired, as a warning; ASP0000, ASP0001 and ASP0015 did not fire for our code shapes. CA2254 can be promoted to an error (it caught an interpolated log message); none of these is in the list in section 12.
 - **Logging in production.** The `Default: Information` level in `appsettings.json` also prints EF's SQL when the environment is Production (the home page's `SELECT count(*)` appeared). Fixed 2026-11-17: `Microsoft.EntityFrameworkCore.Database.Command` is at `Warning` (`FrameworkDefaultsTests`).
 - **The front-end tests port.** The data-shape checks (unique slugs, known category, whole-dong price, image paths, seed equals the file) and the CSS-colour check are C# tests already; the language-key check went away with the English text; `tests/vectors/pricing.json` is run against the pricing code by `PricingVectorsTests`.
@@ -162,7 +167,7 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
 
 - A real form produced by the tag helpers, with the validation scripts and the policy, in a browser.
 - The Arch build (the Arch packages are runtime 10.0.14, our EF packages are pinned at 10.0.15): for the teammate to confirm on Arch.
-- A Docker image for Peekbox (base image names, pinning, health check), and the production setup of forwarded headers: both belong to deployment, which comes later.
+- A Docker image for Peekbox (base image names, pinning, health check), and a real proxy in front: the headers are tested with a made-up chain, not yet through the Cloudflare tunnel.
 - A normal index for accent-free search once the catalogue is large (`unaccent` is not an immutable function, so it needs a wrapper before it can be indexed): not tried.
 
 ## 12. Writing C#: the compiler and habits

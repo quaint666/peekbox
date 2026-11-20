@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Peekbox.Web.Content;
@@ -32,6 +33,31 @@ builder.Services.AddScoped<ReadyHampers>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddSingleton<RateLimits>();
 
+// Demo mode (Demo:Enabled): the site runs for people to look at, and the checkout takes no order. See Services/DemoMode.cs.
+builder.Services.AddSingleton(new DemoMode(builder.Configuration.GetValue<bool>("Demo:Enabled")));
+
+// Behind a proxy chain (Cloudflare, cloudflared, nginx) the visitor's address and "https" arrive in X-Forwarded-*.
+// ForwardedHeaders:Hops is how many proxies sit in front of the app (the staging chain is 2: nginx, then cloudflared,
+// as Bloomy's "trust proxy 2"). It is off (0) by default, so a copy on a laptop never believes a header a visitor
+// sends. When it is on, the app must be reachable only through the proxy (a loopback port): the callers are not
+// checked, the number of hops is what picks the visitor's address out of the header.
+var proxyHops = builder.Configuration.GetValue<int?>("ForwardedHeaders:Hops") ?? 0;
+if (proxyHops < 0)
+{
+    throw new InvalidOperationException("ForwardedHeaders:Hops must be 0 (no proxy) or a whole number above 0.");
+}
+
+if (proxyHops > 0)
+{
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        options.ForwardLimit = proxyHops;
+        options.KnownProxies.Clear();
+        options.KnownIPNetworks.Clear();
+    });
+}
+
 // The connection string is a secret, so it is never written in a file of the
 // project. See docs/frontend-plan.md, section 2, for how to set it.
 var connectionString = builder.Configuration.GetConnectionString("Default")
@@ -44,6 +70,13 @@ builder.Services.AddDbContext<PeekboxDbContext>(options => options
     .UseSeeding((context, _) => SeedData.Run(context)));
 
 var app = builder.Build();
+
+// First of all, so that everything after it (the rate limits, the cookie's Secure flag) sees the visitor's address
+// and "https".
+if (proxyHops > 0)
+{
+    app.UseForwardedHeaders();
+}
 
 if (!app.Environment.IsDevelopment())
 {
@@ -66,6 +99,10 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+// For the container's health check and the proxy's: 200 when the database answers, 503 when it does not.
+app.MapGet(SiteLinks.HealthPath, async (PeekboxDbContext db, CancellationToken cancellationToken) =>
+    await db.Database.CanConnectAsync(cancellationToken) ? Results.Text("ok") : Results.Text("database unavailable", statusCode: StatusCodes.Status503ServiceUnavailable));
 
 // Every action names its own address (SiteLinks), so each page has exactly one. There is no
 // "{controller}/{action}/{id?}" route: it also answered /Home/Error, /Track/Index and /Cart/Index/x.

@@ -12,7 +12,7 @@ public static class HamperCookie
     public static string? Read(HttpRequest request) => request.Cookies[Name];
 
     // Scripts cannot read it (HttpOnly) and other sites' forms do not send it (Lax). Secure only over HTTPS: behind a
-    // proxy that ends HTTPS this needs the forwarded headers first (a deployment item, not set up yet).
+    // proxy that ends HTTPS the request is https once ForwardedHeaders:Hops is set (Program.cs).
     public static void Write(HttpResponse response, string token) => response.Cookies.Append(Name, token, new CookieOptions
     {
         HttpOnly = true,

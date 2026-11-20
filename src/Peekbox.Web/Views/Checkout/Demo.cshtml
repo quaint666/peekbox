@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Thanh toán";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true">
+}
+
+@* Demo mode (Demo:Enabled): this copy of the site takes no order, so the checkout says so instead of showing the form. *@
+<div class="checkout">
+    <h1 class="checkout__title">Thanh toán</h1>
+
+    <section class="card checkout-stock" aria-labelledby="demo-title">
+        <div class="checkout-stock__note" role="status">
+            <h2 class="checkout-stock__title" id="demo-title">Đây là bản xem thử</h2>
+            <p class="checkout-stock__text">Trang web đang được hoàn thiện nên chưa nhận đơn hàng. Bạn vẫn có thể tạo hộp quà, bỏ vào giỏ và xem giá.</p>
+        </div>
+        <div class="checkout-stock__actions">
+            <a class="btn btn--primary" href="@SiteLinks.Cart.Href">Quay lại giỏ hàng</a>
+            <a class="btn btn--outline" href="@SiteLinks.Builder.Href">Tiếp tục chọn món</a>
+        </div>
+    </section>
+</div>
