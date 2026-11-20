@@ -1,5 +1,5 @@
 {
-  "_note": "Ready hampers (F15) and the six occasion pages. Totals are not stored: the page works them out from current prices, packaging included. The banner text is for the season banner (F05, later) and is not read yet. The hamper photos are drafts.",
+  "_note": "Ready hampers (F15) and the six occasion pages. Totals are not stored: the page works them out from current prices, packaging included. The banner text is the season banner's line (F05): the banner shows the occasion's chip in bold, then this text, then a link \"Xem hộp {name}\". It shows only on the occasion named by the setting Banner:Occasion. The hamper photos are drafts.",
   "occasions": [
     {
       "id": "tet",
@@ -9,7 +9,7 @@
       "accent": "tet",
       "image": "/images/occasions/tet.webp",
       "lead": "Peekbox chọn sẵn vài hộp cho mỗi mức ngân sách. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp. Hạn dùng vẫn được kiểm tra theo ngày giao.",
-      "banner": "Mùa Tết 2027: chọn hộp quà và ngày giao sớm để còn nhiều lựa chọn",
+      "banner": "đặt sớm để còn nhiều lựa chọn",
       "bloomy_link": null
     },
     {
@@ -20,7 +20,7 @@
       "accent": "valentine",
       "image": "/images/occasions/valentine.webp",
       "lead": "Hộp quà ngọt ngào cho người thương, gọn và có hạn dùng rõ ràng. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
-      "banner": "Valentine: chọn một hộp quà ngọt ngào và ngày giao sớm",
+      "banner": "chọn một hộp quà ngọt ngào và ngày giao sớm",
       "bloomy_link": "Xem hoa Valentine trên Bloomy"
     },
     {
@@ -31,7 +31,7 @@
       "accent": "women",
       "image": "/images/occasions/8-3.webp",
       "lead": "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ, dùng cho cả 8/3 và 20/10. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
-      "banner": "8/3: chọn món quà ý nghĩa cho mẹ, vợ, bạn gái và đồng nghiệp",
+      "banner": "chọn món quà ý nghĩa cho mẹ, vợ, bạn gái và đồng nghiệp",
       "bloomy_link": "Xem hoa 8/3 và 20/10 trên Bloomy"
     },
     {
@@ -42,7 +42,7 @@
       "accent": "midautumn",
       "image": "/images/occasions/trung-thu.webp",
       "lead": "Hộp quà đoàn viên: bánh, trà và món nhâm nhi cho cả nhà. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp. Bánh trung thu có hạn dùng ngắn, nên hạn dùng được kiểm tra theo ngày giao.",
-      "banner": "Trung thu: bánh và trà cho đêm rằm, đặt sớm để kịp ngày giao",
+      "banner": "bánh và trà cho đêm rằm, đặt sớm để kịp ngày giao",
       "bloomy_link": null
     },
     {
@@ -53,7 +53,7 @@
       "accent": "teachers",
       "image": "/images/occasions/20-11.webp",
       "lead": "Những hộp gọn, dễ chia theo ngân sách lớp. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
-      "banner": "20/11: gửi lời tri ân đến thầy cô bằng một hộp quà nhỏ chu đáo",
+      "banner": "gửi lời tri ân đến thầy cô bằng một hộp quà nhỏ chu đáo",
       "bloomy_link": "Xem hoa 20/11 trên Bloomy"
     },
     {
@@ -64,7 +64,7 @@
       "accent": "christmas",
       "image": "/images/occasions/giang-sinh.webp",
       "lead": "Hộp quà ấm áp cho gia đình, bạn bè và đồng nghiệp cuối năm. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
-      "banner": "Giáng sinh: chọn hộp quà ấm áp và đặt sớm để kịp ngày 25/12",
+      "banner": "chọn hộp quà ấm áp và đặt sớm để kịp ngày 25/12",
       "bloomy_link": null
     }
   ],

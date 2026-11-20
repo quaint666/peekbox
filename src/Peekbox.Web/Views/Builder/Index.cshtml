@@ -54,6 +54,10 @@
     }
 }
 
+@section Banner {
+    @await Component.InvokeAsync("SeasonBanner")
+}
+
 @section Styles {
     <link rel="stylesheet" href="~/css/builder.css" asp-append-version="true">
 }

@@ -142,10 +142,10 @@ public sealed record SeedPackagingFile(List<SeedPackaging> Packaging);
 
 public sealed record SeedPackaging(string Id, string NameVi, string DescVi, long FeeVnd, string Image);
 
-// The shape of content/data/hampers.json. The banner text is for the season banner (F05) and is not read yet.
+// The shape of content/data/hampers.json. Banner is the line of the season banner (F05); Services/SeasonBanner.cs reads it.
 public sealed record SeedHampersFile(List<SeedOccasion> Occasions, List<SeedReadyHamper> Hampers);
 
-public sealed record SeedOccasion(string Id, string Name, string Title, string Chip, string Lead, string Accent, string Image, string? BloomyLink);
+public sealed record SeedOccasion(string Id, string Name, string Title, string Chip, string Lead, string Accent, string Image, string Banner, string? BloomyLink);
 
 public sealed record SeedReadyHamper(
     string Slug, string Name, string For, long BudgetVnd, string Packaging, List<string> Occasions, string Image, List<SeedReadyHamperItem> Items);
