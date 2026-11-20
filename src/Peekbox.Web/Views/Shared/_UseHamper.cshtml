@@ -20,6 +20,10 @@ else
     <form method="post" action="@SiteLinks.UseHamperPath">
         <input type="hidden" name="slug" value="@card.Slug">
         <input type="hidden" name="from" value="@Model.From">
+        @if (Model.Detail)
+        {
+            <input type="hidden" name="detail" value="true">
+        }
         <button type="submit" class="btn btn--primary hamper__use">Dùng hộp này</button>
     </form>
 }

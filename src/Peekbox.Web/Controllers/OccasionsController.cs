@@ -32,7 +32,7 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
     // the card, where the page now asks or says why. The way back is built from the hamper's own occasions, never taken
     // from the request as an address.
     [HttpPost(SiteLinks.UseHamperPath)]
-    public async Task<IActionResult> Use(string? slug, string? from, bool replace = false, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Use(string? slug, string? from, bool replace = false, bool detail = false, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -45,10 +45,14 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
             return NotFound();
         }
 
-        // From the builder's "Hộp gợi ý" (from=builder) the visitor goes back there; from an occasion page, to the card.
-        var back = from == FromBuilder
-            ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Suggestions)
-            : SiteLinks.Occasion(card.OccasionIds.Contains(from) ? from! : card.OccasionIds[0]) + Anchors.Link(Anchors.HamperCard(card.Slug));
+        // From the builder's "Hộp gợi ý" (from=builder) the visitor goes back there; from an occasion page, to the card;
+        // from the hamper's own page (detail), to that page with the same "from".
+        var known = from == FromBuilder || card.OccasionIds.Contains(from);
+        var back = detail
+            ? SiteLinks.Hamper(card.Slug, known ? from : null)
+            : from == FromBuilder
+                ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Suggestions)
+                : SiteLinks.Occasion(card.OccasionIds.Contains(from) ? from! : card.OccasionIds[0]) + Anchors.Link(Anchors.HamperCard(card.Slug));
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         var hasItems = hamper is not null && (await hampers.BoxAsync(hamper, cancellationToken)).Lines.Count > 0;
         if (card.SoldOut.Count > 0 || (hasItems && !replace))

@@ -173,10 +173,13 @@
                         @foreach (var card in suggestions.Hampers)
                         {
                             <li class="suggest-card">
-                                <img class="suggest-card__photo" src="@card.ImagePath" alt="" width="570" height="380" loading="lazy">
+                                <div class="suggest-card__media">
+                                    <img class="suggest-card__photo" src="@card.ImagePath" alt="" width="570" height="380" loading="lazy">
+                                    <span class="card-go" aria-hidden="true"><partial name="_Icon" model='"arrow"' /></span>
+                                </div>
                                 <div class="suggest-card__body">
                                     <span class="suggest-card__who suggest-card__who--@suggestions.Chosen.Accent">@card.ForWhom</span>
-                                    <h3 class="suggest-card__name"><a href="@(SiteLinks.Occasion(suggestions.Chosen.Id) + Anchors.Link(Anchors.HamperCard(card.Slug)))">@card.Name</a></h3>
+                                    <h3 class="suggest-card__name"><a href="@SiteLinks.Hamper(card.Slug, Peekbox.Web.Controllers.OccasionsController.FromBuilder)">@card.Name</a></h3>
                                     <p class="meta">@card.Count món · @Vnd.Format(card.Quote.TotalVnd)</p>
                                     <partial name="_UseHamper" model='new UseHamperControl(card, Peekbox.Web.Controllers.OccasionsController.FromBuilder, box, "goi-y")' />
                                     <partial name="_ReplaceHamper" model='new UseHamperControl(card, Peekbox.Web.Controllers.OccasionsController.FromBuilder, box, "ask")' />

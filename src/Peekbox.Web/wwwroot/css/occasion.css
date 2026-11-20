@@ -170,31 +170,15 @@
 .hamper__use { width: 100%; }
 .hamper form { display: flex; }
 .hamper__sold { margin: 0; font-size: var(--text-xs); line-height: 1.5; color: var(--color-danger-text); }
-.hamper__more {
-    align-self: center;
-    min-height: var(--tap-min);
-    padding: 0 var(--space-2);
-    border: 0;
-    background: none;
-    color: var(--color-primary-text);
-    font: inherit;
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-/* "Xem từng món" (state 32): a wider question box with the items. */
-.hamper-items { width: min(100% - 2 * var(--space-4), 520px); max-height: calc(100dvh - 2 * var(--space-4)); overflow-y: auto; display: none; flex-direction: column; gap: var(--space-3); }
-.hamper-items:popover-open { display: flex; }
-.hamper-items__head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border-soft); }
-.hamper-items__title { margin: 0; font-size: var(--text-xl); }
-.hamper-items__list { margin: 0; padding: 0; list-style: none; }
-.hamper-items__line { display: flex; justify-content: space-between; gap: var(--space-3); padding-block: var(--space-3); border-bottom: 1px solid var(--color-border-soft); font-size: var(--text-md); }
-.hamper-items__line > div { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
-.hamper-items__sum { display: flex; justify-content: space-between; }
-.hamper-items .hamper__total { margin-top: 0; border-top: 0; padding-top: 0; }
-.hamper-items .hamper__total strong { font-size: var(--title-sm); }
+/* The whole card is one link: the name's ::after covers the card, and what comes after it in the card (the buttons, the
+   reason a hamper is off) is positioned so it paints above that cover. The link's own focus ring is drawn round the card. */
+.hamper { position: relative; }
+.hamper__link { color: inherit; text-decoration: none; }
+.hamper__link::after { content: ''; position: absolute; inset: 0; }
+.hamper__link:focus-visible { outline: none; }
+.hamper:has(.hamper__link:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.hamper form, .hamper__sold, .hamper__use { position: relative; }
+.hamper__media { position: relative; overflow: hidden; }
 
 /* "Tặng kèm hoa?" (20/11 and the women's page). */
 .occ-bloomy { padding-block: var(--space-2) var(--space-6); }
@@ -221,6 +205,15 @@
     .occ-switch__btn:hover { background: var(--occ-soft); }
     .occ-switch__menu a:hover { background: var(--occ-soft); }
     .occ-crumbs a:hover { color: var(--color-text); text-decoration: underline; }
+    .hamper:hover .hamper__link { text-decoration: underline; }
+    .hamper:hover .card-go { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .hamper { transition: transform 150ms ease-out; }
+    .hamper:hover { transform: translateY(-2px); }
+    .hamper__photo { transition: transform 200ms ease-out; }
+    .hamper:hover .hamper__photo { transform: scale(1.04); }
+    .card-go { transition: background-color 150ms ease-out, color 150ms ease-out; }
 }
 
 /* Small motion, only for visitors who have not asked for less: the photo fades in once, the menu opens with a short slide,

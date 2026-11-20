@@ -1,0 +1,141 @@
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Navigation
+@model HamperViewModel
+@{
+    var card = Model.Card;
+    var occasion = Model.Occasion;
+    var earliest = card.EarliestExpiry;
+    ViewData["Title"] = card.Name;
+    if (Model.FromBuilder)
+    {
+        ViewData["Nav"] = SiteLinks.Builder.Key;
+    }
+
+    var summary = $"{card.Name}: {card.Count} món, {card.Packaging.Name}, {Vnd.Format(card.Quote.TotalVnd)} đã gồm thuế. {card.ForWhom}.";
+    var origin = $"{Context.Request.Scheme}://{Context.Request.Host}";
+}
+
+@section Head {
+    <meta name="description" content="@summary">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@card.Name · Peekbox">
+    <meta property="og:description" content="@summary">
+    <meta property="og:image" content="@(origin + card.ImagePath)">
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/occasion.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/hamper.css" asp-append-version="true">
+}
+
+@section Scripts {
+    <script type="module" src="~/js/hamper.js" asp-append-version="true"></script>
+}
+
+@* The page of one ready hamper (F15, mockup layout A of 2026-11-20): photo and buy panel side by side, every item below,
+   then the other hampers of the occasion. The occasion's colours come from its accent (occasion.css). *@
+<div class="hp occ occ--@occasion.Accent">
+    <div class="container hp__inner">
+        <nav class="breadcrumb" aria-label="Đường dẫn">
+            <ol>
+                <li><a href="@SiteLinks.Home.Href">@SiteLinks.Home.Label</a></li>
+                @if (Model.FromBuilder)
+                {
+                    <li><a href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Suggestions))">@SiteLinks.Builder.Label</a></li>
+                }
+                else
+                {
+                    <li><a href="@SiteLinks.Occasion(occasion.Id)">@occasion.Name</a></li>
+                }
+                <li aria-current="page">@card.Name</li>
+            </ol>
+        </nav>
+
+        <div class="hp-main">
+            <img class="hp-photo" src="@card.ImagePath" alt="@card.Name" width="570" height="380">
+
+            <div class="hp-info">
+                <a class="hp-chip" href="@SiteLinks.Occasion(occasion.Id)"><span class="hp-chip__dot" aria-hidden="true"></span>@occasion.Chip</a>
+                <p class="hp-who">@card.ForWhom</p>
+                <h1 class="hp-title">@card.Name</h1>
+                <p class="hp-price"><strong>@Vnd.Format(card.Quote.TotalVnd)</strong><span>Đã gồm thuế</span></p>
+                <ul class="hp-facts">
+                    <li><partial name="_Icon" model='"box"' />@card.Count món · @card.Packaging.Name</li>
+                    <li><partial name="_Icon" model='"calendar"' />@(earliest is { ExpiryDate: { } date } ? $"Hạn sớm nhất: {VnDate.Month(date)}" : VnDate.NoExpiry)</li>
+                </ul>
+                <div class="hp-buy" data-buy-main>
+                    <partial name="_UseHamper" model='new UseHamperControl(card, Model.From, Model.Box, "trang", true)' />
+                </div>
+                <ul class="hp-promises">
+                    <li><partial name="_Icon" model='"shield"' />Hạn dùng được kiểm tra theo ngày giao</li>
+                    <li><partial name="_Icon" model='"box"' />Sửa được từng món trong trình tạo hộp</li>
+                </ul>
+            </div>
+        </div>
+
+        <section class="card hp-contents" aria-labelledby="ben-trong-hop">
+            <h2 class="hp-heading" id="ben-trong-hop">Bên trong hộp</h2>
+            <ul class="hp-lines">
+                @foreach (var line in card.Lines)
+                {
+                    <li class="hp-line">
+                        <img class="hp-line__photo" src="@line.ImagePath" alt="" width="64" height="64" loading="lazy">
+                        <div class="hp-line__text">
+                            <p class="hp-line__name"><a href="@SiteLinks.Item(line.Slug)">@line.Name</a>@if (line.Quantity > 1) { <span class="hp-line__qty">× @line.Quantity</span> }</p>
+                            <p class="meta">@line.Brand · @line.WeightGrams g · @line.Origin</p>
+                            <p class="hp-line__badges">
+                                <span class="badge@(line.ExpiryDate is null ? " badge--muted" : "")">@VnDate.Expiry(line.ExpiryDate)</span>
+                                @if (line.Stock < line.Quantity)
+                                {
+                                    <span class="badge badge--danger">Hết hàng</span>
+                                }
+                            </p>
+                        </div>
+                        <span class="hp-line__price">@Vnd.Format(line.PriceVnd * line.Quantity)</span>
+                    </li>
+                }
+            </ul>
+            <p class="hp-sum"><span>Đóng gói: @card.Packaging.Name</span><span>@Vnd.Format(card.Packaging.FeeVnd)</span></p>
+            <p class="hp-total"><span>Tổng (đã gồm thuế)</span><strong>@Vnd.Format(card.Quote.TotalVnd)</strong></p>
+            <p class="meta">Hạn dùng được kiểm tra theo ngày giao khi các món vào hộp của bạn. Món không có hạn dùng (như nến thơm) không cần kiểm tra.</p>
+        </section>
+
+        @if (Model.Related.Count > 0)
+        {
+            <section class="hp-related" aria-labelledby="cung-dip">
+                <div class="hp-related__head">
+                    <h2 class="hp-heading" id="cung-dip">Cùng dịp @occasion.Name</h2>
+                    <a class="hp-related__all" href="@SiteLinks.Occasion(occasion.Id)">Xem tất cả hộp</a>
+                </div>
+                <ul class="hp-related__row" tabindex="0" aria-label="Hộp cùng dịp @occasion.Name">
+                    @foreach (var other in Model.Related)
+                    {
+                        <li class="hp-rel">
+                            <a class="hp-rel__link" href="@SiteLinks.Hamper(other.Slug, Model.FromBuilder ? null : occasion.Id)">
+                                <img class="hp-rel__photo" src="@other.ImagePath" alt="" width="570" height="380" loading="lazy">
+                                <span class="hp-rel__body">
+                                    <span class="hp-rel__who">@other.ForWhom</span>
+                                    <span class="hp-rel__name">@other.Name</span>
+                                    <span class="meta">@other.Count món · @Vnd.Format(other.Quote.TotalVnd)</span>
+                                </span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </section>
+        }
+    </div>
+
+    @* The phone's buy bar: hidden until the button above has scrolled away (hamper.ts), and not at all when the hamper cannot be used. *@
+    @if (card.SoldOut.Count == 0)
+    {
+        <div class="hp-bar" data-buy-bar hidden>
+            <div class="container hp-bar__inner">
+                <p class="hp-bar__price"><strong>@Vnd.Format(card.Quote.TotalVnd)</strong><span>Đã gồm thuế</span></p>
+                <partial name="_UseHamper" model='new UseHamperControl(card, Model.From, Model.Box, "thanh", true)' />
+            </div>
+        </div>
+    }
+
+    <partial name="_ReplaceHamper" model='new UseHamperControl(card, Model.From, Model.Box, "ask", true)' />
+</div>

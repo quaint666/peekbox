@@ -66,6 +66,13 @@ public static class SiteLinks
 
     public static string Occasion(string id) => $"{OccasionsPath}/{Uri.EscapeDataString(id)}";
 
+    // The page of one ready hamper (/hop/an-khang). "from" is the occasion the visitor came from, or "builder": it picks the
+    // breadcrumb and where "Dùng hộp này" comes back to.
+    public const string HampersPath = "/hop";
+
+    public static string Hamper(string slug, string? from = null) =>
+        $"{HampersPath}/{Uri.EscapeDataString(slug)}" + (from is null ? "" : $"?from={Uri.EscapeDataString(from)}");
+
     // "Dùng hộp này" on an occasion page.
     public const string UseHamperPath = "/dip/dung-hop";
 
