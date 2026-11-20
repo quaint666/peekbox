@@ -69,7 +69,7 @@
             var headingId = Anchors.Budget(group.BudgetVnd) + "-ten";
             <section class="occ-tier" id="@Anchors.Budget(group.BudgetVnd)" aria-labelledby="@headingId" data-row>
                 <div class="occ-tier__head">
-                    <h3 class="occ-tier__title" id="@headingId"><span class="occ-tier__mark" aria-hidden="true"></span>Ngân sách @Vnd.Format(group.BudgetVnd) <span class="occ-tier__count">· @group.Hampers.Count hộp</span></h3>
+                    <h3 class="occ-tier__title" id="@headingId"><span class="occ-tier__mark" aria-hidden="true"></span><span class="occ-tier__label">Ngân sách @Vnd.Format(group.BudgetVnd) <span class="occ-tier__count">@group.Hampers.Count hộp</span></span></h3>
                     @* Shown by occasion.ts; without a script the row still scrolls by swipe, wheel and scrollbar. *@
                     <div class="row-buttons" hidden>
                         <button type="button" class="icon-btn row-buttons__btn" data-row-prev aria-label="Hộp trước"><partial name="_Icon" model='"arrow-left"' /></button>

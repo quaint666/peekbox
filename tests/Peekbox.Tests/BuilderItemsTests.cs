@@ -51,6 +51,15 @@ public class BuilderItemsTests(PeekboxFixture fixture)
     private static string CurrentStep(string html) =>
         Regex.Match(html, @"<li class=""builder-step"" aria-current=""step""><span class=""builder-step__num"">(\d)</span>").Groups[1].Value;
 
+    // Found on a 360 px phone (2026-11-20): "Quà không phải đồ ăn" in the chosen pill wrapped onto three lines and the pill
+    // grew to 104 px. The name stays on one line with an ellipsis, in the chosen pill as in the plain one.
+    [Fact]
+    public async Task A_long_category_name_stays_on_one_line_in_the_chosen_pill()
+    {
+        var css = await File.ReadAllTextAsync(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "builder.css"));
+        Assert.Matches(@"\.category-control > span, \.category-control__open > span \{[^}]*overflow: hidden; text-overflow: ellipsis; white-space: nowrap;", css);
+    }
+
     [Fact]
     public async Task Without_a_saved_hamper_only_the_lock_note_shows_and_step_1_is_current()
     {
@@ -135,6 +144,8 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         Assert.Contains("Bánh: hiện 17 món. 1 món hết hạn trước ngày giao đang được ẩn.", banh);
         Assert.Contains("<a class=\"picker-tile\" href=\"/builder?category=banh#chon-mon\" aria-current=\"true\">", banh);
         Assert.Contains("<span id=\"danh-muc-gia-tri\">Bánh</span>", banh);
+        // The chosen name is on one line (an ellipsis when it is long, builder.css) and the whole name is the button's title.
+        Assert.Contains("<button type=\"button\" class=\"category-control__open\" title=\"Bánh\" popovertarget=\"danh-muc\"", banh);
         Assert.Matches(@"<a class=""category-control__clear"" href=""/builder#chon-mon"" aria-label=""Bỏ danh mục Bánh, xem tất cả"">", banh);
         Assert.Matches(@"<a href=""/builder\?category=banh&inDate=false#chon-mon"">Hiện cả 1 món</a>", banh);   // decoded: &amp; became &
 

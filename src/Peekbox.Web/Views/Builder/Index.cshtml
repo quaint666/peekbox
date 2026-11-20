@@ -206,7 +206,7 @@
                         @if (items.Chosen is { } chosen)
                         {
                             <div class="category-control category-control--chosen">
-                                <button type="button" class="category-control__open" popovertarget="danh-muc" aria-labelledby="danh-muc-nhan danh-muc-gia-tri"><partial name="_Icon" model='"grid"' /><span id="danh-muc-gia-tri">@chosen.Name</span></button>
+                                <button type="button" class="category-control__open" title="@chosen.Name" popovertarget="danh-muc" aria-labelledby="danh-muc-nhan danh-muc-gia-tri"><partial name="_Icon" model='"grid"' /><span id="danh-muc-gia-tri">@chosen.Name</span></button>
                                 <a class="category-control__clear" href="@ListLink(new() { ["category"] = null }, Anchors.Items)" aria-label="Bỏ danh mục @chosen.Name, xem tất cả"><partial name="_Icon" model='"close"' /></a>
                             </div>
                         }

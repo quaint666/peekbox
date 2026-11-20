@@ -114,9 +114,16 @@
 /* One budget: a heading and a row that scrolls sideways and snaps to each card. */
 .occ-tier { display: flex; flex-direction: column; gap: var(--space-4); padding-block: var(--space-4); scroll-margin-top: var(--space-4); }
 .occ-tier__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
-.occ-tier__title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0; font-size: var(--title-sm); font-weight: 600; }
-.occ-tier__mark { width: 6px; height: var(--space-5); border-radius: 3px; background: var(--occ-ink); }
-.occ-tier__count { font-size: var(--text-md); font-weight: 400; color: var(--color-muted); }
+/* The mark and the label stay side by side (the label wraps inside itself): on a 360 px phone the title shares its line with
+   the two arrow buttons, and as separate wrapping items the mark landed alone above the text and the count below it. */
+.occ-tier__title { display: flex; align-items: center; gap: var(--space-2); margin: 0; font-size: var(--title-sm); font-weight: 600; }
+.occ-tier__mark { flex: none; width: 6px; height: var(--space-5); border-radius: 3px; background: var(--occ-ink); }
+.occ-tier__label { min-width: 0; }
+.occ-tier__count { display: block; font-size: var(--text-md); font-weight: 400; color: var(--color-muted); }   /* under the title on a phone, after it ("· 4 hộp") from 600 px */
+@media (min-width: 600px) {
+    .occ-tier__count { display: inline; }
+    .occ-tier__count::before { content: '· '; }
+}
 
 
 .occ-row {
