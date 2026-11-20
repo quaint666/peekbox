@@ -113,6 +113,19 @@ public class OccasionPageTests(PeekboxFixture fixture)
         Assert.Contains("Xem hoa Valentine trên Bloomy", await NewVisitor().PageAsync("/dip/valentine"));
     }
 
+    // Found on a 360 px phone (2026-11-20): the title shares its line with the two arrow buttons, and as separate wrapping
+    // items the mark stood alone above the text and the count below it. The text and the count are one label beside the mark.
+    [Fact]
+    public async Task A_budget_heading_is_the_mark_beside_one_label_that_holds_the_text_and_the_count()
+    {
+        var html = await NewVisitor().PageAsync("/dip/tet");
+        Assert.Matches(@"<h3 class=""occ-tier__title"" id=""[^""]+""><span class=""occ-tier__mark"" aria-hidden=""true""></span><span class=""occ-tier__label"">Ngân sách 300\.000đ <span class=""occ-tier__count"">4 hộp</span></span></h3>", html);
+
+        var css = await File.ReadAllTextAsync(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "occasion.css"));
+        Assert.Matches(@"\.occ-tier__title\s*\{[^}]*display: flex;(?![^}]*flex-wrap)", css);
+        Assert.Contains(".occ-tier__count::before { content: '· '; }", css);
+    }
+
     [Fact]
     public async Task Without_a_box_the_button_is_a_form_and_the_page_asks_nothing()
     {
