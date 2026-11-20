@@ -354,9 +354,10 @@ function showToast(text: string): void {
   }, 3500);
 }
 
+// The toast shows what changed on one line and what is left on the next ("\n"); a screen reader hears the two as sentences.
 function announce(text: string): void {
   showToast(text);
-  say(text);
+  say(text.replace('\n', '. '));
 }
 
 // The status line that screen readers hear, without the toast.
@@ -402,21 +403,22 @@ function celebrate(place: Place, slug: string, before: number, now: number): voi
   }
 }
 
-// What changed, in words: "Đã thêm Trà sen · còn 320.000đ." The amount left is read from the new panel the server sent.
+// What changed, in words: "Đã thêm Trà sen" and, on the next line, "Còn lại 320.000đ". The amount left is read from the new
+// panel the server sent. Two lines, not one line with a dot between them: a dot can end up alone at the start of the second line.
 function message(name: string, before: number, asked: number, now: number): string {
   const left = document.querySelector('#hop-cua-ban .box-sums__row--left dd, #hop-cua-ban .box-sums__row--over dd')?.textContent?.trim() ?? '';
   const over = document.querySelector('#hop-cua-ban .box-sums__row--over') !== null;
-  const money = over ? `vượt ngân sách ${left}` : `còn ${left}`;
+  const money = over ? `Vượt ngân sách ${left}` : `Còn lại ${left}`;
   if (now !== asked) {
-    return `Không thêm được ${name} · ${money}.`;
+    return `Không thêm được ${name}\n${money}`;
   }
 
   if (now === 0) {
-    return `Đã bỏ ${name} khỏi hộp · ${money}.`;
+    return `Đã bỏ ${name} khỏi hộp\n${money}`;
   }
 
   const count = now > 1 ? ` (${now} trong hộp)` : '';
-  return now > before ? `Đã thêm ${name}${count} · ${money}.` : `Đã bớt ${name}${count} · ${money}.`;
+  return now > before ? `Đã thêm ${name}${count}\n${money}` : `Đã bớt ${name}${count}\n${money}`;
 }
 
 document.addEventListener('submit', (event) => {
@@ -489,7 +491,7 @@ document.addEventListener('change', (event) => {
         swapPanel(fresh);
         swap('.box-bar', fresh);
         const total = document.querySelector('#hop-cua-ban .box-sums__row--total dd')?.textContent?.trim() ?? '';
-        announce(`Đã chọn ${name}. Tổng cộng ${total}.`);
+        announce(`Đã chọn ${name}\nTổng cộng ${total}`);
       }
     } catch {
       // Send it the plain way: the server saves it and the reloaded page shows the choice.

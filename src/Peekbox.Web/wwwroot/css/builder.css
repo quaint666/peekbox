@@ -528,22 +528,26 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .box-bar__open .icon { width: 18px; height: 18px; }
 .box-bar__open ~ span { order: 3; flex-basis: 100%; }   /* "Còn lại …" under the button and the total */
 
-/* The toast after "Thêm", − or + (builder.ts): what changed and what is left, for a few seconds. */
+/* The toast after "Thêm", − or + (builder.ts): what changed and what is left, on two lines, for a few seconds. It follows the
+   theme: a white card on the light page, a dark card on the dark one, both with an edge and a shadow so it stands off the page. */
 .box-toast {
     position: fixed;
     inset: auto auto var(--space-5) 50%;   /* undoes the browser's centring of a popover */
     width: max-content;
     max-width: calc(100vw - 2 * var(--space-4));
     margin: 0;
-    border: 0;
     padding: var(--space-3) var(--space-5);
     transform: translateX(-50%);
-    border-radius: 999px;
-    background: var(--footer-bg);
-    color: var(--footer-brand);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    color: var(--color-text);
     box-shadow: var(--shadow-pop);
     font-size: var(--text-md);
+    line-height: 1.4;
     text-align: center;
+    white-space: pre-line;   /* the newline in the message starts the second line ("Còn lại …") */
+    text-wrap: balance;
 }
 @media (max-width: 899px) {
     .box-toast { bottom: calc(var(--space-6) * 5); }   /* above the phone's box bar and the sheet's button */
