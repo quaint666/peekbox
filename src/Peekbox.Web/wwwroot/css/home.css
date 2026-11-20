@@ -91,6 +91,9 @@
 .occasion--tet { --occasion-color: var(--accent-tet); --occasion-panel: var(--occasion-panel-tet); }
 .occasion--teachers { --occasion-color: var(--accent-teachers); --occasion-panel: var(--occasion-panel-teachers); }
 .occasion--women { --occasion-color: var(--accent-women); --occasion-panel: var(--occasion-panel-women); }
+.occasion--valentine { --occasion-color: var(--accent-valentine); --occasion-panel: var(--occasion-panel-valentine); }
+.occasion--midautumn { --occasion-color: var(--accent-midautumn); --occasion-panel: var(--occasion-panel-midautumn); }
+.occasion--christmas { --occasion-color: var(--accent-christmas); --occasion-panel: var(--occasion-panel-christmas); }
 
 /* Photo heights have no size token: plain numbers from the mockup (phone 220 for Tết, 180 for the others). */
 .occasion__photo { position: relative; flex: none; height: 180px; overflow: hidden; }

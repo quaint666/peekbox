@@ -1,10 +1,10 @@
 # Peekbox
 
-A web app for building a gift hamper for Tết, 20/11 (Teachers' Day) and 8/3 (Women's Day).
+A web app for building a gift hamper for Tết, Valentine, 8/3 (Women's Day), Trung thu (Mid-Autumn), 20/11 (Teachers' Day) and Giáng sinh (Christmas).
 
 The customer sets a budget first, then picks items. Every item shows its brand, weight, origin and expiry date, and the total is calculated by the server. An item that would expire before the delivery date cannot be ordered.
 
-**Status:** the design, written content and images are done. Built so far (milestones M0 to M3, plus the occasion pages and ready hampers brought forward from M5): home, the occasion pages with ready hampers, the builder with item pages, packaging and review, the cart, checkout with a real order in the database, the order page and order tracking. One ASP.NET Core MVC app with Razor views and PostgreSQL, in Vietnamese only, with the 83 sample items. Next: the content pages (M4). `docs/frontend-plan.md`, section 6, has the milestones.
+**Status:** the design, written content and images are done. Built so far (milestones M0 to M3, plus the occasion pages and ready hampers brought forward from M5): home, the occasion pages with ready hampers, the builder with item pages, packaging and review, the cart, checkout with a real order in the database, the order page and order tracking. One ASP.NET Core MVC app with Razor views and PostgreSQL, in Vietnamese only, with the 125 sample items. Next: the content pages (M4). `docs/frontend-plan.md`, section 6, has the milestones.
 
 ## Where to look
 
@@ -29,7 +29,7 @@ docker run -d --name peekbox-pg -p 127.0.0.1:5434:5432 -e POSTGRES_USER=peekbox 
 dotnet user-secrets set "ConnectionStrings:Default" "Host=localhost;Port=5434;Database=peekbox;Username=peekbox;Password=dev" --project src/Peekbox.Web   # once
 dotnet tool restore                                    # once: the EF Core command line tool
 (cd src/Peekbox.Web && npm install && npm run build)   # compiles the TypeScript to wwwroot/js
-dotnet ef database update --project src/Peekbox.Web    # creates the tables and the 83 sample items; again after a pull that changes the database
+dotnet ef database update --project src/Peekbox.Web    # creates the tables and the 125 sample items; again after a pull that changes the database (the seed fills only empty tables, so new sample content needs `dotnet ef database drop` first)
 # A database made before 2026-11-17 needs "dotnet ef database drop --project src/Peekbox.Web" once first: the migrations were squashed into one.
 dotnet test                                            # builds everything, then runs the checks
 dotnet run --project src/Peekbox.Web                   # starts the site; the address is printed

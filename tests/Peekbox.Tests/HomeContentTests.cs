@@ -15,7 +15,7 @@ public class HomeContentTests
     {
         Assert.Equal(3, Content.Promises.Count);
         Assert.Equal(4, Content.Steps.Count);
-        Assert.Equal(3, Content.Occasions.Count);
+        Assert.Equal(6, Content.Occasions.Count);
     }
 
     [Fact]

@@ -35,5 +35,8 @@ The Vietnamese text of the home page now lives in one place: `content/data/home.
 - **Tết:** Gift hampers for family, partners and colleagues at the start of the year.
 - **20/11:** Thank-you hampers for teachers, compact and easy to split across a class budget.
 - **8/3:** Hampers for mothers, wives, girlfriends and women colleagues.
+- **Valentine:** Sweet hampers for a partner, compact and with clear expiry dates.
+- **Trung thu:** Reunion hampers with mooncakes, tea and treats for the whole family.
+- **Giáng sinh:** Warm hampers for family, friends and colleagues at the end of the year.
 
 **Closing band:** Know what is in the hamper before you pay | Start building

@@ -47,7 +47,7 @@ Fedora then allows password logins on `localhost` only after one edit, or the co
 sudo -u postgres createuser --createdb --pwprompt peekbox   # you choose a password
 sudo -u postgres createdb --owner peekbox peekbox
 dotnet user-secrets set "ConnectionStrings:Default" "Host=localhost;Database=peekbox;Username=peekbox;Password=YOUR_PASSWORD" --project src/Peekbox.Web
-dotnet ef database update --project src/Peekbox.Web         # creates the tables and loads the 83 sample items
+dotnet ef database update --project src/Peekbox.Web         # creates the tables and loads the 125 sample items
 ```
 
 The password stays on your computer (user secrets) and never goes into a file of the project. With Docker you can replace the first two lines with one command that starts a ready server (use `Port=5434;Password=dev` in the connection string):

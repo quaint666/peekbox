@@ -1,6 +1,6 @@
 namespace Peekbox.Web.Data;
 
-// One occasion page (F15): Tết, 20/11, or 8/3 and 20/10 together. Seeded from content/data/hampers.json.
+// One occasion page (F15): Tết, Valentine, 8/3 and 20/10 together, Trung thu, 20/11 or Giáng sinh. Seeded from content/data/hampers.json.
 public class Occasion
 {
     // A short readable key, also the page's address: "tet" is /dip/tet.

@@ -27,16 +27,16 @@ public class BuilderRowsTests(PeekboxFixture fixture)
         var visitor = await SavedAsync("500000");
         var html = await visitor.PageAsync("/builder");
         Assert.Equal(["banh", "tra-ca-phe", "hat-trai-cay-say", "mut-keo", "mat-ong-dac-san", "socola", "suc-khoe", "dac-san-man", "nhu-yeu-pham-tet", "do-uong", "qua-khong-an"], Rows(html));
-        Assert.Contains("Hiện 81 món trong 11 danh mục.", html);
+        Assert.Contains("Hiện 123 món trong 11 danh mục.", html);
         Assert.DoesNotContain("<ul class=\"item-grid\">", html);
 
         // A row: its count, "Xem tất cả" and the end tile both open the category, the ← → for the script, the position.
         var banh = Regex.Match(html, @"<section class=""item-row"" id=""hang-banh""[\s\S]*?</section>").Value;
-        Assert.Contains("Bánh <span class=\"item-row__count\">8 món</span>", banh);
+        Assert.Contains("Bánh <span class=\"item-row__count\">17 món</span>", banh);
         Assert.Equal(2, Regex.Matches(banh, @"href=""/builder\?category=banh#chon-mon""").Count);
         Assert.Contains("Xem tất cả Bánh", banh);
         Assert.Contains("<div class=\"row-buttons\" hidden>", banh);
-        Assert.Equal(8, Regex.Matches(banh, @"<li class=""card item-card").Count);
+        Assert.Equal(17, Regex.Matches(banh, @"<li class=""card item-card").Count);
         Assert.Contains("id=\"vuot-hint\" hidden>Vuốt sang trái để xem thêm món trong mỗi danh mục</p>", html);
 
         foreach (var query in new[] { "?category=banh", "?q=tra", "?sort=price-asc" })
@@ -66,9 +66,9 @@ public class BuilderRowsTests(PeekboxFixture fixture)
     [Theory]
     [InlineData("500000", "", "500.000đ", new[] { "Hộp Sum Vầy", "Hộp Lộc Xuân", "Hộp Khỏe Xuân", "Hộp Ba Miền" })]
     [InlineData("650000", "", "500.000đ", new[] { "Hộp Sum Vầy", "Hộp Lộc Xuân", "Hộp Khỏe Xuân", "Hộp Ba Miền" })]
-    [InlineData("500000", "20-11", "500.000đ", new[] { "Hộp Bục Giảng", "Hộp Mùa Thu" })]
+    [InlineData("500000", "20-11", "500.000đ", new[] { "Hộp Bục Giảng", "Hộp Mùa Thu", "Hộp Phấn Trắng" })]
     // 20/11 stops at 2 triệu: 5 triệu shows its 2 triệu hampers.
-    [InlineData("5000000", "20-11", "2.000.000đ", new[] { "Hộp Trọn Năm" })]
+    [InlineData("5000000", "20-11", "2.000.000đ", new[] { "Hộp Trọn Năm", "Hộp Tri Ân Lớn", "Hộp Đưa Đò" })]
     public async Task Hop_goi_y_shows_one_occasions_hampers_at_the_highest_budget_that_fits(string budget, string dip, string upTo, string[] names)
     {
         var visitor = await SavedAsync(budget);

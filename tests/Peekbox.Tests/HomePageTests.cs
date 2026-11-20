@@ -43,12 +43,12 @@ public class HomePageTests(PeekboxFixture fixture)
         var html = await GetHomeAsync();
 
         var cards = Regex.Matches(html, @"<a class=""occasion occasion--(\w+)"" href=""([^""]+)"">([\s\S]*?)</a>").ToList();
-        Assert.Equal(["tet", "teachers", "women"], cards.Select(c => c.Groups[1].Value));
-        Assert.Equal(["/dip/tet", "/dip/20-11", "/dip/phu-nu"], cards.Select(c => c.Groups[2].Value));
+        Assert.Equal(["tet", "valentine", "women", "midautumn", "teachers", "christmas"], cards.Select(c => c.Groups[1].Value));
+        Assert.Equal(["/dip/tet", "/dip/valentine", "/dip/phu-nu", "/dip/trung-thu", "/dip/20-11", "/dip/giang-sinh"], cards.Select(c => c.Groups[2].Value));
 
         // Written out here on purpose: a test that read home.json would agree with a typo in it.
-        string[] buttons = ["Tạo hộp cho Tết", "Tạo hộp cho 20/11", "Tạo hộp cho 8/3"];
-        string[] photos = ["/images/occasions/tet.webp", "/images/occasions/20-11.webp", "/images/occasions/8-3.webp"];
+        string[] buttons = ["Tạo hộp cho Tết", "Tạo hộp cho Valentine", "Tạo hộp cho 8/3", "Tạo hộp cho Trung thu", "Tạo hộp cho 20/11", "Tạo hộp cho Giáng sinh"];
+        string[] photos = ["/images/occasions/tet.webp", "/images/occasions/valentine.webp", "/images/occasions/8-3.webp", "/images/occasions/trung-thu.webp", "/images/occasions/20-11.webp", "/images/occasions/giang-sinh.webp"];
         for (var i = 0; i < cards.Count; i++)
         {
             var card = cards[i].Groups[3].Value;

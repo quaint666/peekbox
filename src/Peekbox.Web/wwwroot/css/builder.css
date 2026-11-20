@@ -256,6 +256,9 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .suggest__chip--tet { --chip-fill: var(--accent-tet); }
 .suggest__chip--teachers { --chip-fill: var(--accent-teachers); }
 .suggest__chip--women { --chip-fill: var(--accent-women); }
+.suggest__chip--valentine { --chip-fill: var(--accent-valentine); }
+.suggest__chip--midautumn { --chip-fill: var(--accent-midautumn); }
+.suggest__chip--christmas { --chip-fill: var(--accent-christmas); }
 .suggest__chip[aria-current='true'] { border-color: var(--chip-fill); background: var(--chip-fill); color: var(--color-on-primary); }
 .suggest__text { font-size: var(--text-sm); }
 .suggest__text a { color: var(--color-primary-text); font-weight: 600; }
@@ -271,6 +274,9 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .suggest-card__who--tet { background: var(--occasion-soft-tet); }
 .suggest-card__who--teachers { background: var(--occasion-soft-teachers); }
 .suggest-card__who--women { background: var(--occasion-soft-women); }
+.suggest-card__who--valentine { background: var(--occasion-soft-valentine); }
+.suggest-card__who--midautumn { background: var(--occasion-soft-midautumn); }
+.suggest-card__who--christmas { background: var(--occasion-soft-christmas); }
 .suggest-card__name { margin: 0; font-size: var(--text-md); }
 .suggest-card__name a { color: inherit; text-decoration: none; }
 .suggest-card form { display: flex; align-self: stretch; margin-top: auto; }

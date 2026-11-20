@@ -24,8 +24,11 @@
   "occasions_subtitle": "Chọn một dịp để bắt đầu. Bạn vẫn tự chọn từng món và ngân sách.",
   "occasions": [
     { "id": "tet", "name": "Tết", "accent": "tet", "chip": "Mùa Tết 2027", "button": "Tạo hộp cho Tết", "image": "tet.webp", "text": "Hộp quà biếu gia đình, đối tác và đồng nghiệp dịp đầu năm." },
+    { "id": "valentine", "name": "Valentine", "accent": "valentine", "chip": "Ngày Valentine", "button": "Tạo hộp cho Valentine", "image": "valentine.webp", "text": "Hộp quà ngọt ngào cho người thương, gọn và có hạn dùng rõ ràng." },
+    { "id": "phu-nu", "name": "8/3", "accent": "women", "chip": "Ngày Quốc tế Phụ nữ", "button": "Tạo hộp cho 8/3", "image": "8-3.webp", "text": "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ." },
+    { "id": "trung-thu", "name": "Trung thu", "accent": "midautumn", "chip": "Tết Trung thu", "button": "Tạo hộp cho Trung thu", "image": "trung-thu.webp", "text": "Hộp quà đoàn viên: bánh, trà và món nhâm nhi cho cả nhà." },
     { "id": "20-11", "name": "20/11", "accent": "teachers", "chip": "Ngày Nhà giáo Việt Nam", "button": "Tạo hộp cho 20/11", "image": "20-11.webp", "text": "Hộp quà tri ân thầy cô, gọn và dễ chia theo ngân sách lớp." },
-    { "id": "phu-nu", "name": "8/3", "accent": "women", "chip": "Ngày Quốc tế Phụ nữ", "button": "Tạo hộp cho 8/3", "image": "8-3.webp", "text": "Hộp quà cho mẹ, vợ, bạn gái và đồng nghiệp nữ." }
+    { "id": "giang-sinh", "name": "Giáng sinh", "accent": "christmas", "chip": "Mùa Giáng sinh", "button": "Tạo hộp cho Giáng sinh", "image": "giang-sinh.webp", "text": "Hộp quà ấm áp cho gia đình, bạn bè và đồng nghiệp cuối năm." }
   ],
   "closing_text": "Biết rõ hộp quà chứa gì trước khi bạn trả tiền",
   "closing_button": "Bắt đầu tạo hộp"
