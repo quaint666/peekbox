@@ -100,17 +100,25 @@ public class OccasionPageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task Only_the_20_11_womens_and_Valentine_pages_link_to_Bloomy()
+    public async Task Every_occasion_page_links_to_Bloomy_with_its_own_label()
     {
         const string bloomy = "href=\"https://bloomy.quaintshomelabdomain.uk\"";
-        foreach (var occasion in new[] { "tet", "trung-thu", "giang-sinh" })
+        var labels = new Dictionary<string, string>
         {
-            Assert.DoesNotContain(bloomy, await NewVisitor().PageAsync("/dip/" + occasion));
+            ["tet"] = "Xem hoa Tết trên Bloomy",
+            ["valentine"] = "Xem hoa Valentine trên Bloomy",
+            ["phu-nu"] = "Xem hoa 8/3 và 20/10 trên Bloomy",
+            ["trung-thu"] = "Xem hoa Trung thu trên Bloomy",
+            ["20-11"] = "Xem hoa 20/11 trên Bloomy",
+            ["giang-sinh"] = "Xem hoa Giáng sinh trên Bloomy",
+        };
+        foreach (var (occasion, label) in labels)
+        {
+            var page = await NewVisitor().PageAsync("/dip/" + occasion);
+            Assert.Contains("Tặng kèm hoa?", page);
+            Assert.Contains(bloomy, page);
+            Assert.Contains(label, page);
         }
-
-        Assert.Contains(bloomy, await NewVisitor().PageAsync("/dip/20-11"));
-        Assert.Contains("Xem hoa 8/3 và 20/10 trên Bloomy", await NewVisitor().PageAsync("/dip/phu-nu"));
-        Assert.Contains("Xem hoa Valentine trên Bloomy", await NewVisitor().PageAsync("/dip/valentine"));
     }
 
     // Found on a 360 px phone (2026-11-20): the title shares its line with the two arrow buttons, and as separate wrapping

@@ -10,7 +10,7 @@
       "image": "/images/occasions/tet.webp",
       "lead": "Peekbox chọn sẵn vài hộp cho mỗi mức ngân sách. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp. Hạn dùng vẫn được kiểm tra theo ngày giao.",
       "banner": "đặt sớm để còn nhiều lựa chọn",
-      "bloomy_link": null
+      "bloomy_link": "Xem hoa Tết trên Bloomy"
     },
     {
       "id": "valentine",
@@ -43,7 +43,7 @@
       "image": "/images/occasions/trung-thu.webp",
       "lead": "Hộp quà đoàn viên: bánh, trà và món nhâm nhi cho cả nhà. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp. Bánh trung thu có hạn dùng ngắn, nên hạn dùng được kiểm tra theo ngày giao.",
       "banner": "bánh và trà cho đêm rằm, đặt sớm để kịp ngày giao",
-      "bloomy_link": null
+      "bloomy_link": "Xem hoa Trung thu trên Bloomy"
     },
     {
       "id": "20-11",
@@ -65,7 +65,7 @@
       "image": "/images/occasions/giang-sinh.webp",
       "lead": "Hộp quà ấm áp cho gia đình, bạn bè và đồng nghiệp cuối năm. Dùng một hộp làm điểm bắt đầu, rồi đổi từng món trong trình tạo hộp.",
       "banner": "chọn hộp quà ấm áp và đặt sớm để kịp ngày 25/12",
-      "bloomy_link": null
+      "bloomy_link": "Xem hoa Giáng sinh trên Bloomy"
     }
   ],
   "hampers": [
