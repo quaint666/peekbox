@@ -44,6 +44,7 @@ public static class Icons
         // The review page's summary sheet on a phone (mockup 29): "Xem tổng kết" and "Thu gọn".
         ["chevron-up"] = "M6 15l6-6 6 6",
         ["chevron-down"] = "M6 9l6 6 6-6",
+        ["chevron-right"] = "M9 6l6 6-6 6",
         // "Danh mục" on the builder: four tiles.
         ["grid"] = "M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h6v6h-6z",
         // A link that leaves the site (Bloomy, on the occasion pages).

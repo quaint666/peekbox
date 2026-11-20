@@ -10,11 +10,10 @@
     margin: 0;
 }
 
-/* Hero (decision 2026-11-20). The photo is the background and fades into the page colour, so the text is always dark on
-   the page colour (dark mode: light on its own page colour). The fade is a mask on the photo itself, so the page colour
-   shows through and there is no extra layer. On a phone the photo is the top of the section and the text starts over its
-   lower part; from 900px the photo is the right side and the fade runs from the left. The photo's size is fixed by the
-   rules here, so the width and height attributes only reserve the space. */
+/* Hero (decision 2026-11-20, replaced the same day). The photo fills the section and is left clear: the text sits on a solid
+   card over it, so it is always on the card colour and no gradient or mask is needed. On a phone the photo is the top and
+   the card overlaps its lower part; from 900px the photo fills the section and the card sits at the left. The photo's size
+   is fixed by the rules here, so the width and height attributes only reserve the space. */
 .hero {
     position: relative;
     overflow: hidden;
@@ -24,13 +23,18 @@
     position: absolute;
     inset: 0 0 auto 0;
     width: 100%;
-    height: 420px;
+    height: 340px;
     object-fit: cover;
-    object-position: 58% 0;
-    -webkit-mask-image: linear-gradient(0deg, transparent 0%, transparent 8%, color-mix(in srgb, black 40%, transparent) 30%, black 62%);
-    mask-image: linear-gradient(0deg, transparent 0%, transparent 8%, color-mix(in srgb, black 40%, transparent) 30%, black 62%);
+    object-position: 62% 50%;
 }
-.hero__inner { position: relative; padding-top: 300px; padding-bottom: var(--space-6); }   /* after the photo in the page, so it paints over it */
+.hero__inner { position: relative; padding-top: 230px; padding-bottom: var(--space-6); }   /* after the photo in the page, so it paints over it */
+.hero__copy {
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border-top: var(--space-1) solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-pop);
+}
 .hero__badge { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 14px; font-size: var(--text-xs); line-height: 1.2; }  /* 6px, 14px, 13px and 1.2: from the mockup */
 .hero__dot { width: var(--space-2); height: var(--space-2); border-radius: 50%; flex: none; }
 /* The card colours: the accent in the light theme, the lighter ink in the dark one, so the dots stay visible in both. */
@@ -186,16 +190,9 @@
 
 @media (min-width: 900px) {
     .hero { min-height: 600px; display: flex; align-items: center; }
-    .hero__image {
-        inset: 0 0 0 26%;
-        width: 74%;
-        height: 100%;
-        object-position: 60% 50%;
-        -webkit-mask-image: linear-gradient(90deg, transparent 0%, color-mix(in srgb, black 8%, transparent) 34%, color-mix(in srgb, black 55%, transparent) 56%, black 80%);
-        mask-image: linear-gradient(90deg, transparent 0%, color-mix(in srgb, black 8%, transparent) 34%, color-mix(in srgb, black 55%, transparent) 56%, black 80%);
-    }
+    .hero__image { inset: 0; height: 100%; object-position: 72% 50%; }
     .hero__inner { padding-block: calc(var(--space-6) + var(--space-3)); }
-    .hero__copy { max-width: 600px; }
+    .hero__copy { max-width: 600px; padding: var(--space-6); }
     .hero__title { font-size: clamp(var(--text-3xl), 4vw, var(--text-hero)); }
     .hero__lead { font-size: var(--text-lg); }
     .hero__actions { flex-direction: row; }
@@ -220,4 +217,10 @@
     .cta { padding-block: calc(var(--space-6) + var(--space-4)); }
     .cta__inner { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-5); }
     .cta__text { font-size: var(--text-2xl); line-height: 1.3; }
+}
+
+/* The hero photo fades in once, for visitors who have not asked for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes hero-photo-in { from { opacity: 0; } }
+    .hero__image { animation: hero-photo-in 450ms ease-out; }
 }

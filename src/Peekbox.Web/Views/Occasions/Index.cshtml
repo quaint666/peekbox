@@ -17,24 +17,36 @@
 
 @* An occasion page (F15; mockups 13 to 15, states 31 and 32). The colours come from the accent key (occasion.css). *@
 <div class="occ occ--@occasion.Accent">
+    @* A slim bar (where you are, and a menu of the other occasions), then the photo in a frame with the chip and the title on it, then the paragraph and the button below. The photo carries the accent as a light tint and a short soft shade under the title; the paragraph is never on the photo. *@
+    <div class="occ-bar">
+        <div class="container occ-bar__inner">
+            <nav class="occ-crumbs" aria-label="Vị trí"><a href="@SiteLinks.Home.Href">@SiteLinks.Home.Label</a><partial name="_Icon" model='"chevron-right"' /><span aria-current="page">@occasion.Name</span></nav>
+            <details class="occ-switch" data-switch>
+                <summary class="occ-switch__btn">Dịp khác<partial name="_Icon" model='"chevron-down"' /></summary>
+                <ul class="occ-switch__menu">
+                    @foreach (var other in Model.Others)
+                    {
+                        <li><a href="@SiteLinks.Occasion(other.Id)"><span class="occ-dot occ-dot--@other.Accent" aria-hidden="true"></span>@other.Name</a></li>
+                    }
+                </ul>
+            </details>
+        </div>
+    </div>
+
     <section class="occ-hero">
         <div class="container occ-hero__inner">
-            <div class="occ-hero__text">
-                <nav class="occ-hero__crumbs" aria-label="Vị trí"><a href="@SiteLinks.Home.Href">@SiteLinks.Home.Label</a> / @occasion.Name</nav>
-                <p class="occ-hero__chip">@occasion.Chip</p>
-                <h1 class="occ-hero__title">@occasion.Title</h1>
-                <p class="occ-hero__lead">@occasion.Lead</p>
-                <div class="occ-hero__actions">
-                    <a class="btn btn--lg occ-hero__start" href="@SiteLinks.Builder.Href">Tự tạo hộp từ đầu<partial name="_Icon" model='"arrow"' /></a>
-                    <span class="occ-hero__others">Dịp khác:
-                        @foreach (var other in Model.Others)
-                        {
-                            <a href="@SiteLinks.Occasion(other.Id)">@other.Name</a>
-                        }
-                    </span>
+            <div class="occ-frame">
+                <img class="occ-hero__photo" src="@occasion.ImagePath" alt="" width="1264" height="848">
+                <span class="occ-frame__shade" aria-hidden="true"></span>
+                <div class="occ-frame__text">
+                    <p class="occ-hero__chip">@occasion.Chip</p>
+                    <h1 class="occ-hero__title">@occasion.Title</h1>
                 </div>
             </div>
-            <img class="occ-hero__photo" src="@occasion.ImagePath" alt="" width="1264" height="848">
+            <div class="occ-intro">
+                <p class="occ-hero__lead">@occasion.Lead</p>
+                <a class="btn btn--primary btn--lg occ-hero__start" href="@SiteLinks.Builder.Href">Tự tạo hộp từ đầu<partial name="_Icon" model='"arrow"' /></a>
+            </div>
         </div>
     </section>
 

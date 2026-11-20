@@ -47,6 +47,29 @@ public class OccasionPageTests(PeekboxFixture fixture)
         }
     }
 
+    // The slim bar: where you are, and a menu of the other five occasions (not this one), in the order of the home cards, each
+    // with its colour dot. The paragraph and the button are below the photo, not in its frame.
+    [Fact]
+    public async Task The_slim_bar_has_the_crumb_and_a_menu_of_the_other_five_occasions_and_the_paragraph_is_below_the_photo()
+    {
+        var html = await NewVisitor().PageAsync("/dip/trung-thu");
+
+        var bar = Regex.Match(html, @"<div class=""occ-bar"">[\s\S]*?</details>").Value;
+        Assert.Contains("<a href=\"/\">Trang chủ</a>", bar);
+        Assert.Contains("<span aria-current=\"page\">Trung thu</span>", bar);
+        var menu = Regex.Matches(bar, @"<a href=""(/dip/[^""]+)""><span class=""occ-dot occ-dot--(\w+)""").Select(m => (m.Groups[1].Value, m.Groups[2].Value));
+        Assert.Equal(
+            [("/dip/tet", "tet"), ("/dip/valentine", "valentine"), ("/dip/phu-nu", "women"), ("/dip/20-11", "teachers"), ("/dip/giang-sinh", "christmas")],
+            menu);
+
+        var frame = Regex.Match(html, @"<div class=""occ-frame"">[\s\S]*?</div>\s*</div>").Value;
+        Assert.Contains("occ-hero__title", frame);
+        Assert.Contains("occ-hero__chip", frame);
+        Assert.DoesNotContain("occ-hero__lead", frame);
+        Assert.Contains("<p class=\"occ-hero__lead\">", html);
+        Assert.DoesNotContain("style=", html);
+    }
+
     // No repeated id, no reference to a missing id, every picture and form address real (the builder's checker).
     [Fact]
     public async Task Every_occasion_page_is_well_formed_with_and_without_a_box()
