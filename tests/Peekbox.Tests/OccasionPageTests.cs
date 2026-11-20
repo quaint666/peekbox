@@ -131,7 +131,55 @@ public class OccasionPageTests(PeekboxFixture fixture)
     {
         var html = await NewVisitor().PageAsync("/dip/tet");
         Assert.DoesNotContain("Thay hộp hiện tại?", html);
-        Assert.Matches(@"<form method=""post"" action=""/dip/dung-hop""> <input type=""hidden"" name=""slug"" value=""an-khang"">", html);
+        var form = Regex.Match(html, @"<form method=""post"" action=""/dip/dung-hop"">[\s\S]*?</form>").Value;
+        Assert.Contains("<input type=\"hidden\" name=\"slug\" value=\"an-khang\">", form);
+        // The token is in the card's own form: without it a browser gets a blank 400 page (every POST needs it).
+        Assert.Contains("name=\"__RequestVerificationToken\"", form);
+    }
+
+    [Fact]
+    public async Task The_button_works_with_the_token_from_its_own_page_and_the_builder_says_what_was_added_once()
+    {
+        var visitor = NewVisitor();
+        Assert.Equal(HttpStatusCode.Redirect, (await visitor.PostAsync("/builder", new() { ["budget"] = "500000", ["deliveryDate"] = Iso(TestDates.Delivery) })).StatusCode);
+        // The token comes from the occasion page, as in a browser.
+        await visitor.PageAsync("/dip/tet");
+        var response = await visitor.PostAsync("/dip/dung-hop", new() { ["slug"] = "sum-vay", ["from"] = "tet" });
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.Equal("/builder#chon-mon", response.Headers.Location?.OriginalString);
+
+        var count = (await HamperAsync(Token(response))).Items.Sum(l => l.Quantity);
+        var first = await visitor.PageAsync("/builder");
+        Assert.Contains($"Đã thêm {count} món từ hộp “Hộp Sum Vầy”.", first);
+        Assert.Contains("Bạn có thể sửa tiếp bên dưới.", first);
+        Assert.DoesNotContain("deliveryDate\" autofocus", first);
+        // Shown once: a second visit to the builder does not repeat it.
+        Assert.DoesNotContain("Đã thêm", await visitor.PageAsync("/builder"));
+    }
+
+    [Fact]
+    public async Task With_no_delivery_date_saved_the_notice_names_the_budget_taken_and_asks_for_the_date()
+    {
+        var visitor = NewVisitor();
+        var response = await visitor.PostAsync("/dip/dung-hop", new() { ["slug"] = "sum-vay", ["from"] = "tet" });
+        Assert.Equal("/builder", response.Headers.Location?.OriginalString);
+
+        var count = (await HamperAsync(Token(response))).Items.Sum(l => l.Quantity);
+        var html = await visitor.PageAsync("/builder");
+        Assert.Contains($"Đã thêm {count} món từ hộp “Hộp Sum Vầy”.", html);
+        // The budget came from the hamper; the date is what is missing, and its field has the cursor.
+        Assert.Contains("Ngân sách lấy từ hộp: 500.000đ. Chọn ngày giao hàng rồi bấm Lưu để xem và sửa các món.", html);
+        Assert.Matches(@"<input class=""input"" id=""delivery-date"" name=""deliveryDate"" autofocus", html);
+    }
+
+    [Fact]
+    public async Task A_hamper_that_was_not_used_leaves_no_notice_on_the_builder()
+    {
+        var visitor = await VisitorWithBoxAsync("300000");
+        Assert.DoesNotContain("Đã thêm", await visitor.PageAsync("/builder"));
+        // Left alone (the question is still to be answered), so nothing was added either.
+        await visitor.PostAsync("/dip/dung-hop", new() { ["slug"] = "sum-vay", ["from"] = "tet" });
+        Assert.DoesNotContain("Đã thêm", await visitor.PageAsync("/builder"));
     }
 
     [Fact]

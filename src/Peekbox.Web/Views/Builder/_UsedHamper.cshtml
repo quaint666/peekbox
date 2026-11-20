@@ -1,0 +1,8 @@
+@model UsedHamper
+@* After "Dùng hộp này" (F15): says what went into the box. Shown once. Rendered at the start of step 2 when the items are
+   open (the page opens there). When they are not (no delivery date yet), the caller gives ViewData["Budget"], the budget
+   taken from the hamper, and the note says that the date is what is missing. *@
+<p class="alert alert--success used-hamper" role="status">
+    <partial name="_Icon" model='"check-circle"' />
+    <span><strong>Đã thêm @Model.Count món từ hộp “@Model.Name”.</strong> @(ViewData["Budget"] is string budget ? $"Ngân sách lấy từ hộp: {budget}. Chọn ngày giao hàng rồi bấm Lưu để xem và sửa các món." : "Bạn có thể sửa tiếp bên dưới.")</span>
+</p>

@@ -25,7 +25,7 @@
         </p>
         <div class="confirm__actions">
             <button type="button" class="btn btn--outline" popovertarget="@Anchors.HamperReplace(card.Slug)" popovertargetaction="hide" autofocus>Giữ hộp của tôi</button>
-            <form method="post" action="@SiteLinks.UseHamperPath">
+            <form method="post" action="@SiteLinks.UseHamperPath" asp-antiforgery="true">
                 <input type="hidden" name="slug" value="@card.Slug">
                 <input type="hidden" name="from" value="@Model.From">
                 @if (Model.Detail)

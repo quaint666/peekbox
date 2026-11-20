@@ -21,10 +21,11 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     public async Task<IActionResult> Index(string? category, string? q, string? sort, string? chon, string? dip, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
     {
         var picked = BudgetTiers.All.Cast<long?>().FirstOrDefault(t => t.ToString() == chon);
+        var used = TempData[OccasionsController.UsedHamperKey] is string json ? System.Text.Json.JsonSerializer.Deserialize<UsedHamper>(json) : null;
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is null)
         {
-            return View(new BuilderViewModel { BudgetText = picked is { } p ? Vnd.Format(p) : "", PickedBudgetVnd = picked });
+            return View(new BuilderViewModel { BudgetText = picked is { } p ? Vnd.Format(p) : "", PickedBudgetVnd = picked, UsedHamper = used });
         }
 
         var model = await WithItemsAsync(hamper, new BuilderViewModel
@@ -36,6 +37,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             // The cookie lasts 180 days, so a date saved earlier can be today or in the past by now. It shows the same
             // warning as typing such a date, and the items stay locked until a new date is saved (decision 2026-11-16).
             DateProblem = hamper.DeliveryDate < limits.Earliest ? DateProblem.TooEarly : DateProblem.None,
+            UsedHamper = used,
         }, new ItemFilter(category, inDate, q, sort, fit), cancellationToken);
         return View(model.Box is null ? model : model with { Suggestions = await SuggestionsAsync(model.Box.BudgetVnd, dip, cancellationToken) });
     }

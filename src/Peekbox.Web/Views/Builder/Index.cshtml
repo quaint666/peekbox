@@ -92,7 +92,7 @@
 
             <div class="field budget-card__date">
                 <label class="field__label" for="delivery-date">Ngày giao hàng</label>
-                <input class="input" id="delivery-date" name="deliveryDate" type="date" value="@Model.DeliveryDateText" aria-invalid="@(dateError is null ? null : "true")" aria-describedby="@(dateError is null ? null : "delivery-date-error")">
+                <input class="input" id="delivery-date" name="deliveryDate" autofocus="@(Model.UsedHamper is not null && Model.Items is null)" type="date" value="@Model.DeliveryDateText" aria-invalid="@(dateError is null ? null : "true")" aria-describedby="@(dateError is null ? null : "delivery-date-error")">
                 @if (dateError is not null)
                 {
                     <p class="field__error" id="delivery-date-error">@dateError</p>
@@ -123,6 +123,10 @@
 
     @if (items is null)
     {
+        @if (Model.UsedHamper is { } usedLocked)
+        {
+            <partial name="_UsedHamper" model="usedLocked" view-data='new ViewDataDictionary(ViewData) { ["Budget"] = Vnd.Format(Model.SavedBudgetVnd ?? 0) }' />
+        }
         <p class="lock-note"><partial name="_Icon" model='"lock"' /><span>Nhập ngân sách và ngày giao hàng rồi bấm <strong>Lưu</strong> để mở bước chọn món và đóng gói. Chúng tôi cần ngày giao để ẩn những món sắp hết hạn.</span></p>
     }
     else
@@ -152,6 +156,10 @@
         <div class="builder-main">
         <section class="items" id="@Anchors.Items" aria-labelledby="items-title">
             <h2 class="visually-hidden" id="items-title">Chọn món</h2>
+            @if (Model.UsedHamper is { } used)
+            {
+                <partial name="_UsedHamper" model="used" />
+            }
 
             @if (Model.Suggestions is { } suggestions)
             {
