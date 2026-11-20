@@ -61,7 +61,7 @@ public sealed class ReadyHampers(PeekboxDbContext db)
     {
         var lines = h.Items.OrderBy(l => l.ProductId).Select(l => new ReadyHamperLine(
             l.Product!.Slug, l.Product.Name, l.Product.Brand, l.Product.WeightGrams, l.Product.Origin, l.Product.ExpiryDate,
-            l.Product.PriceVnd, l.Quantity, l.Product.Stock)).ToList();
+            l.Product.PriceVnd, l.Quantity, l.Product.Stock, l.Product.ImagePath)).ToList();
         var items = lines.ToDictionary(l => l.Slug, l => new PricedItem(l.Slug, l.PriceVnd, l.ExpiryDate, l.Stock));
         var packaging = h.Packaging!;
         var quote = Pricing.Quote(h.BudgetVnd, lines.Select(l => new HamperLine(l.Slug, l.Quantity)).ToList(), items, packaging.FeeVnd);
@@ -85,9 +85,9 @@ public sealed record OccasionPage(Occasion Occasion, IReadOnlyList<BudgetGroup> 
 
 public sealed record BudgetGroup(long BudgetVnd, IReadOnlyList<ReadyHamperCard> Hampers);
 
-// One item of a ready hamper, with what "Xem từng món" shows.
+// One item of a ready hamper, with what the hamper's own page shows for it.
 public sealed record ReadyHamperLine(
-    string Slug, string Name, string Brand, int WeightGrams, string Origin, DateOnly? ExpiryDate, long PriceVnd, int Quantity, int Stock);
+    string Slug, string Name, string Brand, int WeightGrams, string Origin, DateOnly? ExpiryDate, long PriceVnd, int Quantity, int Stock, string ImagePath);
 
 // A ready hamper with its money worked out. Quote.TotalVnd is the price on the card: the goods and the packaging.
 public sealed record ReadyHamperCard(

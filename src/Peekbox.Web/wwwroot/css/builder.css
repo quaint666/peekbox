@@ -279,6 +279,24 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .suggest-card__who--christmas { background: var(--occasion-soft-christmas); }
 .suggest-card__name { margin: 0; font-size: var(--text-md); }
 .suggest-card__name a { color: inherit; text-decoration: none; }
+/* The whole card is one link, as on the occasion page: the name's ::after covers it and the buttons paint above. */
+.suggest-card { position: relative; }
+.suggest-card__media { position: relative; overflow: hidden; }
+.suggest-card__name a::after { content: ''; position: absolute; inset: 0; }
+.suggest-card__name a:focus-visible { outline: none; }
+.suggest-card:has(.suggest-card__name a:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.suggest-card form, .suggest-card .hamper__sold, .suggest-card .hamper__use { position: relative; }
+@media (hover: hover) {
+    .suggest-card:hover .suggest-card__name a { text-decoration: underline; }
+    .suggest-card:hover .card-go { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .suggest-card { transition: transform 150ms ease-out; }
+    .suggest-card:hover { transform: translateY(-2px); }
+    .suggest-card__photo { transition: transform 200ms ease-out; }
+    .suggest-card:hover .suggest-card__photo { transform: scale(1.04); }
+    .card-go { transition: background-color 150ms ease-out, color 150ms ease-out; }
+}
 .suggest-card form { display: flex; align-self: stretch; margin-top: auto; }
 .suggest-card .hamper__use { width: 100%; margin-top: var(--space-2); }
 /* Outlined here, as drawn: the main button of the page is "Tiếp tục" in the box panel. */

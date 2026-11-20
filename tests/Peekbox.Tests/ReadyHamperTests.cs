@@ -183,7 +183,7 @@ public class ReadyHamperTests(PeekboxFixture fixture)
     [Fact]
     public void A_hamper_of_items_with_no_expiry_date_has_no_earliest_expiry()
     {
-        ReadyHamperLine Line(string slug) => new(slug, slug, "", 100, "", null, 1_000, 1, 10);
+        ReadyHamperLine Line(string slug) => new(slug, slug, "", 100, "", null, 1_000, 1, 10, "");
         var card = new ReadyHamperCard("x", "x", "", 300_000, "", new PackagingOption("kraft", "", "", 0, ""),
             [Line("nen-thom"), Line("thiep")], new Quote(2_000, 0, 2_000, 298_000, false, []), []);
         Assert.Null(card.EarliestExpiry);

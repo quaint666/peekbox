@@ -10,6 +10,6 @@ public sealed record OccasionViewModel(OccasionPage Page, IReadOnlyList<Occasion
 }
 
 // One hamper's "Dùng hộp này" control: the card, where the visitor comes back to (an occasion id, or "builder" for the
-// builder's "Hộp gợi ý"), the visitor's box (null or empty: no question), and which copy of the control this is on the
-// page (its ids must differ).
-public sealed record UseHamperControl(ReadyHamperCard Card, string From, Box? Box, string Place);
+// builder's "Hộp gợi ý"), the visitor's box (null or empty: no question), which copy of the control this is on the
+// page (its ids must differ), and whether it is on the hamper's own page (a refusal then comes back there, not to the card).
+public sealed record UseHamperControl(ReadyHamperCard Card, string From, Box? Box, string Place, bool Detail = false);

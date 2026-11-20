@@ -82,43 +82,19 @@
                         var card = group.Hampers[i];
                         var earliest = card.EarliestExpiry;
                         <li class="hamper" id="@Anchors.HamperCard(card.Slug)" aria-label="@card.Name, @(i + 1) / @group.Hampers.Count">
-                            <img class="hamper__photo" src="@card.ImagePath" alt="" width="570" height="380" loading="lazy">
+                            @* The whole card opens the hamper's page: the name is the one link and stretches over the card (occasion.css); the buttons sit above it. *@
+                            <div class="hamper__media">
+                                <img class="hamper__photo" src="@card.ImagePath" alt="" width="570" height="380" loading="lazy">
+                                <span class="card-go" aria-hidden="true"><partial name="_Icon" model='"arrow"' /></span>
+                            </div>
                             <div class="hamper__body">
                                 <span class="hamper__who">@card.ForWhom</span>
-                                <h4 class="hamper__name">@card.Name</h4>
+                                <h4 class="hamper__name"><a class="hamper__link" href="@SiteLinks.Hamper(card.Slug, occasion.Id)">@card.Name</a></h4>
                                 <p class="meta">@card.Count món · @card.Packaging.Name</p>
                                 <p class="hamper__items">@string.Join(", ", card.Lines.Select(l => l.Quantity > 1 ? $"{l.Name} × {l.Quantity}" : l.Name))</p>
                                 <p class="hamper__expiry">@(earliest is { ExpiryDate: { } date } ? $"Hạn sớm nhất: {VnDate.Month(date)} ({earliest.Name})" : VnDate.NoExpiry)</p>
                                 <p class="hamper__total"><span>Tổng (đã gồm thuế)</span><strong>@Vnd.Format(card.Quote.TotalVnd)</strong></p>
                                 <partial name="_UseHamper" model='new UseHamperControl(card, occasion.Id, Model.Box, "card")' />
-                                <button type="button" class="hamper__more" popovertarget="@Anchors.HamperItems(card.Slug)">Xem từng món</button>
-                            </div>
-
-                            <div class="confirm hamper-items" id="@Anchors.HamperItems(card.Slug)" popover role="dialog" aria-labelledby="@Anchors.HamperItems(card.Slug)-ten">
-                                <div class="hamper-items__head">
-                                    <div>
-                                        <p class="meta">@card.ForWhom · @card.Count món</p>
-                                        <h2 class="hamper-items__title" id="@Anchors.HamperItems(card.Slug)-ten">@card.Name</h2>
-                                    </div>
-                                    <button type="button" class="icon-btn" popovertarget="@Anchors.HamperItems(card.Slug)" popovertargetaction="hide" aria-label="Đóng"><partial name="_Icon" model='"close"' /></button>
-                                </div>
-                                <ul class="hamper-items__list">
-                                    @foreach (var line in card.Lines)
-                                    {
-                                        <li class="hamper-items__line">
-                                            <div>
-                                                <strong>@line.Name@(line.Quantity > 1 ? $" × {line.Quantity}" : "")</strong>
-                                                <p class="meta">@line.Brand · @line.WeightGrams g · Xuất xứ: @line.Origin</p>
-                                                <span class="badge@(line.ExpiryDate is null ? " badge--muted" : "")">@VnDate.Expiry(line.ExpiryDate)</span>
-                                            </div>
-                                            <span>@Vnd.Format(line.PriceVnd * line.Quantity)</span>
-                                        </li>
-                                    }
-                                </ul>
-                                <p class="hamper-items__sum meta"><span>Đóng gói: @card.Packaging.Name</span><span>@Vnd.Format(card.Packaging.FeeVnd)</span></p>
-                                <p class="hamper__total"><span>Tổng (đã gồm thuế)</span><strong>@Vnd.Format(card.Quote.TotalVnd)</strong></p>
-                                <p class="meta">Hạn dùng được kiểm tra theo ngày giao khi các món vào hộp của bạn. Món không có hạn dùng (như nến thơm) không cần kiểm tra.</p>
-                                <partial name="_UseHamper" model='new UseHamperControl(card, occasion.Id, Model.Box, "list")' />
                             </div>
 
                             <partial name="_ReplaceHamper" model='new UseHamperControl(card, occasion.Id, Model.Box, "ask")' />

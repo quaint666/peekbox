@@ -28,6 +28,7 @@ public class RoutesTests(PeekboxFixture fixture)
             "/dip/dung-hop POST",
             "/dip/{id} GET,HEAD",
         "/error any",
+        "/hop/{slug} GET,HEAD",
         "/items/{slug} GET,HEAD",
         "/orders/{token} GET,HEAD",
         "/track GET,HEAD",

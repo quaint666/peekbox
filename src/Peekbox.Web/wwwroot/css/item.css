@@ -2,11 +2,6 @@
    meter come from builder.css, which the page also loads. Sizes in px without a token are from the mockup. */
 .item-page { display: flex; flex-direction: column; gap: 20px; }
 
-.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0; padding: 0; font-size: var(--text-sm); color: var(--color-muted); }
-.breadcrumb li { display: flex; align-items: center; gap: var(--space-2); }
-.breadcrumb li + li::before { content: '/'; }
-.breadcrumb a { display: inline-flex; align-items: center; min-height: var(--tap-min); }
-.breadcrumb [aria-current='page'] { color: var(--color-text); font-weight: 600; }
 
 .item-main { display: flex; flex-direction: column; gap: var(--space-5); }
 .item-photo { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-lg); background: var(--color-border-soft); }

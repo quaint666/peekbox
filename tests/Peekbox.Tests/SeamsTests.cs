@@ -58,15 +58,16 @@ public class SeamsTests
         Assert.Matches(@"addEventListener\('pageshow',\s*\(event\)\s*=>\s*\{\s*if \(event\.persisted\)\s*\{\s*window\.location\.reload\(\);", code);
     }
 
-    // Found in WebKit and then in Chromium: after "Thêm" in the background the header still said "Giỏ hàng (0)".
-    // Everything on the builder that shows the hamper is swapped in from the server's page.
+    // Found in WebKit and then in Chromium: after "Thêm" in the background the header still said "Giỏ hàng (0)", and (2026-11-20)
+    // the step strip stayed on step 2 after the first item. Everything on the builder that shows the hamper is swapped in from
+    // the server's page.
     [Fact]
     public void The_builder_swaps_the_header_count_after_a_background_add()
     {
         var code = Read(Path.Combine(RepoRoot.WebProject, "Scripts", "builder.ts"));
         var applyPage = Regex.Match(code, @"function applyPage\(fresh: Document\): void \{([\s\S]*?)\n\}").Groups[1].Value;
 
-        foreach (var part in new[] { "'.box-bar'", "'.cart-link'", "'#packaging-lock'", "'#dong-goi'" })
+        foreach (var part in new[] { "'.box-bar'", "'.builder-steps'", "'.cart-link'", "'#packaging-lock'", "'#dong-goi'" })
         {
             Assert.Contains($"swap({part}, fresh", applyPage);
         }
