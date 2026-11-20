@@ -9,7 +9,7 @@ namespace Peekbox.Web.Controllers;
 // Checkout (F41 to F48) and the sold-out notice (F50). A box that cannot be ordered (none, empty, a passed date, an item
 // out of date) goes back to the cart, which says why. Placing is OrderService's job; this controller reads the form,
 // checks it, and sends the visitor on (post, then redirect).
-public class CheckoutController(HamperService hampers, OrderService orders, BuilderLimits limits, RateLimits rateLimits) : Controller
+public class CheckoutController(HamperService hampers, OrderService orders, BuilderLimits limits, RateLimits rateLimits, DemoMode demo) : Controller
 {
     private const string SoldOutKey = "soldOut";
 
@@ -18,6 +18,11 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
     [HttpHead(SiteLinks.CheckoutPath)]
     public async Task<IActionResult> Index(int? ward, CancellationToken cancellationToken)
     {
+        if (demo.Enabled)
+        {
+            return DemoPage();
+        }
+
         var box = await ReadyBoxAsync(cancellationToken);
         if (box is null)
         {
@@ -32,6 +37,11 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
     [HttpPost(SiteLinks.CheckoutPath)]
     public async Task<IActionResult> Index(CheckoutForm form, CancellationToken cancellationToken)
     {
+        if (demo.Enabled)
+        {
+            return DemoPage();
+        }
+
         if (!ModelState.IsValid)
         {
             return BadRequest();
@@ -90,6 +100,13 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
         var box = hamper is null ? null : await hampers.BoxAsync(hamper, cancellationToken);
         ViewData["NoIndex"] = true;
         return View(new SoldOutViewModel(lines, box is { Lines.Count: > 0 } ? box : null));
+    }
+
+    // Demo mode: the same notice for the page and for a form that was sent anyway; nothing is read or written.
+    private ViewResult DemoPage()
+    {
+        ViewData["NoIndex"] = true;
+        return View("Demo");
     }
 
     // The visitor's box when it can be ordered, else null (the same rules as the cart's "Tiếp tục thanh toán").

@@ -6,7 +6,7 @@ namespace Peekbox.Web.Services;
 // window of 15 minutes, counts from appsettings.json ("RateLimits"). It is the framework's own limiter
 // (System.Threading.RateLimiting), asked by the controller rather than run as middleware, so that a refused request
 // still gets the page with a Vietnamese message (the "Bạn đã thử quá nhiều lần" state) instead of a bare 429.
-// Behind a proxy every visitor has the proxy's address until forwarded headers are set up (not done yet).
+// Behind a proxy the address is the visitor's only when ForwardedHeaders:Hops is set (Program.cs); without it every visitor has the proxy's address.
 public sealed class RateLimits : IDisposable
 {
     public static readonly TimeSpan Window = TimeSpan.FromMinutes(15);

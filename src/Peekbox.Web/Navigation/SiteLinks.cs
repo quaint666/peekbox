@@ -13,6 +13,9 @@ public static class SiteLinks
     public const string CartPath = "/cart";
     public const string TrackPath = "/track";
 
+    // The health check (Program.cs): not a page, so no link or route test lists it.
+    public const string HealthPath = "/healthz";
+
     // The page shown after an unexpected error. Only the exception handler opens it; a direct visit is a 404.
     public const string ErrorPath = "/error";
 
