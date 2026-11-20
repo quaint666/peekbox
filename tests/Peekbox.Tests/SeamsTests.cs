@@ -22,6 +22,26 @@ public class SeamsTests
         Assert.Contains($"'{key}'", Read(Path.Combine(RepoRoot.WebProject, "wwwroot", "theme-init.js")));
     }
 
+    // Every POST needs the anti-forgery token (a global filter), and a form only carries it when it says so. A form
+    // without it posts fine in a test that adds the token by hand, and gives a blank 400 page in a real browser.
+    [Fact]
+    public void Every_post_form_in_a_view_asks_for_the_anti_forgery_token()
+    {
+        var views = Files("Views", "*.cshtml").ToList();
+        Assert.NotEmpty(views);
+        foreach (var file in views)
+        {
+            var body = Regex.Replace(Read(file), @"@\*[\s\S]*?\*@|<!--[\s\S]*?-->", "");
+            foreach (Match form in Regex.Matches(body, @"<form\b[^>]*>", RegexOptions.IgnoreCase))
+            {
+                if (Regex.IsMatch(form.Value, @"method\s*=\s*""post""", RegexOptions.IgnoreCase))
+                {
+                    Assert.True(form.Value.Contains("asp-antiforgery=\"true\""), $"{Name(file)}: POST form without asp-antiforgery=\"true\": {form.Value}");
+                }
+            }
+        }
+    }
+
     [Fact]
     public void No_view_has_inline_styles_or_scripts()
     {

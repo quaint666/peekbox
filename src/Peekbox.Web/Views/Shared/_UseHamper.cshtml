@@ -17,7 +17,7 @@ else if (Model.Box is { Lines.Count: > 0 })
 }
 else
 {
-    <form method="post" action="@SiteLinks.UseHamperPath">
+    <form method="post" action="@SiteLinks.UseHamperPath" asp-antiforgery="true">
         <input type="hidden" name="slug" value="@card.Slug">
         <input type="hidden" name="from" value="@Model.From">
         @if (Model.Detail)

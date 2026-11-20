@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Peekbox.Web.Models;
 using Peekbox.Web.Navigation;
@@ -9,6 +10,9 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
 {
     // The "from" of the builder's "Hộp gợi ý" (an occasion id otherwise).
     public const string FromBuilder = "builder";
+
+    // TempData key: read once by BuilderController.Index, which says what was put in the box.
+    public const string UsedHamperKey = "UsedHamper";
 
     // One occasion page (/dip/tet): the hampers Peekbox put together for it, by budget (F15).
     [HttpGet(SiteLinks.OccasionsPath + "/{id}")]
@@ -62,6 +66,7 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
 
         hamper = await hampers.UseReadyHamperAsync(hamper, card, cancellationToken);
         HamperCookie.Write(Response, hamper.Token);
+        TempData[UsedHamperKey] = JsonSerializer.Serialize(new UsedHamper(card.Name, card.Count));
         // With a date that can be delivered the visitor lands on the items; without one, on step 1 to pick it.
         return Redirect(limits.ItemsOpen(hamper.DeliveryDate) ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Items) : SiteLinks.Builder.Href);
     }

@@ -22,6 +22,9 @@ public sealed record BuilderViewModel
     // "Hộp gợi ý" (F15): ready hampers for the saved budget; null while the items are locked or under the lowest budget.
     public Suggestions? Suggestions { get; init; }
 
+    // Set once, on the page the visitor lands on after "Dùng hộp này": says what was put in the box.
+    public UsedHamper? UsedHamper { get; init; }
+
     // The saved delivery date, shown next to the checkbox. Null until a budget and a date are saved: the items stay locked.
     public DateOnly? SavedDeliveryDate { get; init; }
 
@@ -37,4 +40,7 @@ public sealed record BuilderViewModel
 
 // The builder's "Hộp gợi ý": the occasions as chips (Chosen is filled in its colour), and the hampers of that occasion
 // at the highest budget that fits the saved one ("Hộp đến 500.000đ").
+// The ready hamper the visitor just used: its name and how many items (quantities added up) went into the box.
+public sealed record UsedHamper(string Name, int Count);
+
 public sealed record Suggestions(IReadOnlyList<OccasionLink> Occasions, OccasionLink Chosen, long BudgetVnd, IReadOnlyList<ReadyHamperCard> Hampers);
