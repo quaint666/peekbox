@@ -29,12 +29,13 @@ public class HomePageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task Home_has_the_season_banner_above_the_header()
+    public async Task Home_has_the_season_banner_above_the_header_with_a_link_to_the_season_page()
     {
         var html = await GetHomeAsync();
 
-        var banner = html.IndexOf("<p class=\"home-banner\">", StringComparison.Ordinal);
+        var banner = html.IndexOf("<div class=\"home-banner home-banner--tet\">", StringComparison.Ordinal);
         Assert.InRange(banner, 0, html.IndexOf("<header class=\"site-header\">", StringComparison.Ordinal));
+        Assert.Matches(@"<strong>Mùa Tết 2027:</strong> đặt sớm để còn nhiều lựa chọn\s*<a class=""home-banner__go"" href=""/dip/tet"">Xem hộp Tết", html);
     }
 
     // Written out here on purpose: a test that read home.json or the database would agree with a typo in either.
