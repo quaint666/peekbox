@@ -180,12 +180,30 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .search-input { position: relative; }
 .search-input .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--color-muted); pointer-events: none; }
 .search-input .input { padding-left: 42px; }  /* room for the icon, as in the mockup */
+/* Phone: the search box stays under the step strip while it has words or the cursor, so the list can be read and changed
+   without scrolling back (decision 2026-11-20). builder.ts adds .is-pinned and keeps the box's place in the page with a
+   height. Pinned, the box is its 48px (.input) with --space-3 above and below; the list scrolls to just under it. */
+:root { --search-pin-height: calc(48px + 2 * var(--space-3)); }
+.search-pin { display: flex; flex-direction: column; gap: 6px; }   /* 6px, as .field */
+.search-pin.is-pinned {
+    position: fixed;
+    top: var(--builder-steps-height);
+    left: var(--space-4);
+    right: var(--space-4);
+    z-index: var(--z-steps);
+    box-sizing: border-box;
+    height: var(--search-pin-height);
+    padding: var(--space-3) 0;
+    border-image: linear-gradient(to top, var(--color-border) 1px, var(--color-bg) 1px) fill 0 / 0 / 0 100vmax;
+}
+#ket-qua { scroll-margin-top: var(--search-pin-height); }
 .no-match { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); text-align: center; }
 .no-match__title { margin: 0; font-size: var(--text-lg); font-weight: 700; }
 .no-match__text { margin: 0; color: var(--color-muted); }
 .item-filters__check { display: flex; align-items: center; gap: var(--space-3); min-height: 48px; font-size: var(--text-sm); line-height: 1.4; }
 .item-filters__check input { flex: none; width: 20px; height: 20px; margin: 0; accent-color: var(--color-primary); }
 .item-filters__check label { display: flex; align-items: center; min-height: var(--tap-min); }  /* the label is the tap target: the box itself is 20 px. The text is in a span, so its spaces stay. */
+.items__results { display: flex; flex-direction: column; gap: var(--space-4); }
 .items__count { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); margin: 0; font-size: var(--text-sm); line-height: 1.5; color: var(--color-muted); }
 .items__count a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--color-primary-text); font-weight: 600; }
 
@@ -239,7 +257,8 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .item-grid--row .item-card__name { font-size: var(--text-md); }
 .item-grid--row .item-card__meta { display: none; }
 .item-grid--row .item-card__foot { flex-direction: column; align-items: stretch; }
-.item-grid--row .qty-add, .item-grid--row .qty { width: 100%; justify-content: space-between; }
+.item-grid--row .qty-add, .item-grid--row .qty { width: 100%; }
+.item-grid--row .qty { justify-content: space-between; }   /* − n + to the two ends; "Thêm" keeps the button's own centring */
 .item-row__end a {
     display: flex;
     flex-direction: column;
@@ -331,6 +350,36 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .item-card:has(.item-card__photo:hover, .item-card__link:hover) { transform: translateY(-2px); }
     .item-card:has(.item-card__photo:hover, .item-card__link:hover) .item-card__img { transform: scale(1.05); }
+}
+
+/* The ring of an added card is drawn on a layer of its own, inside the card's edge: it does not share the card's own
+   animation (the entrance after a search) and is not cut off in the rows, which hide what overflows. */
+.item-card::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+
+/* Motion on the cards (decision 2026-11-20). A: a photo fades in once, as the heroes do. C: after a search the cards that
+   come in rise a little and fade in one after another (builder.ts puts .is-entering on #ket-qua; the first seven are
+   staggered, the rest come in with the eighth). B: a card that got one more of its item shows a ring once (.is-added),
+   the − n + control that appears pops in (.is-new), and the header's cart and the phone's "Xem hộp" button grow once (.is-bump); builder.ts adds
+   these after the new numbers are on screen. All of it only for visitors who have not asked for less motion. */
+@keyframes card-photo-in { from { opacity: 0; } }
+@keyframes card-in { from { opacity: 0; transform: translateY(6px); } }
+@keyframes card-added { from { box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--color-primary) 45%, transparent); } to { box-shadow: inset 0 0 0 0 transparent; } }
+@keyframes qty-pop { from { opacity: 0; transform: scale(0.9); } }
+@keyframes count-bump { 40% { transform: scale(1.06); } }
+@media (prefers-reduced-motion: no-preference) {
+    .item-card__img { animation: card-photo-in var(--motion-photo) ease-out; }
+    .items__results.is-entering .item-card__img { animation: none; }
+    .items__results.is-entering .item-card { animation: card-in var(--motion-enter) ease-out backwards; animation-delay: calc(var(--i, 7) * var(--motion-stagger)); }
+    .items__results.is-entering .item-card:nth-child(1) { --i: 0; }
+    .items__results.is-entering .item-card:nth-child(2) { --i: 1; }
+    .items__results.is-entering .item-card:nth-child(3) { --i: 2; }
+    .items__results.is-entering .item-card:nth-child(4) { --i: 3; }
+    .items__results.is-entering .item-card:nth-child(5) { --i: 4; }
+    .items__results.is-entering .item-card:nth-child(6) { --i: 5; }
+    .items__results.is-entering .item-card:nth-child(7) { --i: 6; }
+    .item-card.is-added::after { animation: card-added var(--motion-ring) ease-out; }
+    .qty.is-new { animation: qty-pop var(--motion-fast) ease-out; }
+    .is-bump { animation: count-bump var(--motion-bump) ease-out; }
 }
 
 /* The add control (mockups 26, 27 and state 04): "Thêm", the − n + pill, or a disabled button that says why. */
@@ -480,22 +529,26 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .box-bar__open .icon { width: 18px; height: 18px; }
 .box-bar__open ~ span { order: 3; flex-basis: 100%; }   /* "Còn lại …" under the button and the total */
 
-/* The toast after "Thêm", − or + (builder.ts): what changed and what is left, for a few seconds. */
+/* The toast after "Thêm", − or + (builder.ts): what changed and what is left, on two lines, for a few seconds. It follows the
+   theme: a white card on the light page, a dark card on the dark one, both with an edge and a shadow so it stands off the page. */
 .box-toast {
     position: fixed;
     inset: auto auto var(--space-5) 50%;   /* undoes the browser's centring of a popover */
     width: max-content;
     max-width: calc(100vw - 2 * var(--space-4));
     margin: 0;
-    border: 0;
     padding: var(--space-3) var(--space-5);
     transform: translateX(-50%);
-    border-radius: 999px;
-    background: var(--footer-bg);
-    color: var(--footer-brand);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    color: var(--color-text);
     box-shadow: var(--shadow-pop);
     font-size: var(--text-md);
+    line-height: 1.4;
     text-align: center;
+    white-space: pre-line;   /* the newline in the message starts the second line ("Còn lại …") */
+    text-wrap: balance;
 }
 @media (max-width: 899px) {
     .box-toast { bottom: calc(var(--space-6) * 5); }   /* above the phone's box bar and the sheet's button */

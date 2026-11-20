@@ -205,6 +205,32 @@ public class BuilderItemsTests(PeekboxFixture fixture)
 
     private static List<string> Sorted(IEnumerable<string> names) => names.Order(StringComparer.Ordinal).ToList();
 
+    // Live search (builder.ts, decision 2026-11-20) swaps #ket-qua for the one in the answer to the same GET the form sends.
+    // So the block must hold the count and the items and nothing the visitor is typing in: the search box stays outside it.
+    [Fact]
+    public async Task The_results_block_holds_the_count_and_the_items_and_not_the_search_box()
+    {
+        var token = await SavedHamperAsync(Delivery);
+        foreach (var query in new[] { "", "?q=mut", "?q=khong+co+mon+nay" })
+        {
+            var html = await PageAsync(token, query);
+            var open = html.IndexOf("<div class=\"items__results\" id=\"ket-qua\">", StringComparison.Ordinal);
+            Assert.True(open >= 0, $"{query}: no #ket-qua");
+            var block = html[open..html.IndexOf("id=\"packaging-lock\"", open, StringComparison.Ordinal)];
+            Assert.Contains("class=\"items__count\"", block);
+            Assert.DoesNotContain("id=\"item-search\"", block);
+            // The box and its label sit in one wrapper, which builder.ts pins under the step strip on a phone.
+            Assert.Matches(@"<div class=""search-pin"">\s*<label class=""field__label"" for=""item-search"">Tìm món</label>[\s\S]*?id=""item-search""", html);
+            Assert.DoesNotContain("<form", block.Replace("<form class=\"qty", "").Replace("<form class=\"qty-add-form", ""));
+            Assert.Single(Regex.Matches(html, "id=\"ket-qua\""));
+        }
+
+        // The cards of a search are in the block, and the block of one search is not the block of another.
+        var mut = await PageAsync(token, "?q=mut");
+        Assert.Equal(Sorted(["Mứt dâu", "Mứt dừa", "Mứt gừng", "Mứt hạt sen", "Mứt me", "Mứt vỏ bưởi"]), Sorted(CardNames(mut)));
+        Assert.Contains("Không có món nào khớp", await PageAsync(token, "?q=khong+co+mon+nay"));
+    }
+
     [Fact]
     public async Task Search_ignores_accents_and_case_and_looks_in_name_brand_and_origin()
     {

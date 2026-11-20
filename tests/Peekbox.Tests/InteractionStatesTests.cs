@@ -70,6 +70,20 @@ public class InteractionStatesTests
         Assert.True(moving.Count == 0, "movement that ignores \"reduce motion\": " + string.Join("; ", moving));
     }
 
+    // Fading in, rising, the ring round an added card, a counter growing: every animation is inside "no-preference", so a
+    // visitor who asked for less motion sees none (base.css also switches animations off for them, as a second guard).
+    [Fact]
+    public void Every_animation_is_only_for_visitors_who_have_not_asked_for_less_motion()
+    {
+        var animated = Rules().Where(r => Regex.IsMatch(r.Body, @"animation(-name)?\s*:\s*(?!none)[^\s;]"))
+            .Where(r => !r.Media.Any(m => m.Contains("prefers-reduced-motion: no-preference")))
+            .Select(r => $"{r.File}: {r.Selector}").ToList();
+
+        Assert.True(animated.Count == 0, "animation that ignores \"reduce motion\": " + string.Join("; ", animated));
+        // The rules this guard is for exist: the card photo's fade is one of them.
+        Assert.Contains(Rules(), r => r.File == "builder.css" && r.Selector == ".item-card__img" && r.Body.Contains("animation: card-photo-in var(--motion-photo)"));
+    }
+
     [Fact]
     public void The_hover_and_pressed_colours_are_in_the_light_and_both_dark_blocks()
     {

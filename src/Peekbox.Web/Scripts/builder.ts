@@ -1,7 +1,8 @@
 // The builder page in the browser. The page works without this file: the item filters are a plain GET form (without
 // scripts a "Lọc" button sends it), and "Thêm", − and + are plain POST forms that reload the page. This file sends the
-// filters as soon as the checkbox or the sort menu changes (the search box with Enter, not on every letter), and sends
-// the add forms in the background so the page does not jump.
+// filters as soon as the checkbox or the sort menu changes, filters the list while the visitor types in the search
+// box (a moment after the last letter, no Enter needed), and sends the add forms in the background so the page does
+// not jump.
 
 import { fetchPage } from './lib/page.js';
 import { wireRows, type RowPosition } from './lib/rows.js';
@@ -50,6 +51,169 @@ filters?.addEventListener('focusout', (event) => {
     filters.requestSubmit();
   }
 });
+
+// ---- Live search ----
+// While the visitor types in "Tìm món", the same GET the form would send is fetched in the background and the block of
+// results (#ket-qua: the count, the "no match" card and the rows or the grid) is swapped for the one in the answer. The
+// server does the matching, so "banh" finds "Bánh gừng" exactly as it does after Enter, and this file never works out
+// anything. Without this file Enter and the "Lọc" button send the form the plain way.
+const SEARCH_DELAY_MS = 250;
+const search = document.getElementById('item-search');
+let searchTimer = 0;
+let searchSerial = 0;
+let searchRequest: AbortController | null = null;
+
+// The box stays under the step strip on a phone while it has words or the cursor, from the moment its place has gone up
+// under the strip until the end of the list has too (the CSS is .search-pin.is-pinned). The box keeps its place in the page
+// with a height, so pinning moves nothing else.
+const phone = window.matchMedia('(max-width: 899px)');
+const searchField = document.querySelector<HTMLElement>('.item-filters__search');
+const searchPin = searchField?.querySelector<HTMLElement>('.search-pin') ?? null;
+let pinFrame = 0;
+
+function isPinned(): boolean {
+  return searchPin?.classList.contains('is-pinned') === true;
+}
+
+function setPinned(on: boolean): void {
+  if (!searchField || !searchPin || on === isPinned()) {
+    return;
+  }
+
+  if (on) {
+    searchField.style.height = `${searchField.getBoundingClientRect().height}px`;
+  }
+
+  searchPin.classList.toggle('is-pinned', on);
+  searchPin.querySelector('label')?.classList.toggle('visually-hidden', on);
+  if (!on) {
+    searchField.style.height = '';
+  }
+}
+
+function updatePin(): void {
+  pinFrame = 0;
+  const steps = document.querySelector('.builder-steps');
+  const results = document.getElementById('ket-qua');
+  if (!searchField || !(search instanceof HTMLInputElement) || !steps || !results || !phone.matches) {
+    setPinned(false);
+    return;
+  }
+
+  const top = steps.getBoundingClientRect().bottom;
+  const used = search.value !== '' || document.activeElement === search;
+  setPinned(used && searchField.getBoundingClientRect().top < top && results.getBoundingClientRect().bottom > top);
+}
+
+function schedulePin(): void {
+  if (pinFrame === 0) {
+    pinFrame = window.requestAnimationFrame(updatePin);
+  }
+}
+
+function stopSearch(): void {
+  window.clearTimeout(searchTimer);
+  searchRequest?.abort();
+  searchSerial += 1;
+}
+
+function searchNow(): void {
+  if (!filters) {
+    return;
+  }
+
+  const query = new URLSearchParams(Array.from(new FormData(filters), ([name, value]) => [name, String(value)]));
+  const url = new URL(filters.action);
+  url.search = query.toString();
+
+  stopSearch();
+  const serial = searchSerial;
+  const typing = document.activeElement === search;
+  searchRequest = new AbortController();
+  fetchPage(url, { signal: searchRequest.signal })
+    .then(({ page: fresh }) => {
+      // Only the newest request may change the page: a slow answer to "ba" must not replace the one for "banh".
+      const results = document.getElementById('ket-qua');
+      if (serial !== searchSerial || !results) {
+        return;
+      }
+
+      swap('#ket-qua', fresh);
+      const shown = document.getElementById('ket-qua');
+      if (shown) {
+        shown.classList.add('is-entering');   // the cards come in softly (builder.css)
+        wireRows(shown, writePosition);
+        wireHint();
+        say(shown.querySelector('.items__count span')?.textContent?.trim() ?? '');
+        // On a phone the first answer scrolls the list up under the box; once the box is pinned the list is already there.
+        if (typing && phone.matches && !isPinned()) {
+          shown.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        }
+
+        schedulePin();
+      }
+
+      // The address now says what is on screen, so reload and Back keep the search.
+      window.history.replaceState(null, '', url);
+    })
+    .catch(() => {
+      // Cancelled, timed out or the server said no: the list stays as it was. Enter still sends the form.
+    });
+}
+
+function searchSoon(): void {
+  window.clearTimeout(searchTimer);
+  searchTimer = window.setTimeout(searchNow, SEARCH_DELAY_MS);
+}
+
+window.addEventListener('scroll', schedulePin, { passive: true });
+window.addEventListener('resize', schedulePin);
+phone.addEventListener('change', schedulePin);
+
+if (search instanceof HTMLInputElement) {
+  search.addEventListener('focus', schedulePin);
+  search.addEventListener('blur', schedulePin);
+  schedulePin();
+  // A letter being composed (Telex, VNI) is not final yet: wait for the composition to end.
+  search.addEventListener('input', (event) => {
+    schedulePin();
+    if (!(event instanceof InputEvent && event.isComposing)) {
+      searchSoon();
+    }
+  });
+  search.addEventListener('compositionend', searchSoon);
+  // The × of a search box: some browsers announce it with this event (and only for emptying, so Enter, which also
+  // raises it in some browsers, does not start a second request).
+  search.addEventListener('search', () => {
+    if (search.value === '') {
+      searchSoon();
+    }
+  });
+  // Enter searches at once instead of waiting out the delay. Sent the plain way it would only open the same address
+  // again and add a step to Back; the live answer is already what that page would show.
+  search.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.isComposing) {
+      event.preventDefault();
+      searchNow();
+      // The keyboard's search key: on a touch screen the keyboard goes away so the list can be seen.
+      if (window.matchMedia('(pointer: coarse)').matches) {
+        search.blur();
+      }
+    }
+  });
+
+  // A touch screen's keyboard covers half of the screen. A tap anywhere outside the box closes it (a tap on a button or
+  // a link still does what it says), and so does the start of a swipe, when the browser takes the touch over to scroll
+  // the page (pointercancel). Some browsers keep the keyboard open on a tap on plain text, so this is done here.
+  const closeKeyboard = (event: PointerEvent): void => {
+    const inside = event.target instanceof Node && searchPin?.contains(event.target);
+    if (event.pointerType === 'touch' && document.activeElement === search && !inside) {
+      search.blur();
+    }
+  };
+  document.addEventListener('pointerup', closeKeyboard);
+  document.addEventListener('pointercancel', closeKeyboard);
+}
 
 // ---- "Thêm", − and + (F20) ----
 // The form is sent in the background. The server answers as it does without scripts: it saves, then redirects to the
@@ -190,8 +354,14 @@ function showToast(text: string): void {
   }, 3500);
 }
 
+// The toast shows what changed on one line and what is left on the next ("\n"); a screen reader hears the two as sentences.
 function announce(text: string): void {
   showToast(text);
+  say(text.replace(/\n/g, '. '));
+}
+
+// The status line that screen readers hear, without the toast.
+function say(text: string): void {
   if (!status) {
     return;
   }
@@ -203,21 +373,52 @@ function announce(text: string): void {
   }, 50);
 }
 
-// What changed, in words: "Đã thêm Trà sen · còn 320.000đ." The amount left is read from the new panel the server sent.
+// ---- The answer to an add (decision 2026-11-20) ----
+// A card that got one more of its item shows a soft ring once, the − n + control that appears when the first one is added
+// pops in, and the header's cart and the phone's "Xem hộp" button grow once. Only the CSS moves (and only for visitors who
+// have not asked for less motion); this adds the classes once the new numbers are on screen. A class added again does not
+// restart an animation, so it is taken off and put back.
+function replay(element: Element | null, name: string): void {
+  if (!element) {
+    return;
+  }
+
+  element.classList.remove(name);
+  void (element as HTMLElement).offsetWidth;
+  element.classList.add(name);
+}
+
+function celebrate(place: Place, slug: string, before: number, now: number): void {
+  if (now <= before) {
+    return;
+  }
+
+  replay(document.getElementById(`mon-${slug}`), 'is-added');
+  if (before === 0) {
+    replay(controlRoot(place, slug)?.querySelector('.qty') ?? null, 'is-new');
+  }
+
+  for (const counter of document.querySelectorAll('.cart-link, .box-bar__open')) {
+    replay(counter, 'is-bump');
+  }
+}
+
+// What changed, in words: "Đã thêm Trà sen" and, on the next line, "Còn lại 320.000đ". The amount left is read from the new
+// panel the server sent. Two lines, not one line with a dot between them: a dot can end up alone at the start of the second line.
 function message(name: string, before: number, asked: number, now: number): string {
   const left = document.querySelector('#hop-cua-ban .box-sums__row--left dd, #hop-cua-ban .box-sums__row--over dd')?.textContent?.trim() ?? '';
   const over = document.querySelector('#hop-cua-ban .box-sums__row--over') !== null;
-  const money = over ? `vượt ngân sách ${left}` : `còn ${left}`;
+  const money = over ? `Vượt ngân sách ${left}` : `Còn lại ${left}`;
   if (now !== asked) {
-    return `Không thêm được ${name} · ${money}.`;
+    return `Không thêm được ${name}\n${money}`;
   }
 
   if (now === 0) {
-    return `Đã bỏ ${name} khỏi hộp · ${money}.`;
+    return `Đã bỏ ${name} khỏi hộp\n${money}`;
   }
 
   const count = now > 1 ? ` (${now} trong hộp)` : '';
-  return now > before ? `Đã thêm ${name}${count} · ${money}.` : `Đã bớt ${name}${count} · ${money}.`;
+  return now > before ? `Đã thêm ${name}${count}\n${money}` : `Đã bớt ${name}${count}\n${money}`;
 }
 
 document.addEventListener('submit', (event) => {
@@ -246,6 +447,7 @@ document.addEventListener('submit', (event) => {
       applyPage(fresh);
       refocus(place, slug, step);
       announce(message(name, before, Math.max(asked, 0), quantityIn(document, slug)));
+      celebrate(place, slug, before, quantityIn(document, slug));
     })
     .catch(() => {
       // Anything unexpected: send the same form the plain way, so the page the server makes says what happened.
@@ -289,7 +491,7 @@ document.addEventListener('change', (event) => {
         swapPanel(fresh);
         swap('.box-bar', fresh);
         const total = document.querySelector('#hop-cua-ban .box-sums__row--total dd')?.textContent?.trim() ?? '';
-        announce(`Đã chọn ${name}. Tổng cộng ${total}.`);
+        announce(`Đã chọn ${name}\nTổng cộng ${total}`);
       }
     } catch {
       // Send it the plain way: the server saves it and the reloaded page shows the choice.
@@ -361,7 +563,6 @@ wireRows(document, writePosition);
 // "Vuốt sang trái…" shows on a phone until the first sideways swipe of a category row, remembered in the browser. With
 // storage blocked it shows on every visit, which is harmless.
 const HINT_KEY = 'peekbox-row-hint-seen';
-const hint = document.getElementById('vuot-hint');
 
 function hintSeen(): boolean {
   try {
@@ -371,7 +572,12 @@ function hintSeen(): boolean {
   }
 }
 
-if (hint && !hintSeen() && window.matchMedia('(max-width: 899px)').matches) {
+function wireHint(): void {
+  const hint = document.getElementById('vuot-hint');
+  if (!hint || hintSeen() || !window.matchMedia('(max-width: 899px)').matches) {
+    return;
+  }
+
   hint.hidden = false;
   const done = (): void => {
     hint.hidden = true;
@@ -385,3 +591,5 @@ if (hint && !hintSeen() && window.matchMedia('(max-width: 899px)').matches) {
     track.addEventListener('scroll', done, { once: true, passive: true });
   }
 }
+
+wireHint();

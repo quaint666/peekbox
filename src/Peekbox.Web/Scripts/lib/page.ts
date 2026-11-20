@@ -15,7 +15,10 @@ export interface FetchedPage {
 
 // Throws on a network error, a timeout or a status that is not 2xx.
 export async function fetchPage(url: string | URL, init: RequestInit = {}): Promise<FetchedPage> {
-  const response = await fetch(url, { credentials: 'same-origin', signal: AbortSignal.timeout(TIMEOUT_MS), ...init });
+  // A caller's own signal (to cancel an out-of-date request) joins the time-out instead of replacing it.
+  const timeout = AbortSignal.timeout(TIMEOUT_MS);
+  const signal = init.signal ? AbortSignal.any([timeout, init.signal]) : timeout;
+  const response = await fetch(url, { credentials: 'same-origin', ...init, signal });
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
   }
