@@ -33,7 +33,7 @@ public class BlogContentTests
         Assert.Equal("Cách chọn hộp quà Tết theo ngân sách", post.Title);
         Assert.Equal("Mẹo chọn quà", post.Category);
         Assert.StartsWith("Quà Tết đẹp không nhất thiết phải đắt.", post.Excerpt);
-        Assert.Equal(["1. Đặt ngân sách cho từng hộp", "2. Chọn đủ nhóm, đừng lặp", "3. Nghĩ đến người nhận", "4. Kiểm tra hạn sử dụng so với ngày giao", "Ví dụ một hộp 500.000đ"],
+        Assert.Equal(["1. Đặt ngân sách cho từng hộp", "2. Chọn đủ nhóm, đừng lặp", "3. Nghĩ đến người nhận", "4. Kiểm tra hạn sử dụng so với ngày giao", "5. Chọn kiểu đóng gói", "6. Đặt sớm cho dịp Tết", "Ví dụ một hộp 500.000đ"],
             post.Blocks.OfType<BlogHeading>().Select(heading => heading.Text));
     }
 

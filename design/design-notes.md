@@ -83,7 +83,7 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - **Admin:** search and a status filter on the items and coupons lists.
 
 ## Header and footer on every page
-Every customer page and every state starts with the same header (logo, Trang chủ, Tạo hộp quà, Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng, light/dark button, cart) and ends with the same footer. The page you are on is bold and green in the header. A page shorter than the screen keeps the footer at the bottom of the screen. The only drawn exception is the phone share sheet, which shows the screen with the sheet open. On a phone the header links are in the menu (state 21) and the footer is the same footer, stacked.
+Every customer page and every state starts with the same header (logo, Trang chủ, Tạo hộp quà, Giới thiệu, Blog, Tra cứu đơn hàng, light/dark button, cart) and ends with the same footer. The page you are on is bold and green in the header. A page shorter than the screen keeps the footer at the bottom of the screen. The only drawn exception is the phone share sheet, which shows the screen with the sheet open. On a phone the header links are in the menu (state 21) and the footer is the same footer, stacked.
 
 ## Interaction states
 Every control has five looks: default, hover, keyboard focus, pressed, disabled. They are drawn once on the "Interaction states" board (light and dark, in `mockups/foundations/`) and are the same on every page.

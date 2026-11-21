@@ -33,6 +33,18 @@ Trà dễ hút mùi. Hãy giữ trà trong hộp kín, tránh để cạnh gia v
 
 Gập kín miệng túi và dùng kẹp, hoặc chuyển sang hũ kín. Nếu thấy có mùi lạ hoặc ẩm mốc, đừng dùng.
 
+### Socola và kẹo
+
+Socola sợ nóng và mùi. Hãy giữ socola nơi mát, xa bếp và ánh nắng, và đậy kín để không hút mùi. Nếu bề mặt có lớp phấn trắng, thường là bơ cacao tách ra do nhiệt. Món vẫn dùng được nhưng có thể kém mịn.
+
+### Mật ong
+
+Đóng chặt nắp và dùng thìa khô, sạch để lấy. Mật ong để lâu có thể đặc lại hoặc đóng hạt, đó là hiện tượng tự nhiên chứ không phải hỏng. Bạn có thể ngâm hũ trong nước ấm cho mật mềm trở lại.
+
+### Dọn lại sau Tết
+
+Khoảng một tuần sau Tết, hãy xem lại những gì đang để trong nhà. Món sắp hết hạn thì dùng trước, món đã mở thì dùng sớm, món cả nhà không dùng thì chia cho người thân hoặc hàng xóm.
+
 ### Nhớ xem hạn sử dụng
 
 Cho dù bảo quản tốt, hạn sử dụng vẫn là mốc cuối cùng. Hãy dùng món có hạn ngắn trước.

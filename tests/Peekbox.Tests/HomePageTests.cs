@@ -110,12 +110,12 @@ public class HomePageTests(PeekboxFixture fixture)
     private static readonly (string Href, string Label)[] HeaderLinks =
     [
         ("/", "Trang chủ"), ("/builder", "Tạo hộp quà"), ("/#cho-tung-dip", "Dịp"), .. OccasionLinks,
-        ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"),
+        ("/about", "Giới thiệu"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"),
     ];
 
     private static readonly (string Href, string Label)[] FooterLinks =
     [
-        ("/builder", "Tạo hộp quà"), ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"), .. OccasionLinks,
+        ("/builder", "Tạo hộp quà"), ("/about", "Giới thiệu"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"), .. OccasionLinks,
     ];
 
     // The links of one <nav>, in order, as (href, text). Looking inside one nav keeps a link in the footer from counting for the header.

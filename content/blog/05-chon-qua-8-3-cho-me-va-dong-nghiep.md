@@ -25,9 +25,17 @@ Hộp nhỏ, ngân sách vừa phải và dễ chia sẻ là hợp lý. Bánh qu
 
 Nếu biết người nhận dị ứng hoặc kiêng một số món, hãy tránh các món đó. Mỗi món trên Peekbox có thương hiệu, trọng lượng và xuất xứ để bạn tham khảo. Thành phần chi tiết hãy đọc trên bao bì khi nhận hộp.
 
+### Nếu người nhận ít ăn đồ ngọt
+
+Hãy xem nhóm trà và cà phê, hạt và trái cây sấy, hoặc nhóm quà không phải đồ ăn. Một hộp có vị mặn nhẹ hoặc một món dùng được lâu cũng là lựa chọn tốt.
+
 ### Chọn kiểu đóng gói
 
 Hộp cứng có nơ hợp với quà tặng mẹ. Hộp giấy kraft gọn gàng cho đồng nghiệp. Bạn chọn kiểu đóng gói ở bước Đóng gói.
+
+### Cho cả 8/3 và 20/10
+
+Ngày 20/10 là Ngày Phụ nữ Việt Nam, nhiều người cũng tặng quà vào dịp này. Cách chọn ở trên dùng được cho cả hai ngày.
 
 ### Đặt sớm
 

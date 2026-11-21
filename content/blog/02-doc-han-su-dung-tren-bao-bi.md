@@ -29,6 +29,18 @@ Một số sản phẩm ghi đầy đủ ngày, tháng, năm (ví dụ 10/01/202
 
 Hạn sử dụng chỉ đúng khi món được giữ theo hướng dẫn trên bao bì, ví dụ nơi khô ráo, tránh ánh nắng. Sau khi mở bao bì, nhiều món cần dùng sớm hơn hoặc để trong tủ lạnh.
 
+### Hộp có nhiều món thì tính thế nào
+
+Hạn sử dụng của cả hộp là hạn của món hết hạn sớm nhất. Vì vậy mỗi hộp gợi ý trên Peekbox cho bạn thấy món có hạn gần nhất. Hãy xem món đó trước, rồi nhắc người nhận dùng nó sớm.
+
+### Món nào nên dùng trước
+
+Thông thường, bánh mềm và món có nhân có hạn ngắn hơn trà, hạt khô hay mứt đóng hũ. Nhưng mỗi sản phẩm một khác, nên hãy đọc ngày trên từng món thay vì đoán theo loại.
+
+### Khi không đọc được ngày
+
+Nếu ngày in trên bao bì bị mờ hoặc không rõ, đừng dùng món đó và hãy báo cho cửa hàng kèm mã đơn hàng.
+
 ### Khi nhận quà
 
 Hãy xem hạn sử dụng ngay khi nhận hộp. Trên Peekbox, mỗi món đều hiển thị hạn sử dụng, và chúng tôi chỉ nhận đơn khi món còn hạn đủ so với ngày giao.

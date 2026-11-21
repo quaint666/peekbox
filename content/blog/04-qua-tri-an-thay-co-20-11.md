@@ -25,6 +25,14 @@ Khi cả lớp góp chung, hãy chia đều số tiền theo số học sinh đ�
 
 Trà, bánh quy và kẹo là lựa chọn an toàn. Chọn món có hạn sử dụng dài để thầy cô không phải dùng vội.
 
+### Chọn đóng gói gọn gàng
+
+Với quà của cả lớp, hộp giấy kraft hoặc hộp cứng có nơ đều hợp. Hãy chọn kiểu dễ mang, vì thầy cô thường phải mang quà về nhà sau buổi lễ.
+
+### Giao đến trường hay đến nhà
+
+Hãy hỏi trước thầy cô muốn nhận quà ở đâu. Peekbox giao đến địa chỉ bạn nhập trong Thành phố Hồ Chí Minh. Nếu giao đến trường, hãy hỏi trường về giờ nhận và người nhận thay, và chọn khung giờ giao cho phù hợp.
+
 ### Thêm một tấm thiệp
 
 Lời nhắn viết tay hoặc chữ ký của cả lớp làm món quà thêm ý nghĩa. Hãy chuẩn bị sẵn lời nhắn hoặc tấm thiệp của lớp để gửi kèm khi trao quà.
