@@ -104,8 +104,6 @@ app.Use(async (context, next) =>
 
 app.UseRouting();
 
-app.UseAuthorization();
-
 app.MapStaticAssets();
 
 // For the container's health check and the proxy's: 200 when the database answers, 503 when it does not.

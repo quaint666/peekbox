@@ -41,7 +41,6 @@
   --color-danger-border: #D9877D;  /* the edge of the red banner on the review page (mockup 30) */
   --color-danger: #A32A1E;         /* error text and filled danger buttons */
   --color-field-error: #A32A1E;    /* the message and the border of a form field with an error; dark mode is lighter (issue #44) */
-  --color-option-off: #FFFFFF;     /* an unchosen option in a choice list */
   --color-focus: #3F6B57;
   --color-band: #3F6B57;           /* the wide green band near the end of the home page */
   --photo-filter: none;            /* photos (not the logo or icons) */
@@ -188,7 +187,6 @@
     --color-danger-text: #F4B8AF;
     --color-danger-border: #A32A1E;  /* no dark mockup 30: the light theme's danger red, which reads on the dark red banner */
     --color-field-error: #FF6B5E;
-    --color-option-off: #121513;
     --color-focus: #9EC3A5;
     --color-band: #2F5242;
     --photo-filter: brightness(0.9);   /* the light photo backgrounds glare on a dark page */
@@ -256,7 +254,6 @@
   --color-danger-text: #F4B8AF;
   --color-danger-border: #A32A1E;  /* no dark mockup 30: the light theme's danger red, which reads on the dark red banner */
   --color-field-error: #FF6B5E;
-  --color-option-off: #121513;
   --color-focus: #9EC3A5;
   --color-band: #2F5242;
   --photo-filter: brightness(0.9);   /* the light photo backgrounds glare on a dark page */

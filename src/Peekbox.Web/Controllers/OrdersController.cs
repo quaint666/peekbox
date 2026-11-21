@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Peekbox.Web.Models;
+using Peekbox.Web.Navigation;
 using Peekbox.Web.Services;
 
 namespace Peekbox.Web.Controllers;
@@ -10,8 +11,8 @@ namespace Peekbox.Web.Controllers;
 // of shared caches (no-store).
 public class OrdersController(OrderService orders) : Controller
 {
-    [HttpGet("/orders/{token}")]
-    [HttpHead("/orders/{token}")]
+    [HttpGet(SiteLinks.OrdersPath + "/{token}")]
+    [HttpHead(SiteLinks.OrdersPath + "/{token}")]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public async Task<IActionResult> Show(string token, CancellationToken cancellationToken)
     {

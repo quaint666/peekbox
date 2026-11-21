@@ -384,7 +384,7 @@ function replay(element: Element | null, name: string): void {
   }
 
   element.classList.remove(name);
-  void (element as HTMLElement).offsetWidth;
+  void element.getBoundingClientRect();
   element.classList.add(name);
 }
 
