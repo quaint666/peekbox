@@ -323,10 +323,6 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--site-header-height) + 
     .suggest-card:hover .card-go { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .suggest-card { transition: transform 150ms ease-out; }
-    .suggest-card:hover { transform: translateY(-2px); }
-    .suggest-card__photo { transition: transform 200ms ease-out; }
-    .suggest-card:hover .suggest-card__photo { transform: scale(1.04); }
     .card-go { transition: background-color 150ms ease-out, color 150ms ease-out; }
 }
 .suggest-card form { display: flex; align-self: stretch; margin-top: auto; }
@@ -337,19 +333,19 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--site-header-height) + 
 
 /* The photo and the name are links to the item page. Pointing at either lifts the card, as the occasion cards on the
    home page do (design-notes, "Item card (builder)"): a primary border, a deeper shadow and a green, underlined name;
-   with a mouse and without "reduce motion", the card also rises 2 px and the photo zooms to 105 %. Only the links
+   with a mouse and without "reduce motion", the card also rises and the photo zooms (--card-lift, --card-zoom, as every card). Only the links
    trigger it, so the card never looks clickable where it is not. */
-.item-card { transition: border-color 150ms ease, box-shadow 150ms ease, transform 200ms ease; }
+.item-card { transition: border-color 150ms ease, box-shadow 150ms ease, transform var(--motion-card) ease-out; }
 .item-card__photo { display: block; overflow: hidden; border-radius: var(--radius-sm); }
-.item-card__img { display: block; transition: transform 200ms ease; }
+.item-card__img { display: block; transition: transform var(--motion-card) ease-out; }
 .item-card__link { color: inherit; text-decoration: none; display: inline-flex; align-items: center; min-height: 24px; }   /* 24 px: WCAG 2.5.8 */
 @media (hover: hover) {
     .item-card:has(.item-card__photo:hover, .item-card__link:hover) { border-color: var(--color-primary); box-shadow: var(--shadow-pop); }
     .item-card:has(.item-card__photo:hover, .item-card__link:hover) .item-card__link { color: var(--color-primary-text); text-decoration: underline; }
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .item-card:has(.item-card__photo:hover, .item-card__link:hover) { transform: translateY(-2px); }
-    .item-card:has(.item-card__photo:hover, .item-card__link:hover) .item-card__img { transform: scale(1.05); }
+    .item-card:has(.item-card__photo:hover, .item-card__link:hover) { transform: translateY(var(--card-lift)); }
+    .item-card:has(.item-card__photo:hover, .item-card__link:hover) .item-card__img { transform: scale(var(--card-zoom)); }
 }
 
 /* The ring of an added card is drawn on a layer of its own, inside the card's edge: it does not share the card's own
@@ -361,13 +357,11 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--site-header-height) + 
    staggered, the rest come in with the eighth). B: a card that got one more of its item shows a ring once (.is-added),
    the − n + control that appears pops in (.is-new), and the header's cart and the phone's "Xem hộp" button grow once (.is-bump); builder.ts adds
    these after the new numbers are on screen. All of it only for visitors who have not asked for less motion. */
-@keyframes card-photo-in { from { opacity: 0; } }
-@keyframes card-in { from { opacity: 0; transform: translateY(6px); } }
 @keyframes card-added { from { box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--color-primary) 45%, transparent); } to { box-shadow: inset 0 0 0 0 transparent; } }
 @keyframes qty-pop { from { opacity: 0; transform: scale(0.9); } }
 @keyframes count-bump { 40% { transform: scale(1.06); } }
 @media (prefers-reduced-motion: no-preference) {
-    .item-card__img { animation: card-photo-in var(--motion-photo) ease-out; }
+    .item-card__img { animation: photo-in var(--motion-photo) ease-out; }
     .items__results.is-entering .item-card__img { animation: none; }
     .items__results.is-entering .item-card { animation: card-in var(--motion-enter) ease-out backwards; animation-delay: calc(var(--i, 7) * var(--motion-stagger)); }
     .items__results.is-entering .item-card:nth-child(1) { --i: 0; }

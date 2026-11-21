@@ -121,7 +121,7 @@
 
 .occasion { flex: 1; display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-text); text-decoration: none; }
 .occasion__photo { position: relative; overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); background: var(--color-border-soft); }
-.occasion__img { display: block; width: 100%; height: auto; aspect-ratio: 7 / 5; object-fit: cover; transition: transform 200ms ease; }   /* height: auto, or the height attribute wins over the ratio */
+.occasion__img { display: block; width: 100%; height: auto; aspect-ratio: 7 / 5; object-fit: cover; }   /* height: auto, or the height attribute wins over the ratio */
 /* The subject of these four photos sits to the right, so the crop keeps the right edge. */
 .occasion--women .occasion__img, .occasion--teachers .occasion__img, .occasion--midautumn .occasion__img, .occasion--christmas .occasion__img { object-position: 100% 50%; }
 .occasion__chip {
@@ -164,7 +164,6 @@
     .occasion:hover .occasion__go { background: var(--occasion-color); color: var(--color-surface); }   /* the disc fills with the accent */
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .occasion:hover .occasion__img { transform: scale(1.04); }
     .occasion__go { transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out; }
     .occasion:hover .occasion__go { transform: translateX(2px); }
 }
@@ -213,6 +212,5 @@
 
 /* The hero photo fades in once, for visitors who have not asked for less motion. */
 @media (prefers-reduced-motion: no-preference) {
-    @keyframes hero-photo-in { from { opacity: 0; } }
-    .hero__image { animation: hero-photo-in 450ms ease-out; }
+    .hero__image { animation: photo-in var(--motion-photo) ease-out; }
 }

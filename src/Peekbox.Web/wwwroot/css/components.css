@@ -383,3 +383,26 @@ select.input {
     transition-duration: var(--motion-press);
   }
 }
+
+/* Every card with a photo moves the same way (decision 2026-11-21): the card rises --card-lift and the photo grows
+   --card-zoom over --motion-card when a mouse points at it; the first four cards of a list rise and fade in one after
+   another when the page opens; every photo fades in once. (The builder's item card does the same on its own rules, because
+   only its photo and its name trigger it: builder.css.) All of it only for visitors who have not asked for less motion. */
+@keyframes photo-in { from { opacity: 0; } }
+@keyframes card-in { from { opacity: 0; transform: translateY(6px); } }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hamper, .suggest-card, .blog-card, .occasion, .hp-rel__link { transition: transform var(--motion-card) ease-out; }
+  .hamper:hover, .suggest-card:hover, .blog-card:hover, .occasion:hover, .hp-rel__link:hover { transform: translateY(var(--card-lift)); }
+  .hamper__photo, .suggest-card__photo, .blog-card__photo, .occasion__img, .hp-rel__photo { transition: transform var(--motion-card) ease-out; }
+  .hamper:hover .hamper__photo, .suggest-card:hover .suggest-card__photo, .blog-card:hover .blog-card__photo, .occasion:hover .occasion__img, .hp-rel__link:hover .hp-rel__photo { transform: scale(var(--card-zoom)); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hamper__photo, .suggest-card__photo, .blog-card__photo, .occasion__img, .hp-rel__photo { animation: photo-in var(--motion-photo) ease-out; }
+  .hamper:nth-child(-n+4), .blog-list__item:nth-child(-n+4) .blog-card, .occasions__item:nth-child(-n+4) .occasion {
+    animation: card-in var(--motion-enter) ease-out backwards;
+    animation-delay: calc(var(--i, 0) * var(--motion-stagger));
+  }
+  .hamper:nth-child(2), .blog-list__item:nth-child(2), .occasions__item:nth-child(2) { --i: 1; }
+  .hamper:nth-child(3), .blog-list__item:nth-child(3), .occasions__item:nth-child(3) { --i: 2; }
+  .hamper:nth-child(4), .blog-list__item:nth-child(4), .occasions__item:nth-child(4) { --i: 3; }
+}
