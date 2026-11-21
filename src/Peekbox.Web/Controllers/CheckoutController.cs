@@ -9,7 +9,7 @@ namespace Peekbox.Web.Controllers;
 // Checkout (F41 to F48) and the sold-out notice (F50). A box that cannot be ordered (none, empty, a passed date, an item
 // out of date) goes back to the cart, which says why. Placing is OrderService's job; this controller reads the form,
 // checks it, and sends the visitor on (post, then redirect).
-public class CheckoutController(HamperService hampers, OrderService orders, BuilderLimits limits, RateLimits rateLimits, DemoMode demo) : Controller
+public class CheckoutController(HamperService hampers, OrderService orders, DeliveryCapacity capacity, BuilderLimits limits, RateLimits rateLimits, DemoMode demo) : Controller
 {
     private const string SoldOutKey = "soldOut";
 
@@ -75,6 +75,9 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
             case PlaceOutcome.UnknownWard:
                 // The ward was in the list a moment ago; tell the visitor to pick again.
                 return await PageAsync(box, form, [new FieldError("ward", "Chọn phường giao hàng", "Chọn phường giao hàng.")], tooManyTries: false, cancellationToken, wards);
+            case PlaceOutcome.WindowFull:
+                // Another order took the last place a moment ago; the page now shows the window as full.
+                return await PageAsync(box, form, [new FieldError("window-morning", "Khung giờ đã đầy, chọn khung giờ khác", "Khung giờ này vừa đầy. Chọn khung giờ khác.")], tooManyTries: false, cancellationToken, wards);
             case PlaceOutcome.NoHamper:
             case PlaceOutcome.NotReady:
             default:
@@ -122,7 +125,14 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
     {
         wards ??= await orders.WardsAsync(cancellationToken);
         var fee = wards.FirstOrDefault(w => w.Id == form.Ward)?.FeeVnd;
+        var slots = await capacity.SlotsAsync(box.DeliveryDate!.Value, cancellationToken);
+        // A window that is full cannot stay chosen: the form shows the first one with room instead.
+        if (slots.Full.Contains(form.Window) && DeliveryWindows.All.FirstOrDefault(w => !slots.Full.Contains(w), form.Window) is var open)
+        {
+            form.Window = open;
+        }
+
         ViewData["NoIndex"] = true;
-        return View("Index", new CheckoutViewModel(box, wards, form, errors, tooManyTries, fee));
+        return View("Index", new CheckoutViewModel(box, wards, form, errors, tooManyTries, fee, slots));
     }
 }

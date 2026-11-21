@@ -26,6 +26,11 @@ public sealed class CheckoutForm
     public DeliveryWindow Window { get; set; } = DeliveryWindow.Morning;   // as drawn: Sáng is chosen at first
 
     public PaymentMethod Payment { get; set; } = PaymentMethod.ZaloPay;
+
+    // F43: the note for the card, and the checkbox "hide prices inside the hamper" (a checkbox sends nothing when off).
+    public string? CardMessage { get; set; }
+
+    public bool HidePrices { get; set; }
 }
 
 // One problem with one field. Summary is the line in the red box at the top; Message is the text under the field.
@@ -85,9 +90,17 @@ public static class CheckoutCheck
             errors.Add(new FieldError("payment-zalopay", "Chọn cách thanh toán", "Chọn cách thanh toán."));
         }
 
+        // Line breaks are kept (a card can have lines) but as one kind, and blank ones at the ends are dropped.
+        var card = (form.CardMessage ?? "").Replace("\r\n", "\n").Replace('\r', '\n').Trim();
+        if (card.Length > CardMessageRules.MaxLength)
+        {
+            errors.Add(new FieldError("card-message", "Lời nhắn quá dài", $"Lời nhắn dài tối đa {CardMessageRules.MaxLength} ký tự. Bạn đã nhập {card.Length} ký tự."));
+        }
+
         request = errors.Count > 0
             ? null
-            : new OrderRequest(senderName, senderPhone, email, recipientName, recipientPhone, form.Ward!.Value, street, form.Window, form.Payment);
+            : new OrderRequest(senderName, senderPhone, email, recipientName, recipientPhone, form.Ward!.Value, street, form.Window, form.Payment,
+                card.Length == 0 ? null : card, form.HidePrices);
         return errors;
     }
 

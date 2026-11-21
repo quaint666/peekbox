@@ -110,6 +110,7 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             order.Property(o => o.WardName).HasMaxLength(100);
             order.Property(o => o.Street).HasMaxLength(300);
             order.Property(o => o.PackagingName).HasMaxLength(100);
+            order.Property(o => o.CardMessage).HasMaxLength(CardMessageRules.MaxLength);
             // The admin's day view (M6) lists orders by delivery date; the track page finds one by id and phone.
             order.HasIndex(o => o.DeliveryDate);
             order.HasOne(o => o.Ward).WithMany().HasForeignKey(o => o.WardId).OnDelete(DeleteBehavior.Restrict);
@@ -118,6 +119,7 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
                 table.HasCheckConstraint("CK_Orders_Money",
                     "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND " +
                     "\"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\"");
+                table.HasCheckConstraint("CK_Orders_CardMessage", "\"CardMessage\" IS NULL OR char_length(\"CardMessage\") BETWEEN 1 AND " + CardMessageRules.MaxLength);
                 table.HasCheckConstraint("CK_Orders_Phones", "\"SenderPhone\" ~ '^0[0-9]{9}$' AND \"RecipientPhone\" ~ '^0[0-9]{9}$'");
             });
         });

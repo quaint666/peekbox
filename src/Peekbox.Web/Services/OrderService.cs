@@ -7,7 +7,7 @@ namespace Peekbox.Web.Services;
 // What the checkout form sends once its fields have passed the checks (names trimmed, phones as 10 digits).
 public sealed record OrderRequest(
     string SenderName, string SenderPhone, string SenderEmail, string RecipientName, string RecipientPhone,
-    int WardId, string Street, DeliveryWindow Window, PaymentMethod Payment);
+    int WardId, string Street, DeliveryWindow Window, PaymentMethod Payment, string? CardMessage = null, bool HidePrices = false);
 
 public enum PlaceOutcome
 {
@@ -16,6 +16,7 @@ public enum PlaceOutcome
     NoHamper,        // no cookie or an unknown one
     NotReady,        // empty box, a delivery date that has passed, or an item out of date: the cart says which
     UnknownWard,
+    WindowFull,      // the chosen window of the delivery date has taken all it can (F42); the checkout says so
     SoldOut,         // an item no longer has enough stock; the hamper was lowered to what is left (SoldOut lists them)
 }
 
@@ -30,7 +31,7 @@ public sealed record WardOption(int Id, string Name, long FeeVnd);
 // Places an order (F48): the one place an order is written. All or nothing, in one transaction: the hamper is priced
 // again on the server, every rule is checked again, the stock is taken, the order and its lines are saved with copies
 // of everything that can change later, and the hamper is marked as ordered. The browser never sends a price.
-public sealed class OrderService(PeekboxDbContext db, HamperService hampers, BuilderLimits limits, TimeProvider clock)
+public sealed class OrderService(PeekboxDbContext db, HamperService hampers, BuilderLimits limits, DeliveryCapacity capacity, TimeProvider clock)
 {
     public async Task<PlaceResult> PlaceAsync(string? hamperToken, OrderRequest request, CancellationToken cancellationToken = default)
     {
@@ -80,6 +81,18 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
             return new PlaceResult(PlaceOutcome.NotReady);
         }
 
+        // F42: is there room in the chosen window? Two orders for the last place must not both win, so they take turns:
+        // an advisory lock on the delivery day (held until this transaction ends) makes the second one count after the
+        // first has committed. Another day does not wait.
+        var day = hamper.DeliveryDate!.Value;
+        await db.Database.ExecuteSqlAsync($"SELECT pg_advisory_xact_lock({SlotLockKey(day)})", cancellationToken);
+        var taken = await capacity.Counted.CountAsync(o => o.DeliveryDate == day && o.DeliveryWindow == request.Window, cancellationToken);
+        if (taken >= capacity.PerWindow)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return new PlaceResult(PlaceOutcome.WindowFull);
+        }
+
         var slugs = box.Lines.Select(l => l.Slug).ToList();
         var productIds = await db.Products.AsNoTracking()
             .Where(p => slugs.Contains(p.Slug))
@@ -91,10 +104,10 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
         foreach (var line in box.Lines.OrderBy(l => productIds[l.Slug]))
         {
             var id = productIds[line.Slug];
-            var taken = await db.Products
+            var updated = await db.Products
                 .Where(p => p.Id == id && p.Stock >= line.Quantity)
                 .ExecuteUpdateAsync(s => s.SetProperty(p => p.Stock, p => p.Stock - line.Quantity), cancellationToken);
-            if (taken == 0)
+            if (updated == 0)
             {
                 shortLines.Add(line);
             }
@@ -124,6 +137,8 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
             Street = request.Street,
             DeliveryDate = hamper.DeliveryDate!.Value,   // ItemsOpen above means a date is set
             DeliveryWindow = request.Window,
+            CardMessage = request.CardMessage,
+            HidePrices = request.HidePrices,
             GoodsVnd = box.Quote.GoodsVnd,
             PackagingName = box.Packaging.Name,
             PackagingFeeVnd = box.Packaging.FeeVnd,
@@ -175,6 +190,9 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
         (await db.Wards.AsNoTracking().OrderBy(w => w.SortOrder).Select(w => new { w.Id, w.Name, w.Ring }).ToListAsync(cancellationToken))
             .Select(w => new WardOption(w.Id, w.Name, DeliveryFees.ForRing(w.Ring)))
             .ToList();
+
+    // One number per delivery day for pg_advisory_xact_lock; the prefix keeps it clear of any other lock the site might take.
+    private static long SlotLockKey(DateOnly day) => 0x50_45_45_4B_00_00_00_00L + day.DayNumber;
 
     private async Task<PlaceResult> AlreadyPlacedAsync(int orderId, CancellationToken cancellationToken)
     {

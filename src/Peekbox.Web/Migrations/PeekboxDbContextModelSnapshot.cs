@@ -191,6 +191,10 @@ namespace Peekbox.Web.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CardMessage")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -207,6 +211,9 @@ namespace Peekbox.Web.Migrations
 
                     b.Property<long>("GoodsVnd")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("HidePrices")
+                        .HasColumnType("boolean");
 
                     b.Property<long>("PackagingFeeVnd")
                         .HasColumnType("bigint");
@@ -288,6 +295,8 @@ namespace Peekbox.Web.Migrations
 
                     b.ToTable("Orders", t =>
                         {
+                            t.HasCheckConstraint("CK_Orders_CardMessage", "\"CardMessage\" IS NULL OR char_length(\"CardMessage\") BETWEEN 1 AND 200");
+
                             t.HasCheckConstraint("CK_Orders_Money", "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND \"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\"");
 
                             t.HasCheckConstraint("CK_Orders_Phones", "\"SenderPhone\" ~ '^0[0-9]{9}$' AND \"RecipientPhone\" ~ '^0[0-9]{9}$'");

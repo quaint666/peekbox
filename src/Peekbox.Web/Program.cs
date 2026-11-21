@@ -45,6 +45,8 @@ builder.Services.AddScoped<HamperService>();
 builder.Services.AddScoped<ItemCatalog>();
 builder.Services.AddScoped<ReadyHampers>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddSingleton(DeliveryLimit.FromConfiguration(builder.Configuration));
+builder.Services.AddScoped<DeliveryCapacity>();
 builder.Services.AddSingleton<RateLimits>();
 builder.Services.AddSingleton(ShopInfo.FromConfiguration(builder.Configuration));
 builder.Services.AddScoped<HamperRetention>();

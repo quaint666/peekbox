@@ -50,6 +50,7 @@
 .order-facts { display: flex; flex-direction: column; gap: 6px; margin: 0; font-size: var(--text-sm); line-height: 1.6; }
 .order-facts dt { display: inline; color: var(--color-muted); }
 .order-facts dd { display: inline; margin: 0; }
+.order-card-message { white-space: pre-line; overflow-wrap: anywhere; }   /* the card's own lines, as typed */
 .order-sums { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding-top: var(--space-3); border-top: 1px solid var(--color-border-soft); font-size: var(--text-md); }
 .order-sums div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
 .order-sums dd { margin: 0; }

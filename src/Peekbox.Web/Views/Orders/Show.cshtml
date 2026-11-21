@@ -76,6 +76,14 @@
                 <div><dt>Người nhận:</dt> <dd>@order.RecipientName, @OrderPageModel.Phone(order.RecipientPhone)</dd></div>
                 <div><dt>Địa chỉ:</dt> <dd>@order.Street, @order.WardName</dd></div>
                 <div><dt>Ngày giao:</dt> <dd>@Model.When</dd></div>
+                @if (order.CardMessage is { } card)
+                {
+                    <div><dt>Lời nhắn trên thiệp:</dt> <dd class="order-card-message">@card</dd></div>
+                }
+                @if (order.HidePrices)
+                {
+                    <div><dt>Gói quà:</dt> <dd>Ẩn giá bên trong hộp quà</dd></div>
+                }
             </dl>
             <dl class="order-sums">
                 <div><dt>Tiền hàng</dt><dd>@Vnd.Format(order.GoodsVnd)</dd></div>
