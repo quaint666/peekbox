@@ -45,9 +45,10 @@ public class ShopInfoTests(PeekboxFixture fixture)
     [InlineData("Shop:Email")]
     [InlineData("Shop:Address")]
     [InlineData("Shop:SupportHours")]
+    [InlineData("Shop:ZaloUrl")]
     public void A_missing_setting_stops_the_site_from_starting_with_its_name(string key)
     {
-        var settings = new Dictionary<string, string?> { ["Shop:Phone"] = "1", ["Shop:Email"] = "a@b", ["Shop:Address"] = "x", ["Shop:SupportHours"] = "y", [key] = " " };
+        var settings = new Dictionary<string, string?> { ["Shop:Phone"] = "1", ["Shop:Email"] = "a@b", ["Shop:Address"] = "x", ["Shop:SupportHours"] = "y", ["Shop:ZaloUrl"] = "https://zalo.me/1", [key] = " " };
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(settings).Build();
 
         var error = Assert.Throws<InvalidOperationException>(() => ShopInfo.FromConfiguration(configuration));
@@ -57,7 +58,7 @@ public class ShopInfoTests(PeekboxFixture fixture)
     [Fact]
     public void The_phone_link_keeps_only_the_digits()
     {
-        Assert.Equal("tel:0900000001", new ShopInfo("0900 000 001", "a@b", "x", "y").PhoneLink);
-        Assert.Equal("tel:02873001234", new ShopInfo("(028) 7300-1234", "a@b", "x", "y").PhoneLink);
+        Assert.Equal("tel:0900000001", new ShopInfo("0900 000 001", "a@b", "x", "y", "z").PhoneLink);
+        Assert.Equal("tel:02873001234", new ShopInfo("(028) 7300-1234", "a@b", "x", "y", "z").PhoneLink);
     }
 }
