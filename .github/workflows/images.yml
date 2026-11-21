@@ -114,7 +114,7 @@ jobs:
           [ "$(docker exec "$CI_NAME-web" id -u)" != 0 ]
           docker exec "$CI_NAME-web" sh -c 'TZ=Asia/Ho_Chi_Minh date +%z' | grep -q '+0700'
           # What a plain wget cannot see (the image has no curl, the runner does): HEAD, compression and the method rule,
-          # against the published build (the test host answers some of these differently, see RequestMapTests).
+          # against the published build (an unpublished app answers some of them differently; see PeekboxFixture).
           IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$CI_NAME-web")
           req() { curl -s -H 'Host: localhost' "$@"; }
           [ "$(req -o /dev/null -w '%{http_code}' -I "http://$IP:8080/healthz")" = 200 ]

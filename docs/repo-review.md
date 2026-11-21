@@ -76,8 +76,8 @@ proxy's rate-limit bucket and the hamper cookie is not marked Secure), `AllowedH
   the app should not answer, `/error` opened directly, a 404 body, cache headers, whether SQL reaches the log. **Probe the
   published build, not `dotnet run`:** `dotnet publish -c Release -o <scratch>` and `dotnet Peekbox.Web.dll` is the
   Dockerfile's artifact. From the Debug build, a request with `Accept-Encoding: gzip` for any static file got an empty `200`
-  (every script failed in the browser), and a wrong method gave 404 where the published build gives 405. Ask for each
-  important address with the methods GET, HEAD, POST and PUT, and once with `Accept-Encoding: gzip, br`.
+  (every script failed in the browser), and a wrong method gave 404 where the published build gives 405 (the 404 is explained in the batch 6 note below; the empty gzip I did not trace, but it
+  appeared only in the unpublished build). Ask for each important address with the methods GET, HEAD, POST and PUT, and once with `Accept-Encoding: gzip, br`.
 - Support claims come from data: `npm pack web-features` (the package behind Baseline) has the status and the first
   version of every feature; look the feature up, do not recall it.
 - Headless Chromium has no hover device, so every `:hover` rule is silently off in a screenshot: start it with
@@ -157,14 +157,18 @@ in brackets. Score 8/10: the base was sound, and the defects were in what a hand
   sticks to the top does not start below the header.
 - Built after the review: the carousel dots are named by their occasion and the stand-alone links are 24 px (#78); the
   request map is in `docs/api-contract.md` and `RequestMapTests` keeps it equal to `RoutesTests.Expected`; a POST, PUT,
-  DELETE or PATCH to an address that does not take it is a 405 (a GET or HEAD is not tried in the test host, which answers
-  the 404 page where the published app answers 405: only a real server tells, so the image smoke step in `images.yml` sends
-  a GET to `/cart/add`, and also checks `HEAD /healthz` and a gzip'd stylesheet that inflates to the real file).
+  DELETE, PATCH, GET or HEAD to an address that does not take it is a 405. Why the test host first said 404 to a GET: an
+  unpublished app (the test host, `dotnet run`, `bin/`) has a build manifest, and then `MapStaticAssets` adds a GET/HEAD fallback
+  `{**path:file}` (`StaticAssetDevelopmentRuntimeHandler`). The routing method policy sees a GET candidate, so it never
+  answers 405, and the `:file` constraint then rejects the address: a 404. `dotnet publish` writes a manifest that is not a
+  build manifest, so the image has no fallback. `PeekboxFixture` sets `DisableStaticAssetNotFoundRuntimeFallback` so the
+  tests answer like the image; the image smoke step in `images.yml` sends a GET to `/cart/add` and also checks `HEAD /healthz`
+  and a gzip'd stylesheet that inflates to the real file).
 - Left, decided and not yet built: "8/3" on the home page against "8/3 và 20/10" on the occasion page (two sources for one
   name); hamper rows are never purged; the workflow actions are pinned by tag, not by commit; the browser scripts
   (`builder.ts` is 595 lines) have no automated test.
-- Left on purpose: `/about`, `/blog` and `/legal` are linked from the header and footer and were 404 until M4 (the blog
-  came in #74); on a phone the sticky header, the builder's steps and the bottom bar leave about 60 % of the screen for the list.
+- Left on purpose: `/about`, `/blog` and `/legal` were linked from the header and footer before they were built and were 404 until M4 (the blog
+  came in #74, About and legal in #77); on a phone the sticky header, the builder's steps and the bottom bar leave about 60 % of the screen for the list.
 - Browser floor (decision 2026-11-21): the Popover API is Baseline "newly available" since 2025-01-27 and "widely
   available" about 2027-07 (web-features 3.47.0), and the confirm popovers, panels and the toast depend on it with no
   fallback. The floor is Chrome 116, Firefox 125 and Safari 17. `:has()`, `color-mix()`, `text-wrap: balance`,

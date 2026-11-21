@@ -4,7 +4,7 @@ A web app for building a gift hamper for Tết, Valentine, 8/3 (Women's Day), Tr
 
 The customer sets a budget first, then picks items. Every item shows its brand, weight, origin and expiry date, and the total is calculated by the server. An item that would expire before the delivery date cannot be ordered.
 
-**Status:** the design, written content and images are done. Built so far (milestones M0 to M3, plus the occasion pages and ready hampers brought forward from M5): home, the occasion pages with ready hampers, the builder with item pages, packaging and review, the cart, checkout with a real order in the database, the order page and order tracking. One ASP.NET Core MVC app with Razor views and PostgreSQL, in Vietnamese only, with the 125 sample items. Next: the content pages (M4). `docs/frontend-plan.md`, section 6, has the milestones.
+**Status:** the design, written content and images are done. Built so far (milestones M0 to M4, plus the occasion pages and ready hampers brought forward from M5): home, the occasion pages with ready hampers, the builder with item pages, packaging and review, the cart, checkout with a real order in the database, the order page and order tracking, About and commitments, the blog, and terms and privacy. One ASP.NET Core MVC app with Razor views and PostgreSQL, in Vietnamese only, with the 125 sample items. Next: the extras (M5). `docs/frontend-plan.md`, section 6, has the milestones.
 
 ## Where to look
 
