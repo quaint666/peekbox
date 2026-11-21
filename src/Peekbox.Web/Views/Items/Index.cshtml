@@ -7,6 +7,22 @@
     ViewData["Nav"] = SiteLinks.Builder.Key;
     var categoryLink = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, "category", item.CategoryId) + Anchors.Link(Anchors.Items);
     ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Builder), Crumbs.To(item.CategoryName, categoryLink), Crumbs.Here(item.Name));
+    var origin = $"{Context.Request.Scheme}://{Context.Request.Host}";
+    var shareUrl = origin + SiteLinks.Item(item.Slug);
+    var facebook = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString("https://www.facebook.com/sharer/sharer.php", "u", shareUrl);
+}
+
+@section Head {
+    <meta name="description" content="@item.Description">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@item.Name · Peekbox">
+    <meta property="og:description" content="@item.Description">
+    <meta property="og:image" content="@(origin + item.ImagePath)">
+    <meta property="og:url" content="@shareUrl">
+}
+
+@section Scripts {
+    <script type="module" src="~/js/share.js" asp-append-version="true"></script>
 }
 
 @section Styles {
@@ -54,6 +70,14 @@
 
             <div class="card item-buy" id="@Anchors.ItemBuy">
                 <partial name="_ItemBuy" model="Model" />
+            </div>
+
+            @* F31: a plain link to Facebook; the two buttons appear when share.ts runs (hidden until then). *@
+            <div class="item-share" data-share-url="@shareUrl" data-share-title="@item.Name · Peekbox" role="group" aria-label="Chia sẻ món này">
+                <span class="item-share__label">Chia sẻ</span>
+                <button type="button" class="item-share__btn" data-share-copy hidden><partial name="_Icon" model='"link"' />Sao chép liên kết</button>
+                <a class="item-share__btn" href="@facebook" target="_blank" rel="noopener noreferrer"><partial name="_Icon" model='"external"' />Facebook<span class="visually-hidden"> (mở trang mới)</span></a>
+                <button type="button" class="item-share__btn" data-share-system hidden><partial name="_Icon" model='"share"' />Chia sẻ…</button>
             </div>
 
             <ul class="item-promises">
