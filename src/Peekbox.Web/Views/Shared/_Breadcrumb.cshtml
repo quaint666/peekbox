@@ -1,0 +1,22 @@
+@model IReadOnlyList<Crumb>
+
+@* Where the visitor is: one trail for every page but the home page and the error pages (the layout draws it from ViewData["Crumbs"]). *@
+<div class="crumb-bar">
+    <div class="container">
+        <nav class="breadcrumb" aria-label="Đường dẫn">
+            <ol>
+                @foreach (var crumb in Model)
+                {
+                    if (crumb.Href is null)
+                    {
+                        <li><span aria-current="page">@crumb.Label</span></li>
+                    }
+                    else
+                    {
+                        <li><a href="@crumb.Href">@crumb.Label</a></li>
+                    }
+                }
+            </ol>
+        </nav>
+    </div>
+</div>

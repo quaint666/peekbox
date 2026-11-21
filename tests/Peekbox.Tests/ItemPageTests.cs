@@ -102,7 +102,7 @@ public class ItemPageTests(PeekboxFixture fixture)
         var html = Text(await new Visitor(fixture.Client(), null).PageAsync());
 
         Assert.Contains("<title>Trà sen · Peekbox</title>", html);
-        Assert.Contains("<li><a href=\"/builder\">Tạo hộp quà</a></li> <li><a href=\"/builder?category=tra-ca-phe#chon-mon\">Trà và cà phê</a></li> <li aria-current=\"page\">Trà sen</li>", html);
+        Assert.Contains("<li><a href=\"/builder\">Tạo hộp quà</a></li> <li><a href=\"/builder?category=tra-ca-phe#chon-mon\">Trà và cà phê</a></li> <li><span aria-current=\"page\">Trà sen</span></li>", html);
         Assert.Contains("<img class=\"item-photo\" src=\"/images/products/tra-sen.webp\" alt=\"Trà sen\"", html);
         Assert.Contains("<h1 class=\"item-title\">Trà sen</h1>", html);
         Assert.Contains("<span class=\"item-price__value\">180.000đ</span><span class=\"item-price__tax\">Đã gồm thuế</span>", html);

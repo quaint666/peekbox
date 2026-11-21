@@ -54,7 +54,7 @@ public class HamperPageTests(PeekboxFixture fixture)
         var html = await NewVisitor().PageAsync(path);
         var crumbs = Regex.Match(html, @"<nav class=""breadcrumb""[\s\S]*?</nav>").Value;
         Assert.Contains(crumb, crumbs);
-        Assert.Contains("<li aria-current=\"page\">Hộp An Khang</li>", crumbs);
+        Assert.Contains("<li><span aria-current=\"page\">Hộp An Khang</span></li>", crumbs);
     }
 
     [Fact]

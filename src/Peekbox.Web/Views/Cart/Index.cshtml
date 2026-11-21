@@ -2,6 +2,7 @@
 @model CartViewModel
 @{
     ViewData["Title"] = "Giỏ hàng";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.Here(SiteLinks.Cart.Label));
     ViewData["Nav"] = SiteLinks.Cart.Key;
 }
 

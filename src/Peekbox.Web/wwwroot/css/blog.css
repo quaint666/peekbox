@@ -31,7 +31,6 @@
 
 /* ---------- One post ---------- */
 .post { display: flex; flex-direction: column; gap: 20px; max-width: 760px; margin-inline: auto; }
-.post__back { display: inline-flex; align-items: center; align-self: flex-start; min-height: 44px; font-size: var(--text-sm); font-weight: 600; }
 .post__head { display: flex; flex-direction: column; gap: var(--space-2); }
 .post__category { margin: 0; font-size: var(--text-2xs); font-weight: 700; color: var(--color-primary-text); }  /* 12px; 13px from 900px */
 .post__title { margin: 0; font-size: var(--text-2xl); line-height: 1.3; }  /* 28px; 38px from 900px: the nearest token is 34px */

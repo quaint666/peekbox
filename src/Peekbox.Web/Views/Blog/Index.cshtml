@@ -2,6 +2,7 @@
 @model IReadOnlyList<BlogPost>
 @{
     ViewData["Title"] = "Blog";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.Here(SiteLinks.Blog.Label));
 }
 
 @section Styles {

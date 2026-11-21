@@ -24,6 +24,10 @@
     <a class="skip-link" href="#main">Bỏ qua và vào nội dung</a>
     @await RenderSectionAsync("Banner", required: false)
     <partial name="_Header" />
+    @if (ViewData[Crumbs.ViewDataKey] is IReadOnlyList<Crumb> crumbs)
+    {
+        <partial name="_Breadcrumb" model="crumbs" />
+    }
     <main id="main" class="@(ViewData["FullWidth"] is true ? null : "container page")">
         @RenderBody()
     </main>

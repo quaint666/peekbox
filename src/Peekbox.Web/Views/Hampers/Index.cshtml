@@ -13,6 +13,9 @@
 
     var summary = $"{card.Name}: {card.Count} món, {card.Packaging.Name}, {Vnd.Format(card.Quote.TotalVnd)} đã gồm thuế. {card.ForWhom}.";
     var origin = $"{Context.Request.Scheme}://{Context.Request.Host}";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(
+        Model.FromBuilder ? Crumbs.To(SiteLinks.Builder.Label, SiteLinks.Builder.Href + Anchors.Link(Anchors.Suggestions)) : Crumbs.To(occasion.Name, SiteLinks.Occasion(occasion.Id)),
+        Crumbs.Here(card.Name));
 }
 
 @section Head {
@@ -36,20 +39,6 @@
    then the other hampers of the occasion. The occasion's colours come from its accent (occasion.css). *@
 <div class="hp occ occ--@occasion.Accent">
     <div class="container hp__inner">
-        <nav class="breadcrumb" aria-label="Đường dẫn">
-            <ol>
-                <li><a href="@SiteLinks.Home.Href">@SiteLinks.Home.Label</a></li>
-                @if (Model.FromBuilder)
-                {
-                    <li><a href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Suggestions))">@SiteLinks.Builder.Label</a></li>
-                }
-                else
-                {
-                    <li><a href="@SiteLinks.Occasion(occasion.Id)">@occasion.Name</a></li>
-                }
-                <li aria-current="page">@card.Name</li>
-            </ol>
-        </nav>
 
         <div class="hp-main">
             <img class="hp-photo" src="@card.ImagePath" alt="@card.Name" width="570" height="380">

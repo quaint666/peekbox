@@ -3,6 +3,7 @@
 @{
     var order = Model.Order;
     ViewData["Title"] = $"Đơn hàng {order.Number}";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Track), Crumbs.Here($"Đơn hàng {order.Number}"));
     var current = OrderPageModel.Steps.ToList().FindIndex(s => s.Status == order.Status);
 }
 

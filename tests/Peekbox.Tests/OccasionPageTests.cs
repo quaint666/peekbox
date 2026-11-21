@@ -67,7 +67,7 @@ public class OccasionPageTests(PeekboxFixture fixture)
     {
         var html = await NewVisitor().PageAsync("/dip/trung-thu");
 
-        var bar = Regex.Match(html, @"<div class=""occ-bar"">[\s\S]*?</nav>").Value;
+        var bar = Regex.Match(html, @"<div class=""crumb-bar"">[\s\S]*?</nav>").Value;
         Assert.Contains("<a href=\"/\">Trang chủ</a>", bar);
         Assert.Contains("<span aria-current=\"page\">Trung thu</span>", bar);
         Assert.DoesNotContain("Dịp khác", html);

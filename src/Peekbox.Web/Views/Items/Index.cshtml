@@ -6,6 +6,7 @@
     ViewData["Title"] = item.Name;
     ViewData["Nav"] = SiteLinks.Builder.Key;
     var categoryLink = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, "category", item.CategoryId) + Anchors.Link(Anchors.Items);
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Builder), Crumbs.To(item.CategoryName, categoryLink), Crumbs.Here(item.Name));
 }
 
 @section Styles {
@@ -15,14 +16,6 @@
 
 @* The item page (F26 to F28, mockup 03 as redrawn 2026-11-16). *@
 <div class="item-page">
-    <nav class="breadcrumb" aria-label="Đường dẫn">
-        <ol>
-            <li><a href="@SiteLinks.Builder.Href">@SiteLinks.Builder.Label</a></li>
-            <li><a href="@categoryLink">@item.CategoryName</a></li>
-            <li aria-current="page">@item.Name</li>
-        </ol>
-    </nav>
-
     <div class="item-main">
         <img class="item-photo" src="@item.ImagePath" alt="@item.Name" width="508" height="508">
 

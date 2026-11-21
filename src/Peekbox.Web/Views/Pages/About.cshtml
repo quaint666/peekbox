@@ -3,6 +3,7 @@
 @{
     ViewData["FullWidth"] = true;   // the page sets its own width and spacing
     ViewData["Title"] = Model.Title;
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.Here(SiteLinks.About.Label));
 }
 
 @section Styles {
