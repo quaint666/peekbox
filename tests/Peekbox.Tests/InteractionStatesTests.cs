@@ -81,7 +81,7 @@ public class InteractionStatesTests
 
         Assert.True(animated.Count == 0, "animation that ignores \"reduce motion\": " + string.Join("; ", animated));
         // The rules this guard is for exist: the card photo's fade is one of them.
-        Assert.Contains(Rules(), r => r.File == "builder.css" && r.Selector == ".item-card__img" && r.Body.Contains("animation: card-photo-in var(--motion-photo)"));
+        Assert.Contains(Rules(), r => r.File == "builder.css" && r.Selector == ".item-card__img" && r.Body.Contains("animation: photo-in var(--motion-photo)"));
     }
 
     [Fact]

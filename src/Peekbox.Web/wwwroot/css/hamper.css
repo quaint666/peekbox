@@ -66,12 +66,6 @@
     .hp-line__name a:hover { text-decoration: underline; }
     .hp-rel__link:hover .hp-rel__name { text-decoration: underline; }
 }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .hp-rel__link { transition: transform 150ms ease-out; }
-    .hp-rel__link:hover { transform: translateY(-2px); }
-    .hp-rel__photo { transition: transform 200ms ease-out; }
-    .hp-rel__link:hover .hp-rel__photo { transform: scale(1.04); }
-}
 
 @media (min-width: 600px) {
     .hp-contents { padding: var(--space-5); }

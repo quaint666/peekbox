@@ -202,32 +202,21 @@
     .hamper:hover .card-go { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .hamper { transition: transform 150ms ease-out; }
-    .hamper:hover { transform: translateY(-2px); }
-    .hamper__photo { transition: transform 200ms ease-out; }
-    .hamper:hover .hamper__photo { transform: scale(1.04); }
     .card-go { transition: background-color 150ms ease-out, color 150ms ease-out; }
 }
 
 /* Small motion, only for visitors who have not asked for less: the photo fades in once,
    and the budget you jumped to flashes its mark. */
 @media (prefers-reduced-motion: no-preference) {
-    @keyframes occ-photo-in { from { opacity: 0; } }
     @keyframes occ-mark-flash { from { transform: scale(2.4, 1.2); opacity: 0.45; } }
-    .occ-hero__photo { animation: occ-photo-in 450ms ease-out; }
+    .occ-hero__photo { animation: photo-in var(--motion-photo) ease-out; }
     .occ-tier:target .occ-tier__mark { animation: occ-mark-flash 800ms ease-out; }
 }
 
 /* Loading motion for the ready hampers, the same as on the builder's product cards (tokens.css). A: each photo fades in once.
    C: when the page opens, the first four cards of every budget rise a little and fade in one after another (a wide screen
    shows three and a bit; a phone one and a bit); the cards further along the row are off screen and just sit there. */
-@keyframes occ-card-in { from { opacity: 0; transform: translateY(6px); } }
 @media (prefers-reduced-motion: no-preference) {
-    .hamper__photo { animation: occ-photo-in var(--motion-photo) ease-out; }
-    .hamper:nth-child(-n+4) { animation: occ-card-in var(--motion-enter) ease-out backwards; animation-delay: calc(var(--i, 0) * var(--motion-stagger)); }
-    .hamper:nth-child(2) { --i: 1; }
-    .hamper:nth-child(3) { --i: 2; }
-    .hamper:nth-child(4) { --i: 3; }
 }
 
 @media (min-width: 900px) {
