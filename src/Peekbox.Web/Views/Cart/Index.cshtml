@@ -51,7 +51,13 @@
                     </div>
                 </div>
                 <partial name="_HamperLines" model="lines" />
-                <p class="cart-box__packaging"><span>@packaging.Name</span><strong>@Vnd.Format(packaging.FeeVnd)</strong></p>
+                <div class="cart-box__pack">
+                    <div class="review-card__head">
+                        <h3 class="cart-box__subtitle">Kiểu đóng gói</h3>
+                        <a class="review-card__edit" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Packaging))" aria-label="Đổi kiểu đóng gói">Đổi</a>
+                    </div>
+                    <partial name="_PackagingRow" model="packaging" />
+                </div>
             </section>
 
             <aside class="card cart-summary" aria-labelledby="summary-title">

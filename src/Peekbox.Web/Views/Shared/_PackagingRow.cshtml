@@ -1,0 +1,13 @@
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model PackagingOption
+
+@* The packaging of a box: its photo, name, description and fee. The same block on the review page and in the cart. *@
+<div class="review-packaging">
+    <img class="review-packaging__img" src="@Model.ImagePath" alt="" width="600" height="448">
+    <div class="review-packaging__text">
+        <p class="review-packaging__name">@Model.Name</p>
+        <p class="review-packaging__desc meta">@Model.Description</p>
+    </div>
+    <p class="review-packaging__fee">@(Model.FeeVnd == 0 ? "Miễn phí" : Vnd.Format(Model.FeeVnd))</p>
+</div>

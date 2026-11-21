@@ -38,6 +38,36 @@ async function showFee(): Promise<void> {
   }
 }
 
-ward?.addEventListener('change', () => void showFee());
+// A key press on the closed menu changes its value at once (the arrow keys), and each change would fetch and swap the
+// summary, so a keyboard visitor passing three wards fetched three times. A change made with keys waits until the keys stop
+// (or Enter, or the menu loses the focus); a choice made with the pointer is sent at once.
+const KEY_IDLE_MS = 500;
+let changedByKeys = false;
+let keyTimer = 0;
+
+function showFeeNow(): void {
+  window.clearTimeout(keyTimer);
+  changedByKeys = false;
+  void showFee();
+}
+
+ward?.addEventListener('pointerdown', () => { changedByKeys = false; });
+ward?.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' && changedByKeys) {
+    showFeeNow();
+  } else {
+    changedByKeys = true;
+  }
+});
+ward?.addEventListener('change', () => {
+  if (!changedByKeys) {
+    void showFee();
+    return;
+  }
+
+  window.clearTimeout(keyTimer);
+  keyTimer = window.setTimeout(showFeeNow, KEY_IDLE_MS);
+});
+ward?.addEventListener('blur', () => { if (changedByKeys) showFeeNow(); });
 for (const input of payments) input.addEventListener('change', nameThePayment);
 nameThePayment();

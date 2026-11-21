@@ -147,7 +147,13 @@ public class CartTests(PeekboxFixture fixture)
         Assert.Contains("<button type=\"button\" class=\"btn btn--outline cart-box__clear\" popovertarget=\"xoa-hop\">Xóa hộp</button>", html);
         Assert.Contains("<p class=\"review-line__name\">Trà sen</p>", html);
         Assert.Contains("<p class=\"review-line__name\">Mứt gừng</p>", html);
-        Assert.Contains("<p class=\"cart-box__packaging\"><span>Hộp cứng có nơ</span><strong>40.000đ</strong></p>", html);
+        // The packaging is the same block as on the review page: its photo, name, description and fee, with a way to change it.
+        var pack = System.Text.RegularExpressions.Regex.Match(html, @"<div class=""cart-box__pack"">[\s\S]*?<div class=""review-packaging"">[\s\S]*?<p class=""review-packaging__fee"">[^<]*</p>").Value;
+        Assert.Contains("<h3 class=\"cart-box__subtitle\">Kiểu đóng gói</h3>", pack);
+        Assert.Contains("<img class=\"review-packaging__img\" src=\"/images/packaging/", pack);
+        Assert.Contains("<p class=\"review-packaging__name\">Hộp cứng có nơ</p>", pack);
+        Assert.Contains("<p class=\"review-packaging__fee\">40.000đ</p>", pack);
+        Assert.Contains("href=\"/builder#dong-goi\"", pack);
         Assert.DoesNotContain("Bỏ món này", html);
 
         var summary = Summary(html);

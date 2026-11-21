@@ -5,7 +5,10 @@
     var box = Model.Box;
 }
 <aside class="card checkout-summary" id="checkout-summary" aria-labelledby="summary-title">
-    <h2 class="checkout-summary__title" id="summary-title">Đơn hàng của bạn</h2>
+    <div class="checkout-summary__head">
+        <h2 class="checkout-summary__title" id="summary-title">Đơn hàng của bạn</h2>
+        <a class="checkout-summary__edit" href="@SiteLinks.Cart.Href" aria-label="Sửa giỏ hàng">Sửa</a>
+    </div>
     <ul class="checkout-lines">
         @foreach (var line in box.Lines)
         {
