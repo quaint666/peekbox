@@ -11,7 +11,8 @@
 .occ {
     background: var(--occ-tint);
     --occ-scrim: color-mix(in srgb, var(--occ-panel) 70%, black);
-    /* The "Ngân sách" bar: a chip, the bar's padding and its border. The rows below stop under it when a chip is chosen. */
+    /* The "Ngân sách" bar: a chip, the bar's padding and its border. A chosen row stops under it (and under the header and
+       a gap, which html's scroll-padding already holds). */
     --occ-budgets-height: calc(var(--tap-min) + 2 * var(--space-2) + 1px);
 }
 
@@ -97,8 +98,9 @@
 
 /* Budget chips: links to the rows below, in a bar that stays at the top of the screen while the rows scroll by
    (occasion.ts marks the chip of the row in view). On a phone it is one slim line whose chips scroll sideways, with the
-   chips fading out at both edges; from 900 px the chips fit in a roomier row and do not scroll. */
-.occ-budgets { position: sticky; top: 0; z-index: var(--z-steps); background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+   chips fading out at both edges; from 900 px the bar is a little roomier, and the chips still scroll sideways on any screen too
+   narrow for all of them (so the page never does). */
+.occ-budgets { position: sticky; top: var(--site-header-height); z-index: var(--z-steps); background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
 .occ-budgets__inner { display: flex; align-items: center; gap: var(--space-3); padding-block: var(--space-2); }
 .occ-budgets__label { flex: none; font-size: var(--text-sm); font-weight: 600; }
 .occ-budgets__list {
@@ -139,7 +141,7 @@
 .occ-list__text { margin: 0 0 var(--space-4); font-size: var(--text-base); line-height: 1.6; color: var(--color-muted); }
 
 /* One budget: a heading and a row that scrolls sideways and snaps to each card. */
-.occ-tier { display: flex; flex-direction: column; gap: var(--space-4); padding-block: var(--space-4); scroll-margin-top: calc(var(--occ-budgets-height) + var(--space-4)); }
+.occ-tier { display: flex; flex-direction: column; gap: var(--space-4); padding-block: var(--space-4); scroll-margin-top: var(--occ-budgets-height); }
 .occ-tier__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 /* The mark and the label stay side by side (the label wraps inside itself): on a 360 px phone the title shares its line with
    the two arrow buttons, and as separate wrapping items the mark landed alone above the text and the count below it. */
@@ -275,13 +277,13 @@
 
 @media (min-width: 900px) {
     .occ {
-        /* A roomier bar: the chips fit, so nothing scrolls. */
+        /* A roomier bar (the chips fit on most wide screens; if they do not, the list scrolls, never the page). */
         --occ-budgets-height: calc(var(--tap-min) + 2 * var(--space-3) + 1px);
     }
     .occ-budgets__inner { gap: var(--space-4); padding-block: var(--space-3); }
     .occ-budgets__label { font-size: var(--text-base); }
-    .occ-budgets__list { gap: var(--space-3); padding-inline: 4px; overflow-x: visible; mask-image: none; }
-    .occ-budgets__chip { padding: 0 var(--space-5); }
+    .occ-budgets__list { gap: var(--space-3); }
+    .occ-budgets__chip { padding: 0 var(--space-4); }
     .occ-frame { height: 400px; }
     .occ-frame__text { padding: var(--space-6); }
     .occ-hero__title { font-size: var(--text-hero); }

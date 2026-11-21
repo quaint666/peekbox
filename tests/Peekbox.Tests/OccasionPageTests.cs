@@ -49,15 +49,15 @@ public class OccasionPageTests(PeekboxFixture fixture)
         }
     }
 
-    // The "Ngân sách" bar follows the page, and a chosen row stops under it, not behind it. jsdom and the test host cannot see
-    // layout, so this only reads the two rules that do it; how it looks was checked in a browser.
+    // The "Ngân sách" bar follows the page, under the sticky header, and a chosen row stops under it, not behind it. jsdom and
+    // the test host cannot see layout, so this only reads the two rules that do it; how it looks was checked in a browser.
     [Fact]
     public void The_budget_bar_is_sticky_and_the_rows_stop_below_it()
     {
         var css = File.ReadAllText(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "occasion.css"));
 
-        Assert.Matches(@"\.occ-budgets\s*\{[^}]*position:\s*sticky;[^}]*top:\s*0;", css);
-        Assert.Matches(@"\.occ-tier\s*\{[^}]*scroll-margin-top:\s*calc\(var\(--occ-budgets-height\)", css);
+        Assert.Matches(@"\.occ-budgets\s*\{[^}]*position:\s*sticky;[^}]*top:\s*var\(--site-header-height\);", css);
+        Assert.Matches(@"\.occ-tier\s*\{[^}]*scroll-margin-top:\s*var\(--occ-budgets-height\)", css);
     }
 
     // The slim bar: where you are, and a menu of the other five occasions (not this one), in the order of the home cards, each
