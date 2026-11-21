@@ -56,13 +56,13 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
         var hasItems = hamper is not null && (await hampers.BoxAsync(hamper, cancellationToken)).Lines.Count > 0;
         if (card.SoldOut.Count > 0 || (hasItems && !replace))
         {
-            return Redirect(back);
+            return LocalRedirect(back);
         }
 
         hamper = await hampers.UseReadyHamperAsync(hamper, card, cancellationToken);
         HamperCookie.Write(Response, hamper.Token);
         TempData[UsedHamperKey] = JsonSerializer.Serialize(new UsedHamper(card.Name, card.Count));
         // With a date that can be delivered the visitor lands on the items; without one, on step 1 to pick it.
-        return Redirect(limits.ItemsOpen(hamper.DeliveryDate) ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Items) : SiteLinks.Builder.Href);
+        return LocalRedirect(limits.ItemsOpen(hamper.DeliveryDate) ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Items) : SiteLinks.Builder.Href);
     }
 }

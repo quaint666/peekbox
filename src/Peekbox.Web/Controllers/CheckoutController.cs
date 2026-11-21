@@ -26,7 +26,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
         var box = await ReadyBoxAsync(cancellationToken);
         if (box is null)
         {
-            return Redirect(SiteLinks.Cart.Href);
+            return LocalRedirect(SiteLinks.Cart.Href);
         }
 
         return await PageAsync(box, new CheckoutForm { Ward = ward }, [], tooManyTries: false, cancellationToken);
@@ -47,7 +47,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
         {
             // Also a second click after the order was placed (the hamper is an order now): it opens that order.
             var placed = await orders.OrderTokenOfAsync(HamperCookie.Read(Request), cancellationToken);
-            return Redirect(placed is null ? SiteLinks.Cart.Href : SiteLinks.Order(placed));
+            return LocalRedirect(placed is null ? SiteLinks.Cart.Href : SiteLinks.Order(placed));
         }
 
         if (!rateLimits.TryOrder(HttpContext))
@@ -68,17 +68,17 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
         {
             case PlaceOutcome.Placed:
             case PlaceOutcome.AlreadyPlaced:
-                return Redirect(SiteLinks.Order(result.OrderToken!));
+                return LocalRedirect(SiteLinks.Order(result.OrderToken!));
             case PlaceOutcome.SoldOut:
                 TempData[SoldOutKey] = JsonSerializer.Serialize(result.SoldOut);
-                return Redirect(SiteLinks.SoldOutPath);
+                return LocalRedirect(SiteLinks.SoldOutPath);
             case PlaceOutcome.UnknownWard:
                 // The ward was in the list a moment ago; tell the visitor to pick again.
                 return await PageAsync(box, form, [new FieldError("ward", "Chọn phường giao hàng", "Chọn phường giao hàng.")], tooManyTries: false, cancellationToken, wards);
             case PlaceOutcome.NoHamper:
             case PlaceOutcome.NotReady:
             default:
-                return Redirect(SiteLinks.Cart.Href);
+                return LocalRedirect(SiteLinks.Cart.Href);
         }
     }
 
@@ -88,7 +88,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
     {
         if (TempData[SoldOutKey] is not string json || JsonSerializer.Deserialize<List<SoldOutLine>>(json) is not { Count: > 0 } lines)
         {
-            return Redirect(SiteLinks.CheckoutPath);
+            return LocalRedirect(SiteLinks.CheckoutPath);
         }
 
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
