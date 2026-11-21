@@ -80,7 +80,7 @@
             @foreach (var occasion in Model.Content.Occasions)
             {
                 @* The whole card is one link; what is inside it is text and decoration, never another link. *@
-                <li class="occasions__item">
+                <li class="occasions__item" data-name="@occasion.Name">
                     <a class="occasion occasion--@occasion.Accent" href="@SiteLinks.Occasion(occasion.Id)">
                         <div class="occasion__photo">
                             <img class="occasion__img" src="~/images/occasions/@occasion.Image" alt="" width="1264" height="848" loading="lazy">

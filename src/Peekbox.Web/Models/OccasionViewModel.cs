@@ -2,9 +2,9 @@ using Peekbox.Web.Services;
 
 namespace Peekbox.Web.Models;
 
-// An occasion page (F15): the occasion and its hampers, the other occasions to link to, and the visitor's box when it
+// An occasion page (F15): the occasion and its hampers, and the visitor's box when it
 // holds items (then "Dùng hộp này" asks first, state 31).
-public sealed record OccasionViewModel(OccasionPage Page, IReadOnlyList<OccasionLink> Others, Box? Box)
+public sealed record OccasionViewModel(OccasionPage Page, Box? Box)
 {
     public bool BoxHasItems => Box is { Lines.Count: > 0 };
 }

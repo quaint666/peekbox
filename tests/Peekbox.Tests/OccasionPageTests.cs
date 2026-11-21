@@ -60,20 +60,18 @@ public class OccasionPageTests(PeekboxFixture fixture)
         Assert.Matches(@"\.occ-tier\s*\{[^}]*scroll-margin-top:\s*var\(--occ-budgets-height\)", css);
     }
 
-    // The slim bar: where you are, and a menu of the other five occasions (not this one), in the order of the home cards, each
-    // with its colour dot. The paragraph and the button are below the photo, not in its frame.
+    // The slim bar: where you are. The other occasions are in the header's "Dịp" menu, so the page has no "Dịp khác" menu of its
+    // own (owner, 2026-11-21). The paragraph and the button are below the photo, not in its frame.
     [Fact]
-    public async Task The_slim_bar_has_the_crumb_and_a_menu_of_the_other_five_occasions_and_the_paragraph_is_below_the_photo()
+    public async Task The_slim_bar_has_only_the_crumb_and_the_paragraph_is_below_the_photo()
     {
         var html = await NewVisitor().PageAsync("/dip/trung-thu");
 
-        var bar = Regex.Match(html, @"<div class=""occ-bar"">[\s\S]*?</details>").Value;
+        var bar = Regex.Match(html, @"<div class=""occ-bar"">[\s\S]*?</nav>").Value;
         Assert.Contains("<a href=\"/\">Trang chủ</a>", bar);
         Assert.Contains("<span aria-current=\"page\">Trung thu</span>", bar);
-        var menu = Regex.Matches(bar, @"<a href=""(/dip/[^""]+)""><span class=""occ-dot occ-dot--(\w+)""").Select(m => (m.Groups[1].Value, m.Groups[2].Value));
-        Assert.Equal(
-            [("/dip/tet", "tet"), ("/dip/valentine", "valentine"), ("/dip/phu-nu", "women"), ("/dip/20-11", "teachers"), ("/dip/giang-sinh", "christmas")],
-            menu);
+        Assert.DoesNotContain("Dịp khác", html);
+        Assert.DoesNotContain("occ-switch", html);
 
         var frame = Regex.Match(html, @"<div class=""occ-frame"">[\s\S]*?</div>\s*</div>").Value;
         Assert.Contains("occ-hero__title", frame);
