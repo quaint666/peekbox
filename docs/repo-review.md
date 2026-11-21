@@ -155,12 +155,14 @@ in brackets. Score 8/10: the base was sound, and the defects were in what a hand
 - The sticky header and the occasion's budgets bar: `--site-header-height` was 67 px but is 68 (a 1 px line), the chip row
   overflowed the page at 900 px, and the old `scroll-padding-top: 96px` was a guess. `StickyHeaderTests` fails if a bar that
   sticks to the top does not start below the header.
-- Left, decided and not yet built: the carousel dots on the home page are links with no name (`content: ''` on
-  `::scroll-marker`); stand-alone links are 19 to 23 px tall on a phone (WCAG 2.5.8 asks for 24); a request map in
-  `docs/api-contract.md` with a test against `RoutesTests.Expected`; a test that every other method gets a 405; a CI smoke
-  step that asks the published image for a script with `Accept-Encoding: gzip` and for `HEAD /healthz`; "8/3" on the home
-  page against "8/3 và 20/10" on the occasion page (two sources for one name); hamper rows are never purged; the workflow
-  actions are pinned by tag, not by commit; the browser scripts (`builder.ts` is 595 lines) have no automated test.
+- Built after the review: the carousel dots are named by their occasion and the stand-alone links are 24 px (#78); the
+  request map is in `docs/api-contract.md` and `RequestMapTests` keeps it equal to `RoutesTests.Expected`; a POST, PUT,
+  DELETE or PATCH to an address that does not take it is a 405 (a GET or HEAD is not tried in the test host, which answers
+  the 404 page where the published app answers 405: only a real server tells, so the image smoke step in `images.yml` sends
+  a GET to `/cart/add`, and also checks `HEAD /healthz` and a gzip'd stylesheet that inflates to the real file).
+- Left, decided and not yet built: "8/3" on the home page against "8/3 và 20/10" on the occasion page (two sources for one
+  name); hamper rows are never purged; the workflow actions are pinned by tag, not by commit; the browser scripts
+  (`builder.ts` is 595 lines) have no automated test.
 - Left on purpose: `/about`, `/blog` and `/legal` are linked from the header and footer and were 404 until M4 (the blog
   came in #74); on a phone the sticky header, the builder's steps and the bottom bar leave about 60 % of the screen for the list.
 - Browser floor (decision 2026-11-21): the Popover API is Baseline "newly available" since 2025-01-27 and "widely
