@@ -14,19 +14,24 @@ public class HomeController(HomeContent content, ReadyHampers hampers) : Control
     public async Task<IActionResult> Index(CancellationToken cancellationToken) =>
         View(new HomeViewModel(content, await hampers.SummariesAsync(cancellationToken)));
 
-    // The "page not found" page (F09). The status-code middleware runs it again for an unknown address, and it keeps the 404.
-    // Other empty answers (a 400 from the form token, a 405) run it too; they stay as they were, with no page. Opened
-    // directly it is a 404 as well: the middleware runs it once more.
+    // The page for an answer with no body, which the status-code middleware runs again with the answer's own status.
+    // 404 (an unknown address): "page not found" (F09). 400 (a form whose token expired, for instance after a deploy, or a
+    // value that cannot be read): "request not valid", which says to reload and try again. Any other empty answer (a 405)
+    // stays as it was, with no page. Opened directly it is a 404: the middleware runs it with a 200, which is not an error.
     [Route(SiteLinks.NotFoundPath)]
     [IgnoreAntiforgeryToken]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult NotFoundPage() =>
-        Response.StatusCode is StatusCodes.Status404NotFound or StatusCodes.Status200OK ? Page() : new EmptyResult();
-
-    private ViewResult Page()
+    public IActionResult NotFoundPage() => Response.StatusCode switch
     {
-        Response.StatusCode = StatusCodes.Status404NotFound;
-        return View("NotFound");
+        StatusCodes.Status404NotFound or StatusCodes.Status200OK => Page("NotFound", StatusCodes.Status404NotFound),
+        StatusCodes.Status400BadRequest => Page("BadRequest", StatusCodes.Status400BadRequest),
+        _ => new EmptyResult(),
+    };
+
+    private ViewResult Page(string view, int status)
+    {
+        Response.StatusCode = status;
+        return View(view);
     }
 
     // The page after an unexpected error (Production; Development shows the framework's details instead). The
