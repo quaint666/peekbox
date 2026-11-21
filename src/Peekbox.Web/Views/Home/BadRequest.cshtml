@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Yêu cầu không hợp lệ";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/not-found.css" asp-append-version="true">
+}
+
+@* The page for a 400 (HomeController.NotFoundPage): a form that expired, or a value the site cannot read. Same look as the "page not found" page. *@
+<section class="card not-found" aria-labelledby="bad-request-title">
+    <p class="not-found__code" aria-hidden="true">400</p>
+    <h1 class="not-found__title" id="bad-request-title">Yêu cầu không hợp lệ</h1>
+    <p class="not-found__lead">Trang bạn đang mở có thể đã hết hạn hoặc yêu cầu bị lỗi. Hãy tải lại trang rồi thử lại, hoặc bắt đầu từ trang chủ.</p>
+    <div class="not-found__actions">
+        <a class="btn btn--primary" href="@SiteLinks.Home.Href">Về trang chủ</a>
+        <a class="btn btn--outline" href="@SiteLinks.Builder.Href">Tạo hộp quà</a>
+    </div>
+    <p class="not-found__help"><partial name="_SupportLine" /></p>
+</section>

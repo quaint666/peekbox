@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Peekbox.Web.Data;
 using Peekbox.Web.Security;
 
@@ -146,6 +147,23 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
     // one added still passes every rule of Pricing.StatusOf (stock, the delivery date, the budget); going down always is,
     // so a visitor who lowered the budget can still take things out.
     public async Task<QuantityChange> SetQuantityAsync(Hamper hamper, string slug, int quantity, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await ChangeQuantityAsync(hamper, slug, quantity, cancellationToken);
+        }
+        catch (Exception e) when (e is DbUpdateConcurrencyException || e is DbUpdateException { InnerException: PostgresException { SqlState: PostgresErrorCodes.UniqueViolation } })
+        {
+            // Another request changed the same line at the same moment (a double click, two tabs): two adds of a new item
+            // both insert its line, and two removals both delete it. The first one is stored now, so look again from the
+            // database and apply this request once more; it then updates the line or finds nothing left to do.
+            db.ChangeTracker.Clear();
+            var fresh = await db.Hampers.FirstAsync(h => h.Id == hamper.Id, cancellationToken);
+            return await ChangeQuantityAsync(fresh, slug, quantity, cancellationToken);
+        }
+    }
+
+    private async Task<QuantityChange> ChangeQuantityAsync(Hamper hamper, string slug, int quantity, CancellationToken cancellationToken)
     {
         var product = await db.Products.FirstOrDefaultAsync(p => p.Slug == slug, cancellationToken);
         if (product is null)

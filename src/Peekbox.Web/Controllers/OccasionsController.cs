@@ -38,11 +38,6 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
     [HttpPost(SiteLinks.UseHamperPath)]
     public async Task<IActionResult> Use(string? slug, string? from, bool replace = false, bool detail = false, CancellationToken cancellationToken = default)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
         var card = string.IsNullOrEmpty(slug) ? null : await readyHampers.FindAsync(slug, cancellationToken);
         if (card is null)
         {
@@ -61,13 +56,13 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
         var hasItems = hamper is not null && (await hampers.BoxAsync(hamper, cancellationToken)).Lines.Count > 0;
         if (card.SoldOut.Count > 0 || (hasItems && !replace))
         {
-            return Redirect(back);
+            return LocalRedirect(back);
         }
 
         hamper = await hampers.UseReadyHamperAsync(hamper, card, cancellationToken);
         HamperCookie.Write(Response, hamper.Token);
         TempData[UsedHamperKey] = JsonSerializer.Serialize(new UsedHamper(card.Name, card.Count));
         // With a date that can be delivered the visitor lands on the items; without one, on step 1 to pick it.
-        return Redirect(limits.ItemsOpen(hamper.DeliveryDate) ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Items) : SiteLinks.Builder.Href);
+        return LocalRedirect(limits.ItemsOpen(hamper.DeliveryDate) ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Items) : SiteLinks.Builder.Href);
     }
 }

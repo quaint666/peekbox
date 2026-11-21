@@ -38,9 +38,13 @@ public class FrameworkDefaultsTests(PeekboxFixture fixture)
     }
 
     // A plain Controller runs the action even when a value cannot be bound (it becomes the default: 0, Sáng, ZaloPay).
-    // The actions that would act on such a default refuse it instead: an amount of 0 takes the item out.
+    // One global filter (RefuseUnboundValuesFilter) refuses it with a 400 before any action runs, so no action can act on
+    // a default the visitor never typed: an amount of 0 takes the item out, a next of "abc" goes to the builder.
     [Theory]
     [InlineData("/builder/quantity", "quantity", "abc")]
+    [InlineData("/builder/packaging", "next", "abc")]
+    [InlineData("/dip/dung-hop", "replace", "abc")]
+    [InlineData("/dip/dung-hop", "detail", "abc")]
     [InlineData("/checkout", "payment", "Bitcoin")]
     [InlineData("/checkout", "window", "Midnight")]
     [InlineData("/checkout", "ward", "x")]
@@ -51,6 +55,17 @@ public class FrameworkDefaultsTests(PeekboxFixture fixture)
         var response = await visitor.PostAsync(path, new Dictionary<string, string> { ["slug"] = "tra-sen", [field] = value });
 
         Assert.Equal(400, (int)response.StatusCode);
+    }
+
+    // The same for an address: a checkbox that is "abc" would be read as its default, and the page would answer as if it
+    // had never been sent.
+    [Theory]
+    [InlineData("/builder?inDate=abc")]
+    [InlineData("/builder?fit=maybe")]
+    [InlineData("/checkout?ward=abc")]
+    public async Task An_address_with_a_value_that_cannot_be_bound_is_refused(string path)
+    {
+        Assert.Equal(400, (int)(await fixture.Client().GetAsync(path)).StatusCode);
     }
 
     // EF writes every SQL statement at Information, and the default level is Information: in Production that would put

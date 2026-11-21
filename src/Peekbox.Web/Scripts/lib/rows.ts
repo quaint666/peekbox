@@ -27,7 +27,7 @@ export function wireRows(root: ParentNode, onSettle?: (row: HTMLElement, positio
       continue;
     }
 
-    const cards = (): HTMLElement[] => Array.from(track.children) as HTMLElement[];
+    const cards = (): HTMLElement[] => Array.from(track.children).filter((card): card is HTMLElement => card instanceof HTMLElement);
     // A press while the row is still moving builds on the card already being scrolled to, not on where it is now.
     let pending: number | null = null;
 
