@@ -249,4 +249,43 @@ public class ItemPageTests(PeekboxFixture fixture)
 
     private Task SetStockAsync(string slug, int stock) =>
         fixture.WithDbAsync(db => db.Products.Where(p => p.Slug == slug).ExecuteUpdateAsync(s => s.SetProperty(p => p.Stock, stock)));
+
+    // ---- F29: ingredients, allergens, storage and the date they were read through (placeholders) ----
+
+    [Fact]
+    public async Task The_page_has_ingredients_allergens_storage_and_the_date_with_a_note_that_they_are_samples()
+    {
+        var html = Text(await new Visitor(fixture.Client(), null).PageAsync());
+
+        Assert.Contains("<h3 class=\"item-about__sub\">Thành phần và bảo quản</h3>", html);
+        Assert.Contains("<dt>Thành phần</dt><dd>Lá trà hoặc hạt cà phê, có thể ướp hương hoa tự nhiên (tùy loại).</dd>", html);
+        Assert.Contains("<dt>Chất gây dị ứng</dt><dd>Không có chất gây dị ứng phổ biến.</dd>", html);
+        Assert.Contains("<dt>Bảo quản</dt><dd>Giữ kín, nơi khô ráo, tránh ẩm và mùi mạnh.</dd>", html);
+        Assert.Contains("<dt>Cập nhật lần cuối</dt><dd>22/11/2026</dd>", html);
+        Assert.Contains("Thông tin mẫu theo nhóm món, chưa phải thông tin riêng của sản phẩm này.", html);
+        BuilderItemsTests.AssertWellFormed("item with details", html);
+    }
+
+    [Fact]
+    public async Task An_item_that_is_not_food_has_no_ingredients_line()
+    {
+        var slug = await fixture.WithDbAsync(db => db.Products.AsNoTracking().Where(p => p.CategoryId == "qua-khong-an").Select(p => p.Slug).FirstAsync());
+
+        var html = Text(await new Visitor(fixture.Client(), null).PageAsync(slug));
+
+        Assert.DoesNotContain("<dt>Thành phần</dt>", html);
+        Assert.Contains("<dt>Chất gây dị ứng</dt>", html);
+        Assert.Contains("<dt>Bảo quản</dt>", html);
+    }
+
+    [Fact]
+    public async Task Every_category_of_the_seed_has_its_own_text_and_the_others_say_nothing_that_could_be_wrong()
+    {
+        var categories = await fixture.WithDbAsync(db => db.Categories.AsNoTracking().Select(c => c.Id).ToListAsync());
+
+        Assert.NotEmpty(categories);
+        Assert.All(categories, id => Assert.Contains(id, ItemDetails.Categories));
+        Assert.All(ItemDetails.Categories, id => Assert.False(string.IsNullOrWhiteSpace(ItemDetails.For(id).Allergens + ItemDetails.For(id).Storage)));
+        Assert.Equal("Xem trên bao bì khi nhận hàng.", ItemDetails.For("a-new-category").Allergens);
+    }
 }
