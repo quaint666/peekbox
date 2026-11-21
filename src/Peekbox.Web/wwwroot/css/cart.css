@@ -33,6 +33,18 @@
 .cart-sums div { display: flex; justify-content: space-between; gap: var(--space-3); }
 .cart-sums dd { margin: 0; }
 .cart-sums__later { color: var(--color-muted); }
+.cart-sums__discount { color: var(--color-primary-text); font-weight: 600; }   /* F38: the code's line */
+/* F38: the discount code. The field and its button on one line; a code that is on shows as a row with "Bỏ mã". */
+.cart-coupon { display: flex; flex-direction: column; gap: var(--space-2); padding-top: var(--space-3); border-top: 1px solid var(--color-border-soft); }
+.cart-coupon__form { display: flex; flex-direction: column; gap: 6px; margin: 0; }
+.cart-coupon__row { display: flex; gap: var(--space-2); }
+.cart-coupon__row .input { flex: 1 1 auto; min-width: 0; text-transform: uppercase; }
+.cart-coupon__btn { flex: none; min-height: 48px; }
+.cart-coupon__applied { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.cart-coupon__applied form { margin: 0; }
+.cart-coupon__code { display: flex; flex-direction: column; margin: 0; font-size: var(--text-sm); min-width: 0; overflow-wrap: anywhere; }
+.cart-coupon__code strong { font-size: var(--text-md); letter-spacing: 0.04em; }
+.cart-coupon .field__error { margin: 0; }
 .cart-total { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); margin: 0; font-size: var(--text-sm); }
 .cart-total strong { font-size: var(--text-xl); }
 .cart-checkout { width: 100%; min-height: 48px; }

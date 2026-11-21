@@ -21,6 +21,8 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
 
     public DbSet<Ward> Wards => Set<Ward>();
 
+    public DbSet<Coupon> Coupons => Set<Coupon>();
+
     public DbSet<Order> Orders => Set<Order>();
 
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
@@ -67,6 +69,7 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             hamper.HasIndex(h => h.Token).IsUnique();
             hamper.Property(h => h.Token).HasMaxLength(64);
             hamper.Property(h => h.PackagingId).HasMaxLength(40);
+            hamper.Property(h => h.CouponCode).HasMaxLength(Coupon.CodeMaxLength);
             // A packaging that some hamper uses cannot be deleted by accident.
             hamper.HasOne(h => h.Packaging).WithMany().HasForeignKey(h => h.PackagingId).OnDelete(DeleteBehavior.Restrict);
             hamper.ToTable(table => table.HasCheckConstraint("CK_Hampers_BudgetVnd", "\"BudgetVnd\" >= 0"));
@@ -84,6 +87,15 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             packaging.Property(p => p.Description).HasMaxLength(300);
             packaging.Property(p => p.ImagePath).HasMaxLength(300);
             packaging.ToTable(table => table.HasCheckConstraint("CK_Packagings_FeeVnd", "\"FeeVnd\" >= 0"));
+        });
+
+        modelBuilder.Entity<Coupon>(coupon =>
+        {
+            coupon.HasIndex(c => c.Code).IsUnique();
+            coupon.Property(c => c.Code).HasMaxLength(Coupon.CodeMaxLength);
+            coupon.Property(c => c.Kind).HasConversion<string>().HasMaxLength(20);
+            coupon.ToTable(table => table.HasCheckConstraint("CK_Coupons_Value",
+                "\"Value\" > 0 AND (\"Kind\" <> 'Percent' OR \"Value\" <= 100) AND \"MinGoodsVnd\" >= 0 AND \"Uses\" >= 0"));
         });
 
         modelBuilder.Entity<Ward>(ward =>
@@ -111,6 +123,7 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             order.Property(o => o.Street).HasMaxLength(300);
             order.Property(o => o.PackagingName).HasMaxLength(100);
             order.Property(o => o.CardMessage).HasMaxLength(CardMessageRules.MaxLength);
+            order.Property(o => o.CouponCode).HasMaxLength(Coupon.CodeMaxLength);
             // The admin's day view (M6) lists orders by delivery date; the track page finds one by id and phone.
             order.HasIndex(o => o.DeliveryDate);
             order.HasOne(o => o.Ward).WithMany().HasForeignKey(o => o.WardId).OnDelete(DeleteBehavior.Restrict);
@@ -118,7 +131,8 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             {
                 table.HasCheckConstraint("CK_Orders_Money",
                     "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND " +
-                    "\"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\"");
+                    "\"DiscountVnd\" >= 0 AND \"DiscountVnd\" <= \"GoodsVnd\" AND " +
+                    "\"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\" - \"DiscountVnd\"");
                 table.HasCheckConstraint("CK_Orders_CardMessage", "\"CardMessage\" IS NULL OR char_length(\"CardMessage\") BETWEEN 1 AND " + CardMessageRules.MaxLength);
                 table.HasCheckConstraint("CK_Orders_Phones", "\"SenderPhone\" ~ '^0[0-9]{9}$' AND \"RecipientPhone\" ~ '^0[0-9]{9}$'");
             });

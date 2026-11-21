@@ -61,6 +61,53 @@ namespace Peekbox.Web.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Peekbox.Web.Data.Coupon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int?>("MaxUses")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("MinGoodsVnd")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Uses")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly?>("ValidFrom")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("ValidTo")
+                        .HasColumnType("date");
+
+                    b.Property<long>("Value")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Coupons", t =>
+                        {
+                            t.HasCheckConstraint("CK_Coupons_Value", "\"Value\" > 0 AND (\"Kind\" <> 'Percent' OR \"Value\" <= 100) AND \"MinGoodsVnd\" >= 0 AND \"Uses\" >= 0");
+                        });
+                });
+
             modelBuilder.Entity("Peekbox.Web.Data.Hamper", b =>
                 {
                     b.Property<int>("Id")
@@ -71,6 +118,10 @@ namespace Peekbox.Web.Migrations
 
                     b.Property<long>("BudgetVnd")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("CouponCode")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -195,6 +246,10 @@ namespace Peekbox.Web.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<string>("CouponCode")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -208,6 +263,9 @@ namespace Peekbox.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
+
+                    b.Property<long>("DiscountVnd")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("GoodsVnd")
                         .HasColumnType("bigint");
@@ -297,7 +355,7 @@ namespace Peekbox.Web.Migrations
                         {
                             t.HasCheckConstraint("CK_Orders_CardMessage", "\"CardMessage\" IS NULL OR char_length(\"CardMessage\") BETWEEN 1 AND 200");
 
-                            t.HasCheckConstraint("CK_Orders_Money", "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND \"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\"");
+                            t.HasCheckConstraint("CK_Orders_Money", "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND \"DiscountVnd\" >= 0 AND \"DiscountVnd\" <= \"GoodsVnd\" AND \"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\" - \"DiscountVnd\"");
 
                             t.HasCheckConstraint("CK_Orders_Phones", "\"SenderPhone\" ~ '^0[0-9]{9}$' AND \"RecipientPhone\" ~ '^0[0-9]{9}$'");
                         });

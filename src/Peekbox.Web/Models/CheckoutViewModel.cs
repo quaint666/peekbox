@@ -8,7 +8,7 @@ namespace Peekbox.Web.Models;
 public sealed record CheckoutViewModel(
     Box Box, IReadOnlyList<WardOption> Wards, CheckoutForm Form, IReadOnlyList<FieldError> Errors, bool TooManyTries, long? DeliveryFeeVnd, DaySlots Slots)
 {
-    public long TotalVnd => Box.Quote.TotalVnd + (DeliveryFeeVnd ?? 0);
+    public long TotalVnd => Box.PayVnd + (DeliveryFeeVnd ?? 0);
 
     public string? ErrorFor(string field) => Errors.FirstOrDefault(e => e.Field == field)?.Message;
 }

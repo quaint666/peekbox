@@ -6,7 +6,7 @@ using Peekbox.Web.Security;
 namespace Peekbox.Web.Services;
 
 // Finds and saves a visitor's unfinished hamper. The browser holds only a random token in a cookie.
-public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
+public sealed class HamperService(PeekboxDbContext db, TimeProvider clock, BuilderLimits limits)
 {
     // null when there is no cookie, the cookie names no row (an old or made-up token), or the hamper is already an
     // order: an ordered hamper is finished, so the cart is empty and the next save starts a new hamper (F48).
@@ -79,7 +79,65 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         var startedFrom = hamper.StartedFromId is { } from && rows.Count > 0
             ? await db.ReadyHampers.Where(h => h.Id == from).Select(h => h.Name).SingleOrDefaultAsync(cancellationToken)
             : null;
-        return new Box(hamper.BudgetVnd, hamper.DeliveryDate, boxLines, quote, lines, items, packaging) { StartedFrom = startedFrom };
+        return new Box(hamper.BudgetVnd, hamper.DeliveryDate, boxLines, quote, lines, items, packaging)
+        {
+            StartedFrom = startedFrom,
+            Coupon = rows.Count > 0 ? await AppliedCouponAsync(hamper.CouponCode, quote.GoodsVnd, cancellationToken) : null,
+        };
+    }
+
+    // The code on the hamper as it stands today (F38): what it takes off, or why it no longer works. Read again with every
+    // box, so an expired code or a box that fell under the minimum is noticed at once.
+    private async Task<AppliedCoupon?> AppliedCouponAsync(string? code, long goodsVnd, CancellationToken cancellationToken)
+    {
+        if (code is null)
+        {
+            return null;
+        }
+
+        var coupon = await db.Coupons.AsNoTracking().FirstOrDefaultAsync(c => c.Code == code, cancellationToken);
+        var problem = CouponRules.Check(coupon, goodsVnd, limits.Today);
+        return problem == CouponProblem.None
+            ? new AppliedCoupon(coupon!.Id, coupon.Code, CouponRules.Label(coupon), CouponRules.Discount(coupon, goodsVnd), problem, null)
+            : new AppliedCoupon(coupon?.Id ?? 0, code, coupon is null ? "" : CouponRules.Label(coupon), 0, problem, CouponRules.Message(problem, coupon));
+    }
+
+    // "Áp dụng" in the cart (F38). The code is kept on the hamper only when it works for this box today; otherwise nothing
+    // changes and the problem comes back for the page to say.
+    public async Task<CouponProblem> ApplyCouponAsync(Hamper hamper, Box box, string? text, CancellationToken cancellationToken = default)
+    {
+        var code = CouponRules.Normalize(text);
+        if (code.Length == 0)
+        {
+            return CouponProblem.Empty;
+        }
+
+        var coupon = code.Length > Coupon.CodeMaxLength ? null : await db.Coupons.AsNoTracking().FirstOrDefaultAsync(c => c.Code == code, cancellationToken);
+        var problem = CouponRules.Check(coupon, box.Quote.GoodsVnd, limits.Today);
+        if (problem == CouponProblem.None)
+        {
+            hamper.CouponCode = coupon!.Code;
+            hamper.UpdatedAt = clock.GetUtcNow();
+            await db.SaveChangesAsync(cancellationToken);
+        }
+
+        return problem;
+    }
+
+    // The message for a code that was refused, with the numbers it quotes (its minimum, its first day).
+    public async Task<string> CouponMessageAsync(CouponProblem problem, string? text, CancellationToken cancellationToken = default)
+    {
+        var code = CouponRules.Normalize(text);
+        var coupon = code.Length is > 0 and <= Coupon.CodeMaxLength ? await db.Coupons.AsNoTracking().FirstOrDefaultAsync(c => c.Code == code, cancellationToken) : null;
+        return CouponRules.Message(problem, coupon);
+    }
+
+    // "Bỏ mã" in the cart.
+    public async Task RemoveCouponAsync(Hamper hamper, CancellationToken cancellationToken = default)
+    {
+        hamper.CouponCode = null;
+        hamper.UpdatedAt = clock.GetUtcNow();
+        await db.SaveChangesAsync(cancellationToken);
     }
 
     // Saves the visitor's packaging (F33). False for an id that is not a packaging; nothing is saved then.
@@ -110,6 +168,7 @@ public sealed class HamperService(PeekboxDbContext db, TimeProvider clock)
         await db.HamperItems.Where(l => l.HamperId == hamper.Id).ExecuteDeleteAsync(cancellationToken);
         hamper.PackagingId = null;
         hamper.StartedFromId = null;
+        hamper.CouponCode = null;
         hamper.UpdatedAt = clock.GetUtcNow();
         await db.SaveChangesAsync(cancellationToken);
     }
@@ -226,6 +285,13 @@ public sealed record BoxLine(
 // One packaging choice (F33).
 public sealed record PackagingOption(string Id, string Name, string Description, long FeeVnd, string ImagePath);
 
+// The code on the hamper (F38) as it stands today: what it takes off (DiscountVnd, 0 when it does not work), or Problem and
+// Note (the sentence for the page) when it no longer works.
+public sealed record AppliedCoupon(int Id, string Code, string Label, long DiscountVnd, CouponProblem Problem, string? Note)
+{
+    public bool Works => Problem == CouponProblem.None;
+}
+
 // The hamper's items, its packaging and its quote. The view shows these numbers and never adds anything up itself.
 // Packaging is null while the box is empty (the step is locked then).
 public sealed record Box(
@@ -234,6 +300,16 @@ public sealed record Box(
 {
     // The name of the ready hamper the box was filled from, while it holds items ("Bạn đang sửa Hộp Sum Vầy").
     public string? StartedFrom { get; init; }
+
+    // The discount code on the hamper, or null (F38).
+    public AppliedCoupon? Coupon { get; init; }
+
+    // What the code takes off the goods (0 when there is none or it does not work).
+    public long DiscountVnd => Coupon?.DiscountVnd ?? 0;
+
+    // Goods and packaging with the discount taken off; the delivery fee comes on top at checkout. Quote.TotalVnd stays the
+    // price before any code, as the builder and the shared pricing vectors have it.
+    public long PayVnd => Quote.TotalVnd - DiscountVnd;
 
     public int Count => Lines.Sum(l => l.Quantity);
 

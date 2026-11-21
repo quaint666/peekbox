@@ -92,6 +92,7 @@
 .checkout-sums div { display: flex; justify-content: space-between; gap: var(--space-3); }
 .checkout-sums dd { margin: 0; }
 .checkout-sums__later { color: var(--color-muted); }
+.checkout-sums__discount { color: var(--color-primary-text); font-weight: 600; }   /* F38 */
 .checkout-sums__left { color: var(--color-primary-text); font-weight: 600; }
 .checkout-total { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); margin: 0; font-size: var(--text-sm); }
 .checkout-total strong { font-size: var(--text-xl); }

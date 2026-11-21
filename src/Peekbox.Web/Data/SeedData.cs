@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Peekbox.Web.Services;
 
 namespace Peekbox.Web.Data;
 
@@ -38,6 +39,14 @@ public static class SeedData
 
     public static SeedPackagingFile? ParsePackaging(string json) => JsonSerializer.Deserialize<SeedPackagingFile>(json, JsonOptions);
 
+    // The discount codes, from content/data/coupons.json (copied as Seed/coupons.json).
+    public static string CouponsFilePath => Path.Combine(AppContext.BaseDirectory, "Seed", "coupons.json");
+
+    public static SeedCouponsFile LoadCoupons(string path) =>
+        ParseCoupons(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
+
+    public static SeedCouponsFile? ParseCoupons(string json) => JsonSerializer.Deserialize<SeedCouponsFile>(json, JsonOptions);
+
     public static SeedWardsFile LoadWards(string path) =>
         ParseWards(File.ReadAllText(path)) ?? throw new InvalidOperationException($"{path} is empty.");
 
@@ -66,6 +75,16 @@ public static class SeedData
         {
             // The file is already in Vietnamese order; that order is the order of the list on the checkout page.
             context.Set<Ward>().AddRange(LoadWards(WardsFilePath).Wards.Select((w, i) => new Ward { Name = w.Name, Ring = w.Ring, SortOrder = i }));
+        }
+
+        if (!context.Set<Coupon>().Any())
+        {
+            // A code the file spells wrongly (an unknown kind, a repeat) stops the start, as a broken file does.
+            context.Set<Coupon>().AddRange(LoadCoupons(CouponsFilePath).Coupons.Select(c => new Coupon
+            {
+                Code = CouponRules.Normalize(c.Code), Kind = Enum.Parse<CouponKind>(c.Kind, ignoreCase: true), Value = c.Value,
+                MinGoodsVnd = c.MinGoodsVnd, ValidFrom = c.ValidFrom, ValidTo = c.ValidTo, MaxUses = c.MaxUses,
+            }));
         }
 
         if (!context.Set<Category>().Any())
@@ -151,6 +170,11 @@ public sealed record SeedReadyHamper(
     string Slug, string Name, string For, long BudgetVnd, string Packaging, List<string> Occasions, string Image, List<SeedReadyHamperItem> Items);
 
 public sealed record SeedReadyHamperItem(string Item, int Quantity);
+
+// The shape of content/data/coupons.json; every key must be there (null for "no limit").
+public sealed record SeedCouponsFile(List<SeedCoupon> Coupons);
+
+public sealed record SeedCoupon(string Code, string Kind, long Value, long MinGoodsVnd, DateOnly? ValidFrom, DateOnly? ValidTo, int? MaxUses);
 
 // The shape of content/data/wards.json.
 public sealed record SeedWardsFile(List<SeedWard> Wards);

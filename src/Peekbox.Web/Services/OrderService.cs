@@ -101,6 +101,21 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
             return new PlaceResult(PlaceOutcome.WindowFull);
         }
 
+        // F38: a code that stopped working (it expired, the box fell under its minimum) sends the visitor back to the cart,
+        // which says why. A working one takes a use now: "Uses < MaxUses" in the UPDATE makes it all or nothing, so two orders
+        // racing for the last use cannot both win.
+        if (box.Coupon is { } code)
+        {
+            var usable = code.Works && await db.Coupons
+                .Where(c => c.Id == code.Id && (c.MaxUses == null || c.Uses < c.MaxUses))
+                .ExecuteUpdateAsync(s => s.SetProperty(c => c.Uses, c => c.Uses + 1), cancellationToken) == 1;
+            if (!usable)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return new PlaceResult(PlaceOutcome.NotReady);
+            }
+        }
+
         var slugs = box.Lines.Select(l => l.Slug).ToList();
         var productIds = await db.Products.AsNoTracking()
             .Where(p => slugs.Contains(p.Slug))
@@ -151,7 +166,9 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
             PackagingName = box.Packaging.Name,
             PackagingFeeVnd = box.Packaging.FeeVnd,
             DeliveryFeeVnd = deliveryFee,
-            TotalVnd = box.Quote.TotalVnd + deliveryFee,
+            CouponCode = box.Coupon?.Code,
+            DiscountVnd = box.DiscountVnd,
+            TotalVnd = box.PayVnd + deliveryFee,
             CreatedAt = now,
             Items = box.Lines.Select(l => new OrderItem
             {

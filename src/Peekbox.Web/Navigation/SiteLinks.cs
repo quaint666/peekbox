@@ -69,6 +69,11 @@ public static class SiteLinks
 
     public const string CartClearPath = "/cart/clear";
 
+    // F38: apply a discount code in the cart, and take it off.
+    public const string CartCouponPath = "/cart/coupon";
+
+    public const string CartCouponRemovePath = "/cart/coupon/remove";
+
     // Checkout (F41 to F48) and the page an item that ran short meanwhile leads to (F50).
     public const string CheckoutPath = "/checkout";
 
