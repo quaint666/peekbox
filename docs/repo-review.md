@@ -78,6 +78,12 @@ proxy's rate-limit bucket and the hamper cookie is not marked Secure), `AllowedH
   Dockerfile's artifact. From the Debug build, a request with `Accept-Encoding: gzip` for any static file got an empty `200`
   (every script failed in the browser), and a wrong method gave 404 where the published build gives 405 (the 404 is explained in the batch 6 note below; the empty gzip I did not trace, but it
   appeared only in the unpublished build). Ask for each important address with the methods GET, HEAD, POST and PUT, and once with `Accept-Encoding: gzip, br`.
+- **Test the engines the site is built for, not only Chromium.** Firefox: BiDi on a headed Firefox under `xvfb-run` (a
+  headless Firefox answers `(hover: hover)` false, so every hover rule is skipped); the pointer moves with
+  `input.performActions`. WebKit: MiniBrowser under WebKitWebDriver with `LIBGL_ALWAYS_SOFTWARE=1` only: with
+  `WEBKIT_DISABLE_DMABUF_RENDERER=1` or disabled compositing the web process crashed on a view transition (the site was
+  fine). Move the pointer with WebDriver actions. Read the same computed value in all three (the transform of a card, the
+  `background-size` of a header link 80 ms and 580 ms after the pointer arrives).
 - Support claims come from data: `npm pack web-features` (the package behind Baseline) has the status and the first
   version of every feature; look the feature up, do not recall it.
 - Headless Chromium has no hover device, so every `:hover` rule is silently off in a screenshot: start it with

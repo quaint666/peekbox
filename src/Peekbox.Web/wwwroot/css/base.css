@@ -22,6 +22,16 @@ html {
   html { scroll-behavior: smooth; }
 }
 
+/* A page fades into the next one (decision 2026-11-21): a cross-document view transition, for every link and every form
+   that stays on this site, over --motion-page. The header has a name of its own, so it stays where it is instead of
+   fading with the page. Where the browser cannot do it (Firefox; Safari before 18.2) the pages simply change, and a
+   visitor who asked for less motion gets no transition either. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: var(--motion-page); }
+  .site-header { view-transition-name: site-header; }
+}
+
 body {
   margin: 0;
   background: var(--color-bg);
