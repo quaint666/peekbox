@@ -33,7 +33,8 @@ public class BlogContentTests
         Assert.Equal("Cách chọn hộp quà Tết theo ngân sách", post.Title);
         Assert.Equal("Mẹo chọn quà", post.Category);
         Assert.StartsWith("Quà Tết đẹp không nhất thiết phải đắt.", post.Excerpt);
-        Assert.Equal(["1. Đặt ngân sách cho từng hộp", "2. Chọn đủ nhóm, đừng lặp", "3. Nghĩ đến người nhận", "4. Kiểm tra hạn sử dụng so với ngày giao", "5. Chọn kiểu đóng gói", "6. Đặt sớm cho dịp Tết", "Ví dụ một hộp 500.000đ"],
+        Assert.Equal(
+            ["Biếu quà Tết để làm gì", "1. Đặt ngân sách cho từng hộp", "2. Chọn đủ nhóm, đừng lặp", "3. Nghĩ đến người nhận", "4. Kiểm tra hạn sử dụng so với ngày giao", "5. Chọn kiểu đóng gói", "6. Khi nào nên đặt", "Những lỗi hay gặp", "Ví dụ một hộp 500.000đ"],
             post.Blocks.OfType<BlogHeading>().Select(heading => heading.Text));
     }
 
@@ -72,6 +73,21 @@ public class BlogContentTests
             Assert.DoesNotMatch(@"[\[\]]", text);
             Assert.DoesNotContain("giá mẫu", text);
             Assert.DoesNotContain("bài viết mẫu", text, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    // The owner asked for posts that are longer and more informative (2026-11-21): at least 600 syllables (a few minutes
+    // to read) and at least five headings. The English text is not kept any more, so nothing else is in the files.
+    [Fact]
+    public void Every_post_is_a_proper_article_not_a_note()
+    {
+        foreach (var post in Posts.All)
+        {
+            var text = string.Join(' ', post.Blocks.SelectMany(Texts).Append(post.Excerpt));
+            var syllables = text.Split([' ', '\n'], StringSplitOptions.RemoveEmptyEntries).Length;
+
+            Assert.True(syllables >= 600, $"{post.Slug} has only {syllables} syllables");
+            Assert.True(post.Blocks.OfType<BlogHeading>().Count() >= 5, $"{post.Slug} has fewer than five headings");
         }
     }
 

@@ -8,7 +8,7 @@ The site is **Vietnamese only** (decided 2026-11-11). The English text in these 
 
 | Folder | What | Status |
 |---|---|---|
-| `blog/` | 6 blog posts, each in Vietnamese then English, in one file | Draft for review |
+| `blog/` | 6 blog posts, one Markdown file each (Vietnamese only; the English text was dropped on 2026-11-21 because the site is Vietnamese only and it had fallen behind). Rewritten the same day to 600 to 900 syllables each, from research and from what the site really does (see the header `note:` of each file) | Draft; a Vietnamese speaker should read them, and the 20/11 post changed its advice (schools ask teachers not to accept gifts) |
 | `legal/` | Terms of use and privacy policy. The Vietnamese files (`*.vi.md`) are the source and are the only ones the site reads; they were rewritten on 2026-11-21 from the researched laws (see "Legal sources" below). The English files are the earlier sample text and are no longer used | Draft; needs a lawyer and a Vietnamese speaker before launch |
 | `pages/` | Copy for the About and commitments page. The Vietnamese text is the source (rewritten on 2026-11-21 and checked against how the site works); the English text is the earlier draft and is unused. The home page's Vietnamese text moved to `data/home.json` | Draft |
 | `data/products.json` | 125 sample products in 11 categories (names in both languages, brand, weight, origin, expiry date, price, stock, short description, image) | Sample data |
