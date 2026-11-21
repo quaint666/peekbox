@@ -20,6 +20,11 @@ public sealed class PeekboxFixture : IAsyncLifetime
 
     public PeekboxFixture()
     {
+        // Every app the tests make (the shared one and each WithWebHostBuilder) watches its files for changes. On Linux that
+        // takes inotify instances, 128 per user by default, and with this many apps the limit was reached: a page then
+        // answered 500 ("The configured user limit (128) on the number of inotify instances has been reached") in whichever
+        // test came last. Polling instead needs none. Set before the first app is made; only the tests are affected.
+        Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
         _serverConnection = new ConfigurationBuilder()
             .AddUserSecrets<Program>()
             .AddEnvironmentVariables()
