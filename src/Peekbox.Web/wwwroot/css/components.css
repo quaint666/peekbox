@@ -373,7 +373,9 @@ select.input {
   .item-card:has(.item-card__photo:active, .item-card__link:active),
   .suggest-card:has(a:active),
   .hamper:has(a:active),
-  .hp-rel__link:active {
+  .hp-rel__link:active,
+  .blog-card:active,
+  .post-more__link:active {
     transform: scale(0.985);
     transition-duration: var(--motion-press);
   }

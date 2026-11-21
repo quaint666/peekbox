@@ -11,5 +11,7 @@ design
 docs
 tests
 **/*.md
+# ...except the texts the site reads at start (blog posts, About page, legal texts): without them the app stops at start.
+!content/**/*.md
 # Built by the "assets" stage; a local copy could be stale.
 src/Peekbox.Web/wwwroot/js

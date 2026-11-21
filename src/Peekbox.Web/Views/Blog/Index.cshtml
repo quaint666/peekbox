@@ -1,0 +1,36 @@
+@using Peekbox.Web.Content
+@model IReadOnlyList<BlogPost>
+@{
+    ViewData["Title"] = "Blog";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/blog.css" asp-append-version="true">
+}
+
+@* The blog list (F52; mockup 08). Each card is one link: photo, category, title and the post's first paragraph. The
+   mockup's "[NGÀY ĐĂNG]" is left out: the posts have no date yet. The mockup's "Bài viết mẫu cho bản thiết kế" is left out: it
+   describes the design, not the site. *@
+<section class="blog" aria-labelledby="blog-title">
+    <header class="blog__head">
+        <h1 class="blog__title" id="blog-title">Blog</h1>
+        <p class="blog__lead">Mẹo chọn quà, đọc hạn sử dụng và bảo quản.</p>
+    </header>
+    <ul class="blog-list">
+        @foreach (var post in Model)
+        {
+            @* The link is named by the title alone; the category and the first paragraph are its description, so a screen
+               reader does not read all three as one long name. *@
+            <li class="blog-list__item">
+                <a class="blog-card" href="@SiteLinks.BlogPost(post.Slug)" aria-labelledby="title-@post.Slug" aria-describedby="category-@post.Slug excerpt-@post.Slug">
+                    <img class="blog-card__photo" src="@Url.Content("~" + post.Cover)" alt="" width="1264" height="848" loading="lazy">
+                    <span class="blog-card__body">
+                        <span class="blog-card__category" id="category-@post.Slug">@post.Category</span>
+                        <span class="blog-card__title" id="title-@post.Slug">@post.Title</span>
+                        <span class="blog-card__excerpt" id="excerpt-@post.Slug">@post.Excerpt</span>
+                    </span>
+                </a>
+            </li>
+        }
+    </ul>
+</section>

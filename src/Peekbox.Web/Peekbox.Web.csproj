@@ -25,6 +25,8 @@
     <None Include="..\..\content\data\hampers.json" Link="Seed\hampers.json" CopyToOutputDirectory="PreserveNewest" />
     <!-- The home page text stays in content/data/ (one copy); it is copied next to the app and read at start. -->
     <None Include="..\..\content\data\home.json" Link="Content\home.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- The blog posts stay in content/blog/ (one copy); they are copied next to the app and read at start. -->
+    <None Include="..\..\content\blog\*.md" Link="Content\blog\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

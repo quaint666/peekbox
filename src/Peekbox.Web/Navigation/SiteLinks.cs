@@ -12,6 +12,7 @@ public static class SiteLinks
     public const string BuilderPath = "/builder";
     public const string CartPath = "/cart";
     public const string TrackPath = "/track";
+    public const string BlogPath = "/blog";
 
     // The health check (Program.cs): not a page, so no link or route test lists it.
     public const string HealthPath = "/healthz";
@@ -29,11 +30,14 @@ public static class SiteLinks
     public static readonly SiteLink Occasions = new("occasions", HomePath + Anchors.Link(Anchors.Occasions), "Dịp");
     public static readonly SiteLink About = new("about", "/about", "Giới thiệu");
     public static readonly SiteLink Commitments = new("commitments", "/about#cam-ket", "Cam kết");
-    public static readonly SiteLink Blog = new("blog", "/blog", "Blog");
+    public static readonly SiteLink Blog = new("blog", BlogPath, "Blog");
     public static readonly SiteLink Terms = new("terms", "/legal#dieu-khoan", "Điều khoản");
     public static readonly SiteLink Privacy = new("privacy", "/legal#bao-mat", "Chính sách bảo mật");
     public static readonly SiteLink Cart = new("cart", CartPath, "Giỏ hàng");
     public static readonly SiteLink Track = new("track", TrackPath, "Tra cứu đơn hàng");
+
+    // One blog post (/blog/doc-han-su-dung-tren-bao-bi); the slug is the one in the post's own file.
+    public static string BlogPost(string slug) => $"{BlogPath}/{Uri.EscapeDataString(slug)}";
 
     // The page of one item (/items/tra-sen), written once for the cards, the item page and the redirect after adding.
     public const string ItemsPath = "/items";
