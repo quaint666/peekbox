@@ -23,7 +23,15 @@ public enum PlaceOutcome
 // An item that ran short while the visitor was checking out (F50, state 07). Left is what the hamper now holds.
 public sealed record SoldOutLine(string Name, int Wanted, int Left);
 
-public sealed record PlaceResult(PlaceOutcome Outcome, string? OrderToken = null, IReadOnlyList<SoldOutLine>? SoldOut = null);
+public sealed record PlaceResult(PlaceOutcome Outcome, string? OrderToken = null, IReadOnlyList<SoldOutLine>? SoldOut = null, bool PaymentFailed = false);
+
+// What a retry or a switch to cash did (F49).
+public enum PaymentFix
+{
+    Paid,           // the retry worked (or cash was chosen): the order is in order
+    StillFailed,    // the retry failed again
+    NotFailed,      // no such order, or it is not a failed ZaloPay payment: nothing was changed
+}
 
 // One ward in the checkout list, with the fee its ring costs.
 public sealed record WardOption(int Id, string Name, long FeeVnd);
@@ -31,7 +39,7 @@ public sealed record WardOption(int Id, string Name, long FeeVnd);
 // Places an order (F48): the one place an order is written. All or nothing, in one transaction: the hamper is priced
 // again on the server, every rule is checked again, the stock is taken, the order and its lines are saved with copies
 // of everything that can change later, and the hamper is marked as ordered. The browser never sends a price.
-public sealed class OrderService(PeekboxDbContext db, HamperService hampers, BuilderLimits limits, DeliveryCapacity capacity, TimeProvider clock)
+public sealed class OrderService(PeekboxDbContext db, HamperService hampers, BuilderLimits limits, DeliveryCapacity capacity, PaymentStandIn payments, TimeProvider clock)
 {
     public async Task<PlaceResult> PlaceAsync(string? hamperToken, OrderRequest request, CancellationToken cancellationToken = default)
     {
@@ -126,7 +134,7 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
             Status = OrderStatus.New,
             PaymentMethod = request.Payment,
             // ZaloPay is a stand-in (decision 2026-11-11): marked paid at once. Cash is paid to the courier.
-            PaymentStatus = request.Payment == PaymentMethod.ZaloPay ? PaymentStatus.Paid : PaymentStatus.Pending,
+            PaymentStatus = request.Payment == PaymentMethod.ZaloPay ? (payments.Fails ? PaymentStatus.Failed : PaymentStatus.Paid) : PaymentStatus.Pending,
             SenderName = request.SenderName,
             SenderPhone = request.SenderPhone,
             SenderEmail = request.SenderEmail,
@@ -158,8 +166,36 @@ public sealed class OrderService(PeekboxDbContext db, HamperService hampers, Bui
         hamper.UpdatedAt = now;
         await db.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
-        return new PlaceResult(PlaceOutcome.Placed, order.Token);
+        return new PlaceResult(PlaceOutcome.Placed, order.Token, PaymentFailed: order.PaymentStatus == PaymentStatus.Failed);
     }
+
+    // F49: the payment of an order failed (ZaloPay), the order and its box are kept. A retry asks the stand-in again; it
+    // changes the order only while it is a failed ZaloPay payment of an order that is not cancelled, so a repeated click or
+    // a made-up token does nothing.
+    public async Task<PaymentFix> RetryPaymentAsync(string? orderToken, CancellationToken cancellationToken = default)
+    {
+        if (payments.Fails)
+        {
+            return await IsFailedAsync(orderToken, cancellationToken) ? PaymentFix.StillFailed : PaymentFix.NotFailed;
+        }
+
+        return await FailedOrders(orderToken).ExecuteUpdateAsync(s => s.SetProperty(o => o.PaymentStatus, PaymentStatus.Paid), cancellationToken) == 1
+            ? PaymentFix.Paid
+            : PaymentFix.NotFailed;
+    }
+
+    // F49: "pay in cash on delivery instead": the same order, now cash, not paid yet.
+    public async Task<PaymentFix> SwitchToCashAsync(string? orderToken, CancellationToken cancellationToken = default) =>
+        await FailedOrders(orderToken).ExecuteUpdateAsync(
+            s => s.SetProperty(o => o.PaymentMethod, PaymentMethod.CashOnDelivery).SetProperty(o => o.PaymentStatus, PaymentStatus.Pending), cancellationToken) == 1
+            ? PaymentFix.Paid
+            : PaymentFix.NotFailed;
+
+    private IQueryable<Order> FailedOrders(string? orderToken) =>
+        db.Orders.Where(o => o.Token == orderToken && o.PaymentMethod == PaymentMethod.ZaloPay && o.PaymentStatus == PaymentStatus.Failed && o.Status != OrderStatus.Cancelled);
+
+    private async Task<bool> IsFailedAsync(string? orderToken, CancellationToken cancellationToken) =>
+        SecretToken.IsWellFormed(orderToken) && await FailedOrders(orderToken).AnyAsync(cancellationToken);
 
     // The order this visitor's hamper became, or null (no hamper, or not ordered yet).
     public Task<string?> OrderTokenOfAsync(string? hamperToken, CancellationToken cancellationToken = default) =>

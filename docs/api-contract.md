@@ -49,6 +49,9 @@ Every address the site answers, with the methods it takes. Any other method on t
 | `/legal` | `GET,HEAD` | Terms and privacy (F55) |
 | `/not-found` | `any` | The 404 and 400 pages, shown by the status-code handler only |
 | `/orders/{token}` | `GET,HEAD` | One order, by its unguessable token |
+| `/orders/{token}/payment` | `GET,HEAD` | F49: the payment-failed page (an order whose ZaloPay payment failed; any other order goes to its own page) |
+| `/orders/{token}/payment/retry` | `POST` | F49: try the payment again |
+| `/orders/{token}/payment/cash` | `POST` | F49: switch the order to cash on delivery |
 | `/track` | `GET,HEAD` | The order lookup form |
 | `/track` | `POST` | Look an order up |
 | `/healthz` | `GET,HEAD` | The health check (a minimal endpoint, not a controller): `ok` |

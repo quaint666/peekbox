@@ -66,6 +66,9 @@ public class CheckoutController(HamperService hampers, OrderService orders, Deli
         var result = await orders.PlaceAsync(HamperCookie.Read(Request), request, cancellationToken);
         switch (result.Outcome)
         {
+            case PlaceOutcome.Placed when result.PaymentFailed:
+                // F49: the order and the box are kept; the visitor chooses to retry or to pay in cash.
+                return LocalRedirect(SiteLinks.OrderPayment(result.OrderToken!));
             case PlaceOutcome.Placed:
             case PlaceOutcome.AlreadyPlaced:
                 return LocalRedirect(SiteLinks.Order(result.OrderToken!));

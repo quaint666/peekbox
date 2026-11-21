@@ -14,8 +14,8 @@ Peekbox
 │       └── Giỏ hàng ......................... /cart
 │           └── Thanh toán ................... /checkout
 │               ├── Món vừa hết hàng ......... /checkout/soldout
-│               ├── Thanh toán thất bại ...... (M5)
 │               └── Xác nhận đơn hàng ........ /orders/{token}
+│                   └── Thanh toán thất bại .. /orders/{token}/payment
 ├── Giới thiệu và cam kết .................... /about
 ├── Blog ..................................... /blog
 │   └── Bài viết ............................. /blog/{slug}
@@ -45,7 +45,7 @@ Every page but the home page and the error pages shows one trail under the heade
 | `/builder/review` | Trang chủ › Tạo hộp quà › Xem lại hộp quà |
 | `/cart` | Trang chủ › Giỏ hàng |
 | `/checkout` (and the sold-out and demo notices) | Trang chủ › Giỏ hàng › Thanh toán |
-| `/orders/{token}` | Trang chủ › Tra cứu đơn hàng › Đơn hàng {number} |
+| `/orders/{token}` and `/orders/{token}/payment` | Trang chủ › Tra cứu đơn hàng › Đơn hàng {number} |
 | `/track` | Trang chủ › Tra cứu đơn hàng |
 | `/about` | Trang chủ › Giới thiệu |
 | `/legal` | Trang chủ › Điều khoản và bảo mật |

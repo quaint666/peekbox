@@ -1,0 +1,44 @@
+@using Peekbox.Web.Formatting
+@model OrderPageModel
+@{
+    var order = Model.Order;
+    ViewData["Title"] = "Thanh toán chưa thành công";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Track), Crumbs.Here($"Đơn hàng {order.Number}"));
+    var stillFailed = ViewData["StillFailed"] is true;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true">
+}
+
+@* F49 (state): the ZaloPay payment did not go through. The order and its box are kept and nothing was charged. Two ways
+   on: try again, or pay the courier in cash. ZaloPay is a stand-in, so this page is reached by the test switch
+   (Payment:SimulateFailure). *@
+<div class="order">
+    <section class="alert order-banner" aria-labelledby="pay-title" role="alert">
+        <h1 class="order-banner__title" id="pay-title"><partial name="_Icon" model='"x-circle"' />Thanh toán chưa thành công</h1>
+        <p class="order-banner__text">
+            @if (stillFailed)
+            {
+                <text>Lần thử lại này cũng chưa thành công. </text>
+            }
+            Đơn hàng <strong>@order.Number</strong> và hộp quà của bạn vẫn được giữ, chưa có khoản nào bị tính. Bạn có thể thử lại hoặc trả tiền mặt khi nhận hàng. <partial name="_SupportLine" />
+        </p>
+    </section>
+
+    <section class="card order-delivery" aria-labelledby="pay-options-title">
+        <h2 class="order-card__title" id="pay-options-title">Bạn muốn làm gì tiếp?</h2>
+        <dl class="order-sums">
+            <div class="order-sums__total"><dt>Tổng cộng</dt><dd>@Vnd.Format(order.TotalVnd)</dd></div>
+        </dl>
+        <div class="order-actions">
+            <form method="post" action="@SiteLinks.OrderPaymentRetry(order.Token)" asp-antiforgery="true">
+                <button type="submit" class="btn btn--primary">Thử thanh toán lại</button>
+            </form>
+            <form method="post" action="@SiteLinks.OrderPaymentCash(order.Token)" asp-antiforgery="true">
+                <button type="submit" class="btn btn--outline">Chuyển sang thanh toán khi nhận hàng</button>
+            </form>
+            <a class="btn btn--outline" href="@SiteLinks.Order(order.Token)">Xem đơn hàng</a>
+        </div>
+    </section>
+</div>

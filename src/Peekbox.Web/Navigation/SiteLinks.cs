@@ -79,6 +79,13 @@ public static class SiteLinks
 
     public static string Order(string token) => $"{OrdersPath}/{Uri.EscapeDataString(token)}";
 
+    // F49: what to do when the ZaloPay payment of an order failed, and the two ways out (both POST).
+    public static string OrderPayment(string token) => $"{Order(token)}/payment";
+
+    public static string OrderPaymentRetry(string token) => $"{OrderPayment(token)}/retry";
+
+    public static string OrderPaymentCash(string token) => $"{OrderPayment(token)}/cash";
+
     // The occasion pages (F15): /dip/tet, /dip/20-11, /dip/phu-nu. The id is the occasion's key in content/data/hampers.json.
     public const string OccasionsPath = "/dip";
 
