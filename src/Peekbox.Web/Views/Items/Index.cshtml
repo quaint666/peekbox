@@ -99,6 +99,19 @@
             <div><dt>Xuất xứ</dt><dd>@item.Origin</dd></div>
             <div><dt>Hạn sử dụng</dt><dd>@(item.ExpiryDate is { } expiry ? VnDate.Day(expiry) : VnDate.NoExpiry)</dd></div>
         </dl>
+        @{ var detail = ItemDetails.For(item.CategoryId); }
+        @* F29: placeholders (Services/ItemDetails.cs): one text for the group of items, and the page says so. *@
+        <h3 class="item-about__sub">Thành phần và bảo quản</h3>
+        <dl class="item-details" id="thanh-phan">
+            @if (detail.Ingredients is { } ingredients)
+            {
+                <div><dt>Thành phần</dt><dd>@ingredients</dd></div>
+            }
+            <div><dt>Chất gây dị ứng</dt><dd>@detail.Allergens</dd></div>
+            <div><dt>Bảo quản</dt><dd>@detail.Storage</dd></div>
+            <div><dt>Cập nhật lần cuối</dt><dd>@VnDate.Day(ItemDetails.ReviewedOn)</dd></div>
+        </dl>
+        <p class="item-about__note meta">Thông tin mẫu theo nhóm món, chưa phải thông tin riêng của sản phẩm này. Xem bao bì khi nhận hàng.</p>
     </section>
 
     @* Phone: the same budget and add control in a bar at the bottom of the screen (mockup 03, phone). *@
