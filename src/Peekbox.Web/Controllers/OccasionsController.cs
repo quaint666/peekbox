@@ -38,11 +38,6 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
     [HttpPost(SiteLinks.UseHamperPath)]
     public async Task<IActionResult> Use(string? slug, string? from, bool replace = false, bool detail = false, CancellationToken cancellationToken = default)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
         var card = string.IsNullOrEmpty(slug) ? null : await readyHampers.FindAsync(slug, cancellationToken);
         if (card is null)
         {

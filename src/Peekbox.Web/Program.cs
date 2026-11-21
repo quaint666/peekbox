@@ -11,7 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Every POST, PUT, PATCH and DELETE must carry the form's anti-forgery token, or the request gets a 400; GET and HEAD
 // are never checked. A future payment callback, which cannot send the token, opts out with [IgnoreAntiforgeryToken].
-builder.Services.AddControllersWithViews(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+    // A value that cannot be bound (a quantity of "abc") is a 400 before any action runs; see the filter.
+    options.Filters.Add<RefuseUnboundValuesFilter>();
+});
 
 // Development already runs these checks; this turns them on in every environment. A scoped service (the DbContext,
 // HamperService) taken by a singleton then stops the app at start, instead of one object being shared by all visitors.
@@ -106,8 +111,9 @@ app.UseRouting();
 
 app.MapStaticAssets();
 
-// For the container's health check and the proxy's: 200 when the database answers, 503 when it does not.
-app.MapGet(SiteLinks.HealthPath, async (PeekboxDbContext db, CancellationToken cancellationToken) =>
+// For the container's health check and the proxy's: 200 when the database answers, 503 when it does not. HEAD as well,
+// as uptime monitors ask (without it they got a 405).
+app.MapMethods(SiteLinks.HealthPath, ["GET", "HEAD"], async (PeekboxDbContext db, CancellationToken cancellationToken) =>
     await db.Database.CanConnectAsync(cancellationToken) ? Results.Text("ok") : Results.Text("database unavailable", statusCode: StatusCodes.Status503ServiceUnavailable));
 
 // Every action names its own address (SiteLinks), so each page has exactly one. There is no

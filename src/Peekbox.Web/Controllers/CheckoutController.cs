@@ -42,11 +42,6 @@ public class CheckoutController(HamperService hampers, OrderService orders, Buil
             return DemoPage();
         }
 
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
         var box = await ReadyBoxAsync(cancellationToken);
         if (box is null)
         {

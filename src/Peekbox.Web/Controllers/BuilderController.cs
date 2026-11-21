@@ -1,5 +1,6 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
 using Peekbox.Web.Data;
 using Peekbox.Web.Formatting;
@@ -127,13 +128,8 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // button the page showed as off, or a made-up request, changes nothing. An amount that is not a number is refused:
     // bound as 0, it would take the item out.
     [HttpPost(SiteLinks.QuantityPath)]
-    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Quantity(string? slug, [BindRequired] int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is not null && ItemsOpen(hamper) && !string.IsNullOrEmpty(slug)
             && await hampers.SetQuantityAsync(hamper, slug, quantity, cancellationToken) == QuantityChange.UnknownItem)
