@@ -419,7 +419,7 @@ select.input {
    popover: it opens, closes on Escape or a click outside, and needs no script. It sits above both buttons, so it never covers
    "Lên đầu trang". --floating-lift is the height of a bar stuck to the bottom of a phone screen (layout.ts), so the buttons sit
    above it; it is 0 when there is none. 20px, 56px, 14px and 260px/300px are from the mockup. */
-.float-stack { position: fixed; right: 20px; bottom: calc(20px + var(--floating-lift, 0px)); z-index: var(--z-float); display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
+.float-stack { position: fixed; right: 20px; bottom: calc(20px + var(--floating-lift, 0px)); z-index: var(--z-float); display: flex; flex-direction: column; align-items: center; gap: var(--space-3); transition: bottom 150ms ease; }   /* when a bar sticks or unsticks (base.css drops it for "reduce motion") */
 .float-btn { display: grid; place-items: center; padding: 0; border-radius: 50%; cursor: pointer; touch-action: manipulation; }
 .float-btn[hidden] { display: none; }
 .float-btn .icon { width: 20px; height: 20px; }
@@ -455,10 +455,6 @@ body:has(.float-top:not([hidden])) .contact-panel { bottom: calc(var(--floating-
    wide enough by itself, so the line stays in line with the columns above it. */
 @media (max-width: 1359.98px) {
   .site-footer__bottom-inner { padding-inline-end: calc(20px + 56px + var(--space-3)); }
-}
-/* A phone page with its own bar at the bottom (the builder's box, the cart, the checkout, the review, the item, a hamper) has no room for them. */
-@media (max-width: 899px) {
-  body:has(.box-bar, .cart-bar, .checkout-bar, .review-bar, .item-bar, .hp-bar) .float-stack { display: none; }
 }
 
 /* The toast (F08, Views/Shared/_Toast.cshtml, lib/toast.ts): a card at the bottom centre of the screen for a few seconds. Its

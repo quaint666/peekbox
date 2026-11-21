@@ -76,7 +76,7 @@ public class HamperPageTests(PeekboxFixture fixture)
         Assert.Matches(@"<form method=""post"" action=""/dip/dung-hop""> <input type=""hidden"" name=""slug"" value=""an-khang""> <input type=""hidden"" name=""from"" value=""tet""> <input type=""hidden"" name=""detail"" value=""true"">", html);
         Assert.DoesNotContain("Thay hộp hiện tại?", html);
         // The phone's bar is there but hidden until the script shows it.
-        Assert.Contains("<div class=\"hp-bar\" data-buy-bar hidden>", html);
+        Assert.Contains("<div class=\"hp-bar\" data-bottom-bar data-buy-bar hidden>", html);
     }
 
     // A refusal (the box holds items and the visitor did not say "Thay hộp", or an item is short) comes back to the page the

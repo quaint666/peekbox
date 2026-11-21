@@ -143,4 +143,65 @@ describe('layout.ts', () => {
       expect(() => scrollY(900)).not.toThrow();
     });
   });
+
+  describe('the lift of the floating buttons above a bar at the bottom of a phone screen', () => {
+    let frames: FrameRequestCallback[] = [];
+    const lift = (): string => document.documentElement.style.getPropertyValue('--floating-lift');
+
+    // The bars' heights and bottoms as the test says (jsdom has no layout): data-h and data-bottom on the bar.
+    const stubBars = (): void => {
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+        const height = Number(this.dataset['h'] ?? 0);
+        const bottom = Number(this.dataset['bottom'] ?? 0);
+        return { height, bottom, top: bottom - height, left: 0, right: 0, width: 0, x: 0, y: bottom - height, toJSON: () => ({}) } as DOMRect;
+      });
+    };
+    const bar = (h: number, bottom: number): string => `<div data-bottom-bar data-h="${h}" data-bottom="${bottom}"></div>`;
+
+    beforeEach(() => {
+      frames = [];
+      window.requestAnimationFrame = ((cb: FrameRequestCallback) => frames.push(cb)) as typeof window.requestAnimationFrame;
+      Object.defineProperty(window, 'innerHeight', { configurable: true, value: 800 });
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
+      document.documentElement.style.removeProperty('--floating-lift');
+      stubMatchMedia(false);
+      stubBars();
+    });
+
+    it('is the height of a bar that is stuck to the bottom edge of the screen', async () => {
+      await load('layout', `${header}${bar(143, 800)}`);
+      expect(lift()).toBe('143px');
+    });
+
+    it('is nothing once the bar has moved up into the page, as at the end of a page (it is not in the way any more)', async () => {
+      await load('layout', `${header}${bar(143, 500)}`);
+      expect(lift()).toBe('0px');
+    });
+
+    it('is nothing for a bar that is hidden (a wide screen: height 0)', async () => {
+      await load('layout', `${header}${bar(0, 800)}`);
+      expect(lift()).toBe('0px');
+    });
+
+    it('is the tallest of several bars that are stuck', async () => {
+      await load('layout', `${header}${bar(75, 800)}${bar(181, 800)}${bar(108, 300)}`);
+      expect(lift()).toBe('181px');
+    });
+
+    it('follows the bar while the page is scrolled, one animation frame for a burst of scroll events', async () => {
+      await load('layout', `${header}${bar(143, 500)}`);
+      expect(lift()).toBe('0px');
+
+      document.querySelector<HTMLElement>('[data-bottom-bar]')!.dataset['bottom'] = '800';
+      for (let i = 0; i < 5; i++) window.dispatchEvent(new Event('scroll'));
+      expect(frames).toHaveLength(1);
+      frames.splice(0).forEach((cb) => cb(0));
+      expect(lift()).toBe('143px');
+    });
+
+    it('is nothing on a page without a bar', async () => {
+      await load('layout', header);
+      expect(lift()).toBe('0px');
+    });
+  });
 });

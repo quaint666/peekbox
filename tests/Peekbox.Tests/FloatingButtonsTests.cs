@@ -43,21 +43,32 @@ public class FloatingButtonsTests(PeekboxFixture fixture)
         Assert.Contains("href=\"tel:02873001234\"", html);
     }
 
+    // A bar that sticks to the bottom of a phone screen carries data-bottom-bar, and layout.ts lifts the buttons above it. A new
+    // bar that is not marked would have the buttons on top of its own button, so every such bar in the CSS must be marked in a view.
     [Fact]
-    public void On_a_phone_a_page_with_its_own_bottom_bar_hides_the_buttons()
+    public void Every_bar_that_sticks_to_the_bottom_of_a_phone_is_marked_so_the_buttons_sit_above_it()
     {
-        var css = Css("components.css");
-        var rule = Regex.Match(css, @"@media \(max-width: 899px\) \{\s*body:has\((?<bars>[^)]*)\) \.float-stack \{ display: none; \}").Groups["bars"].Value;
-        Assert.NotEmpty(rule);
+        var views = Directory.GetFiles(Path.Combine(RepoRoot.WebProject, "Views"), "*.cshtml", SearchOption.AllDirectories).Select(File.ReadAllText).ToList();
+        var found = new List<string>();
 
-        // Every bar that sticks to the bottom of a phone screen is in the list, so a new one cannot be covered unseen.
         foreach (var file in new[] { "builder.css", "cart.css", "checkout.css", "review.css", "hamper.css", "item.css" })
         {
             foreach (Match bar in Regex.Matches(Css(file), @"^\.(?<name>[a-z-]*bar)\s*\{[^}]*(position:\s*sticky|position:\s*fixed)[^}]*bottom:\s*0", RegexOptions.Multiline))
             {
-                Assert.Contains("." + bar.Groups["name"].Value, rule);
+                var name = bar.Groups["name"].Value;
+                found.Add(name);
+                Assert.Contains(views, view => view.Contains($"class=\"{name}\" data-bottom-bar"));
             }
         }
+
+        // The scan finds the bars it should (a change to the CSS that hid them from it would otherwise pass in silence).
+        Assert.Equal(["box-bar", "cart-bar", "checkout-bar", "hp-bar", "item-bar", "review-bar"], found.Order());
+    }
+
+    [Fact]
+    public void The_buttons_are_no_longer_hidden_on_a_phone_page_with_a_bar()
+    {
+        Assert.DoesNotMatch(@"\.float-stack \{ display: none; \}", Css("components.css"));
     }
 
     [Fact]

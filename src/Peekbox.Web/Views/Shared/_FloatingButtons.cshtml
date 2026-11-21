@@ -2,7 +2,7 @@
 
 @* F06 and F07: two round buttons at the bottom right of every page. "Liên hệ" opens a small panel (a popover, no script) with
    Zalo, the phone, the email and the support hours; "Lên đầu trang" shows after the page has been scrolled (layout.ts). On a
-   phone they are left out of the pages that have their own bar at the bottom (components.css). *@
+   phone a bar that stays at the bottom of the screen carries data-bottom-bar, and layout.ts lifts the buttons above it. *@
 <div class="float-stack">
     <button type="button" class="float-btn float-top" data-action="to-top" aria-label="Lên đầu trang" hidden><partial name="_Icon" model='"chevron-up"' /></button>
     <button type="button" class="float-btn float-contact" popovertarget="lien-he" aria-label="Liên hệ"><partial name="_Icon" model='"chat"' /></button>
