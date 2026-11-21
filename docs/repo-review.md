@@ -78,6 +78,12 @@ proxy's rate-limit bucket and the hamper cookie is not marked Secure), `AllowedH
   Dockerfile's artifact. From the Debug build, a request with `Accept-Encoding: gzip` for any static file got an empty `200`
   (every script failed in the browser), and a wrong method gave 404 where the published build gives 405 (the 404 is explained in the batch 6 note below; the empty gzip I did not trace, but it
   appeared only in the unpublished build). Ask for each important address with the methods GET, HEAD, POST and PUT, and once with `Accept-Encoding: gzip, br`.
+- **Test the engines the site is built for, not only Chromium.** Firefox: BiDi on a headed Firefox under `xvfb-run` (a
+  headless Firefox answers `(hover: hover)` false, so every hover rule is skipped); the pointer moves with
+  `input.performActions`. WebKit: MiniBrowser under WebKitWebDriver with `LIBGL_ALWAYS_SOFTWARE=1` only: with
+  `WEBKIT_DISABLE_DMABUF_RENDERER=1` or disabled compositing the web process crashed on a view transition (the site was
+  fine). Move the pointer with WebDriver actions. Read the same computed value in all three (the transform of a card, the
+  `background-size` of a header link 80 ms and 580 ms after the pointer arrives).
 - Support claims come from data: `npm pack web-features` (the package behind Baseline) has the status and the first
   version of every feature; look the feature up, do not recall it.
 - Headless Chromium has no hover device, so every `:hover` rule is silently off in a screenshot: start it with
@@ -164,9 +170,11 @@ in brackets. Score 8/10: the base was sound, and the defects were in what a hand
   build manifest, so the image has no fallback. `PeekboxFixture` sets `DisableStaticAssetNotFoundRuntimeFallback` so the
   tests answer like the image; the image smoke step in `images.yml` sends a GET to `/cart/add` and also checks `HEAD /healthz`
   and a gzip'd stylesheet that inflates to the real file).
-- Left, decided and not yet built: "8/3" on the home page against "8/3 và 20/10" on the occasion page (two sources for one
-  name); hamper rows are never purged; the workflow actions are pinned by tag, not by commit; the browser scripts
-  (`builder.ts` is 595 lines) have no automated test.
+- Done after batch 7: the occasion "8/3 và 20/10" has one name and one chip on the home page, the header and its own page
+  (`HomeContentTests` compares `home.json` and `hampers.json`); the workflow actions are pinned to a commit with the tag in
+  a comment (`WorkflowTests`; an update is now a deliberate edit of the SHA, there is no Dependabot).
+- Left, decided and not yet built: hamper rows are never purged; the browser scripts (`builder.ts` is 595 lines) have no
+  automated test.
 - Left on purpose: `/about`, `/blog` and `/legal` were linked from the header and footer before they were built and were 404 until M4 (the blog
   came in #74, About and legal in #77); on a phone the sticky header, the builder's steps and the bottom bar leave about 60 % of the screen for the list.
 - Browser floor (decision 2026-11-21): the Popover API is Baseline "newly available" since 2025-01-27 and "widely

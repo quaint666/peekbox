@@ -34,7 +34,7 @@ public class HomePageTests(PeekboxFixture fixture)
     [
         ("tet", "/dip/tet", "Mùa Tết 2027", "Tết", "/images/occasions/tet.webp", "300.000đ – 10 triệu", "25 hộp gợi ý"),
         ("valentine", "/dip/valentine", "Ngày Valentine", "Valentine", "/images/occasions/valentine.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
-        ("women", "/dip/phu-nu", "Ngày Quốc tế Phụ nữ", "8/3", "/images/occasions/8-3.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
+        ("women", "/dip/phu-nu", "Ngày Phụ nữ", "8/3 và 20/10", "/images/occasions/8-3.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
         ("midautumn", "/dip/trung-thu", "Tết Trung thu", "Trung thu", "/images/occasions/trung-thu.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
         ("teachers", "/dip/20-11", "Ngày Nhà giáo Việt Nam", "20/11", "/images/occasions/20-11.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
         ("christmas", "/dip/giang-sinh", "Mùa Giáng sinh", "Giáng sinh", "/images/occasions/giang-sinh.webp", "300.000đ – 2 triệu", "15 hộp gợi ý"),
@@ -73,7 +73,7 @@ public class HomePageTests(PeekboxFixture fixture)
         var dots = Regex.Matches(pill, @"hero__dot hero__dot--(\w+)""").Select(m => m.Groups[1].Value);
         Assert.Equal(["tet", "valentine", "women", "midautumn", "teachers", "christmas"], dots);
         Assert.Contains("<span class=\"hero__pill-short\">6 dịp lễ trong năm</span>", pill);
-        Assert.Contains("<span class=\"hero__pill-long\">Tết · Valentine · 8/3 · Trung thu · 20/11 · Giáng sinh</span>", pill);
+        Assert.Contains("<span class=\"hero__pill-long\">Tết · Valentine · 8/3 và 20/10 · Trung thu · 20/11 · Giáng sinh</span>", pill);
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public class HomePageTests(PeekboxFixture fixture)
     // The six occasions, in page order: the header's "Dịp" menu and the footer's "Dịp" column list the same six pages.
     private static readonly (string Href, string Label)[] OccasionLinks =
     [
-        ("/dip/tet", "Tết"), ("/dip/valentine", "Valentine"), ("/dip/phu-nu", "8/3"), ("/dip/trung-thu", "Trung thu"), ("/dip/20-11", "20/11"), ("/dip/giang-sinh", "Giáng sinh"),
+        ("/dip/tet", "Tết"), ("/dip/valentine", "Valentine"), ("/dip/phu-nu", "8/3 và 20/10"), ("/dip/trung-thu", "Trung thu"), ("/dip/20-11", "20/11"), ("/dip/giang-sinh", "Giáng sinh"),
     ];
 
     // "Dịp" goes to the six cards on the home page, and its menu comes right after it.

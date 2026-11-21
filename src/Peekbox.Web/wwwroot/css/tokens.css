@@ -151,6 +151,7 @@
      no-preference), so visitors who asked for less motion see none of it. */
   --motion-press: 100ms;           /* a pressed card shrinking (phone) */
   --motion-fast: 150ms;            /* the − n + control appearing */
+  --motion-page: 200ms;            /* one page fading into the next (base.css) */
   --motion-enter: 220ms;           /* a card coming in after a search */
   --motion-bump: 250ms;            /* a counter growing once */
   --motion-photo: 450ms;           /* a photo fading in, as the heroes do */
