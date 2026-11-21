@@ -1,0 +1,8 @@
+@model IReadOnlyList<Peekbox.Web.Content.HomeOccasion>
+@* The header's menu under "Dịp": it opens on hover and on keyboard focus (components.css) and is always open in the phone's menu. *@
+<ul class="site-nav__menu">
+    @foreach (var occasion in Model)
+    {
+        <li><a href="@SiteLinks.Occasion(occasion.Id)">@occasion.Name</a></li>
+    }
+</ul>

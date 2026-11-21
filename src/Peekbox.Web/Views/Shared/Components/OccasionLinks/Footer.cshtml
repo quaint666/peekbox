@@ -1,0 +1,5 @@
+@model IReadOnlyList<Peekbox.Web.Content.HomeOccasion>
+@foreach (var occasion in Model)
+{
+    <a href="@SiteLinks.Occasion(occasion.Id)">@occasion.Name</a>
+}

@@ -12,7 +12,17 @@
         <nav class="site-nav" id="site-nav" aria-label="Menu chính">
             @foreach (var link in SiteLinks.Header)
             {
-                <a href="@link.Href" aria-current="@(link.Key == active ? "page" : null)">@link.Label</a>
+                if (link.Key == SiteLinks.Occasions.Key)
+                {
+                    <div class="site-nav__dip">
+                        <a href="@link.Href">@link.Label</a>
+                        @await Component.InvokeAsync("OccasionLinks", new { variant = "Menu" })
+                    </div>
+                }
+                else
+                {
+                    <a href="@link.Href" aria-current="@(link.Key == active ? "page" : null)">@link.Label</a>
+                }
             }
         </nav>
         <div class="site-header__tools">

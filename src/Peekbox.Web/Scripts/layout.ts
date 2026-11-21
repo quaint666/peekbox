@@ -54,8 +54,19 @@ document.addEventListener('click', (event) => {
   }
 });
 
+// The "Dịp" menu opens on hover and focus. Escape closes it (WCAG 1.4.13, "dismissible") until the pointer or the focus leaves.
+const dip = document.querySelector<HTMLElement>('.site-nav__dip');
+dip?.addEventListener('pointerleave', () => dip.classList.remove('is-dismissed'));
+dip?.addEventListener('focusout', (event: FocusEvent) => {
+  if (!(event.relatedTarget instanceof Node) || !dip.contains(event.relatedTarget)) dip.classList.remove('is-dismissed');
+});
+
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') setMenu(false);
+  if (event.key !== 'Escape') return;
+  setMenu(false);
+  if (!dip) return;
+  dip.classList.add('is-dismissed');
+  if (dip.contains(document.activeElement)) dip.querySelector('a')?.focus(); // the focus was on a link that is now hidden
 });
 
 // Back and Forward. Safari keeps whole pages in its back-forward cache and shows them exactly as they were left: a

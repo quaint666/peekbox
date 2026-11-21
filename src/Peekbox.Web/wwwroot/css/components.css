@@ -58,7 +58,7 @@
   .btn--primary:active:not(:disabled) { background: var(--color-primary-pressed); }   /* again, so pressed wins over hover */
   .btn--outline:hover:not(:disabled), .icon-btn:hover, .cart-link:hover { background: var(--color-tint); }
   .input:hover:not(:disabled):not(:focus-visible):not([aria-invalid='true']) { border-color: var(--color-muted); }
-  .site-nav a:hover { color: var(--color-primary-text); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; }
+  .site-nav a:hover { color: var(--color-primary-text); }
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -154,6 +154,26 @@ select.input {
 .site-nav a { color: var(--color-text); text-decoration: none; padding: var(--space-2) 0; white-space: nowrap; }
 .site-nav a[aria-current='page'] { color: var(--color-primary-text); font-weight: 600; }
 
+/* The header links: a 2 px line draws in from the left on hover and on keyboard focus (as Bloomy's does). It is a background
+   image, so it needs no extra element, and base.css drops the transition for "reduce motion", so the line then just appears. */
+.site-nav > a, .site-nav__dip > a {
+  background: linear-gradient(var(--color-primary-text), var(--color-primary-text)) no-repeat 0 100% / 0 2px;
+  transition: background-size var(--motion-underline) ease, color 150ms ease;
+}
+.site-nav > a:focus-visible, .site-nav__dip > a:focus-visible { background-size: 100% 2px; }
+@media (hover: hover) {
+  .site-nav > a:hover, .site-nav__dip > a:hover { background-size: 100% 2px; }
+}
+
+/* "Dịp": the six occasions under it. On a phone they are listed under the link in the menu; from 1100 px they open as a
+   small panel on hover and on keyboard focus (the links stay in the Tab order, so a keyboard visitor reaches all six), and
+   Escape closes it (layout.ts adds .is-dismissed until the pointer or focus leaves). */
+.site-nav__menu { list-style: none; margin: 0; padding: 0 0 0 var(--space-4); }
+.site-nav__menu a { display: block; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); }
+@media (hover: hover) {
+  .site-nav__menu a:hover { background: var(--color-tint); }
+}
+
 /* The theme button shows a moon in light mode and a sun in dark mode. */
 [data-action='toggle-theme'] .icon--sun { display: none; }
 :root[data-theme='dark'] [data-action='toggle-theme'] .icon--moon { display: none; }
@@ -208,6 +228,29 @@ select.input {
   .site-nav { display: flex; }
   .menu-btn { display: none; }
   .cart-link__text { display: inline; }
+
+  .site-nav__dip { position: relative; display: flex; }
+  .site-nav__menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: calc(-1 * var(--space-3));
+    z-index: var(--z-menu);
+    min-width: 200px;
+    padding: var(--space-2);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-pop);
+  }
+  .site-nav__dip:not(.is-dismissed):has(> a:focus-visible, .site-nav__menu a:focus-visible) .site-nav__menu { display: block; }
+}
+@media (min-width: 1100px) and (hover: hover) {
+  .site-nav__dip:not(.is-dismissed):hover .site-nav__menu { display: block; }
+}
+@media (min-width: 1100px) and (prefers-reduced-motion: no-preference) {
+  @keyframes nav-menu-in { from { opacity: 0; transform: translateY(-4px); } }
+  .site-nav__menu { animation: nav-menu-in 160ms ease-out; }
 }
 
 /* ---------- Site footer ---------- */
@@ -242,7 +285,14 @@ select.input {
 .site-footer a:focus-visible { outline-color: var(--footer-brand); }   /* --color-focus is too dark on the dark footer */
 .site-footer__contact p { margin: 0; line-height: 1.8; }
 .site-footer__bottom { border-top: 1px solid var(--footer-line); }
+.site-footer__bottom-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: var(--space-4); }
 .site-footer__copy { margin-block: 0; padding-block: var(--space-4); color: var(--footer-label); }
+/* "Chính sách bảo mật · Điều khoản" in one small line, as Bloomy's footer has it. */
+.site-footer__legal { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-2); color: var(--footer-label); }
+.site-footer__legal a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--footer-text); text-decoration: none; }
+@media (hover: hover) {
+  .site-footer__links a:hover, .site-footer__legal a:hover { color: var(--footer-brand); }
+}
 @media (min-width: 900px) {
   .site-footer__main {
     grid-template-columns: 1.6fr 1fr 1fr 1.2fr;

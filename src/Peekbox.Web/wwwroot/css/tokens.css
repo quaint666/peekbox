@@ -156,6 +156,7 @@
   --motion-photo: 450ms;           /* a photo fading in, as the heroes do */
   --motion-ring: 600ms;            /* the ring round a card that was just added to */
   --motion-stagger: 35ms;          /* the pause between one card and the next */
+  --motion-underline: 250ms;       /* the line that draws under a header link */
 
   /* Layout: the pages switch to their wide layout at 900px and the header at 1100px. A media query cannot read a
      variable, so those two numbers are written in each file's @media line; change them everywhere at once. */

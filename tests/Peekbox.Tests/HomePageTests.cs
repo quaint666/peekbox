@@ -100,14 +100,22 @@ public class HomePageTests(PeekboxFixture fixture)
     }
 
     // The expected links are written out here on purpose. A test that read SiteLinks would agree with a typo in SiteLinks.
+    // The six occasions, in page order: the header's "Dịp" menu and the footer's "Dịp" column list the same six pages.
+    private static readonly (string Href, string Label)[] OccasionLinks =
+    [
+        ("/dip/tet", "Tết"), ("/dip/valentine", "Valentine"), ("/dip/phu-nu", "8/3"), ("/dip/trung-thu", "Trung thu"), ("/dip/20-11", "20/11"), ("/dip/giang-sinh", "Giáng sinh"),
+    ];
+
+    // "Dịp" goes to the six cards on the home page, and its menu comes right after it.
     private static readonly (string Href, string Label)[] HeaderLinks =
     [
-        ("/", "Trang chủ"), ("/builder", "Tạo hộp quà"), ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"),
+        ("/", "Trang chủ"), ("/builder", "Tạo hộp quà"), ("/#cho-tung-dip", "Dịp"), .. OccasionLinks,
+        ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"),
     ];
 
     private static readonly (string Href, string Label)[] FooterLinks =
     [
-        ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"), ("/legal#dieu-khoan", "Điều khoản"), ("/legal#bao-mat", "Chính sách bảo mật"),
+        ("/builder", "Tạo hộp quà"), ("/about", "Giới thiệu"), ("/about#cam-ket", "Cam kết"), ("/blog", "Blog"), ("/track", "Tra cứu đơn hàng"), .. OccasionLinks,
     ];
 
     // The links of one <nav>, in order, as (href, text). Looking inside one nav keeps a link in the footer from counting for the header.
@@ -141,7 +149,7 @@ public class HomePageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task The_header_has_the_six_menu_links_in_order_and_marks_the_current_page()
+    public async Task The_header_has_its_links_and_the_occasion_menu_in_order_and_marks_the_current_page()
     {
         var html = await GetHomeAsync();
 
@@ -151,11 +159,30 @@ public class HomePageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task The_footer_has_the_five_links_in_order()
+    public async Task The_footer_has_its_links_and_the_six_occasions_in_order()
     {
         var html = await GetHomeAsync();
 
         Assert.Equal(FooterLinks, LinksInAll(html, "site-footer__links"));
+    }
+
+    // The terms and the privacy policy are one small line at the bottom, as in Bloomy's footer, not a column of their own.
+    [Fact]
+    public async Task The_footer_keeps_the_terms_and_privacy_in_one_line_at_the_bottom()
+    {
+        var html = await GetHomeAsync();
+
+        Assert.Equal([("/legal#dieu-khoan", "Điều khoản"), ("/legal#bao-mat", "Chính sách bảo mật")], LinksIn(html, "site-footer__legal"));
+        Assert.DoesNotContain("Pháp lý</h2>", html);
+    }
+
+    // "Dịp" has no page of its own: it jumps to the six cards on the home page, so that section needs its id.
+    [Fact]
+    public async Task The_home_page_has_the_section_the_Dip_link_jumps_to()
+    {
+        var html = await GetHomeAsync();
+
+        Assert.Contains("<section class=\"occasions\" id=\"cho-tung-dip\">", html);
     }
 
     [Fact]
