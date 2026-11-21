@@ -49,14 +49,7 @@
                     <h2 class="review-card__title" id="packaging-title">Kiểu đóng gói</h2>
                     <a class="review-card__edit" href="@(SiteLinks.Builder.Href + Anchors.Link(Anchors.Packaging))" aria-label="Đổi kiểu đóng gói">Đổi</a>
                 </div>
-                <div class="review-packaging">
-                    <img class="review-packaging__img" src="@packaging.ImagePath" alt="" width="600" height="448">
-                    <div class="review-packaging__text">
-                        <p class="review-packaging__name">@packaging.Name</p>
-                        <p class="review-packaging__desc meta">@packaging.Description</p>
-                    </div>
-                    <p class="review-packaging__fee">@(packaging.FeeVnd == 0 ? "Miễn phí" : Vnd.Format(packaging.FeeVnd))</p>
-                </div>
+                <partial name="_PackagingRow" model="packaging" />
             </section>
 
             <section class="card review-card" aria-labelledby="lines-title">

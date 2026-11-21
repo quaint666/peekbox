@@ -71,4 +71,55 @@ describe('checkout.ts', () => {
 
     expect(document.querySelector('#checkout-summary')?.textContent).toBe('old');
   });
+
+  describe('keyboard changes of the ward', () => {
+    const key = (name: string): void => {
+      document.querySelector('#ward')?.dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true }));
+    };
+
+    it('passing three wards with the arrow keys asks the server once, after the keys stop', async () => {
+      vi.useFakeTimers();
+      const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(answer(page('ward 2')));
+      await load('checkout', html);
+
+      for (const value of ['1', '2', '1']) {
+        key('ArrowDown');
+        pick(value);
+        await vi.advanceTimersByTimeAsync(100);
+      }
+      expect(fetchMock).not.toHaveBeenCalled();
+
+      await vi.advanceTimersByTimeAsync(600);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(String(fetchMock.mock.calls[0]?.[0])).toContain('?ward=1');
+      vi.useRealTimers();
+    });
+
+    it('Enter, or leaving the menu, asks at once', async () => {
+      vi.useFakeTimers();
+      const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(answer(page('x')));
+      await load('checkout', html);
+
+      key('ArrowDown');
+      pick('1');
+      key('Enter');
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      key('ArrowDown');
+      pick('2');
+      document.querySelector('#ward')?.dispatchEvent(new Event('blur'));
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      vi.useRealTimers();
+    });
+
+    it('a choice made with the pointer is sent at once, even after keys were used', async () => {
+      const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(answer(page('x')));
+      await load('checkout', html);
+
+      key('ArrowDown');
+      document.querySelector('#ward')?.dispatchEvent(new Event('pointerdown'));
+      pick('2');
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+  });
 });
