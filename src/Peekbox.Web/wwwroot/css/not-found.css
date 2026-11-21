@@ -1,0 +1,15 @@
+/* PAGE NOT FOUND: any unknown address (state 05). Sizes in px without a token are from the mockups. Phone first; from
+   900px the card is wider, the buttons sit side by side and the numbers grow. */
+.not-found { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); padding: 28px 20px; text-align: center; }
+.not-found__code { margin: 0; font-size: calc(var(--text-hero) * 1.5); font-weight: 700; line-height: 1; letter-spacing: -2px; color: var(--color-border); }  /* 72px, from the mockup */
+.not-found__title { margin: 0; font-size: var(--title-md); line-height: 1.2; }  /* 24px */
+.not-found__lead { margin: 0; max-width: 460px; font-size: var(--text-base); line-height: 1.6; color: var(--color-muted); }
+.not-found__actions { display: flex; flex-direction: column; gap: var(--space-3); width: 100%; }
+.not-found__help { margin: 0; font-size: var(--text-sm); color: var(--color-muted); }
+
+@media (min-width: 900px) {
+    .not-found { max-width: 720px; margin-inline: auto; padding: 56px var(--space-6); }
+    .not-found__code { font-size: calc(var(--text-hero) * 2); }  /* 96px */
+    .not-found__title { font-size: var(--title-lg); }  /* 30px */
+    .not-found__actions { flex-direction: row; justify-content: center; width: auto; }
+}

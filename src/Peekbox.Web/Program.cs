@@ -86,14 +86,18 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler(SiteLinks.ErrorPath);
 }
 
+// An unknown address (or any answer with an empty body) runs the "not found" page again, with the original status code (F09).
+app.UseStatusCodePagesWithReExecute(SiteLinks.NotFoundPath);
+
 // No HTTPS redirection and no HSTS here: the site is served behind a proxy
 // that handles HTTPS.
 
-// First, so that every response carries the headers, including static files and errors.
+// First, so that every response carries the headers, including static files and errors. They are set, not added: the
+// "not found" page runs the pipeline a second time and must not get them twice.
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Append(ContentSecurityPolicy.HeaderName, ContentSecurityPolicy.Value);
-    context.Response.Headers.Append(ReferrerPolicy.HeaderName, ReferrerPolicy.Value);
+    context.Response.Headers[ContentSecurityPolicy.HeaderName] = ContentSecurityPolicy.Value;
+    context.Response.Headers[ReferrerPolicy.HeaderName] = ReferrerPolicy.Value;
     await next();
 });
 

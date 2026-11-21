@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Không tìm thấy trang này";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/not-found.css" asp-append-version="true">
+}
+
+@* The "page not found" page (F09; state 05). Shown for every unknown address, with the 404 status. *@
+<section class="card not-found" aria-labelledby="not-found-title">
+    <p class="not-found__code" aria-hidden="true">404</p>
+    <h1 class="not-found__title" id="not-found-title">Không tìm thấy trang này</h1>
+    <p class="not-found__lead">Đường dẫn có thể đã đổi hoặc gõ sai. Bạn có thể về trang chủ hoặc bắt đầu một hộp quà mới.</p>
+    <div class="not-found__actions">
+        <a class="btn btn--primary" href="@SiteLinks.Home.Href">Về trang chủ</a>
+        <a class="btn btn--outline" href="@SiteLinks.Builder.Href">Tạo hộp quà</a>
+    </div>
+    <p class="not-found__help"><partial name="_SupportLine" /></p>
+</section>
