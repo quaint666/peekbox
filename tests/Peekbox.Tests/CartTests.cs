@@ -165,7 +165,7 @@ public class CartTests(PeekboxFixture fixture)
         Assert.DoesNotContain("cart-reason", html);
         Assert.Contains("<a class=\"btn btn--primary cart-checkout\" href=\"/checkout\">Tiếp tục thanh toán</a>", Regex.Match(html, @"<div class=""cart-bar""[\s\S]*?</div>").Value);
         Assert.Contains("<div class=\"cart-bar\" role=\"region\" aria-label=\"Tạm tính\">", html);
-        Assert.Contains("<div class=\"confirm\" id=\"xoa-hop\" popover role=\"dialog\" aria-labelledby=\"confirm-title\" aria-describedby=\"confirm-text\">", html);
+        Assert.Contains("<div class=\"confirm\" id=\"xoa-hop\" popover role=\"dialog\" aria-labelledby=\"xoa-hop-title\" aria-describedby=\"xoa-hop-text\">", html);
     }
 
     [Fact]
