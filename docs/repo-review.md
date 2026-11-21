@@ -170,9 +170,11 @@ in brackets. Score 8/10: the base was sound, and the defects were in what a hand
   build manifest, so the image has no fallback. `PeekboxFixture` sets `DisableStaticAssetNotFoundRuntimeFallback` so the
   tests answer like the image; the image smoke step in `images.yml` sends a GET to `/cart/add` and also checks `HEAD /healthz`
   and a gzip'd stylesheet that inflates to the real file).
-- Left, decided and not yet built: "8/3" on the home page against "8/3 và 20/10" on the occasion page (two sources for one
-  name); hamper rows are never purged; the workflow actions are pinned by tag, not by commit; the browser scripts
-  (`builder.ts` is 595 lines) have no automated test.
+- Done after batch 7: the occasion "8/3 và 20/10" has one name and one chip on the home page, the header and its own page
+  (`HomeContentTests` compares `home.json` and `hampers.json`); the workflow actions are pinned to a commit with the tag in
+  a comment (`WorkflowTests`; an update is now a deliberate edit of the SHA, there is no Dependabot).
+- Left, decided and not yet built: hamper rows are never purged; the browser scripts (`builder.ts` is 595 lines) have no
+  automated test.
 - Left on purpose: `/about`, `/blog` and `/legal` were linked from the header and footer before they were built and were 404 until M4 (the blog
   came in #74, About and legal in #77); on a phone the sticky header, the builder's steps and the bottom bar leave about 60 % of the screen for the list.
 - Browser floor (decision 2026-11-21): the Popover API is Baseline "newly available" since 2025-01-27 and "widely
