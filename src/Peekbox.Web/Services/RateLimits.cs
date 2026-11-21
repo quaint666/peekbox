@@ -15,12 +15,14 @@ public sealed class RateLimits : IDisposable
     private readonly PartitionedRateLimiter<string> _orders;
     private readonly PartitionedRateLimiter<string> _track;
     private readonly PartitionedRateLimiter<string> _newHampers;
+    private readonly PartitionedRateLimiter<string> _coupons;
 
     public RateLimits(IConfiguration configuration)
     {
         _orders = Create(Required(configuration, "RateLimits:OrdersPer15Minutes"));
         _track = Create(Required(configuration, "RateLimits:TrackPer15Minutes"));
         _newHampers = Create(Required(configuration, "RateLimits:NewHampersPer15Minutes"));
+        _coupons = Create(Required(configuration, "RateLimits:CouponTriesPer15Minutes"));
     }
 
     // True when this visitor may place an order now; each call uses one.
@@ -33,11 +35,15 @@ public sealed class RateLimits : IDisposable
     // call uses one. Without it a script could add rows to the database as fast as it could send forms.
     public bool TryNewHamper(HttpContext context) => Try(_newHampers, context);
 
+    // True when this visitor may try another discount code now (F38); each call uses one. Without it a script could guess codes.
+    public bool TryCoupon(HttpContext context) => Try(_coupons, context);
+
     public void Dispose()
     {
         _orders.Dispose();
         _track.Dispose();
         _newHampers.Dispose();
+        _coupons.Dispose();
     }
 
     private static bool Try(PartitionedRateLimiter<string> limiter, HttpContext context)

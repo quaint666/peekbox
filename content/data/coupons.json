@@ -1,0 +1,16 @@
+{
+  "coupons": [
+    { "code": "CHAO10", "kind": "percent", "value": 10, "min_goods_vnd": 0, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "QUA20K", "kind": "fixed", "value": 20000, "min_goods_vnd": 100000, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "TET15", "kind": "percent", "value": 15, "min_goods_vnd": 300000, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "YEU50K", "kind": "fixed", "value": 50000, "min_goods_vnd": 400000, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "PHUNU8", "kind": "percent", "value": 8, "min_goods_vnd": 0, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "TRUNGTHU12", "kind": "percent", "value": 12, "min_goods_vnd": 200000, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "NOEL25K", "kind": "fixed", "value": 25000, "min_goods_vnd": 250000, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "NGAYVUI5", "kind": "percent", "value": 5, "min_goods_vnd": 0, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "BAN20K", "kind": "fixed", "value": 20000, "min_goods_vnd": 150000, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "MOI30K", "kind": "fixed", "value": 30000, "min_goods_vnd": 300000, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "VIP20", "kind": "percent", "value": 20, "min_goods_vnd": 1000000, "valid_from": null, "valid_to": null, "max_uses": null },
+    { "code": "DUNG100", "kind": "percent", "value": 10, "min_goods_vnd": 0, "valid_from": null, "valid_to": null, "max_uses": 100 }
+  ]
+}

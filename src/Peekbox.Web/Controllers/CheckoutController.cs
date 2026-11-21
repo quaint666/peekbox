@@ -120,7 +120,7 @@ public class CheckoutController(HamperService hampers, OrderService orders, Deli
         }
 
         var box = await hampers.BoxAsync(hamper, cancellationToken);
-        return box.Lines.Count == 0 || box.OutOfDate.Count > 0 ? null : box;
+        return box.Lines.Count == 0 || box.OutOfDate.Count > 0 || box.Coupon is { Works: false } ? null : box;
     }
 
     private async Task<IActionResult> PageAsync(

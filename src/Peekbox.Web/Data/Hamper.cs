@@ -20,6 +20,10 @@ public class Hamper
 
     public Packaging? Packaging { get; set; }
 
+    // The discount code the visitor applied in the cart (F38), as stored (CouponRules.Normalize); null when none. Whether
+    // it still works is checked every time the box is read (HamperService.BoxAsync), and again when the order is placed.
+    public string? CouponCode { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; }
 
     public DateTimeOffset UpdatedAt { get; set; }

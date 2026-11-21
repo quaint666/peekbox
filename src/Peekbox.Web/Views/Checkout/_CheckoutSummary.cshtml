@@ -17,6 +17,10 @@
     </ul>
     <dl class="checkout-sums" aria-live="polite">
         <div><dt>Tiền hàng</dt><dd>@Vnd.Format(box.Quote.GoodsVnd)</dd></div>
+        @if (box.Coupon is { Works: true } coupon)
+        {
+            <div class="checkout-sums__discount"><dt>Mã @coupon.Code (@coupon.Label.ToLowerInvariant())</dt><dd>−@Vnd.Format(coupon.DiscountVnd)</dd></div>
+        }
         <div><dt>Đóng gói (@box.Packaging!.Name)</dt><dd>@Vnd.Format(box.Quote.PackagingVnd)</dd></div>
         @if (Model.DeliveryFeeVnd is { } fee)
         {

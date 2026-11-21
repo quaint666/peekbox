@@ -55,6 +55,12 @@ public class Order
 
     public long DeliveryFeeVnd { get; set; }
 
+    // F38: the code used (null when none) and what it took off the goods, in whole dong. TotalVnd already has it taken off:
+    // TotalVnd = GoodsVnd + PackagingFeeVnd + DeliveryFeeVnd - DiscountVnd.
+    public string? CouponCode { get; set; }
+
+    public long DiscountVnd { get; set; }
+
     public long TotalVnd { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; }

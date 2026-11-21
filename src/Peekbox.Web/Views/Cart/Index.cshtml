@@ -1,3 +1,4 @@
+@using Peekbox.Web.Data
 @using Peekbox.Web.Formatting
 @model CartViewModel
 @{
@@ -65,11 +66,43 @@
                 <dl class="cart-sums">
                     <div><dt>Tiền hàng (@box.Count món)</dt><dd>@Vnd.Format(box.Quote.GoodsVnd)</dd></div>
                     <div><dt>Đóng gói</dt><dd>@Vnd.Format(box.Quote.PackagingVnd)</dd></div>
+                    @if (box.Coupon is { Works: true } applied)
+                    {
+                        <div class="cart-sums__discount"><dt>Mã @applied.Code (@applied.Label.ToLowerInvariant())</dt><dd>−@Vnd.Format(applied.DiscountVnd)</dd></div>
+                    }
                     <div class="cart-sums__later"><dt>Phí giao hàng</dt><dd>Tính ở bước sau</dd></div>
                 </dl>
+                @* F38: the discount code. A code that works is kept on the hamper; one that does not says why under the field. *@
+                <div class="cart-coupon" id="@Anchors.Coupon">
+                    @if (box.Coupon is { } code)
+                    {
+                        <div class="cart-coupon__applied">
+                            <p class="cart-coupon__code"><span class="meta">Mã giảm giá</span><strong>@code.Code</strong>@if (code.Works) {<span class="meta">@code.Label</span>}</p>
+                            <form method="post" action="@SiteLinks.CartCouponRemovePath" asp-antiforgery="true"><button type="submit" class="btn btn--outline cart-coupon__btn" aria-label="Bỏ mã @code.Code">Bỏ mã</button></form>
+                        </div>
+                        @if (code.Note is { } note)
+                        {
+                            <p class="field__error" role="alert">@note</p>
+                        }
+                    }
+                    else
+                    {
+                        <form class="cart-coupon__form" method="post" action="@SiteLinks.CartCouponPath" asp-antiforgery="true">
+                            <label class="field__label" for="coupon-code">Mã giảm giá</label>
+                            <div class="cart-coupon__row">
+                                <input class="input" id="coupon-code" name="code" value="@Model.CouponTyped" maxlength="@Coupon.CodeMaxLength" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-invalid="@(Model.CouponError is null ? null : "true")" aria-describedby="@(Model.CouponError is null ? null : "coupon-code-error")">
+                                <button type="submit" class="btn btn--outline cart-coupon__btn">Áp dụng</button>
+                            </div>
+                            @if (Model.CouponError is { } error)
+                            {
+                                <p class="field__error" id="coupon-code-error" role="alert">@error</p>
+                            }
+                        </form>
+                    }
+                </div>
                 @* Wide screens; on a phone the total and the button are in the bar below (mockup 05, phone). *@
                 <div class="cart-summary__end">
-                    <p class="cart-total"><span>Tạm tính (đã gồm thuế)</span><strong>@Vnd.Format(box.Quote.TotalVnd)</strong></p>
+                    <p class="cart-total"><span>Tạm tính (đã gồm thuế)</span><strong>@Vnd.Format(box.PayVnd)</strong></p>
                     @if (reason is not null)
                     {
                         <button type="button" class="btn btn--primary cart-checkout" disabled aria-describedby="checkout-reason">Tiếp tục thanh toán</button>
@@ -84,7 +117,7 @@
         </div>
 
         <div class="cart-bar" data-bottom-bar role="region" aria-label="Tạm tính">
-            <p class="cart-total"><span>Tạm tính (đã gồm thuế)</span><strong>@Vnd.Format(box.Quote.TotalVnd)</strong></p>
+            <p class="cart-total"><span>Tạm tính (đã gồm thuế)</span><strong>@Vnd.Format(box.PayVnd)</strong></p>
             @if (reason is not null)
             {
                 <button type="button" class="btn btn--primary cart-checkout" disabled aria-describedby="checkout-reason-bar">Tiếp tục thanh toán</button>

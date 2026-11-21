@@ -92,6 +92,10 @@
             <dl class="order-sums">
                 <div><dt>Tiền hàng</dt><dd>@Vnd.Format(order.GoodsVnd)</dd></div>
                 <div><dt>Đóng gói</dt><dd>@Vnd.Format(order.PackagingFeeVnd)</dd></div>
+                @if (order.CouponCode is { } couponCode)
+                {
+                    <div class="order-sums__discount"><dt>Mã @couponCode</dt><dd>−@Vnd.Format(order.DiscountVnd)</dd></div>
+                }
                 <div><dt>Phí giao hàng</dt><dd>@Vnd.Format(order.DeliveryFeeVnd)</dd></div>
                 <div class="order-sums__total"><dt>Tổng cộng</dt><dd>@Vnd.Format(order.TotalVnd)</dd></div>
             </dl>

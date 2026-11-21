@@ -25,6 +25,8 @@ public class RoutesTests(PeekboxFixture fixture)
         "/cart GET,HEAD",
         "/cart/add POST",
         "/cart/clear POST",
+        "/cart/coupon POST",
+        "/cart/coupon/remove POST",
         "/checkout GET,HEAD",
         "/checkout POST",
         "/checkout/soldout GET",

@@ -54,6 +54,7 @@
 .order-sums { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; padding-top: var(--space-3); border-top: 1px solid var(--color-border-soft); font-size: var(--text-md); }
 .order-sums div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
 .order-sums dd { margin: 0; }
+.order-sums__discount { color: var(--color-primary-text); font-weight: 600; }   /* F38 */
 .order-sums__total dd { font-size: var(--title-sm); font-weight: 700; }  /* 22px */
 .order-actions { display: flex; flex-direction: column; gap: 10px; }
 .order-actions .btn { min-height: 48px; }

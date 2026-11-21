@@ -38,6 +38,8 @@ Every address the site answers, with the methods it takes. Any other method on t
 | `/cart` | `GET,HEAD` | The cart |
 | `/cart/add` | `POST` | Put the box in the cart |
 | `/cart/clear` | `POST` | Empty the cart |
+| `/cart/coupon` | `POST` | F38: apply a discount code (rate limited; a refused code comes back as a line under the field) |
+| `/cart/coupon/remove` | `POST` | F38: take the code off |
 | `/checkout` | `GET,HEAD` | The checkout form |
 | `/checkout` | `POST` | Place the order |
 | `/checkout/soldout` | `GET` | Where the checkout sends a visitor whose item sold out |
