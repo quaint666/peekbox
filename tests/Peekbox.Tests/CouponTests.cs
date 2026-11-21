@@ -368,10 +368,15 @@ public class CouponTests(PeekboxFixture fixture)
     [Fact]
     public async Task The_seeded_codes_are_there_and_the_database_refuses_a_code_or_an_order_that_makes_no_sense()
     {
-        var seeded = await fixture.WithDbAsync(db => db.Coupons.AsNoTracking().Where(c => c.Code == "CHAO10" || c.Code == "QUA20K").OrderBy(c => c.Code).ToListAsync());
-        Assert.Equal(["CHAO10", "QUA20K"], seeded.Select(c => c.Code));
-        Assert.Equal((CouponKind.Percent, 10L, 0L), (seeded[0].Kind, seeded[0].Value, seeded[0].MinGoodsVnd));
-        Assert.Equal((CouponKind.Fixed, 20_000L, 100_000L), (seeded[1].Kind, seeded[1].Value, seeded[1].MinGoodsVnd));
+        var fromFile = SeedData.LoadCoupons(SeedData.CouponsFilePath).Coupons.Select(c => c.Code).ToList();
+        var seeded = await fixture.WithDbAsync(db => db.Coupons.AsNoTracking().Where(c => fromFile.Contains(c.Code)).ToListAsync());
+        var chao = seeded.Single(c => c.Code == "CHAO10");
+        var qua = seeded.Single(c => c.Code == "QUA20K");
+        Assert.Equal((CouponKind.Percent, 10L, 0L), (chao.Kind, chao.Value, chao.MinGoodsVnd));
+        Assert.Equal((CouponKind.Fixed, 20_000L, 100_000L), (qua.Kind, qua.Value, qua.MinGoodsVnd));
+        Assert.Equal(12, fromFile.Count);
+        Assert.Equal(fromFile.Count, seeded.Count);   // every code of the file is in the table, none twice
+        Assert.All(seeded, c => Assert.Equal(CouponRules.Normalize(c.Code), c.Code));
 
         await Assert.ThrowsAsync<DbUpdateException>(() => NewCodeAsync(c => c.Value = 101));              // over 100 %
         await Assert.ThrowsAsync<DbUpdateException>(() => NewCodeAsync(c => c.Code = "CHAO10"));          // a repeat
