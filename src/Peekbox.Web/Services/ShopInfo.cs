@@ -11,6 +11,9 @@ public sealed record ShopInfo(string Phone, string Email, string Address, string
 
     public string EmailLink => "mailto:" + Email;
 
+    // The Zalo link as the contact panel shows it: without "https://" (zalo.me/0900000001).
+    public string ZaloLabel => ZaloUrl.Replace("https://", "").Replace("http://", "").TrimEnd('/');
+
     public static ShopInfo FromConfiguration(IConfiguration configuration) => new(
         Required(configuration, "Shop:Phone"),
         Required(configuration, "Shop:Email"),

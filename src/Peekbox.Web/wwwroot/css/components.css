@@ -415,38 +415,46 @@ select.input {
 }
 
 /* F06 and F07: the floating contact button and "Lên đầu trang" (Views/Shared/_FloatingButtons.cshtml), bottom right of every
-   page. The panel is a popover: it opens, closes on Escape or a click outside, and needs no script. */
-.float-stack { position: fixed; right: var(--space-4); bottom: var(--space-4); z-index: var(--z-float); display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-3); }
-.float-btn { display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border: 1px solid var(--color-border); border-radius: 50%; background: var(--color-surface); color: var(--color-primary-text); box-shadow: var(--shadow-pop); cursor: pointer; touch-action: manipulation; }
+   page (mockup state 11): a 56 px contact circle with a 44 px back-to-top circle above it, 20 px from the edges. The panel is a
+   popover: it opens, closes on Escape or a click outside, and needs no script. It sits above both buttons, so it never covers
+   "Lên đầu trang". --floating-lift is the height of a bar stuck to the bottom of a phone screen (layout.ts), so the buttons sit
+   above it; it is 0 when there is none. 20px, 56px, 14px and 260px/300px are from the mockup. */
+.float-stack { position: fixed; right: 20px; bottom: calc(20px + var(--floating-lift, 0px)); z-index: var(--z-float); display: flex; flex-direction: column; align-items: center; gap: var(--space-3); transition: bottom 150ms ease; }   /* when a bar sticks or unsticks (base.css drops it for "reduce motion") */
+.float-btn { display: grid; place-items: center; padding: 0; border-radius: 50%; cursor: pointer; touch-action: manipulation; }
 .float-btn[hidden] { display: none; }
-.float-btn .icon { width: 22px; height: 22px; }
-.float-contact { border-color: var(--color-primary); background: var(--color-primary); color: var(--color-on-primary); }
+.float-btn .icon { width: 20px; height: 20px; }
+.float-top { width: var(--tap-min); height: var(--tap-min); border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-float); }
+.float-contact { width: 56px; height: 56px; border: 0; background: var(--color-primary); color: var(--color-on-primary); box-shadow: var(--shadow-fab); }
+.float-contact .icon { width: 26px; height: 26px; }
 .contact-panel {
-  inset: auto var(--space-4) calc(var(--space-4) + 48px + var(--space-3)) auto;
+  inset: auto 20px calc(var(--floating-lift, 0px) + 20px + 56px + var(--space-3)) auto;
   margin: 0;
-  width: min(300px, calc(100vw - 2 * var(--space-4)));
-  padding: var(--space-3) var(--space-4) var(--space-4);
+  width: min(260px, calc(100vw - 40px));
+  padding: 14px var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   color: var(--color-text);
   box-shadow: var(--shadow-pop);
 }
-.contact-panel__title { margin: 0 0 var(--space-2); font-size: var(--text-md); }
-.contact-panel__link { display: flex; align-items: center; gap: var(--space-3); min-height: var(--tap-min); color: inherit; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
-.contact-panel__link .icon { flex: none; width: 20px; height: 20px; color: var(--color-primary-text); }
-.contact-panel__hours { margin: var(--space-2) 0 0; }
+body:has(.float-top:not([hidden])) .contact-panel { bottom: calc(var(--floating-lift, 0px) + 20px + 56px + var(--space-3) + var(--tap-min) + var(--space-3)); }
+.contact-panel__title { margin: 0; padding-bottom: 6px; font-size: var(--text-base); font-weight: 700; }
+.contact-panel__link { display: flex; flex-direction: column; gap: 2px; min-height: 48px; padding: var(--space-2) 0; border-top: 1px solid var(--color-border-soft); color: var(--color-text); font-size: var(--text-md); text-decoration: none; overflow-wrap: anywhere; }
+.contact-panel__link span { font-size: var(--text-xs); color: var(--color-muted); }
+.contact-panel__hours { margin: 0; padding-top: var(--space-2); border-top: 1px solid var(--color-border-soft); font-size: var(--text-2xs); color: var(--color-muted); }
 @media (hover: hover) {
   .float-top:hover { border-color: var(--color-primary); }
   .float-contact:hover { background: var(--color-primary-hover); }
-  .contact-panel__link:hover span { text-decoration: underline; }
+  .contact-panel__link:hover strong { text-decoration: underline; }
+}
+@media (min-width: 900px) {
+  .contact-panel { width: 300px; }
 }
 .float-btn:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
-/* The footer's last line keeps clear of the buttons. */
-.site-footer__bottom-inner { padding-inline-end: calc(48px + var(--space-6)); }
-/* A phone page with its own bar at the bottom (the builder's box, the cart, the checkout, the review, a hamper) has no room for them. */
-@media (max-width: 899px) {
-  body:has(.box-bar, .cart-bar, .checkout-bar, .review-bar, .hp-bar) .float-stack { display: none; }
+/* The footer's last line keeps clear of the buttons (20px + 56px + 12px). From 1360px the margin beside the 1200px of content is
+   wide enough by itself, so the line stays in line with the columns above it. */
+@media (max-width: 1359.98px) {
+  .site-footer__bottom-inner { padding-inline-end: calc(20px + 56px + var(--space-3)); }
 }
 
 /* The toast (F08, Views/Shared/_Toast.cshtml, lib/toast.ts): a card at the bottom centre of the screen for a few seconds. Its
