@@ -14,7 +14,7 @@ Every endpoint says which functions (F-numbers, `docs/functions.md`) it serves.
 - **Error codes** (used for JSON errors and for the messages shown on pages): `validation_failed`, `item_not_found`, `item_sold_out`, `item_expired_for_date`, `over_budget`, `delivery_day_full`, `unknown_packaging`, `coupon_invalid`, `coupon_expired`, `payment_failed`, `rate_limited`. JSON errors use `application/problem+json` (RFC 9457) with `type`, `title`, `status`, `detail`, `code` and `errors`.
 - **Safe to repeat:** placing an order must never create two orders (the Back button, a double click). The server checks that the hamper was not already ordered.
 - **Security headers** are set by the server on every response, not by a `<meta>` tag: the content security policy, `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff` and a `Permissions-Policy` that switches off the camera, microphone, position, payment and USB. The server does not send a `Server` header. A page that has not said how it may be cached is `Cache-Control: private, no-cache` (it shows the visitor's own cart count); a page with a form, and the order page, are `no-store`.
-- **Rate limits:** 20 orders and 10 order lookups per 15 minutes per address (`appsettings.json`, `RateLimits`). A refused request gets its page with a note and a 429.
+- **Rate limits:** 20 orders, 10 order lookups and 20 new hampers (a first "Lưu" or "Dùng hộp này" with no hamper of one's own) per 15 minutes per address (`appsettings.json`, `RateLimits`). A refused order or lookup gets its page with a note and a 429; a refused new hamper gets the 429 page ("Bạn thao tác hơi nhanh") and `Retry-After: 900`.
 
 ## Pages and forms
 

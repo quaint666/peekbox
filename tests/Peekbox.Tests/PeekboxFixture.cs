@@ -45,6 +45,7 @@ public sealed class PeekboxFixture : IAsyncLifetime
             .UseSetting("ConnectionStrings:Default", _testConnection)
             .UseSetting("RateLimits:OrdersPer15Minutes", "100000")
             .UseSetting("RateLimits:TrackPer15Minutes", "100000")
+            .UseSetting("RateLimits:NewHampersPer15Minutes", "100000")
             // An unpublished app (the test host, dotnet run) gets a GET/HEAD "{**path:file}" fallback from the static-asset
             // development handler, which turns a GET to a POST-only address into the 404 page; the published app has none
             // and answers 405. Off here, so the test host answers as the image does (RequestMapTests).
