@@ -7,7 +7,7 @@ fill_in: nothing; the team's own details (name, address, contact) are shown in t
 # Tiếng Việt
 
 ## Giới thiệu Peekbox
-Peekbox giúp bạn chọn và đặt hộp quà cho các dịp lễ trong năm: Tết, Valentine, 8/3, Trung thu, 20/11 và Giáng sinh. Điểm khác biệt là bạn nhìn thấy rõ từng món bên trong hộp và luôn kiểm soát được ngân sách của mình.
+Peekbox giúp bạn chọn và đặt hộp quà cho các dịp lễ trong năm: Tết, Valentine, 8/3 và 20/10, Trung thu, 20/11 và Giáng sinh. Điểm khác biệt là bạn nhìn thấy rõ từng món bên trong hộp và luôn kiểm soát được ngân sách của mình.
 
 Hộp quà thường được đóng kín: người mua khó biết bên trong có gì, món nào còn hạn đến bao giờ, và tổng tiền đã vượt ngân sách chưa. Peekbox làm ngược lại. Bạn đặt ngân sách trước, tự chọn từng món hoặc dùng một hộp gợi ý, xem thương hiệu, trọng lượng, xuất xứ và hạn sử dụng của từng món, rồi nhận hộp giao tận nơi trong Thành phố Hồ Chí Minh.
 
@@ -25,7 +25,7 @@ Peekbox do cùng nhóm làm ra Bloomy, tiệm hoa trực tuyến của chúng t�
 3. **Không giao món hết hạn.** Món hết hạn trước ngày giao (cộng khoảng dự phòng) không thể đặt. Bạn luôn thấy cảnh báo trước khi thanh toán.
 
 ## Các dịp chúng tôi phục vụ
-Peekbox có trang riêng cho sáu dịp: Tết, Valentine, 8/3, Trung thu, 20/11 và Giáng sinh. Mỗi trang có các hộp gợi ý chia theo mức ngân sách. Với mỗi hộp, bạn thấy người nhận phù hợp, các món bên trong, món có hạn sử dụng gần nhất và tổng tiền.
+Peekbox có trang riêng cho sáu dịp: Tết, Valentine, 8/3 và 20/10, Trung thu, 20/11 và Giáng sinh. Mỗi trang có các hộp gợi ý chia theo mức ngân sách. Với mỗi hộp, bạn thấy người nhận phù hợp, các món bên trong, món có hạn sử dụng gần nhất và tổng tiền.
 
 Khi chọn "Dùng hộp này", hộp gợi ý trở thành hộp của bạn. Bạn có thể thêm, bớt hoặc đổi món cho vừa ý người nhận, hoặc tự tạo một hộp từ đầu nếu muốn.
 

@@ -25,6 +25,16 @@ public class AboutLegalContentTests
         Assert.Equal("Tạo hộp quà", About.CtaButton);
     }
 
+    // The owner's decision of 2026-11-21: the sixth occasion is called "8/3 và 20/10" everywhere.
+    [Fact]
+    public void The_occasions_are_named_as_everywhere_else()
+    {
+        var all = string.Join('\n', AboutTexts());
+
+        Assert.Contains("8/3 và 20/10", all);
+        Assert.DoesNotContain("Valentine, 8/3,", all);
+    }
+
     [Fact]
     public void The_steps_and_the_commitments_are_numbered_cards_and_the_commitments_have_their_address()
     {
