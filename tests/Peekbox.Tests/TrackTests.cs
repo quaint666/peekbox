@@ -46,7 +46,7 @@ public class TrackTests(PeekboxFixture fixture)
         Assert.Contains("Mã có trên trang xác nhận đơn hàng.", html);
         var card = Regex.Match(html, @"<section class=""card track""[\s\S]*?</section>").Value;
         Assert.DoesNotContain("email xác nhận", card);   // no email is sent yet (F61)
-        Assert.Contains("Cần giúp? [Số điện thoại hoặc email hỗ trợ] · Hỗ trợ [7:00 – 21:30]", html);
+        Assert.Contains("Cần giúp? <a href=\"tel:0900000001\">0900 000 001</a> hoặc <a href=\"mailto:hello@peekbox.example\">hello@peekbox.example</a> · Hỗ trợ 7:00 – 21:30", html);
         Assert.Empty(Alert(html));
     }
 

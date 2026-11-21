@@ -1,3 +1,3 @@
-@* How to get help (the track page, a cancelled order). Placeholders until the admin Settings page holds the shop's
-   contact details (decision 2026-11-14); then this reads them, and so do the footer and the 404 page. *@
-Cần giúp? [Số điện thoại hoặc email hỗ trợ] · Hỗ trợ [7:00 – 21:30]
+@inject Peekbox.Web.Services.ShopInfo shop
+@* How to get help (the track page, a cancelled order, the 404 page): the shop's contact details, from one place (ShopInfo). *@
+Cần giúp? <a href="@shop.PhoneLink">@shop.Phone</a> hoặc <a href="@shop.EmailLink">@shop.Email</a> · Hỗ trợ @shop.SupportHours
