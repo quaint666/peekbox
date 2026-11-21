@@ -12,6 +12,8 @@ public static class SiteLinks
     public const string BuilderPath = "/builder";
     public const string CartPath = "/cart";
     public const string TrackPath = "/track";
+    public const string AboutPath = "/about";
+    public const string LegalPath = "/legal";
     public const string BlogPath = "/blog";
 
     // The health check (Program.cs): not a page, so no link or route test lists it.
@@ -24,15 +26,20 @@ public static class SiteLinks
     // visit answers 404 too.
     public const string NotFoundPath = "/not-found";
 
+    // The places the About and Legal pages are jumped to (F54, F55): the ids of the headings, written once for the links and the views.
+    public const string CommitmentsAnchor = "cam-ket";
+    public const string TermsAnchor = "dieu-khoan";
+    public const string PrivacyAnchor = "bao-mat";
+
     public static readonly SiteLink Home = new("home", HomePath, "Trang chủ");
     public static readonly SiteLink Builder = new("builder", BuilderPath, "Tạo hộp quà");
     // "Dịp" has no page of its own: the link goes to the six cards on the home page, and the header's menu under it lists the six occasion pages.
     public static readonly SiteLink Occasions = new("occasions", HomePath + Anchors.Link(Anchors.Occasions), "Dịp");
-    public static readonly SiteLink About = new("about", "/about", "Giới thiệu");
-    public static readonly SiteLink Commitments = new("commitments", "/about#cam-ket", "Cam kết");
+    public static readonly SiteLink About = new("about", AboutPath, "Giới thiệu");
+    public static readonly SiteLink Commitments = new("commitments", AboutPath + "#" + CommitmentsAnchor, "Cam kết");
     public static readonly SiteLink Blog = new("blog", BlogPath, "Blog");
-    public static readonly SiteLink Terms = new("terms", "/legal#dieu-khoan", "Điều khoản");
-    public static readonly SiteLink Privacy = new("privacy", "/legal#bao-mat", "Chính sách bảo mật");
+    public static readonly SiteLink Terms = new("terms", LegalPath + "#" + TermsAnchor, "Điều khoản");
+    public static readonly SiteLink Privacy = new("privacy", LegalPath + "#" + PrivacyAnchor, "Chính sách bảo mật");
     public static readonly SiteLink Cart = new("cart", CartPath, "Giỏ hàng");
     public static readonly SiteLink Track = new("track", TrackPath, "Tra cứu đơn hàng");
 

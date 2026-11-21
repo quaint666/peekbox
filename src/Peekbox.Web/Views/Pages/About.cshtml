@@ -1,0 +1,51 @@
+@model AboutContent
+@using Peekbox.Web.Content
+@{
+    ViewData["FullWidth"] = true;   // the page sets its own width and spacing
+    ViewData["Title"] = Model.Title;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/about.css" asp-append-version="true">
+}
+
+@* About and commitments (F54; mockup 10): the story and a photo, three commitments, how the safe expiry date works and a
+   green strip that leads to the builder. "Giới thiệu" and "Cam kết" in the menu both open this page ("Cam kết" jumps to its
+   heading); only "Giới thiệu" is marked as the page you are on. The text is in
+   content/pages/about-and-commitments.md; the [CÂU CHUYỆN CỦA NHÓM] line is a place the team still has to fill in. *@
+<div class="container about">
+    <section class="about-intro" aria-labelledby="about-title">
+        <div class="about-intro__text">
+            <h1 class="about-intro__title" id="about-title">@Model.Title</h1>
+            @foreach (var paragraph in Model.Intro)
+            {
+                <p>@paragraph</p>
+            }
+        </div>
+        <img class="about-intro__photo" src="~/images/about/team-packing.webp" alt="" width="1264" height="848">
+    </section>
+
+    <section class="about-commitments" aria-labelledby="@SiteLinks.CommitmentsAnchor">
+        <h2 class="about__heading" id="@SiteLinks.CommitmentsAnchor">@Model.CommitmentsTitle</h2>
+        <ol class="about-commitments__list">
+            @for (var i = 0; i < Model.Commitments.Count; i++)
+            {
+                <li class="about-card">
+                    <span class="about-card__number" aria-hidden="true">@(i + 1)</span>
+                    <h3 class="about-card__title">@Model.Commitments[i].Title</h3>
+                    <p class="about-card__text">@Model.Commitments[i].Text</p>
+                </li>
+            }
+        </ol>
+    </section>
+
+    <section class="about-expiry card" aria-labelledby="about-expiry-title">
+        <h2 class="about-expiry__title" id="about-expiry-title">@Model.ExpiryTitle</h2>
+        <p class="about-expiry__text">@Model.ExpiryText</p>
+    </section>
+
+    <section class="about-cta" aria-label="@Model.CtaButton">
+        <p class="about-cta__text">@Model.CtaText</p>
+        <a class="btn btn--lg about-cta__button" href="@SiteLinks.Builder.Href">@Model.CtaButton</a>
+    </section>
+</div>

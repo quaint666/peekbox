@@ -1,0 +1,29 @@
+/* TERMS AND PRIVACY: /legal (mockup 11). Sizes in px without a token are from the mockups. Phone first: the links to the two
+   texts are two buttons above them; from 900px they are a box at the left and the texts are 760px wide. The footer has
+   its own 32px gap above it, so the bottom padding is the mockup's minus that. */
+.legal { display: flex; flex-direction: column; gap: var(--space-5); padding-top: 20px; padding-bottom: 0; }  /* 20px, and 32px - 32px */
+
+.legal-toc { display: flex; gap: var(--space-2); }
+.legal-toc__title { display: none; }
+.legal-toc a { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 44px; border: 1px solid var(--color-primary); border-radius: 999px; font-size: var(--text-sm); font-weight: 600; text-decoration: none; text-align: center; }
+
+.legal__texts { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.legal-text { display: flex; flex-direction: column; gap: 12px; }
+.legal-text + .legal-text { padding-top: 28px; border-top: 1px solid var(--color-border); }
+.legal-text__title { margin: 0; font-size: var(--text-2xl); line-height: 1.25; }  /* 28px; 34px from 900px */
+.legal-text__updated { margin: 0; font-size: var(--text-xs); color: var(--color-muted); }
+.legal-text__heading { margin: var(--space-2) 0 0; font-size: var(--text-lg); font-weight: 700; }  /* 18px; 20px from 900px */
+.legal-text__body { margin: 0; font-size: var(--text-md); line-height: 1.8; color: var(--color-muted); }  /* 15px; 16px from 900px */
+
+@media (min-width: 900px) {
+    .legal { flex-direction: row; align-items: flex-start; gap: 40px; padding-top: 40px; padding-bottom: var(--space-5); }  /* 40px, and 56px - 32px */
+    .legal-toc { flex: 0 1 274px; min-width: 200px; flex-direction: column; gap: 0; padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); }  /* 274px: the mockup's 240px plus its padding and border */
+    .legal-toc__title { display: block; padding: var(--space-1) var(--space-2); line-height: 1.2; font-size: var(--text-xs); font-weight: 700; color: var(--color-muted); }
+    .legal-toc a { flex: none; justify-content: flex-start; padding: 0 var(--space-2); border: 0; border-radius: 0; font-size: var(--text-md); text-decoration: underline; }
+    .legal__texts { flex: 1 1 0; max-width: 760px; gap: var(--space-6); }
+    .legal-text { gap: 14px; }
+    .legal-text + .legal-text { padding-top: var(--space-6); }
+    .legal-text__title { font-size: var(--text-3xl); }
+    .legal-text__heading { font-size: var(--text-xl); }
+    .legal-text__body { font-size: var(--text-base); }
+}
