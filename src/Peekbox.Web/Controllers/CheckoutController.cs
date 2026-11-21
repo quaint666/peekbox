@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Peekbox.Web.Models;
 using Peekbox.Web.Navigation;
 using Peekbox.Web.Services;
+using Peekbox.Web.Services.Email;
 
 namespace Peekbox.Web.Controllers;
 
 // Checkout (F41 to F48) and the sold-out notice (F50). A box that cannot be ordered (none, empty, a passed date, an item
 // out of date) goes back to the cart, which says why. Placing is OrderService's job; this controller reads the form,
 // checks it, and sends the visitor on (post, then redirect).
-public class CheckoutController(HamperService hampers, OrderService orders, DeliveryCapacity capacity, BuilderLimits limits, RateLimits rateLimits, DemoMode demo) : Controller
+public class CheckoutController(HamperService hampers, OrderService orders, OrderMailer mailer, DeliveryCapacity capacity, BuilderLimits limits, RateLimits rateLimits, DemoMode demo) : Controller
 {
     private const string SoldOutKey = "soldOut";
 
@@ -66,10 +67,12 @@ public class CheckoutController(HamperService hampers, OrderService orders, Deli
         var result = await orders.PlaceAsync(HamperCookie.Read(Request), request, cancellationToken);
         switch (result.Outcome)
         {
-            case PlaceOutcome.Placed when result.PaymentFailed:
-                // F49: the order and the box are kept; the visitor chooses to retry or to pay in cash.
-                return LocalRedirect(SiteLinks.OrderPayment(result.OrderToken!));
             case PlaceOutcome.Placed:
+                // F61: the confirmation email (a stand-in that writes to the log), once, for a new order only: a second click
+                // (AlreadyPlaced) opens the order without another email. It runs before the redirect, and a failure is logged.
+                await mailer.SendConfirmationAsync(result.OrderToken!, $"{Request.Scheme}://{Request.Host}", cancellationToken);
+                // F49: when the payment failed the order and the box are kept; the visitor chooses to retry or to pay in cash.
+                return LocalRedirect(result.PaymentFailed ? SiteLinks.OrderPayment(result.OrderToken!) : SiteLinks.Order(result.OrderToken!));
             case PlaceOutcome.AlreadyPlaced:
                 return LocalRedirect(SiteLinks.Order(result.OrderToken!));
             case PlaceOutcome.SoldOut:

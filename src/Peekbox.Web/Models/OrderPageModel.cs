@@ -27,7 +27,10 @@ public sealed record OrderPageModel(Order Order, IReadOnlyDictionary<int, string
 
     // What the customer reads after "Thanh toán:". ZaloPay is a stand-in (decision 2026-11-11), so a paid ZaloPay order
     // says so.
-    public string PaymentText => (Order.PaymentMethod, Order.PaymentStatus) switch
+    public string PaymentText => PaymentTextOf(Order);
+
+    // The same words for the confirmation email (F61), which has no page model.
+    public static string PaymentTextOf(Order order) => (order.PaymentMethod, order.PaymentStatus) switch
     {
         (PaymentMethod.ZaloPay, PaymentStatus.Paid) => "Đã thanh toán qua ZaloPay (mô phỏng)",
         (PaymentMethod.ZaloPay, PaymentStatus.Failed) => "Thanh toán ZaloPay chưa thành công",
@@ -36,17 +39,16 @@ public sealed record OrderPageModel(Order Order, IReadOnlyDictionary<int, string
         (PaymentMethod.CashOnDelivery, PaymentStatus.Paid) => "Đã thu tiền mặt khi nhận hàng",
         (PaymentMethod.CashOnDelivery, PaymentStatus.Refunded) => "Đã hoàn tiền",
         (PaymentMethod.CashOnDelivery, _) => "Trả tiền mặt khi nhận hàng, chưa thu tiền",
-        _ => throw new ArgumentOutOfRangeException(nameof(Order), Order.PaymentMethod, null),
+        _ => throw new ArgumentOutOfRangeException(nameof(order), order.PaymentMethod, null),
     };
 
     // "15/01/2027, sáng 8:00 – 12:00", as drawn.
-    public string When
+    public string When => WhenOf(Order);
+
+    public static string WhenOf(Order order)
     {
-        get
-        {
-            var window = DeliveryWindows.Label(Order.DeliveryWindow);
-            return $"{Formatting.VnDate.Day(Order.DeliveryDate)}, {char.ToLowerInvariant(window[0])}{window[1..]}";
-        }
+        var window = DeliveryWindows.Label(order.DeliveryWindow);
+        return $"{Formatting.VnDate.Day(order.DeliveryDate)}, {char.ToLowerInvariant(window[0])}{window[1..]}";
     }
 
     // A saved phone (10 digits) as people read it: "0900 111 111".

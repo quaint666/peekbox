@@ -8,6 +8,7 @@ using Peekbox.Web.Data;
 using Peekbox.Web.Navigation;
 using Peekbox.Web.Security;
 using Peekbox.Web.Services;
+using Peekbox.Web.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,8 @@ builder.Services.AddScoped<ItemCatalog>();
 builder.Services.AddScoped<ReadyHampers>();
 builder.Services.AddSingleton(PaymentStandIn.FromConfiguration(builder.Configuration));
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddSingleton<IEmailSender, LogEmailSender>();
+builder.Services.AddScoped<OrderMailer>();
 builder.Services.AddSingleton(DeliveryLimit.FromConfiguration(builder.Configuration));
 builder.Services.AddScoped<DeliveryCapacity>();
 builder.Services.AddSingleton<RateLimits>();
