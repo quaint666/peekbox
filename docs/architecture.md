@@ -131,7 +131,7 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
 
 - The admin. Real admin code is written after the front end is done (the framework's own sign-in is the likely choice, not yet checked). The first report covers the front end only.
 - How an order is paid, and how items are held for an unpaid order.
-- The email sender (F61): no email is sent yet, so no page says one was.
+- The real email sender (F61): the confirmation email is built and "sent" by a stand-in that only writes it to the log (decision 2026-11-22), so no page says one was sent. Which sender replaces it (SMTP or a provider's API), and its settings, are not decided.
 - How the project is run for the lecturer; the deployed site via Docker comes later.
 - **Deployment settings** (decided 2026-11-20; the Docker image and the publish workflow are a separate change). Each is an environment variable, written `A__B` for `A:B`:
   - `ConnectionStrings__Default`: the database.

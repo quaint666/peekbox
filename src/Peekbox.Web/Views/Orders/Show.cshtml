@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="~/css/orders.css" asp-append-version="true">
 }
 
-@* An order's page (F51; mockups 07 and 07-cancelled). Opened by the order's secret token only. No email is sent yet
-   (F61 comes later), so unlike the mockup the banner does not say one was. *@
+@* An order's page (F51; mockups 07 and 07-cancelled). Opened by the order's secret token only. The confirmation email
+   (F61) is a stand-in that only writes to the log, so unlike the mockup the banner does not say one was sent. *@
 <div class="order">
     @if (Model.Cancelled)
     {
