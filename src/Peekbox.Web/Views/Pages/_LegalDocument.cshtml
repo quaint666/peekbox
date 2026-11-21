@@ -1,0 +1,18 @@
+@model (LegalDocument Document, string Id)
+@using Peekbox.Web.Content
+
+<section class="legal-text" aria-labelledby="@Model.Id">
+    <h1 class="legal-text__title" id="@Model.Id">@Model.Document.Title</h1>
+    @foreach (var line in Model.Document.Lead)
+    {
+        <p class="legal-text__updated">@line</p>
+    }
+    @foreach (var part in Model.Document.Sections)
+    {
+        <h2 class="legal-text__heading">@part.Heading</h2>
+        @foreach (var paragraph in part.Paragraphs)
+        {
+            <p class="legal-text__body">@paragraph</p>
+        }
+    }
+</section>

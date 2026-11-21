@@ -14,6 +14,7 @@ public class RoutesTests(PeekboxFixture fixture)
     internal static readonly string[] Expected =
     [
         "/ GET,HEAD",
+        "/about GET,HEAD",
         "/builder GET,HEAD",
         "/builder POST",
         "/builder/packaging POST",
@@ -31,6 +32,7 @@ public class RoutesTests(PeekboxFixture fixture)
         "/hop/{slug} GET,HEAD",
         "/items/{slug} GET,HEAD",
         "/not-found any",
+        "/legal GET,HEAD",
         "/orders/{token} GET,HEAD",
         "/track GET,HEAD",
         "/track POST",

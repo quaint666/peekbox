@@ -23,6 +23,8 @@ builder.Host.UseDefaultServiceProvider(options =>
 
 // Page text from content/data/: read once at start; a missing or broken file stops the app at once.
 builder.Services.AddSingleton(HomeContent.Load(HomeContent.FilePath));
+builder.Services.AddSingleton(AboutContent.Load(AboutContent.FilePath));
+builder.Services.AddSingleton(LegalContent.Load(LegalContent.FolderPath));
 
 // The clock is passed in (not read directly), so the tests can pick any day. See Services/BuilderLimits.cs.
 builder.Services.AddSingleton(TimeProvider.System);
