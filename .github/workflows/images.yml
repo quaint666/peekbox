@@ -32,7 +32,6 @@ jobs:
     env:
       REGISTRY: ghcr.io
       APP_IMAGE: ghcr.io/${{ github.repository }}
-      MIGRATE_IMAGE: ghcr.io/${{ github.repository }}-migrate
       CI_NAME: peekbox-ci-${{ github.run_id }}
     steps:
       - name: Checkout
@@ -43,10 +42,8 @@ jobs:
           SHA: ${{ github.sha }}
         run: echo "TAG=${SHA:0:12}" >> "$GITHUB_ENV"
 
-      - name: Build the web and migration images
-        run: |
-          docker build --provenance=false -t "$APP_IMAGE:$TAG" .
-          docker build --provenance=false --target migrate -t "$MIGRATE_IMAGE:$TAG" .
+      - name: Build the image (the site and the migration bundle)
+        run: docker build --provenance=false -t "$APP_IMAGE:$TAG" .
 
       - name: Start a throwaway Postgres on a private network
         run: |
@@ -63,14 +60,15 @@ jobs:
           done
           docker exec "$CI_NAME-pg" pg_isready -h 127.0.0.1 -U peekbox -d peekbox
 
-      # The migration image reaches the database only through ConnectionStrings__Default, the way the compose stack
-      # will. It fills the EMPTY tables with the sample content, and a second run must change nothing.
-      - name: Run the migration image twice
+      # The bundle in the image reaches the database only through ConnectionStrings__Default, the way the compose stack
+      # will run it (the same image, entrypoint /app/efbundle). It fills the EMPTY tables with the sample content, and a
+      # second run must change nothing.
+      - name: Run the migration bundle of the image twice
         run: |
           migrate() {
-            docker run --rm --network "$CI_NAME" \
+            docker run --rm --network "$CI_NAME" --entrypoint /app/efbundle \
               -e ConnectionStrings__Default="Host=$CI_NAME-pg;Username=peekbox;Password=ci;Database=peekbox" \
-              "$MIGRATE_IMAGE:$TAG"
+              "$APP_IMAGE:$TAG"
           }
           migrate | tail -3
           OUT=$(migrate 2>&1)
@@ -127,16 +125,14 @@ jobs:
         if: failure()
         run: docker logs "$CI_NAME-web" 2>&1 | tail -40 || true
 
-      - name: Log in and push both images (main only)
+      - name: Log in and push the image (main only)
         if: github.ref == 'refs/heads/main'
         env:
           REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "$REGISTRY_TOKEN" | docker login "$REGISTRY" -u "${{ github.actor }}" --password-stdin
           docker push "$APP_IMAGE:$TAG"
-          docker push "$MIGRATE_IMAGE:$TAG"
           APP_DIGEST=$(docker image inspect --format '{{index .RepoDigests 0}}' "$APP_IMAGE:$TAG")
-          MIGRATE_DIGEST=$(docker image inspect --format '{{index .RepoDigests 0}}' "$MIGRATE_IMAGE:$TAG")
           {
             echo '### Pin this build'
             echo
@@ -144,11 +140,11 @@ jobs:
             echo
             echo '```'
             echo "$APP_DIGEST"
-            echo "$MIGRATE_DIGEST"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+          # The homelab helper (scripts/peekbox_bump_line.sh) greps the run log for ghcr.io/quaint666/peekbox@sha256:<digest>:
+          # it must appear once, with one digest. Do not print the image reference with a digest anywhere else.
           echo "$APP_DIGEST"
-          echo "$MIGRATE_DIGEST"
 
       - name: Clean up
         if: always()
@@ -156,4 +152,4 @@ jobs:
           docker rm -f "$CI_NAME-web" "$CI_NAME-pg" 2>/dev/null || true
           docker network rm "$CI_NAME" 2>/dev/null || true
           docker logout "$REGISTRY" || true
-          docker rmi "$APP_IMAGE:$TAG" "$MIGRATE_IMAGE:$TAG" 2>/dev/null || true
+          docker rmi "$APP_IMAGE:$TAG" 2>/dev/null || true
