@@ -25,9 +25,18 @@ public class BlogPageTests(PeekboxFixture fixture)
         Assert.Contains("<h1 class=\"blog__title\" id=\"blog-title\">Blog</h1>", html);
         Assert.Equal(6, html.Split("class=\"blog-card\"").Length - 1);
         Assert.Contains("href=\"/blog/chon-hop-qua-tet-theo-ngan-sach\"", html);
-        Assert.Contains("<span class=\"blog-card__category\">Mẹo chọn quà</span>", html);
-        Assert.Contains("<span class=\"blog-card__title\">Cách chọn hộp quà Tết theo ngân sách</span>", html);
+        Assert.Contains("<span class=\"blog-card__category\" id=\"category-chon-hop-qua-tet-theo-ngan-sach\">Mẹo chọn quà</span>", html);
+        Assert.Contains("<span class=\"blog-card__title\" id=\"title-chon-hop-qua-tet-theo-ngan-sach\">Cách chọn hộp quà Tết theo ngân sách</span>", html);
         Assert.Contains("src=\"/images/blog/chon-hop-qua-tet-theo-ngan-sach.webp\"", html);
+    }
+
+    [Fact]
+    public async Task A_card_link_is_named_by_its_title_and_described_by_its_category_and_text()
+    {
+        var (_, html) = await GetAsync("/blog");
+
+        Assert.Contains("aria-labelledby=\"title-doc-han-su-dung-tren-bao-bi\" aria-describedby=\"category-doc-han-su-dung-tren-bao-bi excerpt-doc-han-su-dung-tren-bao-bi\"", html);
+        Assert.Contains("id=\"excerpt-doc-han-su-dung-tren-bao-bi\"", html);
     }
 
     [Fact]
