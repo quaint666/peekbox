@@ -99,7 +99,7 @@ Every control has five looks: default, hover, keyboard focus, pressed, disabled.
 - **Pressed** on a phone: the same pressed colour, no movement.
 
 ## Home: Cho từng dịp
-The second highlight of the home page, after the hero. A large Tết card on the left (520 px high, photo with a gradient in the occasion colour) and two smaller cards (20/11 and 8/3) on the right, where the occasion colour fills the left side and the photo sits on the right; on a phone they stack, with Tết taller. Each card is one link with a white date chip ("Mùa Tết 2027", "Ngày Nhà giáo Việt Nam", "Ngày Quốc tế Phụ nữ"), the name, one sentence and a white button with an arrow. The text sits on the opaque part of the colour (measured on the Tết card: white text at 7 to 1 or better; the two other colours are darker). The photos are placeholders.
+The second highlight of the home page, after the hero. A large Tết card on the left (520 px high, photo with a gradient in the occasion colour) and two smaller cards (20/11 and 8/3) on the right, where the occasion colour fills the left side and the photo sits on the right; on a phone they stack, with Tết taller. Each card is one link with a white date chip ("Mùa Tết 2027", "Ngày Nhà giáo Việt Nam", "Ngày Phụ nữ"), the name, one sentence and a white button with an arrow. The text sits on the opaque part of the colour (measured on the Tết card: white text at 7 to 1 or better; the two other colours are darker). The photos are placeholders.
 
 ## Occasion pages and ready hampers
 Drawn 2026-11-17 (`Occasion*.dc.html`; exports `customer/13-occasion-tet`, `14-occasion-20-11`, `15-occasion-8-3-and-20-10` and their dark copies). One source draws all three pages: `const occasion` at the top of its script is `tet`, `teachers` or `women`.

@@ -125,4 +125,20 @@ public class HomeContentTests
         Assert.Matches(@"\.item-card__link\s*\{[^}]*min-height:\s*24px", File.ReadAllText(Path.Combine(css, "builder.css")));
         Assert.Matches(@"\.hamper__link\s*\{[^}]*min-height:\s*24px", File.ReadAllText(Path.Combine(css, "occasion.css")));
     }
+
+    // The home page and the occasion page name an occasion from two files (content/data/home.json and hampers.json); one said
+    // "8/3" and the other "8/3 và 20/10" for the same id. Name, chip and accent must be the same text in both.
+    [Fact]
+    public void An_occasion_has_the_same_name_chip_and_accent_on_the_home_page_and_on_its_own_page()
+    {
+        var hampers = JsonNode.Parse(File.ReadAllText(Path.Combine(RepoRoot.Path, "content", "data", "hampers.json")))!["occasions"]!.AsArray();
+        Assert.Equal(Content.Occasions.Count, hampers.Count);
+        foreach (var occasion in Content.Occasions)
+        {
+            var own = hampers.Single(o => o!["id"]!.GetValue<string>() == occasion.Id)!;
+            Assert.Equal(own["name"]!.GetValue<string>(), occasion.Name);
+            Assert.Equal(own["chip"]!.GetValue<string>(), occasion.Chip);
+            Assert.Equal(own["accent"]!.GetValue<string>(), occasion.Accent);
+        }
+    }
 }
