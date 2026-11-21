@@ -1,9 +1,14 @@
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Peekbox.Web.Data;
 
-public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbContext(options)
+// IDataProtectionKeyContext: the keys that sign the anti-forgery tokens and the TempData cookie are kept in this database
+// (see Program.cs), so a new container after a deploy still reads what the old one signed.
+public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbContext(options), IDataProtectionKeyContext
 {
+    public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
+
     public DbSet<Category> Categories => Set<Category>();
 
     public DbSet<Product> Products => Set<Product>();

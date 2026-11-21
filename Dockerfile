@@ -28,8 +28,8 @@ COPY Directory.Build.props dotnet-tools.json ./
 COPY src/Peekbox.Web/Peekbox.Web.csproj src/Peekbox.Web/
 RUN dotnet restore src/Peekbox.Web/Peekbox.Web.csproj && dotnet tool restore
 
-# content/data/*.json and the Markdown texts in content/ (the About page and the legal texts) are linked into the app by the csproj;
-# .dockerignore lets those .md files through.
+# content/data/*.json and the Markdown texts in content/ (blog posts, the About page and the legal texts) are linked into
+# the app by the csproj (the sample catalogue, the home page text and the texts); .dockerignore lets those .md files through.
 COPY src ./src
 COPY content ./content
 COPY --from=assets /build/wwwroot/js ./src/Peekbox.Web/wwwroot/js

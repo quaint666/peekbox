@@ -85,8 +85,10 @@ public sealed class ItemCatalog(PeekboxDbContext db)
 
         // An unknown category in the address (a typo, an old link) shows every item instead of an empty page.
         var category = categories.Any(c => c.Id == filter.Category) ? filter.Category : null;
-        // Spaces typed twice or a pasted line break would otherwise match nothing ("bánh  quy").
-        var trimmed = filter.Search is null ? null : string.Join(' ', filter.Search.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
+        // Spaces typed twice or a pasted line break would otherwise match nothing ("bánh  quy"). Any other control character
+        // counts as a space too: a NUL in the address (?q=%00) would make Postgres refuse the query and the page a 500.
+        var spaced = filter.Search is null ? null : string.Concat(filter.Search.Select(c => char.IsControl(c) ? ' ' : c));
+        var trimmed = spaced is null ? null : string.Join(' ', spaced.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
         var search = string.IsNullOrEmpty(trimmed) ? null : trimmed.Length > SearchMaxLength ? trimmed[..SearchMaxLength] : trimmed;
         var sort = ItemSorts.FromQuery(filter.Sort);
 

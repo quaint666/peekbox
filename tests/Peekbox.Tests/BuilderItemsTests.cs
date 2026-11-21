@@ -365,12 +365,14 @@ public class BuilderItemsTests(PeekboxFixture fixture)
 
     // ---------- Odd input from the address ----------
 
+    // A word that is no category and no sort is only text, so it means "none": all the items, the default order. A value that
+    // cannot be read as what it should be (inDate=abc is not a yes or no) is a 400 instead, for every address: see
+    // FrameworkDefaultsTests.An_address_with_a_value_that_cannot_be_bound_is_refused.
     [Fact]
-    public async Task Odd_filter_values_fall_back_to_the_defaults_instead_of_failing()
+    public async Task Odd_category_and_sort_words_fall_back_to_the_defaults_instead_of_failing()
     {
         var token = await SavedHamperAsync(Delivery);
 
-        Assert.Equal(123, CardNames(await PageAsync(token, "?inDate=abc")).Count);          // not a yes/no: the box stays on
         Assert.Equal(123, CardNames(await PageAsync(token, "?category=BANH")).Count);       // ids are lower case: unknown, so all
         Assert.Matches(@"<option value="""" selected=""selected"">Mặc định</option>", await PageAsync(token, "?sort=PRICE-ASC"));
     }

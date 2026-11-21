@@ -55,7 +55,9 @@ CSS with tokens; there is no React, no bundler and no Tailwind)
 5. **Error handling and edge cases.** Empty, error, too-many-tries and sold-out states. Timeouts and stale answers in
    every background request (an older answer must not overwrite a newer one, and the server must receive the requests in
    the order the visitor made them). Validation on the server for every value, with the browser's checks as a hint only.
-   What a hand-made request can do.
+   What a hand-made request can do: a NUL in a cookie, in the query string or in a form; the same request twice at the
+   same moment; a method the address does not take (405, and HEAD); a value that cannot be bound, in a form and in an
+   address. Run these as Production, where an exception is a status and not an exception thrown into the test.
 6. **Security and good practice.** No `Html.Raw` and no `innerHTML`, the content security policy, the anti-forgery
    token on every POST, secret tokens, rate limits, what the logs contain in Production, no `any` and no unchecked type
    assertions in TypeScript, the analyzer and compiler settings in `Directory.Build.props`.
@@ -71,14 +73,31 @@ proxy's rate-limit bucket and the hamper cookie is not marked Secure), `AllowedH
 - Search before claiming: every CSS class against the views and scripts, every file in `wwwroot/` and `content/`
   against its users, every package against its use, every repeated literal (`grep -rn`).
 - Run the app in Production mode (connection string from an environment variable) and probe it with `curl`: addresses
-  the app should not answer, `/error` opened directly, a 404 body, cache headers, whether SQL reaches the log.
+  the app should not answer, `/error` opened directly, a 404 body, cache headers, whether SQL reaches the log. **Probe the
+  published build, not `dotnet run`:** `dotnet publish -c Release -o <scratch>` and `dotnet Peekbox.Web.dll` is the
+  Dockerfile's artifact. From the Debug build, a request with `Accept-Encoding: gzip` for any static file got an empty `200`
+  (every script failed in the browser), and a wrong method gave 404 where the published build gives 405. Ask for each
+  important address with the methods GET, HEAD, POST and PUT, and once with `Accept-Encoding: gzip, br`.
+- Support claims come from data: `npm pack web-features` (the package behind Baseline) has the status and the first
+  version of every feature; look the feature up, do not recall it.
+- Headless Chromium has no hover device, so every `:hover` rule is silently off in a screenshot: start it with
+  `--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4` (headless
+  Firefox has none either, so hover stays unverified there). A screenshot `clip` is in page coordinates, so on a scrolled
+  page leave it out (the viewport is captured). Scroll with `behavior: 'instant'` between steps: a smooth scroll still
+  running swallows the next click or jump and looks like a bug.
+- A sweep beats a few pages: every page type at 390, 768, 900, 1024, 1100 and 1440 px, both themes, reading overflow,
+  `h1` count, duplicate ids, broken images, console, CSP and network errors, and the accessibility tree for links and
+  buttons with no name (this found carousel dots that are links with no name: `::scroll-marker` shows up there). Measure a
+  fixed size (a header height) against its token; a hand-counted 67 px was 68.
 - Browsers: headless Chromium over CDP with a private profile, and WebKit through MiniBrowser and WebKitWebDriver. Take
   screenshots at the widths above in both themes, and record console errors, CSP reports and horizontal overflow. Check
   accessible names with `Accessibility.getPartialAXTree`. Use `Fetch.enable` to hold a request: that is how a hung
   server and out-of-order answers are tested. Firefox the same way through WebDriver BiDi, its built-in remote
   protocol (no geckodriver needed): open each page with `browsingContext.create`, or focus and Space do not work.
 - For every fix, a test that fails without it: break the code on purpose and confirm a check fails. A break that no
-  test catches is a finding of its own.
+  test catches is a finding of its own. Check that the break is the one you meant: `false && A || B` still runs `B`, and
+  a test that passes with the fix removed was not testing it (a race needs eight requests at once, not two). Never stop a
+  process by name (`pkill -f` also matches the shell that runs it, and other people's windows): stop the PIDs you started.
 - Mark every claim `[verified]` (seen in real output in this session), `[inferred]` (reasoned, not seen) or
   `[stated]` (the owner said so). Say plainly what was not checked.
 
@@ -108,4 +127,47 @@ proxy's rate-limit bucket and the hamper cookie is not marked Secure), `AllowedH
 - Docs: README, sitemap, architecture, frontend plan, API contract, content and design READMEs match what is built;
   the mockup departures are listed in `design/design-notes.md`.
 - Still open after the first review: the deployment items, browser compatibility of the Popover API ("Xóa hộp", the
-  review summary) checked against current data, and the M3 pages in Firefox (through WebDriver BiDi).
+  review summary) checked against current data, and the M3 pages in Firefox (through WebDriver BiDi). The second review
+  closed the last two (below).
+
+## Found in the second review (2026-11-21): confirm they stay fixed
+
+Run on 2026-11-21 by the assistant with the owner, on the code after PR #73. Each fix has a test; its name or file is
+in brackets. Score 8/10: the base was sound, and the defects were in what a hand-made request can do.
+
+- A hamper cookie of `a%00b`, or `?q=%00`, made Postgres refuse the query and every page a 500. A token is now accepted
+  only if written as `SecretToken.New` writes it, and a control character in the search is a space
+  (`HandMadeRequestTests`).
+- Two requests that add (or remove) the same item at the same moment gave a 500 for the second: the key of
+  `HamperItems`, and a delete of a row already gone. `SetQuantityAsync` looks again from the database (`Several_adds…`,
+  `Several_removals…`).
+- A value that cannot be bound was a default in some actions (`/builder/packaging next=abc`, `/builder?inDate=abc`) and a
+  400 in others. One global filter, `RefuseUnboundValuesFilter`, refuses it everywhere (`FrameworkDefaultsTests`).
+- `HEAD /healthz` was a 405, which an uptime monitor reads as down.
+- CodeQL's three "URL redirection from remote source" alerts were false positives (every address is built from
+  `SiteLinks`), but `LocalRedirect` makes the framework itself refuse a non-local address; all 21 redirects use it
+  (`Controllers_redirect_with_LocalRedirect_never_with_Redirect`).
+- No `nosniff`, no `Permissions-Policy`, a `Server: Kestrel` header, and no cache policy for HTML (every page shows the
+  visitor's cart count). Now `SecurityHeaderTests`.
+- A 400 was a blank page, and the Data Protection keys lived in a folder of the container, so a deploy made every open
+  form fail with that blank 400. The page is friendly (`NotFoundPageTests`) and the keys are in the database
+  (`DataProtectionTests`).
+- The sticky header and the occasion's budgets bar: `--site-header-height` was 67 px but is 68 (a 1 px line), the chip row
+  overflowed the page at 900 px, and the old `scroll-padding-top: 96px` was a guess. `StickyHeaderTests` fails if a bar that
+  sticks to the top does not start below the header.
+- Left, decided and not yet built: the carousel dots on the home page are links with no name (`content: ''` on
+  `::scroll-marker`); stand-alone links are 19 to 23 px tall on a phone (WCAG 2.5.8 asks for 24); a request map in
+  `docs/api-contract.md` with a test against `RoutesTests.Expected`; a test that every other method gets a 405; a CI smoke
+  step that asks the published image for a script with `Accept-Encoding: gzip` and for `HEAD /healthz`; "8/3" on the home
+  page against "8/3 và 20/10" on the occasion page (two sources for one name); hamper rows are never purged; the workflow
+  actions are pinned by tag, not by commit; the browser scripts (`builder.ts` is 595 lines) have no automated test.
+- Left on purpose: `/about`, `/blog` and `/legal` are linked from the header and footer and were 404 until M4 (the blog
+  came in #74); on a phone the sticky header, the builder's steps and the bottom bar leave about 60 % of the screen for the list.
+- Browser floor (decision 2026-11-21): the Popover API is Baseline "newly available" since 2025-01-27 and "widely
+  available" about 2027-07 (web-features 3.47.0), and the confirm popovers, panels and the toast depend on it with no
+  fallback. The floor is Chrome 116, Firefox 125 and Safari 17. `:has()`, `color-mix()`, `text-wrap: balance`,
+  `AbortSignal.any` and `AbortSignal.timeout` are widely available; `position-area` and `scroll-marker-group` are behind
+  `@supports`; cross-document view transitions are not in Firefox and are not used.
+- Checked clean: no sideways overflow, one `h1` per page, no duplicate ids, no broken images and no console, CSP or network
+  errors on 11 page types at 6 widths in both themes in Chromium; the same 10 pages at 3 widths in Firefox 160 (light)
+  and WebKit 2.54 (light); no vulnerable NuGet or npm package; no SQL or personal data in the Production log.

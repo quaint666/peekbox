@@ -114,6 +114,8 @@ public class DeploymentTests(PeekboxFixture fixture)
 
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/healthz")).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await Get(client, "/healthz", "peekbox-staging.example")).StatusCode);
+        // HEAD too, as uptime monitors ask: it was a 405.
+        Assert.Equal(HttpStatusCode.OK, (await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, "/healthz"))).StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, (await Get(client, "/healthz", "evil.example")).StatusCode);
     }
 

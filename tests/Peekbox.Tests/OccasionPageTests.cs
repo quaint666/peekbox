@@ -40,11 +40,24 @@ public class OccasionPageTests(PeekboxFixture fixture)
         Assert.Contains($"<h1 class=\"occ-hero__title\">{title}</h1>", html);
         var found = Regex.Matches(html, @"<a class=""occ-budgets__chip"" href=""#ngan-sach-\d+"">([^<]+)</a>").Select(m => m.Groups[1].Value);
         Assert.Equal(chips, found);
+        // The chips are in the list occasion.ts watches, inside the "Ngân sách" bar.
+        Assert.Matches(@"<nav class=""occ-budgets"" aria-label=""Ngân sách"">[\s\S]*<div class=""occ-budgets__list"" data-budget-list>(\s*<a class=""occ-budgets__chip""[^>]*>[^<]+</a>)+\s*</div>", html);
         // Every chip leads to a row on the page.
         foreach (Match m in Regex.Matches(html, @"href=""#(ngan-sach-\d+)"""))
         {
             Assert.Contains($"id=\"{m.Groups[1].Value}\"", html);
         }
+    }
+
+    // The "Ngân sách" bar follows the page, under the sticky header, and a chosen row stops under it, not behind it. jsdom and
+    // the test host cannot see layout, so this only reads the two rules that do it; how it looks was checked in a browser.
+    [Fact]
+    public void The_budget_bar_is_sticky_and_the_rows_stop_below_it()
+    {
+        var css = File.ReadAllText(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "occasion.css"));
+
+        Assert.Matches(@"\.occ-budgets\s*\{[^}]*position:\s*sticky;[^}]*top:\s*var\(--site-header-height\);", css);
+        Assert.Matches(@"\.occ-tier\s*\{[^}]*scroll-margin-top:\s*var\(--occ-budgets-height\)", css);
     }
 
     // The slim bar: where you are, and a menu of the other five occasions (not this one), in the order of the home cards, each

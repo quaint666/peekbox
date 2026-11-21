@@ -58,6 +58,21 @@ public class SeamsTests
         }
     }
 
+    // Every address a controller sends the visitor to is built from SiteLinks, so none can leave the site. LocalRedirect is
+    // the framework's own guarantee of that (it throws for anything that is not a path on this site), and it is what static
+    // analysis (CodeQL's "URL redirection from remote source") recognises; a bare Redirect( gives neither.
+    [Fact]
+    public void Controllers_redirect_with_LocalRedirect_never_with_Redirect()
+    {
+        var controllers = Files("Controllers", "*.cs").ToList();
+        Assert.NotEmpty(controllers);
+        foreach (var file in controllers)
+        {
+            var code = Regex.Replace(Read(file), @"/\*[\s\S]*?\*/|(?<!:)//.*$", "", RegexOptions.Multiline);
+            Assert.False(Regex.IsMatch(code, @"(?<![A-Za-z])Redirect\("), $"{Name(file)} calls Redirect(; use LocalRedirect(");
+        }
+    }
+
     [Fact]
     public void No_TypeScript_writes_HTML_from_a_string()
     {

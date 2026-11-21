@@ -11,9 +11,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  /* ONE scroll offset for links like #cam-ket, so the header does not cover the
-     heading. Do not add a second offset anywhere else. */
-  scroll-padding-top: 96px;
+  /* ONE scroll offset for links like #cam-ket, so the sticky header does not cover the heading. A page with another bar
+     that sticks under the header (the builder's steps, an occasion's budgets) adds that bar's height, once, where it is. */
+  scroll-padding-top: calc(var(--site-header-height) + var(--space-4));
 }
 
 /* A link to a place on the same page (the budget chips on an occasion page, #cam-ket) glides there instead of jumping,

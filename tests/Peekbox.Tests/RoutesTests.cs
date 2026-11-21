@@ -19,6 +19,8 @@ public class RoutesTests(PeekboxFixture fixture)
         "/builder POST",
         "/builder/packaging POST",
         "/builder/quantity POST",
+        "/blog GET,HEAD",
+        "/blog/{slug} GET,HEAD",
         "/builder/review GET,HEAD",
         "/cart GET,HEAD",
         "/cart/add POST",

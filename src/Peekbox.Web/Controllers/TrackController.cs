@@ -26,7 +26,7 @@ public class TrackController(OrderService orders, RateLimits rateLimits) : Contr
 
         var id = OrderNumber.Parse(form.Number);
         var token = id is null ? null : await orders.TokenForAsync(id.Value, CheckoutCheck.PhoneDigits(form.Phone), cancellationToken);
-        return token is null ? Page(form, notFound: true, tooManyTries: false) : Redirect(SiteLinks.Order(token));
+        return token is null ? Page(form, notFound: true, tooManyTries: false) : LocalRedirect(SiteLinks.Order(token));
     }
 
     private ViewResult Page(TrackForm form, bool notFound, bool tooManyTries)

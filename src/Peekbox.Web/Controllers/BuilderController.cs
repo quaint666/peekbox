@@ -1,5 +1,6 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
 using Peekbox.Web.Data;
 using Peekbox.Web.Formatting;
@@ -93,7 +94,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
         var open = await OpenBoxAsync(cancellationToken);
         if (open is not { } o || o.Box.Lines.Count == 0)
         {
-            return Redirect(SiteLinks.Builder.Href);
+            return LocalRedirect(SiteLinks.Builder.Href);
         }
 
         if (!string.IsNullOrEmpty(packaging) && !await hampers.SetPackagingAsync(o.Hamper, packaging, cancellationToken))
@@ -101,7 +102,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             return NotFound();
         }
 
-        return Redirect(next == ReturnTo.Review ? SiteLinks.ReviewPath : SiteLinks.Builder.Href + Anchors.Link(Anchors.Packaging));
+        return LocalRedirect(next == ReturnTo.Review ? SiteLinks.ReviewPath : SiteLinks.Builder.Href + Anchors.Link(Anchors.Packaging));
     }
 
     // Step 4 (F34 to F36): the hamper read-only, with links back to change it (decision 2026-11-15). Without a hamper
@@ -113,7 +114,7 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
         var open = await OpenBoxAsync(cancellationToken);
         if (open is not { } o || o.Box.Lines.Count == 0)
         {
-            return Redirect(SiteLinks.Builder.Href);
+            return LocalRedirect(SiteLinks.Builder.Href);
         }
 
         return View(o.Box);
@@ -127,13 +128,8 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     // button the page showed as off, or a made-up request, changes nothing. An amount that is not a number is refused:
     // bound as 0, it would take the item out.
     [HttpPost(SiteLinks.QuantityPath)]
-    public async Task<IActionResult> Quantity(string? slug, int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Quantity(string? slug, [BindRequired] int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest();
-        }
-
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is not null && ItemsOpen(hamper) && !string.IsNullOrEmpty(slug)
             && await hampers.SetQuantityAsync(hamper, slug, quantity, cancellationToken) == QuantityChange.UnknownItem)
@@ -143,25 +139,25 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
 
         if (from == ReturnTo.Item && !string.IsNullOrEmpty(slug))
         {
-            return Redirect(SiteLinks.Item(slug) + Anchors.Link(Anchors.ItemBuy));
+            return LocalRedirect(SiteLinks.Item(slug) + Anchors.Link(Anchors.ItemBuy));
         }
 
         // "Bỏ món này" on the review page or in the cart (F35, F37). An emptied box sends the review page on to the
         // builder, and shows the empty cart.
         if (from == ReturnTo.Review)
         {
-            return Redirect(SiteLinks.ReviewPath);
+            return LocalRedirect(SiteLinks.ReviewPath);
         }
 
         if (from == ReturnTo.Cart)
         {
-            return Redirect(SiteLinks.Cart.Href);
+            return LocalRedirect(SiteLinks.Cart.Href);
         }
 
         var back = new Dictionary<string, string?> { ["category"] = category, ["q"] = q, ["sort"] = sort, ["inDate"] = inDate ? null : "false", ["fit"] = fit ? "true" : null }
             .Where(p => !string.IsNullOrEmpty(p.Value));
         var anchor = Anchors.Link(string.IsNullOrEmpty(slug) ? Anchors.Items : Anchors.ItemCard(slug));
-        return Redirect(QueryHelpers.AddQueryString(SiteLinks.Builder.Href, back) + anchor);
+        return LocalRedirect(QueryHelpers.AddQueryString(SiteLinks.Builder.Href, back) + anchor);
     }
 
     // "Lưu" ends here ("Chọn nhanh" only fills the field). A wrong value saves nothing: the page comes back with a warning
@@ -189,6 +185,6 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
 
         var hamper = await hampers.SaveAsync(HamperCookie.Read(Request), budget, date, cancellationToken);
         HamperCookie.Write(Response, hamper.Token);
-        return Redirect(SiteLinks.Builder.Href);   // /builder, written once in SiteLinks
+        return LocalRedirect(SiteLinks.Builder.Href);   // /builder, written once in SiteLinks
     }
 }

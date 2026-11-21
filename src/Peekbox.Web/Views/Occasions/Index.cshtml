@@ -53,10 +53,13 @@
     <nav class="occ-budgets" aria-label="Ngân sách">
         <div class="container occ-budgets__inner">
             <span class="occ-budgets__label">Ngân sách:</span>
-            @foreach (var group in Model.Page.Groups)
-            {
-                <a class="occ-budgets__chip" href="@Anchors.Link(Anchors.Budget(group.BudgetVnd))">@Vnd.Short(group.BudgetVnd)</a>
-            }
+            @* The chips scroll sideways on a phone; occasion.ts marks the one whose row is in view (aria-current). *@
+            <div class="occ-budgets__list" data-budget-list>
+                @foreach (var group in Model.Page.Groups)
+                {
+                    <a class="occ-budgets__chip" href="@Anchors.Link(Anchors.Budget(group.BudgetVnd))">@Vnd.Short(group.BudgetVnd)</a>
+                }
+            </div>
         </div>
     </nav>
 

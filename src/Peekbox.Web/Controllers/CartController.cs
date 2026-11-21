@@ -26,16 +26,16 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is null || !limits.ItemsOpen(hamper.DeliveryDate))
         {
-            return Redirect(SiteLinks.Builder.Href);
+            return LocalRedirect(SiteLinks.Builder.Href);
         }
 
         var box = await hampers.BoxAsync(hamper, cancellationToken);
         if (box.Lines.Count == 0)
         {
-            return Redirect(SiteLinks.Builder.Href);
+            return LocalRedirect(SiteLinks.Builder.Href);
         }
 
-        return Redirect(box.OutOfDate.Count > 0 ? SiteLinks.ReviewPath : SiteLinks.Cart.Href);
+        return LocalRedirect(box.OutOfDate.Count > 0 ? SiteLinks.ReviewPath : SiteLinks.Cart.Href);
     }
 
     // "Xóa hộp" (F37), after the confirm popover. The items and the packaging go; the budget and the date stay.
@@ -48,6 +48,6 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
             await hampers.ClearAsync(hamper, cancellationToken);
         }
 
-        return Redirect(SiteLinks.Cart.Href);
+        return LocalRedirect(SiteLinks.Cart.Href);
     }
 }
