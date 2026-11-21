@@ -56,7 +56,8 @@ public class BlogPageTests(PeekboxFixture fixture)
         Assert.Contains("<title>Cách đọc hạn sử dụng trên bao bì thực phẩm · Peekbox</title>", html);
         Assert.Contains("<h1 class=\"post__title\">Cách đọc hạn sử dụng trên bao bì thực phẩm</h1>", html);
         Assert.Contains("<strong>NSX hoặc Ngày sản xuất:</strong> ngày thực phẩm được làm ra.", html);
-        Assert.Contains("href=\"/blog\">Quay lại Blog</a>", html);
+        Assert.Contains("<li><a href=\"/blog\">Blog</a></li>", html);   // the trail is the way back
+        Assert.DoesNotContain("Quay lại Blog", html);
         Assert.Contains("href=\"/builder\">Tạo hộp quà</a>", html);
         Assert.Contains("Bài viết khác", html);
         Assert.Equal(2, html.Split("class=\"post-more__link\"").Length - 1);

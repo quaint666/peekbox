@@ -3,16 +3,16 @@
 @{
     var post = Model.Post;
     ViewData["Title"] = post.Title;
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Blog), Crumbs.Here(post.Title));
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/blog.css" asp-append-version="true">
 }
 
-@* One blog post (F53; mockup 09): back link, category, title, photo, the text, the call to action and two other posts.
+@* One blog post (F53; mockup 09): category, title, photo, the text, the call to action and two other posts.
    The mockup's "[NGÀY ĐĂNG] · [TÁC GIẢ]" is left out: the posts have no date or author yet. *@
 <article class="post">
-    <a class="post__back" href="@SiteLinks.Blog.Href">Quay lại Blog</a>
     <header class="post__head">
         <p class="post__category">@post.Category</p>
         <h1 class="post__title">@post.Title</h1>

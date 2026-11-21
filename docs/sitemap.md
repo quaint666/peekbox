@@ -32,3 +32,23 @@ Peekbox
 **Occasion path.** Home (occasion card) → Occasion page → (a hamper's page) → "Dùng hộp này" → Builder, then the main path. The builder's "Hộp gợi ý" cards open the same hamper pages.
 
 **Main customer path.** Home → Builder → (Item) → Review → Cart → Checkout → Confirmation. There are back links at every step.
+
+## Breadcrumbs
+
+Every page but the home page and the error pages shows one trail under the header (`Crumbs.Trail` in the view; the last step is the page itself).
+
+| Page | Trail |
+|---|---|
+| `/blog` | Trang chủ › Blog |
+| `/blog/{slug}` | Trang chủ › Blog › the post's title |
+| `/builder` | Trang chủ › Tạo hộp quà |
+| `/builder/review` | Trang chủ › Tạo hộp quà › Xem lại hộp quà |
+| `/cart` | Trang chủ › Giỏ hàng |
+| `/checkout` (and the sold-out and demo notices) | Trang chủ › Giỏ hàng › Thanh toán |
+| `/orders/{token}` | Trang chủ › Tra cứu đơn hàng › Đơn hàng {number} |
+| `/track` | Trang chủ › Tra cứu đơn hàng |
+| `/about` | Trang chủ › Giới thiệu |
+| `/legal` | Trang chủ › Điều khoản và bảo mật |
+| `/dip/{id}` | Trang chủ › the occasion |
+| `/hop/{slug}` | Trang chủ › the occasion (or Tạo hộp quà when the visitor came from the builder) › the hamper |
+| `/items/{slug}` | Trang chủ › Tạo hộp quà › the item's category › the item |

@@ -328,12 +328,18 @@ select.input {
 .row-buttons__btn:disabled { color: var(--color-muted); border-color: var(--color-border); cursor: default; }
 .row-buttons__btn .icon { width: 18px; height: 18px; }
 
-/* The breadcrumb of the item page and the hamper page. */
-.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin: 0; padding: 0; font-size: var(--text-sm); color: var(--color-muted); }
-.breadcrumb li { display: flex; align-items: center; gap: var(--space-2); }
-.breadcrumb li + li::before { content: '/'; }
-.breadcrumb a { display: inline-flex; align-items: center; min-height: var(--tap-min); }
-.breadcrumb [aria-current='page'] { color: var(--color-text); font-weight: 600; }
+/* The breadcrumb: one trail under the header on every page but the home page and the error pages (decision 2026-11-21).
+   The layout draws it (Views/Shared/_Breadcrumb.cshtml); it scrolls away with the page. On a phone it wraps, and a long
+   page name is cut with an ellipsis instead of pushing the page sideways. */
+.crumb-bar { background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.breadcrumb ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-2); margin: 0; padding: 0; min-height: 52px; font-size: var(--text-sm); color: var(--color-muted); }
+.breadcrumb li { display: flex; align-items: center; gap: var(--space-2); min-width: 0; max-width: 100%; }
+.breadcrumb li + li::before { content: '›'; content: '›' / ''; flex: none; }   /* the second line: no spoken text for it, where supported */
+.breadcrumb a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: inherit; text-decoration: none; }
+.breadcrumb [aria-current='page'] { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-text); font-weight: 600; }
+@media (hover: hover) {
+  .breadcrumb a:hover { color: var(--color-text); text-decoration: underline; }
+}
 
 /* A small disc with an arrow in the corner of a card's photo: it says "opens", also where there is no hover. The card's
    own hover fills it (occasion.css, builder.css). */

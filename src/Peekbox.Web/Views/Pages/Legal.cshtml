@@ -3,6 +3,7 @@
 @{
     ViewData["FullWidth"] = true;   // the page sets its own width and spacing
     ViewData["Title"] = $"{Model.Terms.Title} và {Model.Privacy.Title}";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.Here("Điều khoản và bảo mật"));
 }
 
 @section Styles {

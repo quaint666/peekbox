@@ -2,6 +2,7 @@
 @model SoldOutViewModel
 @{
     ViewData["Title"] = "Thanh toán";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Cart), Crumbs.Here("Thanh toán"));
     var gone = Model.Lines.Where(l => l.Left == 0).ToList();
     var fewer = Model.Lines.Where(l => l.Left > 0).ToList();
     var box = Model.Box;

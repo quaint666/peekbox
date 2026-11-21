@@ -3,6 +3,7 @@
 @model Box
 @{
     ViewData["Title"] = "Xem lại hộp quà";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Builder), Crumbs.Here("Xem lại hộp quà"));
     ViewData["Nav"] = SiteLinks.Builder.Key;
     var packaging = Model.Packaging!;
     var outOfDate = Model.OutOfDate;

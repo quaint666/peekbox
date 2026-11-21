@@ -4,6 +4,7 @@
 @model CheckoutViewModel
 @{
     ViewData["Title"] = "Thanh toán";
+    ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Cart), Crumbs.Here("Thanh toán"));
     var form = Model.Form;
     var box = Model.Box;
 

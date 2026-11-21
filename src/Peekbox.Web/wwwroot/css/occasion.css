@@ -16,13 +16,6 @@
     --occ-budgets-height: calc(var(--tap-min) + 2 * var(--space-2) + 1px);
 }
 
-/* The slim bar under the header: where you are (the other occasions are in the header's "Dịp" menu). */
-.occ-bar { background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
-.occ-bar__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 52px; }
-.occ-crumbs { display: flex; align-items: center; gap: 6px; font-size: var(--text-sm); color: var(--color-muted); }
-.occ-crumbs a { color: inherit; text-decoration: none; }
-.occ-crumbs .icon { width: 12px; height: 12px; }
-.occ-crumbs [aria-current] { color: var(--color-text); font-weight: 600; }
 
 /* Hero: the photo in a rounded frame on the occasion's own page colour, with the chip and the title on it. The photo has the
    accent as a light tint over all of it, plus a short soft shade (the accent mixed with black) only under the title: that
@@ -197,7 +190,6 @@
 
 @media (hover: hover) {
     .occ-budgets__chip:not([aria-current='true']):hover { background: var(--occ-soft); }
-    .occ-crumbs a:hover { color: var(--color-text); text-decoration: underline; }
     .hamper:hover .hamper__link { text-decoration: underline; }
     .hamper:hover .card-go { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
 }
