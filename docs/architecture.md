@@ -52,7 +52,7 @@ Settled in M0 (the layout below is what exists).
 src/Peekbox.Web/
   Controllers/      one per area: Home (and the error page), Builder, Items, Occasions, Cart, Checkout, Orders, Track
   Models/           view models, and the posted forms with their checks (CheckoutForm and CheckoutCheck)
-  ViewComponents/   a piece of the layout that needs data: the header's cart link
+  ViewComponents/   a piece of the layout that needs data: the header's cart link, and the six occasion links of the header menu and the footer (from the home content file, so no database)
   Content/          page text read from content/data/ (for example home.json), loaded once at start; read-only
   Services/         the rules: pricing, budget, expiry, orders, rate limits, the hamper cookie (one place, no copies)
   Data/             the database context, entity classes and seed code

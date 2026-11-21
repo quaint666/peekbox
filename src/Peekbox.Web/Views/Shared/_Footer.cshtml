@@ -11,12 +11,9 @@
                 <a href="@link.Href">@link.Label</a>
             }
         </nav>
-        <nav class="site-footer__links" aria-labelledby="footer-legal">
-            <h2 class="site-footer__title" id="footer-legal">Pháp lý</h2>
-            @foreach (var link in SiteLinks.FooterLegal)
-            {
-                <a href="@link.Href">@link.Label</a>
-            }
+        <nav class="site-footer__links" aria-labelledby="footer-dip">
+            <h2 class="site-footer__title" id="footer-dip">Dịp</h2>
+            @await Component.InvokeAsync("OccasionLinks", new { variant = "Footer" })
         </nav>
         <div class="site-footer__contact">
             <h2 class="site-footer__title">Liên hệ</h2>
@@ -24,6 +21,18 @@
         </div>
     </div>
     <div class="site-footer__bottom">
-        <p class="site-footer__copy container">© Peekbox</p>
+        <div class="site-footer__bottom-inner container">
+            <p class="site-footer__copy">© Peekbox</p>
+            <nav class="site-footer__legal" aria-label="Pháp lý">
+                @for (var i = 0; i < SiteLinks.FooterLegal.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        <span aria-hidden="true">·</span>
+                    }
+                    <a href="@SiteLinks.FooterLegal[i].Href">@SiteLinks.FooterLegal[i].Label</a>
+                }
+            </nav>
+        </div>
     </div>
 </footer>

@@ -9,6 +9,7 @@ public static class Anchors
     public const string ItemBuy = "them";          // the add control on an item's page
     public const string Suggestions = "goi-y";     // "Hộp gợi ý" on /builder
     public const string BudgetCard = "buoc-1";     // step 1 on /builder: the budget and date card
+    public const string Occasions = "cho-tung-dip"; // "Cho từng dịp" on the home page: the six occasion cards
 
     public static string ItemCard(string slug) => "mon-" + slug;   // one card in the item list
 

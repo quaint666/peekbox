@@ -91,7 +91,7 @@ Every control has five looks: default, hover, keyboard focus, pressed, disabled.
 - **Colour changes take 150 ms, movement 200 ms.** With "reduce motion" on, movement is dropped and the colour change stays.
 - **Focus ring**: 3 px, offset 2 px, `#3F6B57` in light mode and `#9EC3A5` in dark mode. It is shown for the keyboard only and never removed.
 - **Primary button**: hover `#2C4D3E` (dark mode: `#4A7A64`), pressed `#25513E` (dark mode: `#2C4D3E`) and 1 px down. **Secondary button**: the sage tint fills in on hover.
-- **Header link**: hover turns it green and adds a 2 px underline 8 px below the text.
+- **Header link**: hover and keyboard focus turn it green and draw a 2 px line under it from the left in 250 ms (as Bloomy's header does; with "reduce motion" the line just appears). "Dịp" opens a small panel of the six occasions on hover and keyboard focus; Escape closes it.
 - **Text field**: the border darkens on hover, gets 2 px green plus the ring on focus, 2 px red `#A32A1E` (dark mode `#F4B8AF`) on error with a message.
 - **Item card (builder)**: the photo and the name are links to the item page; "Thêm" is its own button. On hover the card rises 2 px with a deeper shadow and a green border, the photo zooms to 105 % (like the occasion cards on the home page) and the name turns green and underlined; with "reduce motion" on, only the border, shadow and name change. Keyboard focus rings the link that has it. Once the item is in the box, "Thêm" becomes a − n + pill: − and + on the card colour, the number on the sage tint, and − at 1 takes the item out and brings "Thêm" back. A sold-out card is greyed and does not react.
 - **Table row (admin)**: hover tint `#F1F6F2` (dark mode `#202428`); the open row keeps the chosen tint. These two tints are the only new colours here.
@@ -132,7 +132,7 @@ Each one is on purpose; change the mockup or the page when the reason goes away.
 - **No email yet (F61 comes later),** so no page says one was sent. Confirmation (07): the banner says "Hãy lưu đường dẫn của trang này để xem lại đơn hàng. Bạn cũng có thể dùng mục Tra cứu đơn hàng…" (the words link to /track) instead of "Chúng tôi đã gửi email xác nhận…". Track (12): the hint under the order number is "Mã có trên trang xác nhận đơn hàng." without the email.
 - **Confirmation sums** have an "Đóng gói" row: the mockup's 0đ kraft box let Tiền hàng + Phí giao hàng equal the total, a 40.000đ box does not. The footnote is "Giá và phí giao hàng là giá mẫu." (the order number is real now).
 - **Cancelled order, dark:** the banner's edge is the existing `--color-danger-border` (#A32A1E), not the mockup's #7A3B33, to keep one dark red.
-- **Header:** the six links sit in a row from 1100 px wide (measured: they need about 1040 px with the theme button and "Giỏ hàng (0)"); below that they are in the menu, as on a phone. Only 1440 and 390 are drawn.
+- **Header:** the seven links (with "Dịp") sit in a row from 1100 px wide (measured 2026-11-21 in Chromium: at 1100 px the links end 32 px before the theme button, no sideways scroll); below that they are in the menu, as on a phone. Only 1440 and 390 are drawn.
 
 ## Admin account
 The bottom of the admin sidebar shows a chip: initials in a green circle, the name, the role, and a bordered "Đăng xuất" button with an icon. On a phone the header has an initials button (44 px) that opens a menu with the name, Tài khoản and Đăng xuất (state 23). The name and role are placeholders.
