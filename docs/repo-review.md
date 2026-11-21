@@ -173,8 +173,14 @@ in brackets. Score 8/10: the base was sound, and the defects were in what a hand
 - Done after batch 7: the occasion "8/3 và 20/10" has one name and one chip on the home page, the header and its own page
   (`HomeContentTests` compares `home.json` and `hampers.json`); the workflow actions are pinned to a commit with the tag in
   a comment (`WorkflowTests`; an update is now a deliberate edit of the SHA, there is no Dependabot).
-- Left, decided and not yet built: hamper rows are never purged; the browser scripts (`builder.ts` is 595 lines) have no
-  automated test.
+- Browser scripts now have tests (`src/Peekbox.Web/ScriptTests`, vitest 5 with jsdom 31, `npm test`, a step in `test.yml`):
+  the builder's live search (the 250 ms wait, Enter, composing, a newer search cancelling an older one, a failed fetch), the
+  background add (one at a time, the plain fallback), the checkout fee swap (a stale answer, a redirect), the header (theme,
+  phone menu, Escape), the occasion budget chip, the hamper bar, the rows' arrows and `fetchPage`. Every test was checked by
+  breaking the script on purpose. jsdom has no layout and no real hover: sticky bars, scroll positions and CSS stay checked
+  in real browsers (see the method notes above). A test file must take the page's listeners off before the next one loads
+  (`support.ts` does), or a click would also run the scripts of earlier tests.
+- Left, decided and not yet built: hamper rows are never purged (see the decision notes).
 - Left on purpose: `/about`, `/blog` and `/legal` were linked from the header and footer before they were built and were 404 until M4 (the blog
   came in #74, About and legal in #77); on a phone the sticky header, the builder's steps and the bottom bar leave about 60 % of the screen for the list.
 - Browser floor (decision 2026-11-21): the Popover API is Baseline "newly available" since 2025-01-27 and "widely

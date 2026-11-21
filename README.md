@@ -32,6 +32,7 @@ dotnet tool restore                                    # once: the EF Core comma
 dotnet ef database update --project src/Peekbox.Web    # creates the tables and the 125 sample items; again after a pull that changes the database (the seed fills only empty tables, so new sample content needs `dotnet ef database drop` first)
 # A database made before 2026-11-17 needs "dotnet ef database drop --project src/Peekbox.Web" once first: the migrations were squashed into one.
 dotnet test                                            # builds everything, then runs the checks
+(cd src/Peekbox.Web && npm test)                       # the tests of the browser scripts (vitest and jsdom)
 dotnet run --project src/Peekbox.Web                   # starts the site; the address is printed
 ```
 
