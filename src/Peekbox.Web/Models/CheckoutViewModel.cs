@@ -6,7 +6,7 @@ namespace Peekbox.Web.Models;
 // DeliveryFeeVnd is null until a ward is chosen; the summary then says "Chọn phường để tính" and the total leaves the
 // fee out (agreed with the owner).
 public sealed record CheckoutViewModel(
-    Box Box, IReadOnlyList<WardOption> Wards, CheckoutForm Form, IReadOnlyList<FieldError> Errors, bool TooManyTries, long? DeliveryFeeVnd)
+    Box Box, IReadOnlyList<WardOption> Wards, CheckoutForm Form, IReadOnlyList<FieldError> Errors, bool TooManyTries, long? DeliveryFeeVnd, DaySlots Slots)
 {
     public long TotalVnd => Box.Quote.TotalVnd + (DeliveryFeeVnd ?? 0);
 

@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Peekbox.Web.Data;
 using Peekbox.Web.Models;
 using Peekbox.Web.Services;
@@ -275,6 +276,208 @@ public class CheckoutTests(PeekboxFixture fixture)
         BuilderItemsTests.AssertWellFormed("errors", await (await visitor.PostAsync("/checkout", form)).Content.ReadAsStringAsync());
     }
 
+    // ---- F42: a window that is full, F43: the card message and the price checkbox ----
+
+    // Fills one window of one day with real orders (so the count is the real one) and gives back the stock they took.
+    private async Task FillAsync(WebApplicationFactory<Program> factory, DateOnly day, DeliveryWindow window, int count)
+    {
+        var ward = await WardAsync(1);
+        for (var i = 0; i < count; i++)
+        {
+            var token = await HamperAsync(day, ("tra-sen", 1));
+            using var scope = factory.Services.CreateScope();
+            var result = await scope.ServiceProvider.GetRequiredService<OrderService>().PlaceAsync(token, new OrderRequest(
+                "Nguyễn Văn A", "0900000000", "ten@example.com", "Trần Thị B", "0900111111", ward.Id, "12 đường mẫu", window, PaymentMethod.CashOnDelivery));
+            Assert.Equal(PlaceOutcome.Placed, result.Outcome);
+        }
+    }
+
+    private WebApplicationFactory<Program> OneAWindow() =>
+        fixture.Factory.WithWebHostBuilder(builder => builder.UseSetting("Delivery:OrdersPerWindow", "1"));
+
+    [Fact]
+    public async Task A_full_window_is_greyed_out_and_a_full_day_names_the_nearest_free_one()
+    {
+        var stock = await StockAsync();
+        var day = Delivery.AddDays(41);
+        try
+        {
+            await using var strict = OneAWindow();
+            var visitor = new Visitor(fixture.Client(strict), await HamperAsync(day, ("tra-sen", 1)));
+
+            await FillAsync(strict, day, DeliveryWindow.Morning, 1);
+            var html = await visitor.PageAsync("/checkout");
+
+            Assert.Contains("id=\"window-morning\" name=\"window\" value=\"Morning\" disabled=\"disabled\"", html);
+            Assert.Contains("<span class=\"checkout-choice__full meta\">Đã đầy</span>", html);
+            Assert.Contains("id=\"window-afternoon\" name=\"window\" value=\"Afternoon\" checked=\"checked\"", html);   // the first with room is chosen
+            Assert.DoesNotContain("checkout-full", html);
+
+            await FillAsync(strict, day, DeliveryWindow.Afternoon, 1);
+            await FillAsync(strict, day, DeliveryWindow.Evening, 1);
+            html = await visitor.PageAsync("/checkout");
+
+            Assert.Equal(3, Regex.Matches(html, "disabled=\"disabled\"").Count);
+            Assert.Contains($"Ngày {VnDay(day)} đã đầy. Ngày gần nhất còn chỗ là <strong>{VnDay(day.AddDays(1))}</strong>.", Regex.Replace(html, @"\s+", " "));
+            Assert.Contains("href=\"/builder#delivery-date\">Đổi ngày giao</a>", html);
+            BuilderItemsTests.AssertWellFormed("full day", html);
+        }
+        finally
+        {
+            await TestOrders.RestoreStockAsync(fixture, stock);
+        }
+    }
+
+    [Fact]
+    public async Task An_order_for_a_full_window_is_refused_without_taking_stock_and_another_window_works()
+    {
+        var stock = await StockAsync();
+        var day = Delivery.AddDays(42);
+        try
+        {
+            await using var strict = OneAWindow();
+            await FillAsync(strict, day, DeliveryWindow.Afternoon, 1);
+            var visitor = new Visitor(fixture.Client(strict), await HamperAsync(day, ("tra-sen", 1)));
+            await visitor.PageAsync("/checkout");
+            var ward = await WardAsync(1);
+            var after = (await StockAsync())["tra-sen"];
+
+            var refused = await visitor.PostAsync("/checkout", Form(ward.Id));   // Form() asks for Afternoon
+            var html = await visitor.TextAsync(refused);
+
+            Assert.Equal(HttpStatusCode.OK, refused.StatusCode);
+            Assert.Contains("Khung giờ này vừa đầy. Chọn khung giờ khác.", html);
+            Assert.Equal(after, (await StockAsync())["tra-sen"]);
+            Assert.Equal(1, await fixture.WithDbAsync(db => db.Orders.CountAsync(o => o.DeliveryDate == day)));
+
+            var form = Form(ward.Id);
+            form["window"] = "Evening";
+            Assert.Equal(HttpStatusCode.Redirect, (await visitor.PostAsync("/checkout", form)).StatusCode);
+        }
+        finally
+        {
+            await TestOrders.RestoreStockAsync(fixture, stock);
+        }
+    }
+
+    [Fact]
+    public async Task Two_orders_racing_for_the_last_place_cannot_both_get_it()
+    {
+        var stock = await StockAsync();
+        var day = Delivery.AddDays(43);
+        try
+        {
+            await using var strict = OneAWindow();
+            var ward = await WardAsync(1);
+            var tokens = new[] { await HamperAsync(day, ("tra-sen", 1)), await HamperAsync(day, ("tra-sen", 1)), await HamperAsync(day, ("tra-sen", 1)) };
+
+            var results = await Task.WhenAll(tokens.Select(async token =>
+            {
+                using var scope = strict.Services.CreateScope();
+                return await scope.ServiceProvider.GetRequiredService<OrderService>().PlaceAsync(token, new OrderRequest(
+                    "Nguyễn Văn A", "0900000000", "ten@example.com", "Trần Thị B", "0900111111", ward.Id, "12 đường mẫu", DeliveryWindow.Morning, PaymentMethod.CashOnDelivery));
+            }));
+
+            Assert.Equal(1, results.Count(r => r.Outcome == PlaceOutcome.Placed));
+            Assert.Equal(2, results.Count(r => r.Outcome == PlaceOutcome.WindowFull));
+            Assert.Equal(1, await fixture.WithDbAsync(db => db.Orders.CountAsync(o => o.DeliveryDate == day)));
+        }
+        finally
+        {
+            await TestOrders.RestoreStockAsync(fixture, stock);
+        }
+    }
+
+    [Fact]
+    public async Task A_cancelled_order_gives_its_place_back()
+    {
+        var stock = await StockAsync();
+        var day = Delivery.AddDays(44);
+        try
+        {
+            await using var strict = OneAWindow();
+            var visitor = new Visitor(fixture.Client(strict), await HamperAsync(day, ("tra-sen", 1)));
+            await FillAsync(strict, day, DeliveryWindow.Morning, 1);
+            Assert.Contains("value=\"Morning\" disabled=\"disabled\"", await visitor.PageAsync("/checkout"));
+
+            await fixture.WithDbAsync(db => db.Orders.Where(o => o.DeliveryDate == day).ExecuteUpdateAsync(s => s.SetProperty(o => o.Status, OrderStatus.Cancelled)));
+
+            Assert.DoesNotContain("disabled=\"disabled\"", await visitor.PageAsync("/checkout"));
+        }
+        finally
+        {
+            await TestOrders.RestoreStockAsync(fixture, stock);
+        }
+    }
+
+    [Fact]
+    public async Task The_card_message_and_the_price_checkbox_are_saved_and_shown_on_the_order()
+    {
+        var stock = await StockAsync();
+        try
+        {
+            var visitor = await VisitorAsync(("tra-sen", 1));
+            var page = await visitor.PageAsync("/checkout");
+            Assert.Contains("<textarea class=\"input checkout-card\" id=\"card-message\" name=\"cardMessage\" rows=\"3\" maxlength=\"200\"", page);
+            Assert.Contains("name=\"hidePrices\" value=\"true\"", page);
+            var form = Form((await WardAsync(1)).Id);
+            form["cardMessage"] = "  Chúc mừng\r\nsinh nhật!  ";
+            form["hidePrices"] = "true";
+
+            var response = await visitor.PostAsync("/checkout", form);
+
+            var location = response.Headers.Location?.OriginalString;
+            var order = await fixture.WithDbAsync(db => db.Orders.AsNoTracking().SingleAsync(o => "/orders/" + o.Token == location));
+            Assert.Equal(("Chúc mừng\nsinh nhật!", true), (order.CardMessage, order.HidePrices));
+            var html = await visitor.PageAsync(location!);
+            Assert.Contains("<dt>Lời nhắn trên thiệp:</dt> <dd class=\"order-card-message\">Chúc mừng\nsinh nhật!</dd>", html);
+            Assert.Contains("<dt>Gói quà:</dt> <dd>Ẩn giá bên trong hộp quà</dd>", html);
+        }
+        finally
+        {
+            await TestOrders.RestoreStockAsync(fixture, stock);
+        }
+    }
+
+    [Fact]
+    public async Task Without_a_card_message_or_the_checkbox_the_order_has_neither()
+    {
+        var stock = await StockAsync();
+        try
+        {
+            var visitor = await VisitorAsync(("tra-sen", 1));
+            await visitor.PageAsync("/checkout");
+            var form = Form((await WardAsync(1)).Id);
+            form["cardMessage"] = "   ";   // only spaces
+
+            var location = (await visitor.PostAsync("/checkout", form)).Headers.Location?.OriginalString;
+
+            var order = await fixture.WithDbAsync(db => db.Orders.AsNoTracking().SingleAsync(o => "/orders/" + o.Token == location));
+            Assert.Equal((null, false), (order.CardMessage, order.HidePrices));
+            var html = await visitor.PageAsync(location!);
+            Assert.DoesNotContain("Lời nhắn trên thiệp", html);
+            Assert.DoesNotContain("Ẩn giá", html);
+        }
+        finally
+        {
+            await TestOrders.RestoreStockAsync(fixture, stock);
+        }
+    }
+
+    [Fact]
+    public async Task A_card_message_that_is_too_long_is_refused_and_kept_in_the_form()
+    {
+        var visitor = await VisitorAsync(("tra-sen", 1));
+        await visitor.PageAsync("/checkout");
+        var form = Form((await WardAsync(1)).Id);
+        form["cardMessage"] = new string('a', 201);
+
+        var html = await visitor.TextAsync(await visitor.PostAsync("/checkout", form));
+
+        Assert.Contains("Lời nhắn dài tối đa 200 ký tự. Bạn đã nhập 201 ký tự.", html);
+        Assert.Contains(new string('a', 201), html);
+    }
+
     private static string VnDay(DateOnly date) => Peekbox.Web.Formatting.VnDate.Day(date);
 }
 
@@ -368,5 +571,30 @@ public class CheckoutCheckTests
         Assert.Null(request);
         form.Ward = null;
         Assert.Equal("Chọn phường giao hàng.", MessageFor(form, "ward"));
+    }
+
+    [Fact]
+    public void The_card_message_is_trimmed_kept_with_its_lines_and_a_blank_one_is_none()
+    {
+        var form = Good();
+        form.CardMessage = "  Chúc mừng\r\nsinh nhật\r  ";
+        form.HidePrices = true;
+        Assert.Empty(CheckoutCheck.Check(form, Wards, out var request));
+        Assert.Equal(("Chúc mừng\nsinh nhật", true), (request!.CardMessage, request.HidePrices));
+
+        form.CardMessage = " \r\n ";
+        form.HidePrices = false;
+        Assert.Empty(CheckoutCheck.Check(form, Wards, out request));
+        Assert.Equal((null, false), (request!.CardMessage, request.HidePrices));
+    }
+
+    [Fact]
+    public void A_card_message_may_be_200_characters_and_not_201()
+    {
+        var form = Good();
+        form.CardMessage = new string('a', 200);
+        Assert.Null(MessageFor(form, "card-message"));
+        form.CardMessage = new string('a', 201);
+        Assert.Equal("Lời nhắn dài tối đa 200 ký tự. Bạn đã nhập 201 ký tự.", MessageFor(form, "card-message"));
     }
 }

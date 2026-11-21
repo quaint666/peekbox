@@ -41,6 +41,11 @@ public class Order
 
     public DeliveryWindow DeliveryWindow { get; set; }
 
+    // F43: the optional note for the card in the box (null when none), and "hide prices inside the hamper".
+    public string? CardMessage { get; set; }
+
+    public bool HidePrices { get; set; }
+
     // Whole dong, tax included. TotalVnd = GoodsVnd + PackagingFeeVnd + DeliveryFeeVnd (a database check says so too).
     public long GoodsVnd { get; set; }
 
@@ -58,6 +63,12 @@ public class Order
 
     // PEEK000123: what the customer reads and types on the track page.
     public string Number => OrderNumber.Format(Id);
+}
+
+// F43: how long the card message may be, one number for the form, the column and its check.
+public static class CardMessageRules
+{
+    public const int MaxLength = 200;
 }
 
 // The order number, written and read in one place.

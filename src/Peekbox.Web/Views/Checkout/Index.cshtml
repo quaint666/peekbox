@@ -112,14 +112,39 @@
                         @foreach (var window in DeliveryWindows.All)
                         {
                             var id = "window-" + window.ToString().ToLowerInvariant();
-                            <label class="checkout-choice" for="@id"><input type="radio" id="@id" name="window" value="@window" checked="@(form.Window == window)"><span>@DeliveryWindows.Label(window)</span></label>
+                            var full = Model.Slots.Full.Contains(window);
+                            <label class="checkout-choice@(full ? " checkout-choice--full" : "")" for="@id"><input type="radio" id="@id" name="window" value="@window" checked="@(form.Window == window && !full)" disabled="@full"><span>@DeliveryWindows.Label(window)</span>@if (full) {<span class="checkout-choice__full meta">Đã đầy</span>}</label>
                         }
+                        <partial name="_FieldError" model='(Model.ErrorFor("window-morning"), "window-morning")' />
                     </fieldset>
                 </div>
+                @if (Model.Slots.DayFull)
+                {
+                    @* F42: all three windows are taken. The date is chosen in the builder, so the way out is a link there. *@
+                    <p class="alert checkout-full" role="status" id="ngay-day">
+                        Ngày @VnDate.Day(box.DeliveryDate!.Value) đã đầy.
+                        @if (Model.Slots.NearestFreeDay is { } free)
+                        {
+                            <text>Ngày gần nhất còn chỗ là <strong>@VnDate.Day(free)</strong>. </text>
+                        }
+                        <a href="@(SiteLinks.Builder.Href)#delivery-date">Đổi ngày giao</a>
+                    </p>
+                }
             </fieldset>
 
             <fieldset class="card checkout-set">
-                <legend class="checkout-set__title">3. Thanh toán</legend>
+                <legend class="checkout-set__title">3. Lời nhắn và gói quà</legend>
+                <div class="field">
+                    <label class="field__label" for="card-message">Lời nhắn trên thiệp <span class="meta">(không bắt buộc)</span></label>
+                    <textarea class="input checkout-card" id="card-message" name="cardMessage" rows="3" maxlength="@CardMessageRules.MaxLength" placeholder="Ví dụ: Chúc mừng sinh nhật, thật nhiều niềm vui nhé!" aria-invalid="@Invalid("card-message")" aria-describedby="@Described("card-message")">@form.CardMessage</textarea>
+                    <partial name="_FieldError" model='(Model.ErrorFor("card-message"), "card-message")' />
+                </div>
+                <label class="checkout-choice" for="hide-prices"><input type="checkbox" id="hide-prices" name="hidePrices" value="true" checked="@form.HidePrices"><span>Ẩn giá bên trong hộp quà</span></label>
+                <p class="checkout-hint meta">Người nhận sẽ không thấy giá của từng món. Giá vẫn hiện trong đơn hàng của bạn.</p>
+            </fieldset>
+
+            <fieldset class="card checkout-set">
+                <legend class="checkout-set__title">4. Thanh toán</legend>
                 <label class="checkout-pay" for="payment-zalopay">
                     <input type="radio" id="payment-zalopay" name="payment" value="@PaymentMethod.ZaloPay" checked="@(form.Payment == PaymentMethod.ZaloPay)">
                     <span><span class="checkout-pay__name">ZaloPay</span><span class="checkout-pay__desc meta">Thanh toán bằng ví ZaloPay sau khi đặt hàng.</span></span>

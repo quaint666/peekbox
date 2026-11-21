@@ -56,6 +56,14 @@
 .checkout-choice:has(input:focus-visible), .checkout-pay:has(input:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 .checkout-choice input:focus-visible, .checkout-pay input:focus-visible { outline: none; }   /* the whole row is ringed instead */
 
+/* F42: a window that is full is greyed out and says so; the notice under the choices is for a full day. */
+.checkout-choice--full { color: var(--color-muted); cursor: not-allowed; }
+.checkout-choice__full { margin-left: auto; }
+.checkout-full { margin: var(--space-3) 0 0; padding: 14px var(--space-4); font-size: var(--text-sm); line-height: 1.6; }
+
+/* F43: the card note. Only the height can change, so it cannot push the page wider. */
+.checkout-card { resize: vertical; min-height: 88px; }
+
 /* F44: the payment choice; the chosen one is green, as drawn. */
 .checkout-pay {
     display: flex;
