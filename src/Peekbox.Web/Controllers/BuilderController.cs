@@ -10,7 +10,7 @@ using Peekbox.Web.Services;
 
 namespace Peekbox.Web.Controllers;
 
-public class BuilderController(BuilderLimits limits, HamperService hampers, ItemCatalog catalog, ReadyHampers readyHampers) : Controller
+public class BuilderController(BuilderLimits limits, HamperService hampers, ItemCatalog catalog, ReadyHampers readyHampers, RateLimits rateLimits) : Controller
 {
     // The page of the hamper builder (/builder). It shows the saved budget and date, found by the cookie, and once both
     // are saved, the items. The filter form sends the category, the "only items in date" checkbox, the search words (q)
@@ -102,6 +102,8 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
             return NotFound();
         }
 
+        HamperCookie.Write(Response, o.Hamper.Token);   // a change of the box starts the cookie's time again (HamperCookie)
+
         return LocalRedirect(next == ReturnTo.Review ? SiteLinks.ReviewPath : SiteLinks.Builder.Href + Anchors.Link(Anchors.Packaging));
     }
 
@@ -131,10 +133,14 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
     public async Task<IActionResult> Quantity(string? slug, [BindRequired] int quantity, string? category, string? q, string? sort, ReturnTo from = ReturnTo.Builder, bool inDate = true, bool fit = false, CancellationToken cancellationToken = default)
     {
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
-        if (hamper is not null && ItemsOpen(hamper) && !string.IsNullOrEmpty(slug)
-            && await hampers.SetQuantityAsync(hamper, slug, quantity, cancellationToken) == QuantityChange.UnknownItem)
+        if (hamper is not null && ItemsOpen(hamper) && !string.IsNullOrEmpty(slug))
         {
-            return NotFound();
+            if (await hampers.SetQuantityAsync(hamper, slug, quantity, cancellationToken) == QuantityChange.UnknownItem)
+            {
+                return NotFound();
+            }
+
+            HamperCookie.Write(Response, hamper.Token);   // a change of the box starts the cookie's time again (HamperCookie)
         }
 
         if (from == ReturnTo.Item && !string.IsNullOrEmpty(slug))
@@ -181,6 +187,11 @@ public class BuilderController(BuilderLimits limits, HamperService hampers, Item
                 BudgetProblem = budgetProblem,
                 DateProblem = dateProblem,
             }, new ItemFilter(), cancellationToken));
+        }
+
+        if (await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken) is null && !rateLimits.TryNewHamper(HttpContext))
+        {
+            return this.TooManyNewHampers();
         }
 
         var hamper = await hampers.SaveAsync(HamperCookie.Read(Request), budget, date, cancellationToken);

@@ -10,6 +10,9 @@ internal sealed class Visitor(HttpClient client)
     private readonly Dictionary<string, string> _cookies = [];
     private string _formToken = "";
 
+    // The raw Set-Cookie lines of the last response.
+    public List<string> LastSetCookies { get; private set; } = [];
+
     public Visitor(HttpClient client, string? hamperToken) : this(client)
     {
         if (hamperToken is not null)
@@ -59,6 +62,7 @@ internal sealed class Visitor(HttpClient client)
         }
 
         var response = await client.SendAsync(request);
+        LastSetCookies = response.Headers.TryGetValues("Set-Cookie", out var lines) ? lines.ToList() : [];
         if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
         {
             foreach (var pair in cookies.Select(c => c.Split(';')[0].Split('=', 2)))

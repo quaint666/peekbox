@@ -46,6 +46,7 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
         if (hamper is not null)
         {
             await hampers.ClearAsync(hamper, cancellationToken);
+            HamperCookie.Write(Response, hamper.Token);   // a change of the box starts the cookie's time again (HamperCookie)
         }
 
         return LocalRedirect(SiteLinks.Cart.Href);

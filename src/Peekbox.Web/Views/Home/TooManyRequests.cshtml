@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Thao tác quá nhanh";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/not-found.css" asp-append-version="true">
+}
+
+@* The page for a 429 (HomeController.NotFoundPage): too many new boxes from one address in a short time. Same look as the 400 page. *@
+<section class="card not-found" aria-labelledby="too-many-title">
+    <p class="not-found__code" aria-hidden="true">429</p>
+    <h1 class="not-found__title" id="too-many-title">Bạn thao tác hơi nhanh</h1>
+    <p class="not-found__lead">Chúng tôi giới hạn số hộp quà mới tạo từ một địa chỉ trong ít phút. Hãy đợi vài phút rồi thử lại.</p>
+    <div class="not-found__actions">
+        <a class="btn btn--primary" href="@SiteLinks.Home.Href">Về trang chủ</a>
+        <a class="btn btn--outline" href="@SiteLinks.Builder.Href">Tạo hộp quà</a>
+    </div>
+    <p class="not-found__help"><partial name="_SupportLine" /></p>
+</section>

@@ -6,6 +6,9 @@ public static class HamperCookie
 {
     public const string Name = "peekbox_hamper";
 
+    // 180 days from the visitor's last change to the box: every action that changes the box writes the cookie again
+    // (Save, "Dùng hộp này", an amount, the packaging, "Xóa hộp"), so the time starts over each time. The privacy policy
+    // tells visitors this number (content/legal/privacy.vi.md), and HamperRetention keeps a row a little longer than it.
     public static readonly TimeSpan Lifetime = TimeSpan.FromDays(180);
 
     // The token the browser sent, or null. Not checked here: HamperService and OrderService check every token they use.

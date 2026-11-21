@@ -25,6 +25,7 @@ public class HomeController(HomeContent content, ReadyHampers hampers) : Control
     {
         StatusCodes.Status404NotFound or StatusCodes.Status200OK => Page("NotFound", StatusCodes.Status404NotFound),
         StatusCodes.Status400BadRequest => Page("BadRequest", StatusCodes.Status400BadRequest),
+        StatusCodes.Status429TooManyRequests => Page("TooManyRequests", StatusCodes.Status429TooManyRequests),
         _ => new EmptyResult(),
     };
 

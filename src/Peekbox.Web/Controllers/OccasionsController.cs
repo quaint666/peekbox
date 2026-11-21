@@ -6,7 +6,7 @@ using Peekbox.Web.Services;
 
 namespace Peekbox.Web.Controllers;
 
-public class OccasionsController(ReadyHampers readyHampers, HamperService hampers, BuilderLimits limits) : Controller
+public class OccasionsController(ReadyHampers readyHampers, HamperService hampers, BuilderLimits limits, RateLimits rateLimits) : Controller
 {
     // The "from" of the builder's "Hộp gợi ý" (an occasion id otherwise).
     public const string FromBuilder = "builder";
@@ -56,6 +56,11 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
         if (card.SoldOut.Count > 0 || (hasItems && !replace))
         {
             return LocalRedirect(back);
+        }
+
+        if (hamper is null && !rateLimits.TryNewHamper(HttpContext))
+        {
+            return this.TooManyNewHampers();
         }
 
         hamper = await hampers.UseReadyHamperAsync(hamper, card, cancellationToken);

@@ -46,6 +46,8 @@ builder.Services.AddScoped<ItemCatalog>();
 builder.Services.AddScoped<ReadyHampers>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddSingleton<RateLimits>();
+builder.Services.AddScoped<HamperRetention>();
+builder.Services.AddHostedService<HamperPurgeService>();
 
 // The season banner (Banner:Occasion names the occasion whose banner shows, empty for none). See Services/SeasonBanner.cs.
 builder.Services.AddSingleton(new CurrentBanner(SeasonBanner.Load(builder.Configuration["Banner:Occasion"], SeedData.HampersFilePath)));
