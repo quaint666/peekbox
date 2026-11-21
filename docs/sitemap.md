@@ -1,6 +1,6 @@
 # Sitemap
 
-The addresses of the pages built so far are in `src/Peekbox.Web/Navigation/SiteLinks.cs`, and `RoutesTests` lists every one; a page marked (M4), (M5) or (later) is not built yet, and its address is a proposal. `{slug}` and `{token}` mean one page that serves many items, posts or orders.
+The addresses of the pages built so far are in `src/Peekbox.Web/Navigation/SiteLinks.cs`, and `RoutesTests` lists every one; a page marked (M5) or (later) is not built yet, and its address is a proposal. `{slug}` and `{token}` mean one page that serves many items, posts or orders.
 
 ```
 Peekbox
@@ -16,12 +16,12 @@ Peekbox
 │               ├── Món vừa hết hàng ......... /checkout/soldout
 │               ├── Thanh toán thất bại ...... (M5)
 │               └── Xác nhận đơn hàng ........ /orders/{token}
-├── Giới thiệu và cam kết .................... /about (M4)
-├── Blog ..................................... /blog (M4)
-│   └── Bài viết ............................. /blog/{slug} (M4)
-├── Điều khoản và bảo mật .................... /legal (M4)
+├── Giới thiệu và cam kết .................... /about
+├── Blog ..................................... /blog
+│   └── Bài viết ............................. /blog/{slug}
+├── Điều khoản và bảo mật .................... /legal
 ├── Tra cứu đơn hàng ......................... /track
-├── Không tìm thấy trang (404) ............... any unknown address (M4; an empty 404 until then)
+├── Không tìm thấy trang (404) ............... any unknown address
 └── Quản trị (later) ......................... /admin
     ├── login
     └── orders, items, campaigns, settings, cutoffs, coupons, reviews, stats, users, account

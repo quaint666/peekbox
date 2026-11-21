@@ -22,10 +22,8 @@ public class RequestMapTests(PeekboxFixture fixture)
             Documented().Order(StringComparer.Ordinal));
     }
 
-    // A method an address does not take is a 405, not a 404, a 200 or a 500. Only the methods that change something are tried
-    // here (POST, PUT, DELETE, PATCH): in the test host a GET or HEAD to a POST-only address gets the 404 page, where the
-    // published app (and so the image smoke test in images.yml, which sends a GET to /cart/add) answers 405. Found by sending
-    // the same request to both; do not "fix" the test by asserting the host's answer.
+    // A method an address does not take is a 405, not a 404, a 200 or a 500 (the fixture turns off the static-asset fallback an
+    // unpublished app has, which would make a GET or HEAD a 404; see PeekboxFixture).
     [Fact]
     public async Task A_method_an_address_does_not_take_is_a_405()
     {
@@ -34,7 +32,7 @@ public class RequestMapTests(PeekboxFixture fixture)
         foreach (var entry in RoutesTests.Expected.Append(Health).Where(e => !e.EndsWith(" any")))
         {
             var path = Regex.Replace(entry[..entry.IndexOf(' ')], @"\{[^}]+\}", "x");
-            foreach (var method in new[] { "POST", "PUT", "DELETE", "PATCH" })
+            foreach (var method in new[] { "GET", "HEAD", "POST", "PUT", "DELETE", "PATCH" })
             {
                 if (path == "/healthz" ? method is "GET" or "HEAD" : RoutesTests.Answers(path, method))
                 {
