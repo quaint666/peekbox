@@ -44,6 +44,7 @@ builder.Services.AddSingleton<BuilderLimits>();
 builder.Services.AddScoped<HamperService>();
 builder.Services.AddScoped<ItemCatalog>();
 builder.Services.AddScoped<ReadyHampers>();
+builder.Services.AddSingleton(PaymentStandIn.FromConfiguration(builder.Configuration));
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddSingleton(DeliveryLimit.FromConfiguration(builder.Configuration));
 builder.Services.AddScoped<DeliveryCapacity>();

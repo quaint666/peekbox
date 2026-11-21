@@ -19,11 +19,18 @@ public sealed record OrderPageModel(Order Order, IReadOnlyDictionary<int, string
 
     public bool Cancelled => Order.Status == OrderStatus.Cancelled;
 
+    // F49: a ZaloPay payment that failed on an order that is still on. Cash orders and cancelled orders are never "failed".
+    public static bool PaymentFailed(Order order) =>
+        order is { PaymentMethod: PaymentMethod.ZaloPay, PaymentStatus: PaymentStatus.Failed, Status: not OrderStatus.Cancelled };
+
+    public bool PayFailed => PaymentFailed(Order);
+
     // What the customer reads after "Thanh toán:". ZaloPay is a stand-in (decision 2026-11-11), so a paid ZaloPay order
     // says so.
     public string PaymentText => (Order.PaymentMethod, Order.PaymentStatus) switch
     {
         (PaymentMethod.ZaloPay, PaymentStatus.Paid) => "Đã thanh toán qua ZaloPay (mô phỏng)",
+        (PaymentMethod.ZaloPay, PaymentStatus.Failed) => "Thanh toán ZaloPay chưa thành công",
         (PaymentMethod.ZaloPay, PaymentStatus.Refunded) => "Đã hoàn tiền qua ZaloPay",
         (PaymentMethod.ZaloPay, _) => "Chưa thanh toán qua ZaloPay",
         (PaymentMethod.CashOnDelivery, PaymentStatus.Paid) => "Đã thu tiền mặt khi nhận hàng",

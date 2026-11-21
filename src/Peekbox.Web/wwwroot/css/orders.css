@@ -57,6 +57,8 @@
 .order-sums__total dd { font-size: var(--title-sm); font-weight: 700; }  /* 22px */
 .order-actions { display: flex; flex-direction: column; gap: 10px; }
 .order-actions .btn { min-height: 48px; }
+.order-actions form { display: contents; }   /* F49: the two buttons are forms; they lay out as the links do */
+.order-actions button.btn { width: 100%; }
 .order-note { margin: 0; font-size: var(--text-2xs); line-height: 1.5; color: var(--color-muted); }
 
 @media (min-width: 900px) {

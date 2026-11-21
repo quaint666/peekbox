@@ -189,7 +189,7 @@ public class OrderPageModelTests
     [Theory]
     [InlineData(PaymentMethod.ZaloPay, PaymentStatus.Paid, "Đã thanh toán qua ZaloPay (mô phỏng)")]
     [InlineData(PaymentMethod.ZaloPay, PaymentStatus.Pending, "Chưa thanh toán qua ZaloPay")]
-    [InlineData(PaymentMethod.ZaloPay, PaymentStatus.Failed, "Chưa thanh toán qua ZaloPay")]
+    [InlineData(PaymentMethod.ZaloPay, PaymentStatus.Failed, "Thanh toán ZaloPay chưa thành công")]
     [InlineData(PaymentMethod.ZaloPay, PaymentStatus.Refunded, "Đã hoàn tiền qua ZaloPay")]
     [InlineData(PaymentMethod.CashOnDelivery, PaymentStatus.Pending, "Trả tiền mặt khi nhận hàng, chưa thu tiền")]
     [InlineData(PaymentMethod.CashOnDelivery, PaymentStatus.Failed, "Trả tiền mặt khi nhận hàng, chưa thu tiền")]

@@ -36,6 +36,9 @@ public class RoutesTests(PeekboxFixture fixture)
         "/not-found any",
         "/legal GET,HEAD",
         "/orders/{token} GET,HEAD",
+        "/orders/{token}/payment GET,HEAD",
+        "/orders/{token}/payment/cash POST",
+        "/orders/{token}/payment/retry POST",
         "/track GET,HEAD",
         "/track POST",
     ];

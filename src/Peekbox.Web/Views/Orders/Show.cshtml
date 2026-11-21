@@ -45,6 +45,10 @@
             </ol>
         }
         <p class="order-status__pay">Thanh toán: <strong>@Model.PaymentText</strong></p>
+        @if (Model.PayFailed)
+        {
+            <p class="alert order-status__cancelled" role="status">Thanh toán chưa thành công. <a href="@SiteLinks.OrderPayment(order.Token)">Thử lại hoặc chọn thanh toán khi nhận hàng</a></p>
+        }
     </section>
 
     <div class="order-main">
