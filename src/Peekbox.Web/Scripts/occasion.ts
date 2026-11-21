@@ -3,22 +3,6 @@ import { wireRows } from './lib/rows.js';
 
 wireRows(document);
 
-// "Dịp khác": the menu closes on Esc (focus goes back to its button), on a click outside it, and when a link is chosen.
-const menu = document.querySelector<HTMLDetailsElement>('[data-switch]');
-if (menu) {
-  document.addEventListener('click', (event) => {
-    if (menu.open && event.target instanceof Node && !menu.contains(event.target)) {
-      menu.open = false;
-    }
-  });
-  menu.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && menu.open) {
-      menu.open = false;
-      menu.querySelector('summary')?.focus();
-    }
-  });
-}
-
 // The "Ngân sách" bar stays at the top of the screen (occasion.css). The chip of the budget row in view is marked, so the
 // bar says where you are; on a phone, where the chips scroll sideways, the list also keeps that chip in sight.
 const budgetBar = document.querySelector<HTMLElement>('.occ-budgets');

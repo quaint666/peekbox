@@ -16,54 +16,13 @@
     --occ-budgets-height: calc(var(--tap-min) + 2 * var(--space-2) + 1px);
 }
 
-/* The slim bar under the header: where you are, and a menu of the other occasions. */
+/* The slim bar under the header: where you are (the other occasions are in the header's "Dịp" menu). */
 .occ-bar { background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
 .occ-bar__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 52px; }
 .occ-crumbs { display: flex; align-items: center; gap: 6px; font-size: var(--text-sm); color: var(--color-muted); }
 .occ-crumbs a { color: inherit; text-decoration: none; }
 .occ-crumbs .icon { width: 12px; height: 12px; }
 .occ-crumbs [aria-current] { color: var(--color-text); font-weight: 600; }
-.occ-switch { position: relative; }
-.occ-switch__btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: var(--tap-min);
-    padding: 0 14px;
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    background: var(--color-surface);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    cursor: pointer;
-    list-style: none;
-}
-.occ-switch__btn::-webkit-details-marker { display: none; }
-.occ-switch__btn:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
-.occ-switch__btn .icon { width: 14px; height: 14px; }
-.occ-switch__menu {
-    position: absolute;
-    right: 0;
-    top: calc(100% + var(--space-2));
-    z-index: var(--z-menu);
-    min-width: 220px;
-    margin: 0;
-    padding: var(--space-2);
-    list-style: none;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-pop);   /* a layer that floats over the page, so it gets the pop shadow; nothing else here has one */
-}
-.occ-switch__menu a { display: flex; align-items: center; gap: 10px; min-height: var(--tap-min); padding: 0 var(--space-3); border-radius: var(--radius-sm); color: var(--color-text); font-size: var(--text-sm); font-weight: 600; text-decoration: none; }
-.occ-switch__menu a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: -3px; }
-.occ-dot { width: var(--space-2); height: var(--space-2); border-radius: 50%; flex: none; }
-.occ-dot--tet { background: var(--occasion-card-tet); }
-.occ-dot--valentine { background: var(--occasion-card-valentine); }
-.occ-dot--women { background: var(--occasion-card-women); }
-.occ-dot--midautumn { background: var(--occasion-card-midautumn); }
-.occ-dot--teachers { background: var(--occasion-card-teachers); }
-.occ-dot--christmas { background: var(--occasion-card-christmas); }
 
 /* Hero: the photo in a rounded frame on the occasion's own page colour, with the chip and the title on it. The photo has the
    accent as a light tint over all of it, plus a short soft shade (the accent mixed with black) only under the title: that
@@ -209,7 +168,7 @@
 /* The whole card is one link: the name's ::after covers the card, and what comes after it in the card (the buttons, the
    reason a hamper is off) is positioned so it paints above that cover. The link's own focus ring is drawn round the card. */
 .hamper { position: relative; }
-.hamper__link { color: inherit; text-decoration: none; }
+.hamper__link { color: inherit; text-decoration: none; display: inline-flex; align-items: center; min-height: 24px; }   /* 24 px: WCAG 2.5.8 */
 .hamper__link::after { content: ''; position: absolute; inset: 0; }
 .hamper__link:focus-visible { outline: none; }
 .hamper:has(.hamper__link:focus-visible) { outline: 3px solid var(--color-focus); outline-offset: 2px; }
@@ -238,8 +197,6 @@
 
 @media (hover: hover) {
     .occ-budgets__chip:not([aria-current='true']):hover { background: var(--occ-soft); }
-    .occ-switch__btn:hover { background: var(--occ-soft); }
-    .occ-switch__menu a:hover { background: var(--occ-soft); }
     .occ-crumbs a:hover { color: var(--color-text); text-decoration: underline; }
     .hamper:hover .hamper__link { text-decoration: underline; }
     .hamper:hover .card-go { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
@@ -252,14 +209,12 @@
     .card-go { transition: background-color 150ms ease-out, color 150ms ease-out; }
 }
 
-/* Small motion, only for visitors who have not asked for less: the photo fades in once, the menu opens with a short slide,
+/* Small motion, only for visitors who have not asked for less: the photo fades in once,
    and the budget you jumped to flashes its mark. */
 @media (prefers-reduced-motion: no-preference) {
     @keyframes occ-photo-in { from { opacity: 0; } }
-    @keyframes occ-menu-in { from { opacity: 0; transform: translateY(-4px); } }
     @keyframes occ-mark-flash { from { transform: scale(2.4, 1.2); opacity: 0.45; } }
     .occ-hero__photo { animation: occ-photo-in 450ms ease-out; }
-    .occ-switch[open] .occ-switch__menu { animation: occ-menu-in 160ms ease-out; }
     .occ-tier:target .occ-tier__mark { animation: occ-mark-flash 800ms ease-out; }
 }
 

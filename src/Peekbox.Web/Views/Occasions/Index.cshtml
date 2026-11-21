@@ -17,19 +17,10 @@
 
 @* An occasion page (F15; mockups 13 to 15, states 31 and 32). The colours come from the accent key (occasion.css). *@
 <div class="occ occ--@occasion.Accent">
-    @* A slim bar (where you are, and a menu of the other occasions), then the photo in a frame with the chip and the title on it, then the paragraph and the button below. The photo carries the accent as a light tint and a short soft shade under the title; the paragraph is never on the photo. *@
+    @* A slim bar (where you are; the other occasions are in the header's "Dịp" menu), then the photo in a frame with the chip and the title on it, then the paragraph and the button below. The photo carries the accent as a light tint and a short soft shade under the title; the paragraph is never on the photo. *@
     <div class="occ-bar">
         <div class="container occ-bar__inner">
             <nav class="occ-crumbs" aria-label="Vị trí"><a href="@SiteLinks.Home.Href">@SiteLinks.Home.Label</a><partial name="_Icon" model='"chevron-right"' /><span aria-current="page">@occasion.Name</span></nav>
-            <details class="occ-switch" data-switch>
-                <summary class="occ-switch__btn">Dịp khác<partial name="_Icon" model='"chevron-down"' /></summary>
-                <ul class="occ-switch__menu">
-                    @foreach (var other in Model.Others)
-                    {
-                        <li><a href="@SiteLinks.Occasion(other.Id)"><span class="occ-dot occ-dot--@other.Accent" aria-hidden="true"></span>@other.Name</a></li>
-                    }
-                </ul>
-            </details>
         </div>
     </div>
 

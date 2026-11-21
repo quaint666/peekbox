@@ -25,10 +25,9 @@ public class OccasionsController(ReadyHampers readyHampers, HamperService hamper
             return NotFound();
         }
 
-        var others = (await readyHampers.OccasionsAsync(cancellationToken)).Where(o => o.Id != id).ToList();
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         var box = hamper is null ? null : await hampers.BoxAsync(hamper, cancellationToken);
-        return View(new OccasionViewModel(page, others, box));
+        return View(new OccasionViewModel(page, box));
     }
 
     // "Dùng hộp này" (F15). Nothing is replaced without the visitor saying so: when the box already holds items and the

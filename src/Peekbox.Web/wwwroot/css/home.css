@@ -102,11 +102,11 @@
 }
 .occasions__item { flex: 0 0 82%; scroll-snap-align: start; display: flex; }
 
-/* The dots under the row, where the browser draws them itself (Chromium); elsewhere the row still scrolls by swipe, wheel and keyboard. */
+/* The dots under the row, where the browser draws them itself (Chromium), each named by its occasion (the text after the slash, read from data-name); elsewhere the row still scrolls by swipe, wheel and keyboard. */
 @supports (scroll-marker-group: after) {
     .occasions__list { scroll-marker-group: after; }
     .occasions__list::scroll-marker-group { display: flex; justify-content: center; gap: var(--space-2); padding-top: var(--space-3); }
-    .occasions__item::scroll-marker { content: ''; width: var(--space-2); height: var(--space-2); border-radius: 999px; background: var(--color-input-border); }
+    .occasions__item::scroll-marker { content: '' / attr(data-name); width: var(--space-2); height: var(--space-2); border-radius: 999px; background: var(--color-input-border); }
     .occasions__item::scroll-marker:target-current { width: var(--space-5); background: var(--color-primary); }
 }
 

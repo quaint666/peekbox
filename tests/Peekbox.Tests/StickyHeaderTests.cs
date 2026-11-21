@@ -52,4 +52,16 @@ public class StickyHeaderTests
 
         Assert.True(found >= 6, "the builder's steps, its pinned search, the boxes beside the lists and the occasion's budgets: the check found only " + found);
     }
+
+    [Fact]
+    public void The_builder_panel_compacts_on_a_short_desktop_window()
+    {
+        // With the header (76 px) and the steps bar (64 px) both sticky, the panel on a 800 px high window left 1.4 items
+        // of room (measured in Chromium, Firefox and WebKit); this block gives the lines the room back.
+        var css = File.ReadAllText(Path.Combine(RepoRoot.WebProject, "wwwroot", "css", "builder.css"));
+        var block = Regex.Match(css, @"@media \(min-width: 900px\) and \(max-height: 960px\) \{(?<body>.*?)\n\}", RegexOptions.Singleline);
+        Assert.True(block.Success, "builder.css has no short-desktop block");
+        Assert.Contains(".box-panel__compact { display: flex; }", block.Groups["body"].Value);
+        Assert.Matches(@"\.box-sums__row[^{]*\{ display: none; \}", block.Groups["body"].Value);   // the rows go, the meter (.box-sums__bar) stays
+    }
 }

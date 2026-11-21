@@ -114,4 +114,15 @@ public class HomeContentTests
             Assert.Throws<JsonException>(() => HomeContent.Parse(copy.ToJsonString()));
         }
     }
+
+    [Fact]
+    public void The_carousel_dots_and_the_stand_alone_links_are_named_and_big_enough()
+    {
+        // The dots are ::scroll-marker boxes the browser exposes as buttons; with no text after the slash they have no name
+        // (found in the second review). The links must be 24 px tall (WCAG 2.5.8).
+        var css = Path.Combine(RepoRoot.WebProject, "wwwroot", "css");
+        Assert.Matches(@"\.occasions__item::scroll-marker\s*\{[^}]*content:\s*''\s*/\s*attr\(data-name\)", File.ReadAllText(Path.Combine(css, "home.css")));
+        Assert.Matches(@"\.item-card__link\s*\{[^}]*min-height:\s*24px", File.ReadAllText(Path.Combine(css, "builder.css")));
+        Assert.Matches(@"\.hamper__link\s*\{[^}]*min-height:\s*24px", File.ReadAllText(Path.Combine(css, "occasion.css")));
+    }
 }
