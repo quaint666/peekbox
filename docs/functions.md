@@ -8,10 +8,10 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | ID | Function | Where | Pri |
 |---|---|---|---|
 | **Whole site** | | | |
-| F01 | Header: logo, menu (Trang chủ, Tạo hộp quà, Dịp, Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng; "Dịp" jumps to the six occasion cards on the home page and opens a menu of the six occasion pages on hover), cart link with item count | all | M |
+| F01 | Header: logo, menu (Trang chủ, Tạo hộp quà, Dịp, Giới thiệu, Blog, Tra cứu đơn hàng; "Dịp" jumps to the six occasion cards on the home page and opens a menu of the six occasion pages on hover), cart link with item count | all | M |
 | F02 | Dropped (2026-11-11): the site is Vietnamese only, so there is no language switch. The number is kept so the other F-numbers do not change | all | – |
 | F03 | Light/dark button; follows the system by default; the choice is remembered | all | M |
-| F04 | Footer on every customer page and every state: brand line, Khám phá (Tạo hộp quà, Giới thiệu, Cam kết, Blog, Tra cứu đơn hàng), Dịp (the six occasions), contact [placeholders], and Điều khoản · Chính sách bảo mật in one small line at the bottom. The one exception is the phone share sheet, which shows only the screen | all | M |
+| F04 | Footer on every customer page and every state: brand line, Khám phá (Tạo hộp quà, Giới thiệu, Blog, Tra cứu đơn hàng), Dịp (the six occasions), contact [placeholders], and Điều khoản · Chính sách bảo mật in one small line at the bottom. The one exception is the phone share sheet, which shows only the screen | all | M |
 | F05 | Season banner for one occasion, switched on by the owner (for now the setting `Banner__Occasion`), no dates | Home, Builder | S |
 | F06 | Floating contact button: Zalo, phone, email, support hours [placeholders] | all | S |
 | F07 | Back-to-top button after scrolling | all | C |

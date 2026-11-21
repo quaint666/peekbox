@@ -29,6 +29,14 @@ Người lớn tuổi thường hợp với trà, mật ong và mứt. Đồng n
 
 Hàng Tết thường được đặt sớm. Hãy chọn ngày giao trước, rồi xem từng món còn hạn đến khi nào. Peekbox không cho đặt món sẽ hết hạn trước ngày giao (cộng thêm một khoảng dự phòng).
 
+### 5. Chọn kiểu đóng gói
+
+Đóng gói cũng là một phần của món quà. Hộp giấy kraft gọn gàng, hộp cứng có nơ trang trọng hơn, còn giỏ mây hợp với những hộp đầy đặn. Bạn chọn kiểu đóng gói ở bước Đóng gói và xem lại tổng tiền trước khi đặt.
+
+### 6. Đặt sớm cho dịp Tết
+
+Tết là dịp đông đơn nhất trong năm. Đặt sớm giúp bạn còn nhiều lựa chọn món và ngày giao, và có thời gian đổi ý nếu một món không còn phù hợp. Nếu chưa biết bắt đầu từ đâu, hãy mở trang dịp Tết, chọn "Dùng hộp này" ở một hộp gợi ý rồi thay món theo ý bạn.
+
 ### Ví dụ một hộp 500.000đ
 
 Một hộp 500.000đ có thể gồm một hộp trà, một túi hạt, một hũ mứt và một hộp bánh. Hãy cộng giá từng món và xem thanh ngân sách còn dư bao nhiêu. Dư một chút luôn dễ chịu hơn vượt ngân sách.

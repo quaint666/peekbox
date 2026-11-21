@@ -25,6 +25,14 @@ Ví dụ: đối tác quan trọng một mức cao hơn, khách hàng thường 
 
 Mỗi hộp có ngân sách riêng và có thể giao đến địa chỉ riêng. Hãy đặt từng hộp và chuẩn bị lời chúc riêng cho từng người.
 
+### Địa chỉ và người nhận
+
+Mỗi hộp cần địa chỉ và số điện thoại của người nhận chính xác. Hãy lập danh sách trước, và hỏi người nhận về giờ tiện nhận, nhất là ở văn phòng có giờ làm việc cố định hoặc có bảo vệ.
+
+### Theo dõi nhiều đơn
+
+Mỗi đơn có một mã riêng. Hãy lưu lại mã đơn của từng hộp. Ở trang Tra cứu đơn hàng, bạn nhập mã đơn và số điện thoại của người đặt để xem từng đơn đang ở bước nào.
+
 ### Hóa đơn
 
 Công ty thường cần hóa đơn. Hãy hỏi kế toán của bạn về thông tin cần có trên hóa đơn, rồi liên hệ cửa hàng trước khi đặt để được hướng dẫn. Quy định hóa đơn tùy từng doanh nghiệp.

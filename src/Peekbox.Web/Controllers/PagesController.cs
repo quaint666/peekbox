@@ -12,8 +12,7 @@ public class PagesController(AboutContent about, LegalContent legal) : Controlle
     [HttpHead(SiteLinks.AboutPath)]
     public IActionResult About()
     {
-        // "Giới thiệu" is the page you are on. "Cam kết" opens the same page and jumps to its heading (#cam-ket); the menu
-        // does not mark two links at once.
+        // "Giới thiệu" is the page you are on (the commitments are a part of this page, not a menu item).
         ViewData["Nav"] = SiteLinks.About.Key;
         return View(about);
     }

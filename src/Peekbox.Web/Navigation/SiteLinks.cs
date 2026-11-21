@@ -36,6 +36,7 @@ public static class SiteLinks
     // "Dịp" has no page of its own: the link goes to the six cards on the home page, and the header's menu under it lists the six occasion pages.
     public static readonly SiteLink Occasions = new("occasions", HomePath + Anchors.Link(Anchors.Occasions), "Dịp");
     public static readonly SiteLink About = new("about", AboutPath, "Giới thiệu");
+    // Not in the menu or the footer (the commitments are a part of the About page, owner 2026-11-21); the home page's "Xem cam kết" button uses it.
     public static readonly SiteLink Commitments = new("commitments", AboutPath + "#" + CommitmentsAnchor, "Cam kết");
     public static readonly SiteLink Blog = new("blog", BlogPath, "Blog");
     public static readonly SiteLink Terms = new("terms", LegalPath + "#" + TermsAnchor, "Điều khoản");
@@ -96,7 +97,7 @@ public static class SiteLinks
     // Bloomy, the flower shop of the same team: the occasion pages link to it (decision 2026-11-17).
     public const string Bloomy = "https://bloomy.quaintshomelabdomain.uk";
 
-    public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, Occasions, About, Commitments, Blog, Track];
-    public static readonly IReadOnlyList<SiteLink> FooterExplore = [Builder, About, Commitments, Blog, Track];
+    public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, Occasions, About, Blog, Track];
+    public static readonly IReadOnlyList<SiteLink> FooterExplore = [Builder, About, Blog, Track];
     public static readonly IReadOnlyList<SiteLink> FooterLegal = [Terms, Privacy];
 }

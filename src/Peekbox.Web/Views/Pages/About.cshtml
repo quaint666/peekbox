@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="~/css/about.css" asp-append-version="true">
 }
 
-@* About and commitments (F54; mockup 10): the story and a photo, three commitments, how the safe expiry date works and a
-   green strip that leads to the builder. "Giới thiệu" and "Cam kết" in the menu both open this page ("Cam kết" jumps to its
-   heading); only "Giới thiệu" is marked as the page you are on. The text is in
-   content/pages/about-and-commitments.md; the [CÂU CHUYỆN CỦA NHÓM] line is a place the team still has to fill in. *@
+@* About (F54; mockup 10): the story and a photo, then the sections of content/pages/about-and-commitments.md in the file's
+   order (numbered cards, text boxes, questions and answers), and a green strip that leads to the builder. The commitments
+   are one of the sections (address /about#cam-ket); the menu has no "Cam kết" link, the home page's button uses it. Sections
+   beyond the mockup's three (how it works, the occasions, delivery, questions) are the owner's request of 2026-11-21. *@
 <div class="container about">
     <section class="about-intro" aria-labelledby="about-title">
         <div class="about-intro__text">
@@ -25,24 +25,55 @@
         <img class="about-intro__photo" src="~/images/about/team-packing.webp" alt="" width="1264" height="848">
     </section>
 
-    <section class="about-commitments" aria-labelledby="@SiteLinks.CommitmentsAnchor">
-        <h2 class="about__heading" id="@SiteLinks.CommitmentsAnchor">@Model.CommitmentsTitle</h2>
-        <ol class="about-commitments__list">
-            @for (var i = 0; i < Model.Commitments.Count; i++)
-            {
-                <li class="about-card">
-                    <span class="about-card__number" aria-hidden="true">@(i + 1)</span>
-                    <h3 class="about-card__title">@Model.Commitments[i].Title</h3>
-                    <p class="about-card__text">@Model.Commitments[i].Text</p>
-                </li>
-            }
-        </ol>
-    </section>
-
-    <section class="about-expiry card" aria-labelledby="about-expiry-title">
-        <h2 class="about-expiry__title" id="about-expiry-title">@Model.ExpiryTitle</h2>
-        <p class="about-expiry__text">@Model.ExpiryText</p>
-    </section>
+    @for (var s = 0; s < Model.Sections.Count; s++)
+    {
+        var section = Model.Sections[s];
+        var titleId = section.Id ?? $"about-section-{s + 1}";
+        switch (section)
+        {
+            case AboutCards cards:
+                <section class="about-cards" aria-labelledby="@titleId">
+                    <h2 class="about__heading" id="@titleId">@cards.Heading</h2>
+                    <ol class="about-cards__list">
+                        @for (var i = 0; i < cards.Items.Count; i++)
+                        {
+                            <li class="about-card">
+                                <span class="about-card__number" aria-hidden="true">@(i + 1)</span>
+                                <h3 class="about-card__title">@cards.Items[i].Title</h3>
+                                <p class="about-card__text">@cards.Items[i].Text</p>
+                            </li>
+                        }
+                    </ol>
+                </section>
+                break;
+            case AboutFaq faq:
+                <section class="about-faq" aria-labelledby="@titleId">
+                    <h2 class="about__heading" id="@titleId">@faq.Heading</h2>
+                    <div class="about-faq__list">
+                        @foreach (var question in faq.Questions)
+                        {
+                            <div class="about-faq__item card">
+                                <h3 class="about-faq__question">@question.Question</h3>
+                                @foreach (var line in question.Answer)
+                                {
+                                    <p class="about-faq__answer">@line</p>
+                                }
+                            </div>
+                        }
+                    </div>
+                </section>
+                break;
+            case AboutText text:
+                <section class="about-text card" aria-labelledby="@titleId">
+                    <h2 class="about-text__title" id="@titleId">@text.Heading</h2>
+                    @foreach (var paragraph in text.Paragraphs)
+                    {
+                        <p class="about-text__body">@paragraph</p>
+                    }
+                </section>
+                break;
+        }
+    }
 
     <section class="about-cta" aria-label="@Model.CtaButton">
         <p class="about-cta__text">@Model.CtaText</p>

@@ -15,31 +15,46 @@ public class AboutLegalPageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task The_about_page_shows_the_story_three_commitments_the_expiry_rule_and_the_strip()
+    public async Task The_about_page_shows_the_story_the_steps_the_commitments_and_the_questions()
     {
         var (status, html) = await GetAsync("/about");
 
         Assert.Equal(HttpStatusCode.OK, status);
         Assert.Contains("<title>Giới thiệu Peekbox · Peekbox</title>", html);
         Assert.Contains("<h1 class=\"about-intro__title\" id=\"about-title\">Giới thiệu Peekbox</h1>", html);
+        Assert.Contains("<h2 class=\"about__heading\" id=\"about-section-1\">Peekbox hoạt động thế nào</h2>", html);
         Assert.Contains("<h2 class=\"about__heading\" id=\"cam-ket\">Cam kết của chúng tôi</h2>", html);
-        Assert.Equal(3, html.Split("class=\"about-card\"").Length - 1);
+        Assert.Equal(7, html.Split("class=\"about-card\"").Length - 1);   // four steps and three commitments
         Assert.Contains("<h3 class=\"about-card__title\">Tổng tiền rõ ràng</h3>", html);
+        Assert.Equal(6, html.Split("class=\"about-faq__item card\"").Length - 1);
         Assert.Contains("Hạn sử dụng an toàn hoạt động thế nào", html);
+        Assert.Contains("Giao hàng và thanh toán", html);
         Assert.Contains("href=\"/builder\">Tạo hộp quà</a>", html);
         // Static files carry a fingerprint in their name (team-packing.54vesfuy65.webp).
         Assert.Matches(@"src=""/images/about/team-packing(\.\w+)?\.webp""", html);
     }
 
-    // The menu marks one link, not two: "Cam kết" opens the same page and jumps to its heading.
+    // The menu and the footer have no "Cam kết" link: the commitments are a part of this page. "Giới thiệu" is the one marked.
     [Fact]
-    public async Task The_about_page_marks_only_Gioi_thieu_as_the_page_in_the_header()
+    public async Task There_is_no_Cam_ket_link_in_the_menu_or_the_footer_and_Gioi_thieu_is_marked_on_the_about_page()
     {
         var (_, html) = await GetAsync("/about");
+        var menu = Regex.Matches(html, @"<nav class=""site-nav""[\s\S]*?</nav>").Single().Value;
+        var footer = Regex.Matches(html, @"<footer class=""site-footer""[\s\S]*?</footer>").Single().Value;
 
-        Assert.Contains("<a href=\"/about\" aria-current=\"page\">Giới thiệu</a>", html);
-        Assert.Contains("<a href=\"/about#cam-ket\">Cam kết</a>", html);
-        Assert.Equal(1, Regex.Matches(html, @"<nav class=""site-nav""[\s\S]*?</nav>").Single().Value.Split("aria-current").Length - 1);
+        Assert.Contains("<a href=\"/about\" aria-current=\"page\">Giới thiệu</a>", menu);
+        Assert.DoesNotContain("Cam kết", menu);
+        Assert.DoesNotContain("Cam kết", footer);
+        Assert.Equal(1, menu.Split("aria-current").Length - 1);
+    }
+
+    // The home page's button "Xem cam kết" still leads to the commitments on the About page.
+    [Fact]
+    public async Task The_home_page_button_still_leads_to_the_commitments()
+    {
+        var (_, html) = await GetAsync("/");
+
+        Assert.Contains("href=\"/about#cam-ket\"", html);
     }
 
     [Fact]
