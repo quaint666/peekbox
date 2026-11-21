@@ -1,0 +1,13 @@
+@using Peekbox.Web.Formatting
+@model Peekbox.Web.ViewComponents.ResumeBanner
+
+<section class="resume" aria-labelledby="resume-title">
+    <div class="container resume__inner">
+        <p class="resume__text"><strong id="resume-title">Bạn đang có một hộp quà dở dang.</strong> <span class="resume__meta">@Model.Count món · @Vnd.Format(Model.TotalVnd)</span></p>
+        <div class="resume__actions">
+            <a class="btn btn--primary" href="@SiteLinks.Builder.Href">Tiếp tục</a>
+            <button type="button" class="btn btn--outline" popovertarget="lam-lai">Làm lại</button>
+        </div>
+    </div>
+    <partial name="_ConfirmClear" model='new ConfirmClear("lam-lai", ReturnTo.Builder)' />
+</section>

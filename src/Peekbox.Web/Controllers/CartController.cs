@@ -38,9 +38,9 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
         return LocalRedirect(box.OutOfDate.Count > 0 ? SiteLinks.ReviewPath : SiteLinks.Cart.Href);
     }
 
-    // "Xóa hộp" (F37), after the confirm popover. The items and the packaging go; the budget and the date stay.
+    // "Xóa hộp" (F37), after the confirm popover; in the cart, in the builder's box (from=builder) and in the home page's "Làm lại" (from=builder). The items and the packaging go; the budget and the date stay.
     [HttpPost(SiteLinks.CartClearPath)]
-    public async Task<IActionResult> Clear(CancellationToken cancellationToken)
+    public async Task<IActionResult> Clear(ReturnTo from = ReturnTo.Cart, CancellationToken cancellationToken = default)
     {
         var hamper = await hampers.FindAsync(HamperCookie.Read(Request), cancellationToken);
         if (hamper is not null)
@@ -49,6 +49,8 @@ public class CartController(BuilderLimits limits, HamperService hampers) : Contr
             HamperCookie.Write(Response, hamper.Token);   // a change of the box starts the cookie's time again (HamperCookie)
         }
 
-        return LocalRedirect(SiteLinks.Cart.Href);
+        // From the cart the visitor stays in the cart (now empty); from the builder's box or the home page's banner they go on
+        // building: the budget and the date are kept, so the builder opens at the items.
+        return LocalRedirect(from == ReturnTo.Builder ? SiteLinks.Builder.Href + Anchors.Link(Anchors.Items) : SiteLinks.Cart.Href);
     }
 }

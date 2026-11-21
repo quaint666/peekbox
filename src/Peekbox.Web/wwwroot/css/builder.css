@@ -465,6 +465,11 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--site-header-height) + 
 }
 .box-panel::backdrop { background: var(--color-backdrop); }
 .box-panel__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.box-panel__tools { display: flex; align-items: center; gap: var(--space-2); }
+/* "Xóa hộp": a quiet text button in the box's head, away from the green "Tiếp tục"; it asks first (_ConfirmClear). */
+.box-panel__clear { min-height: var(--tap-min); padding: 0 var(--space-2); border: 0; background: none; color: var(--color-muted); font: inherit; font-size: var(--text-sm); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; touch-action: manipulation; }
+.box-panel__clear:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@media (hover: hover) { .box-panel__clear:hover { color: var(--color-danger-text); } }
 .box-panel__count { font-size: var(--text-md); font-weight: 400; color: var(--color-muted); }
 .box-panel__from { margin: 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); background: var(--color-tint); color: var(--color-on-tint); font-size: var(--text-xs); line-height: 1.5; }
 /* The sheet: the lines scroll, the sums are one line (the block, the meter and the in-date note stay for wide screens). */

@@ -385,8 +385,19 @@
         <aside class="card box-panel" id="hop-cua-ban" aria-labelledby="box-title" popover>
             <div class="box-panel__head">
                 <h2 class="box-panel__title" id="box-title"><span>Hộp của bạn</span>@if (box.Count > 0) {<span class="box-panel__count"> · @box.Count món</span>}</h2>
-                <button type="button" class="icon-btn box-panel__close" popovertarget="hop-cua-ban" popovertargetaction="hide" aria-label="Đóng"><partial name="_Icon" model='"close"' /></button>
+                <div class="box-panel__tools">
+                    @if (box.Count > 0)
+                    {
+                        <button type="button" class="box-panel__clear" popovertarget="xoa-hop-builder">Xóa hộp</button>
+                    }
+                    <button type="button" class="icon-btn box-panel__close" popovertarget="hop-cua-ban" popovertargetaction="hide" aria-label="Đóng"><partial name="_Icon" model='"close"' /></button>
+                </div>
             </div>
+            @if (box.Count > 0)
+            {
+                @* Inside the panel, so that on a phone the question opens over the sheet without closing it. *@
+                <partial name="_ConfirmClear" model='new ConfirmClear("xoa-hop-builder", ReturnTo.Builder)' />
+            }
             @if (box.StartedFrom is { } from)
             {
                 <p class="box-panel__from">Bạn đang sửa <strong>@from</strong>. Đổi món tùy ý; hạn dùng vẫn được kiểm tra.</p>

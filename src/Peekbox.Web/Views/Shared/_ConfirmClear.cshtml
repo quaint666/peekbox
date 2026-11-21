@@ -1,0 +1,15 @@
+@model ConfirmClear
+
+@* "Xóa cả hộp quà?" asks first (decision 2026-11-16); the popover opens and closes without a script. Shared by the cart, the
+   builder's box and the home page's banner. From is where the visitor goes next (ReturnTo). *@
+<div class="confirm" id="@Model.Id" popover role="dialog" aria-labelledby="@(Model.Id)-title" aria-describedby="@(Model.Id)-text">
+    <h2 class="confirm__title" id="@(Model.Id)-title">Xóa cả hộp quà?</h2>
+    <p class="confirm__text" id="@(Model.Id)-text">Các món và kiểu đóng gói sẽ bị bỏ khỏi hộp. Ngân sách và ngày giao vẫn được giữ.</p>
+    <div class="confirm__actions">
+        <form method="post" action="@SiteLinks.CartClearPath" asp-antiforgery="true">
+            <input type="hidden" name="from" value="@Model.From.Value()">
+            <button type="submit" class="btn btn--danger">Xóa</button>
+        </form>
+        <button type="button" class="btn btn--outline" popovertarget="@Model.Id" popovertargetaction="hide" autofocus>Giữ lại</button>
+    </div>
+</div>
