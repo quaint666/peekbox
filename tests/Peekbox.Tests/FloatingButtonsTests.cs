@@ -25,10 +25,10 @@ public class FloatingButtonsTests(PeekboxFixture fixture)
         Assert.Contains("<button type=\"button\" class=\"float-btn float-top\" data-action=\"to-top\" aria-label=\"Lên đầu trang\" hidden>", html);
         Assert.Contains("class=\"float-btn float-contact\" popovertarget=\"lien-he\" aria-label=\"Liên hệ\"", html);
         var panel = Regex.Match(html, @"<div class=""contact-panel"" id=""lien-he"" popover[\s\S]*?</p>\s*</div>").Value;
-        Assert.Contains("href=\"https://zalo.me/0900000001\" target=\"_blank\" rel=\"noopener\"", panel);
-        Assert.Contains("href=\"tel:0900000001\"", panel);
-        Assert.Contains("href=\"mailto:hello@peekbox.example\"", panel);
-        Assert.Contains("Hỗ trợ 7:00 – 21:30", panel);
+        Assert.Contains("href=\"https://zalo.me/0900000001\" target=\"_blank\" rel=\"noopener\"><strong>Chat qua Zalo<span class=\"visually-hidden\"> (mở trang mới)</span></strong><span>zalo.me/0900000001</span>", panel);
+        Assert.Contains("href=\"tel:0900000001\"><strong>Gọi điện</strong><span>0900 000 001</span>", panel);
+        Assert.Contains("href=\"mailto:hello@peekbox.example\"><strong>Gửi email</strong><span>hello@peekbox.example</span>", panel);
+        Assert.Contains("<p class=\"contact-panel__hours\">Hỗ trợ 7:00 – 21:30</p>", panel);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class FloatingButtonsTests(PeekboxFixture fixture)
         Assert.NotEmpty(rule);
 
         // Every bar that sticks to the bottom of a phone screen is in the list, so a new one cannot be covered unseen.
-        foreach (var file in new[] { "builder.css", "cart.css", "checkout.css", "review.css", "hamper.css" })
+        foreach (var file in new[] { "builder.css", "cart.css", "checkout.css", "review.css", "hamper.css", "item.css" })
         {
             foreach (Match bar in Regex.Matches(Css(file), @"^\.(?<name>[a-z-]*bar)\s*\{[^}]*(position:\s*sticky|position:\s*fixed)[^}]*bottom:\s*0", RegexOptions.Multiline))
             {
@@ -66,6 +66,6 @@ public class FloatingButtonsTests(PeekboxFixture fixture)
         var tokens = Css("tokens.css");
         Assert.Matches(@"--z-float:\s*8;", tokens);
         Assert.Matches(@"\.float-stack \{[^}]*z-index: var\(--z-float\)", Css("components.css"));
-        Assert.Matches(@"\.site-footer__bottom-inner \{ padding-inline-end: calc\(48px", Css("components.css"));
+        Assert.Matches(@"\.site-footer__bottom-inner \{ padding-inline-end: calc\(20px \+ 56px", Css("components.css"));
     }
 }
