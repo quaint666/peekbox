@@ -12,6 +12,8 @@
     @await Component.InvokeAsync("SeasonBanner")
 }
 
+@await Component.InvokeAsync("ResumeBanner")
+
 <section class="hero">
     @* The photo is the section's background, so it is first and out of the text's way; home.css fades it into the page colour. *@
     <img class="hero__image" src="~/images/hero.webp" asp-append-version="true"

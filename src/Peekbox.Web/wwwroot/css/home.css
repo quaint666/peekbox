@@ -214,3 +214,15 @@
 @media (prefers-reduced-motion: no-preference) {
     .hero__image { animation: photo-in var(--motion-photo) ease-out; }
 }
+
+/* F13: the offer to carry on with a hamper left unfinished: a slim strip under the header, the text then the two buttons. */
+.resume { background: var(--color-tint); color: var(--color-on-tint); border-bottom: 1px solid var(--color-border); }
+.resume__inner { display: flex; flex-direction: column; gap: var(--space-3); padding-block: var(--space-3); }
+.resume__text { margin: 0; font-size: var(--text-md); line-height: 1.5; }
+.resume__meta { color: var(--color-muted); white-space: nowrap; }
+.resume__actions { display: flex; gap: var(--space-2); }
+.resume__actions .btn { flex: 1 1 0; min-height: var(--tap-min); }
+@media (min-width: 640px) {
+    .resume__inner { flex-direction: row; align-items: center; justify-content: space-between; }
+    .resume__actions .btn { flex: none; }
+}

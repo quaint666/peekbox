@@ -22,7 +22,7 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | **Home** | | | |
 | F11 | Hero with the promise and a button to start a hamper | Home | M |
 | F12 | "How it works" steps and the six occasion cards | Home | M |
-| F13 | Banner "you have an unfinished hamper": continue or start over | Home, Builder | S |
+| F13 | Banner "you have an unfinished hamper": continue or start over. Built on the home page only: the builder already is the unfinished hamper, and its box has its own "Xóa hộp" | Home | S |
 | **Builder** | | | |
 | F14 | Set the budget (typed, or quick amounts 300.000 / 500.000 / 800.000 / 1.000.000đ) and the delivery date | Builder | M |
 | F15 | Starter hampers per occasion; "use this hamper" fills the box, still checked for shelf life | Occasion pages, Builder | S |
