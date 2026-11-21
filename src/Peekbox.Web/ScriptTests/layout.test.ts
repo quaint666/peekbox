@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { load, stubMatchMedia } from './support.js';
 
 const header = `
@@ -78,5 +78,69 @@ describe('layout.ts', () => {
     await load('layout', header);
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
     expect(document.querySelector('.site-nav__dip')?.classList.contains('is-dismissed')).toBe(false);
+  });
+
+  describe('"Lên đầu trang"', () => {
+    const page = `${header}<a class="site-header-logo" href="/">logo</a><button data-action="to-top" hidden></button>`;
+    let scrollTo: ReturnType<typeof vi.fn>;
+    let frames: FrameRequestCallback[] = [];
+
+    // A scroll event; the animation frame it asked for runs when the test says so, as a browser's does after the event.
+    const scrollY = (y: number): void => {
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: y });
+      window.dispatchEvent(new Event('scroll'));
+      frames.splice(0).forEach((cb) => cb(0));
+    };
+
+    beforeEach(() => {
+      scrollTo = vi.fn();
+      window.scrollTo = scrollTo as unknown as typeof window.scrollTo;
+      frames = [];
+      window.requestAnimationFrame = ((cb: FrameRequestCallback) => frames.push(cb)) as typeof window.requestAnimationFrame;
+      Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 });
+    });
+
+    it('stays hidden at the top and shows once the page has been scrolled past 600 px, and hides again on the way up', async () => {
+      stubMatchMedia(false);
+      await load('layout', page);
+      const button = document.querySelector<HTMLButtonElement>('[data-action="to-top"]')!;
+      expect(button.hidden).toBe(true);
+
+      scrollY(500);
+      expect(button.hidden).toBe(true);
+      scrollY(601);
+      expect(button.hidden).toBe(false);
+      scrollY(40);
+      expect(button.hidden).toBe(true);
+    });
+
+    it('scrolls to the top smoothly, or at once for a visitor who asked for less motion, and puts the focus at the top', async () => {
+      stubMatchMedia(false);
+      await load('layout', `<header class="site-header"><a id="logo" href="/">logo</a></header><button data-action="to-top"></button>`);
+      document.querySelector<HTMLElement>('[data-action="to-top"]')?.click();
+      expect(scrollTo).toHaveBeenLastCalledWith({ top: 0, behavior: 'smooth' });
+      expect(document.activeElement?.id).toBe('logo');
+
+      stubMatchMedia(true);
+      await load('layout', `<header class="site-header"><a id="logo" href="/">logo</a></header><button data-action="to-top"></button>`);
+      document.querySelector<HTMLElement>('[data-action="to-top"]')?.click();
+      expect(scrollTo).toHaveBeenLastCalledWith({ top: 0, behavior: 'auto' });
+    });
+
+    it('a burst of scroll events asks for one animation frame, not one each', async () => {
+      stubMatchMedia(false);
+      await load('layout', page);
+      for (let y = 100; y <= 900; y += 100) {
+        Object.defineProperty(window, 'scrollY', { configurable: true, value: y });
+        window.dispatchEvent(new Event('scroll'));
+      }
+      expect(frames).toHaveLength(1);
+    });
+
+    it('a page without the button does nothing and does not throw', async () => {
+      stubMatchMedia(false);
+      await load('layout', header);
+      expect(() => scrollY(900)).not.toThrow();
+    });
   });
 });

@@ -143,6 +143,7 @@
   /* Layers, lowest first. */
   --z-bar: 1;                      /* a bar fixed to the bottom of the screen (phone) */
   --z-steps: 2;                    /* the builder's step strip, which stays at the top */
+  --z-float: 8;                    /* the floating contact and back-to-top buttons: above the page, under the menus and the header */
   --z-menu: 10;                    /* the phone menu, open under the header */
   --z-header: 20;                  /* the header, which stays at the top: above the bars that stick under it and the menus it covers */
   --z-skip-link: 100;              /* "Bỏ qua và vào nội dung", above everything */

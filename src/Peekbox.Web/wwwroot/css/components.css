@@ -413,3 +413,38 @@ select.input {
   .hamper:nth-child(3), .blog-list__item:nth-child(3), .occasions__item:nth-child(3) { --i: 2; }
   .hamper:nth-child(4), .blog-list__item:nth-child(4), .occasions__item:nth-child(4) { --i: 3; }
 }
+
+/* F06 and F07: the floating contact button and "Lên đầu trang" (Views/Shared/_FloatingButtons.cshtml), bottom right of every
+   page. The panel is a popover: it opens, closes on Escape or a click outside, and needs no script. */
+.float-stack { position: fixed; right: var(--space-4); bottom: var(--space-4); z-index: var(--z-float); display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-3); }
+.float-btn { display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border: 1px solid var(--color-border); border-radius: 50%; background: var(--color-surface); color: var(--color-primary-text); box-shadow: var(--shadow-pop); cursor: pointer; touch-action: manipulation; }
+.float-btn[hidden] { display: none; }
+.float-btn .icon { width: 22px; height: 22px; }
+.float-contact { border-color: var(--color-primary); background: var(--color-primary); color: var(--color-on-primary); }
+.contact-panel {
+  inset: auto var(--space-4) calc(var(--space-4) + 48px + var(--space-3)) auto;
+  margin: 0;
+  width: min(300px, calc(100vw - 2 * var(--space-4)));
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-pop);
+}
+.contact-panel__title { margin: 0 0 var(--space-2); font-size: var(--text-md); }
+.contact-panel__link { display: flex; align-items: center; gap: var(--space-3); min-height: var(--tap-min); color: inherit; font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
+.contact-panel__link .icon { flex: none; width: 20px; height: 20px; color: var(--color-primary-text); }
+.contact-panel__hours { margin: var(--space-2) 0 0; }
+@media (hover: hover) {
+  .float-top:hover { border-color: var(--color-primary); }
+  .float-contact:hover { background: var(--color-primary-hover); }
+  .contact-panel__link:hover span { text-decoration: underline; }
+}
+.float-btn:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+/* The footer's last line keeps clear of the buttons. */
+.site-footer__bottom-inner { padding-inline-end: calc(48px + var(--space-6)); }
+/* A phone page with its own bar at the bottom (the builder's box, the cart, the checkout, the review, a hamper) has no room for them. */
+@media (max-width: 899px) {
+  body:has(.box-bar, .cart-bar, .checkout-bar, .review-bar, .hp-bar) .float-stack { display: none; }
+}

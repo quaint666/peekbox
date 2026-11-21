@@ -4,7 +4,7 @@ namespace Peekbox.Web.Services;
 // section of appsettings.json (or Shop__Phone and so on in the environment), so they are typed in one place. The owner
 // later types them into the admin Settings page instead (decision 2026-11-14); then only this class changes.
 // The values in the file are made up (a demo shop), like Bloomy's.
-public sealed record ShopInfo(string Phone, string Email, string Address, string SupportHours)
+public sealed record ShopInfo(string Phone, string Email, string Address, string SupportHours, string ZaloUrl)
 {
     // The number for a tel: link: digits only.
     public string PhoneLink => "tel:" + new string(Phone.Where(char.IsAsciiDigit).ToArray());
@@ -15,7 +15,8 @@ public sealed record ShopInfo(string Phone, string Email, string Address, string
         Required(configuration, "Shop:Phone"),
         Required(configuration, "Shop:Email"),
         Required(configuration, "Shop:Address"),
-        Required(configuration, "Shop:SupportHours"));
+        Required(configuration, "Shop:SupportHours"),
+        Required(configuration, "Shop:ZaloUrl"));
 
     private static string Required(IConfiguration configuration, string key)
     {

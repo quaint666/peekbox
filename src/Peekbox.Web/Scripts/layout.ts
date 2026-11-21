@@ -69,6 +69,27 @@ document.addEventListener('keydown', (event) => {
   if (dip.contains(document.activeElement)) dip.querySelector('a')?.focus(); // the focus was on a link that is now hidden
 });
 
+// "Lên đầu trang" (F07): shown once the page has been scrolled a screen or so; it scrolls up smoothly unless the visitor asked for
+// less motion, and the focus goes to the logo so the keyboard is at the top too (the button hides itself on the way up).
+const toTop = document.querySelector<HTMLButtonElement>('[data-action="to-top"]');
+const SHOW_TOP_AFTER_PX = 600;
+let topFrame = 0;
+
+function updateToTop(): void {
+  topFrame = 0;
+  if (toTop) toTop.hidden = window.scrollY <= SHOW_TOP_AFTER_PX;
+}
+
+window.addEventListener('scroll', () => {
+  if (topFrame === 0) topFrame = window.requestAnimationFrame(updateToTop);
+}, { passive: true });
+toTop?.addEventListener('click', () => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  document.querySelector<HTMLElement>('.site-header a')?.focus({ preventScroll: true });
+});
+updateToTop();
+
 // Back and Forward. Safari keeps whole pages in its back-forward cache and shows them exactly as they were left: a
 // builder page could still show items that were taken out in the cart since, and its buttons would send amounts based
 // on that old box. Every page shows the hamper in the header, so a page restored from that cache is loaded again.
