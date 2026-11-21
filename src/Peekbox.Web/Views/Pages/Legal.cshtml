@@ -9,15 +9,10 @@
     <link rel="stylesheet" href="~/css/legal.css" asp-append-version="true">
 }
 
-@* Terms and privacy (F55; mockup 11): one page, two texts, a box of links to them. On a phone the box is two buttons above
-   the text. The texts are in content/legal/*.vi.md; the [BRACKETS] in them are facts the team still has to fill in. *@
+@* Terms and privacy (F55; mockup 11): one page, two texts. The mockup's box of links to the two texts ("Trang này") is left out at
+   the owner's request (2026-11-21); the footer links ("Điều khoản", "Chính sách bảo mật") still jump to each text. The texts are in
+   content/legal/*.vi.md. *@
 <div class="container legal">
-    <nav class="legal-toc" aria-labelledby="legal-toc-title">
-        <span class="legal-toc__title" id="legal-toc-title">Trang này</span>
-        <a href="#@SiteLinks.TermsAnchor">@Model.Terms.Title</a>
-        <a href="#@SiteLinks.PrivacyAnchor">@Model.Privacy.Title</a>
-    </nav>
-
     <div class="legal__texts">
         <partial name="_LegalDocument" model="@((Model.Terms, SiteLinks.TermsAnchor))" />
         <partial name="_LegalDocument" model="@((Model.Privacy, SiteLinks.PrivacyAnchor))" />

@@ -43,19 +43,19 @@ public class AboutLegalPageTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task The_legal_page_has_both_texts_and_a_box_of_links_to_them()
+    public async Task The_legal_page_has_both_texts_one_after_the_other_and_no_box_of_links()
     {
         var (status, html) = await GetAsync("/legal");
 
         Assert.Equal(HttpStatusCode.OK, status);
-        Assert.Contains("<nav class=\"legal-toc\"", html);
-        Assert.Contains("<a href=\"#dieu-khoan\">Điều khoản sử dụng</a>", html);
-        Assert.Contains("<a href=\"#bao-mat\">Chính sách bảo mật</a>", html);
+        // The box "Trang này" with links to the two texts was removed at the owner's request (2026-11-21).
+        Assert.DoesNotContain("legal-toc", html);
+        Assert.DoesNotContain("Trang này", html);
         Assert.Contains("<h1 class=\"legal-text__title\" id=\"dieu-khoan\">Điều khoản sử dụng</h1>", html);
         Assert.Contains("<h1 class=\"legal-text__title\" id=\"bao-mat\">Chính sách bảo mật</h1>", html);
-        Assert.Equal(12, html.Split("class=\"legal-text__heading\"").Length - 1);
+        Assert.Equal(20, html.Split("class=\"legal-text__heading\"").Length - 1);
         Assert.Contains("1. Phạm vi áp dụng", html);
-        Assert.Contains("6. Cookie", html);
+        Assert.Contains("6. Cookie và bộ nhớ trình duyệt", html);
     }
 
     // The links in the footer and the menu (SiteLinks) point at ids this page really has.

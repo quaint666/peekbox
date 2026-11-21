@@ -25,15 +25,33 @@ public class AboutLegalContentTests
     }
 
     [Fact]
-    public void The_two_legal_texts_have_six_numbered_sections_each()
+    public void The_two_legal_texts_have_ten_numbered_sections_each()
     {
         Assert.Equal("Điều khoản sử dụng", Legal.Terms.Title);
         Assert.Equal("Chính sách bảo mật", Legal.Privacy.Title);
-        Assert.Equal(6, Legal.Terms.Sections.Count);
-        Assert.Equal(6, Legal.Privacy.Sections.Count);
+        Assert.Equal(10, Legal.Terms.Sections.Count);
+        Assert.Equal(10, Legal.Privacy.Sections.Count);
         Assert.Equal("1. Phạm vi áp dụng", Legal.Terms.Sections[0].Heading);
-        Assert.Equal("1. Thông tin chúng tôi thu thập", Legal.Privacy.Sections[0].Heading);
-        Assert.Equal(["Cập nhật lần cuối: [NGÀY]"], Legal.Terms.Lead);
+        Assert.Equal("1. Ai chịu trách nhiệm về thông tin của bạn", Legal.Privacy.Sections[0].Heading);
+        Assert.Equal("7. Quyền của bạn", Legal.Privacy.Sections[6].Heading);
+        Assert.Equal(["Cập nhật lần cuối: 21/11/2026"], Legal.Terms.Lead);
+        Assert.Equal(["Cập nhật lần cuối: 21/11/2026"], Legal.Privacy.Lead);
+    }
+
+    // The owner's order (2026-11-21): no placeholder text. A [BRACKET] left in a text would show on the page.
+    [Fact]
+    public void No_text_has_a_placeholder_in_brackets()
+    {
+        var texts = new List<string> { About.Title, About.ExpiryText, About.CtaText };
+        texts.AddRange(About.Intro);
+        texts.AddRange(About.Commitments.SelectMany(c => new[] { c.Title, c.Text }));
+        foreach (var document in new[] { Legal.Terms, Legal.Privacy })
+        {
+            texts.AddRange(document.Lead);
+            texts.AddRange(document.Sections.SelectMany(s => s.Paragraphs.Prepend(s.Heading)));
+        }
+
+        Assert.All(texts, text => Assert.DoesNotMatch(@"[\[\]]", text));
     }
 
     [Fact]
