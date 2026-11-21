@@ -3,7 +3,7 @@ slug: qua-cong-ty-chia-ngan-sach
 category_vi: Mẹo chọn quà
 category_en: Gift tips
 cover_image: /images/blog/qua-cong-ty-chia-ngan-sach.webp
-status: draft for review
+status: checked against what the site really does on 2026-11-21; needs a Vietnamese speaker to read it
 note: Invoice rules depend on your company and local law; check with your accountant.
 ---
 
@@ -23,11 +23,11 @@ Ví dụ: đối tác quan trọng một mức cao hơn, khách hàng thường 
 
 ### Tạo từng hộp trên Peekbox
 
-Mỗi hộp có ngân sách riêng và có thể giao đến địa chỉ riêng. Hãy đặt từng hộp, ghi rõ lời nhắn trên thiệp cho từng người.
+Mỗi hộp có ngân sách riêng và có thể giao đến địa chỉ riêng. Hãy đặt từng hộp và chuẩn bị lời chúc riêng cho từng người.
 
 ### Hóa đơn
 
-Khi thanh toán, chọn "Tôi cần xuất hóa đơn cho công ty" và nhập thông tin công ty. Quy định hóa đơn tùy từng doanh nghiệp, hãy hỏi kế toán của bạn.
+Công ty thường cần hóa đơn. Hãy hỏi kế toán của bạn về thông tin cần có trên hóa đơn, rồi liên hệ cửa hàng trước khi đặt để được hướng dẫn. Quy định hóa đơn tùy từng doanh nghiệp.
 
 ### Đặt sớm và kiểm tra hạn dùng
 

@@ -33,7 +33,7 @@ public class BlogContentTests
         Assert.Equal("Cách chọn hộp quà Tết theo ngân sách", post.Title);
         Assert.Equal("Mẹo chọn quà", post.Category);
         Assert.StartsWith("Quà Tết đẹp không nhất thiết phải đắt.", post.Excerpt);
-        Assert.Equal(["1. Đặt ngân sách cho từng hộp", "2. Chọn đủ nhóm, đừng lặp", "3. Nghĩ đến người nhận", "4. Kiểm tra hạn sử dụng so với ngày giao", "Ví dụ hộp 500.000đ (giá mẫu)"],
+        Assert.Equal(["1. Đặt ngân sách cho từng hộp", "2. Chọn đủ nhóm, đừng lặp", "3. Nghĩ đến người nhận", "4. Kiểm tra hạn sử dụng so với ngày giao", "Ví dụ một hộp 500.000đ"],
             post.Blocks.OfType<BlogHeading>().Select(heading => heading.Text));
     }
 
@@ -58,6 +58,20 @@ public class BlogContentTests
             Assert.DoesNotContain("**", text);
             Assert.DoesNotContain("##", text);
             Assert.DoesNotContain("# English", text);
+        }
+    }
+
+    // The owner's order (2026-11-21): no placeholder text in the posts, and no "sample prices" label.
+    [Fact]
+    public void No_post_has_a_placeholder_in_brackets_or_a_sample_label()
+    {
+        foreach (var post in Posts.All)
+        {
+            var text = string.Join('\n', post.Blocks.SelectMany(Texts).Append(post.Title).Append(post.Excerpt));
+
+            Assert.DoesNotMatch(@"[\[\]]", text);
+            Assert.DoesNotContain("giá mẫu", text);
+            Assert.DoesNotContain("bài viết mẫu", text, StringComparison.OrdinalIgnoreCase);
         }
     }
 

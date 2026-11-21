@@ -3,7 +3,7 @@ slug: chon-qua-8-3-cho-me-va-dong-nghiep
 category_vi: 8/3
 category_en: 8/3
 cover_image: /images/blog/chon-qua-8-3-cho-me-va-dong-nghiep.webp
-status: draft for review
+status: checked against what the site really does on 2026-11-21; needs a Vietnamese speaker to read it
 note: Suggestions only; choose what fits the person.
 ---
 
@@ -15,7 +15,7 @@ Ngày 8/3 là dịp để nói lời cảm ơn với những người phụ nữ
 
 ### Với mẹ
 
-Mẹ thường thích những món quen thuộc và tốt cho sức khỏe, như trà, mật ong hoặc hạt. Một hộp có vài món nhỏ, đóng gói đẹp, kèm lời nhắn của bạn thường là đủ.
+Mẹ thường thích những món quen thuộc và tốt cho sức khỏe, như trà, mật ong hoặc hạt. Một hộp có vài món nhỏ, đóng gói đẹp, kèm lời chúc của bạn thường là đủ.
 
 ### Với đồng nghiệp
 
@@ -23,11 +23,11 @@ Hộp nhỏ, ngân sách vừa phải và dễ chia sẻ là hợp lý. Bánh qu
 
 ### Chú ý khẩu vị và dị ứng
 
-Nếu biết người nhận dị ứng hoặc kiêng một số món, hãy tránh các món đó. Thông tin từng món trên Peekbox giúp bạn kiểm tra nhanh.
+Nếu biết người nhận dị ứng hoặc kiêng một số món, hãy tránh các món đó. Mỗi món trên Peekbox có thương hiệu, trọng lượng và xuất xứ để bạn tham khảo. Thành phần chi tiết hãy đọc trên bao bì khi nhận hộp.
 
 ### Chọn kiểu đóng gói
 
-Hộp cứng có nơ hợp với quà tặng mẹ. Hộp giấy kraft gọn gàng cho đồng nghiệp. Bạn có thể đổi kiểu đóng gói ở bước cuối.
+Hộp cứng có nơ hợp với quà tặng mẹ. Hộp giấy kraft gọn gàng cho đồng nghiệp. Bạn chọn kiểu đóng gói ở bước Đóng gói.
 
 ### Đặt sớm
 

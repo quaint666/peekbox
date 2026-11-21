@@ -3,8 +3,8 @@ slug: chon-hop-qua-tet-theo-ngan-sach
 category_vi: Mẹo chọn quà
 category_en: Gift tips
 cover_image: /images/blog/chon-hop-qua-tet-theo-ngan-sach.webp
-status: draft for review
-note: Prices in this post are the sample prices used in the design, not real prices.
+status: checked against what the site really does on 2026-11-21; needs a Vietnamese speaker to read it
+note: No prices are quoted, so nothing here goes out of date when prices change.
 ---
 
 # Tiếng Việt
@@ -29,9 +29,9 @@ Người lớn tuổi thường hợp với trà, mật ong và mứt. Đồng n
 
 Hàng Tết thường được đặt sớm. Hãy chọn ngày giao trước, rồi xem từng món còn hạn đến khi nào. Peekbox không cho đặt món sẽ hết hạn trước ngày giao (cộng thêm một khoảng dự phòng).
 
-### Ví dụ hộp 500.000đ (giá mẫu)
+### Ví dụ một hộp 500.000đ
 
-Trà sen 180.000đ, hạt điều rang muối 150.000đ, mứt gừng 90.000đ và bánh đậu xanh 65.000đ, tổng cộng 485.000đ, còn dư 15.000đ.
+Một hộp 500.000đ có thể gồm một hộp trà, một túi hạt, một hũ mứt và một hộp bánh. Hãy cộng giá từng món và xem thanh ngân sách còn dư bao nhiêu. Dư một chút luôn dễ chịu hơn vượt ngân sách.
 
 # English
 
