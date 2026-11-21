@@ -56,6 +56,13 @@ public class ShopInfoTests(PeekboxFixture fixture)
     }
 
     [Fact]
+    public void The_zalo_label_is_the_link_without_its_scheme()
+    {
+        Assert.Equal("zalo.me/0900000001", new ShopInfo("p", "a@b", "x", "y", "https://zalo.me/0900000001").ZaloLabel);
+        Assert.Equal("zalo.me/1234", new ShopInfo("p", "a@b", "x", "y", "http://zalo.me/1234/").ZaloLabel);
+    }
+
+    [Fact]
     public void The_phone_link_keeps_only_the_digits()
     {
         Assert.Equal("tel:0900000001", new ShopInfo("0900 000 001", "a@b", "x", "y", "z").PhoneLink);

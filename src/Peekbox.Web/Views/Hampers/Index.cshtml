@@ -118,7 +118,7 @@
     @* The phone's buy bar: hidden until the button above has scrolled away (hamper.ts), and not at all when the hamper cannot be used. *@
     @if (card.SoldOut.Count == 0)
     {
-        <div class="hp-bar" data-buy-bar hidden>
+        <div class="hp-bar" data-bottom-bar data-buy-bar hidden>
             <div class="container hp-bar__inner">
                 <p class="hp-bar__price"><strong>@Vnd.Format(card.Quote.TotalVnd)</strong><span>Đã gồm thuế</span></p>
                 <partial name="_UseHamper" model='new UseHamperControl(card, Model.From, Model.Box, "thanh", true)' />

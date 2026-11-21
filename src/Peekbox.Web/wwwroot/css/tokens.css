@@ -55,6 +55,8 @@
   --shadow-card: 0 1px 3px rgba(31, 42, 36, 0.07);
   --shadow-pop: 0 8px 24px rgba(31, 42, 36, 0.16);
   --shadow-bar: 0 -4px 12px rgba(31, 42, 36, 0.08);   /* a bar fixed to the bottom of the screen (builder, phone) */
+  --shadow-float: 0 2px 8px rgba(31, 42, 36, 0.15);    /* the back-to-top button (mockup state 11; the same in dark mode) */
+  --shadow-fab: 0 4px 12px rgba(31, 42, 36, 0.25);     /* the floating contact button (mockup state 11; the same in dark mode) */
 
   /* Seasonal accents: Tết, 20/11, 8/3, Valentine, Trung thu, Giáng sinh */
   --accent-tet: #B3382A;

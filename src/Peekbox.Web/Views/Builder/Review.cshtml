@@ -68,7 +68,7 @@
 
     @* Phone: a bar at the bottom of the screen; "Xem tổng kết" opens the summary as a sheet (mockup 29). The sheet is a
        popover, which the browser opens and closes without a script (Escape and a tap outside close it too). *@
-    <div class="review-bar" role="region" aria-label="Tổng kết hộp quà">
+    <div class="review-bar" data-bottom-bar role="region" aria-label="Tổng kết hộp quà">
         <p class="review-bar__line">
             <button type="button" class="review-bar__open" popovertarget="tong-ket" aria-controls="tong-ket">Xem tổng kết <partial name="_Icon" model='"chevron-up"' /></button>
             <span>@Model.Count món · @(Model.Quote.OverBudget ? "Vượt" : "Còn lại") <strong>@Vnd.Format(Model.LeftOrOverVnd)</strong></span>

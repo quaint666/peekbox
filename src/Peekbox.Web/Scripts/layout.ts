@@ -69,26 +69,43 @@ document.addEventListener('keydown', (event) => {
   if (dip.contains(document.activeElement)) dip.querySelector('a')?.focus(); // the focus was on a link that is now hidden
 });
 
-// "Lên đầu trang" (F07): shown once the page has been scrolled a screen or so; it scrolls up smoothly unless the visitor asked for
-// less motion, and the focus goes to the logo so the keyboard is at the top too (the button hides itself on the way up).
+// The floating buttons. "Lên đầu trang" (F07): shown once the page has been scrolled a screen or so; it scrolls up smoothly unless
+// the visitor asked for less motion, and the focus goes to the logo so the keyboard is at the top too (the button hides itself on
+// the way up). A bar that stays at the bottom of a phone screen (data-bottom-bar) must not be covered by the buttons: while it is
+// stuck to the bottom edge of the screen their lift is its height (--floating-lift). At the end of a page such a bar sits in the
+// page above the footer and is no longer in the way (lift 0); a wide screen hides it (height 0).
 const toTop = document.querySelector<HTMLButtonElement>('[data-action="to-top"]');
+const bottomBars = document.querySelectorAll<HTMLElement>('[data-bottom-bar]');
 const SHOW_TOP_AFTER_PX = 600;
 let topFrame = 0;
 
-function updateToTop(): void {
+function updateFloating(): void {
   topFrame = 0;
   if (toTop) toTop.hidden = window.scrollY <= SHOW_TOP_AFTER_PX;
+  let lift = 0;
+  bottomBars.forEach((bar) => {
+    const box = bar.getBoundingClientRect();
+    if (box.height > 0 && box.bottom >= window.innerHeight - 2) lift = Math.max(lift, box.height);
+  });
+  document.documentElement.style.setProperty('--floating-lift', `${lift}px`);
 }
 
-window.addEventListener('scroll', () => {
-  if (topFrame === 0) topFrame = window.requestAnimationFrame(updateToTop);
-}, { passive: true });
+function askForUpdate(): void {
+  if (topFrame === 0) topFrame = window.requestAnimationFrame(updateFloating);
+}
+
+window.addEventListener('scroll', askForUpdate, { passive: true });
+window.addEventListener('resize', askForUpdate);
+if (bottomBars.length > 0 && typeof ResizeObserver !== 'undefined') {
+  const observer = new ResizeObserver(askForUpdate);
+  bottomBars.forEach((bar) => observer.observe(bar));
+}
 toTop?.addEventListener('click', () => {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   document.querySelector<HTMLElement>('.site-header a')?.focus({ preventScroll: true });
 });
-updateToTop();
+updateFloating();
 
 // Back and Forward. Safari keeps whole pages in its back-forward cache and shows them exactly as they were left: a
 // builder page could still show items that were taken out in the cart since, and its buttons would send amounts based
