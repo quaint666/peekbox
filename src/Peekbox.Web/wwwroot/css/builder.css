@@ -11,7 +11,7 @@
 @media (max-width: 359px) { :root { --builder-steps-height: 78px; } }   /* the labels wrap to two lines (measured at 320 px) */
 .builder-steps {
     position: sticky;
-    top: 0;
+    top: var(--site-header-height);
     z-index: var(--z-steps);
     list-style: none;
     margin: 0;
@@ -21,7 +21,7 @@
     font-size: var(--text-2xs);
     border-image: linear-gradient(to top, var(--color-border) 1px, var(--color-bg) 1px) fill 0 / 0 / 0 100vmax;
 }
-html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) + var(--space-4)); }   /* #mon-…, #dong-goi */
+html:has(.builder-steps) { scroll-padding-top: calc(var(--site-header-height) + var(--builder-steps-height) + var(--space-4)); }   /* #mon-…, #dong-goi */
 .builder-step {
     flex: 1;
     display: flex;
@@ -187,7 +187,7 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
 .search-pin { display: flex; flex-direction: column; gap: 6px; }   /* 6px, as .field */
 .search-pin.is-pinned {
     position: fixed;
-    top: var(--builder-steps-height);
+    top: calc(var(--site-header-height) + var(--builder-steps-height));
     left: var(--space-4);
     right: var(--space-4);
     z-index: var(--z-steps);
@@ -593,9 +593,9 @@ html:has(.builder-steps) { scroll-padding-top: calc(var(--builder-steps-height) 
     .box-panel, .box-panel:popover-open {
         position: sticky;
         inset: auto;   /* before "top": the shorthand would reset it */
-        top: calc(var(--builder-steps-height) + var(--space-4));
+        top: calc(var(--site-header-height) + var(--builder-steps-height) + var(--space-4));
         width: auto;
-        max-height: calc(100dvh - var(--builder-steps-height) - 2 * var(--space-4));
+        max-height: calc(100dvh - var(--site-header-height) - var(--builder-steps-height) - 2 * var(--space-4));
         margin: 0;
         display: flex;
         flex-direction: column;
