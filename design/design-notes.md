@@ -74,7 +74,7 @@ Anything in [BRACKETS] is a fact the team must fill in. Brands ("Thương hiệu
 - **"Only items in date for the delivery date"** is a checkbox, on by default. The page says how many items it hides and offers to show them.
 - **Added-to-hamper toast** at the bottom: what was added, what is left of the budget, and a link to the hamper.
 - **Share** on the item page: copy link, Facebook, and the phone's share sheet. No Zalo button, because it needs a third-party script.
-- **Floating contact button** (Zalo, phone, email, support hours) and a **back-to-top button** that appears after scrolling. Numbers and hours are placeholders.
+- **Floating contact button** (Zalo, phone, email, support hours) and a **back-to-top button** that appears after scrolling (state 11). The numbers and hours come from the `Shop` settings. Both sit 20 px from the bottom right of every page: a 56 px green contact circle and, 12 px above it, a 44 px white back-to-top circle, shown once the page is scrolled 600 px. The contact button opens a card (300 px wide, 260 px on a phone) above both buttons: a title and three lines, each a label with its value (Chat qua Zalo, Gọi điện, Gửi email), then the support hours. On a phone, a bar that stays at the bottom of the screen (builder, review, cart, checkout, item, ready hamper) pushes the buttons up by its height while it is stuck there.
 - **Loading skeletons** on the builder instead of a spinner.
 - **Resume banner**: a hamper that was left unfinished is remembered by the site (a cookie and a database row; there are no accounts), and the start page offers to continue or start over.
 - **Hide prices inside the hamper** is a checkbox at checkout: the slip in the box lists names only; the confirmation email to the buyer still shows prices.
