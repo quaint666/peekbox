@@ -1,3 +1,4 @@
+@inject Peekbox.Web.Services.ShopInfo shop
 <footer class="site-footer">
     <div class="site-footer__main container">
         <div class="site-footer__brand">
@@ -17,7 +18,7 @@
         </nav>
         <div class="site-footer__contact">
             <h2 class="site-footer__title">Liên hệ</h2>
-            <p>[SỐ ĐIỆN THOẠI]<br>[EMAIL]<br>[ĐỊA CHỈ]</p>
+            <p><a href="@shop.PhoneLink">@shop.Phone</a><br><a href="@shop.EmailLink">@shop.Email</a><br>@shop.Address</p>
         </div>
     </div>
     <div class="site-footer__bottom">

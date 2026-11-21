@@ -287,6 +287,7 @@ select.input {
 .site-footer__links a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--footer-text); text-decoration: none; }
 .site-footer a:focus-visible { outline-color: var(--footer-brand); }   /* --color-focus is too dark on the dark footer */
 .site-footer__contact p { margin: 0; line-height: 1.8; }
+.site-footer__contact a { color: var(--footer-text); text-decoration: none; }
 .site-footer__bottom { border-top: 1px solid var(--footer-line); }
 .site-footer__bottom-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: var(--space-4); }
 .site-footer__copy { margin-block: 0; padding-block: var(--space-4); color: var(--footer-label); }
@@ -294,7 +295,7 @@ select.input {
 .site-footer__legal { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-2); color: var(--footer-label); }
 .site-footer__legal a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--footer-text); text-decoration: none; }
 @media (hover: hover) {
-  .site-footer__links a:hover, .site-footer__legal a:hover { color: var(--footer-brand); }
+  .site-footer__links a:hover, .site-footer__legal a:hover, .site-footer__contact a:hover { color: var(--footer-brand); }
 }
 @media (min-width: 900px) {
   .site-footer__main {
