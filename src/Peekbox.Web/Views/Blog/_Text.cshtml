@@ -1,0 +1,13 @@
+@using Peekbox.Web.Content
+@model IReadOnlyList<BlogText>
+@foreach (var part in Model)
+{
+    if (part.Bold)
+    {
+        <strong>@part.Text</strong>
+    }
+    else
+    {
+        @part.Text
+    }
+}

@@ -1,0 +1,59 @@
+@using Peekbox.Web.Content
+@model BlogPostViewModel
+@{
+    var post = Model.Post;
+    ViewData["Title"] = post.Title;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/blog.css" asp-append-version="true">
+}
+
+@* One blog post (F53; mockup 09): back link, category, title, photo, the text, the call to action and two other posts.
+   The mockup's "[NGÀY ĐĂNG] · [TÁC GIẢ]" is left out: the posts have no date or author yet. *@
+<article class="post">
+    <a class="post__back" href="@SiteLinks.Blog.Href">Quay lại Blog</a>
+    <header class="post__head">
+        <p class="post__category">@post.Category</p>
+        <h1 class="post__title">@post.Title</h1>
+    </header>
+    <img class="post__photo" src="@Url.Content("~" + post.Cover)" alt="" width="1264" height="848">
+    <div class="post__text">
+        @foreach (var block in post.Blocks)
+        {
+            switch (block)
+            {
+                case BlogHeading heading:
+                    <h2 class="post__heading">@heading.Text</h2>
+                    break;
+                case BlogParagraph paragraph:
+                    <p><partial name="_Text" model="paragraph.Text" /></p>
+                    break;
+                case BlogList list:
+                    <ul>
+                        @foreach (var item in list.Items)
+                        {
+                            <li><partial name="_Text" model="item" /></li>
+                        }
+                    </ul>
+                    break;
+            }
+        }
+    </div>
+
+    <aside class="post-cta" aria-label="Tạo hộp quà">
+        <p class="post-cta__text">Sẵn sàng chọn quà? Đặt ngân sách và xem từng món trong hộp.</p>
+        <a class="btn btn--primary post-cta__button" href="@SiteLinks.Builder.Href">Tạo hộp quà</a>
+    </aside>
+
+    @if (Model.Related.Count > 0)
+    {
+        <nav class="post-more" aria-labelledby="post-more-title">
+            <h2 class="post-more__title" id="post-more-title">Bài viết khác</h2>
+            @foreach (var other in Model.Related)
+            {
+                <a class="post-more__link" href="@SiteLinks.BlogPost(other.Slug)">@other.Title</a>
+            }
+        </nav>
+    }
+</article>
