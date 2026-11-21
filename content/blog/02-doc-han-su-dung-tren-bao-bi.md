@@ -3,7 +3,7 @@ slug: doc-han-su-dung-tren-bao-bi
 category_vi: Hạn sử dụng
 category_en: Expiry dates
 cover_image: /images/blog/doc-han-su-dung-tren-bao-bi.webp
-status: draft for review
+status: checked against what the site really does on 2026-11-21; needs a Vietnamese speaker to read it
 note: General guidance only. The exact rules and wording are on each product's packaging.
 ---
 
@@ -11,13 +11,15 @@ note: General guidance only. The exact rules and wording are on each product's p
 
 ## Cách đọc hạn sử dụng trên bao bì thực phẩm
 
-Ngày ghi trên bao bì cho biết đến khi nào thực phẩm còn giữ được chất lượng và an toàn, nếu bảo quản đúng cách. Hiểu đúng ngày này giúp bạn chọn quà an tâm hơn.
+Ngày ghi trên bao bì là mốc nhà sản xuất cam kết cho sản phẩm. Có hai loại mốc khác nhau, một loại nói về an toàn và một loại nói về chất lượng. Hiểu đúng chúng giúp bạn chọn quà an tâm hơn.
 
 ### Các cụm từ thường gặp
 
 - **NSX hoặc Ngày sản xuất:** ngày thực phẩm được làm ra.
-- **HSD hoặc Hạn sử dụng:** ngày cuối cùng nên dùng. Sau ngày này không nên ăn.
-- **Dùng tốt nhất trước ngày:** sau ngày này món có thể kém ngon hơn nhưng không nhất thiết hỏng. Hãy đọc kỹ bao bì.
+- **HSD hoặc Hạn sử dụng:** ngày cuối cùng được dùng, liên quan đến an toàn. Sau ngày này không nên ăn, kể cả khi món trông vẫn bình thường.
+- **Sử dụng tốt nhất trước:** mốc nói về chất lượng, không phải an toàn. Sau ngày này món có thể kém ngon hoặc kém giòn nhưng không nhất thiết hỏng. Hãy đọc kỹ bao bì.
+
+Đây là hai cách ghi hạn dùng theo quy định về nhãn hàng hóa của Việt Nam (Nghị định 43/2017/NĐ-CP, được sửa đổi, bổ sung bởi Nghị định 111/2021/NĐ-CP).
 
 ### Cách ghi ngày
 

@@ -3,7 +3,7 @@ slug: bao-quan-banh-mut-tra-sau-tet
 category_vi: Bảo quản
 category_en: Storage
 cover_image: /images/blog/bao-quan-banh-mut-tra-sau-tet.webp
-status: draft for review
+status: checked against what the site really does on 2026-11-21; needs a Vietnamese speaker to read it
 note: General storage advice. Follow the instructions printed on each product.
 ---
 

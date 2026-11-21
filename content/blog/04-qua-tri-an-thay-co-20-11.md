@@ -3,7 +3,7 @@ slug: qua-tri-an-thay-co-20-11
 category_vi: 20/11
 category_en: 20/11
 cover_image: /images/blog/qua-tri-an-thay-co-20-11.webp
-status: draft for review
+status: checked against what the site really does on 2026-11-21; needs a Vietnamese speaker to read it
 note: Check your school's own rules on gifts before ordering.
 ---
 
@@ -27,7 +27,7 @@ Trà, bánh quy và kẹo là lựa chọn an toàn. Chọn món có hạn sử 
 
 ### Thêm một tấm thiệp
 
-Lời nhắn viết tay hoặc chữ ký của cả lớp làm món quà thêm ý nghĩa. Peekbox cho phép bạn ghi lời nhắn lên thiệp khi đặt hàng.
+Lời nhắn viết tay hoặc chữ ký của cả lớp làm món quà thêm ý nghĩa. Hãy chuẩn bị sẵn lời nhắn hoặc tấm thiệp của lớp để gửi kèm khi trao quà.
 
 ### Đặt sớm
 
