@@ -110,3 +110,12 @@
     .item-about__sub { font-size: var(--text-plus); }
     .item-details dt { flex-basis: 200px; }
 }
+
+/* F31: share. Three small pill buttons in a row; they wrap on a narrow screen. */
+.item-share { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.item-share__label { margin-right: var(--space-1); font-size: var(--text-sm); color: var(--color-muted); }
+.item-share__btn { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--tap-min); padding: 0 var(--space-4); border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); color: var(--color-primary-text); font: inherit; font-size: var(--text-sm); font-weight: 600; text-decoration: none; cursor: pointer; touch-action: manipulation; }
+.item-share__btn[hidden] { display: none; }
+.item-share__btn .icon { width: 16px; height: 16px; }
+.item-share__btn:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@media (hover: hover) { .item-share__btn:hover { border-color: var(--color-primary); } }

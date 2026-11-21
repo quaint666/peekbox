@@ -448,3 +448,24 @@ select.input {
 @media (max-width: 899px) {
   body:has(.box-bar, .cart-bar, .checkout-bar, .review-bar, .hp-bar) .float-stack { display: none; }
 }
+
+/* The toast (F08, Views/Shared/_Toast.cshtml, lib/toast.ts): a card at the bottom centre of the screen for a few seconds. Its
+   look follows the theme, as the builder's does (builder.css). */
+.toast {
+  position: fixed;
+  inset: auto auto var(--space-5) 50%;   /* undoes the browser's centring of a popover */
+  width: max-content;
+  max-width: calc(100vw - 2 * var(--space-4));
+  margin: 0;
+  padding: var(--space-3) var(--space-5);
+  transform: translateX(-50%);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-pop);
+  font-size: var(--text-md);
+  line-height: 1.4;
+  text-align: center;
+  text-wrap: balance;
+}
