@@ -92,7 +92,7 @@ jobs:
 
       # The settings are the ones staging will use (docs/architecture.md, section 10). The health check calls
       # localhost, because AllowedHosts names the site and localhost only.
-      - name: Smoke test, health check, a page, the host check and the demo checkout
+      - name: Smoke test, health check, a page, the host check, the demo checkout, HEAD, gzip and a 405
         run: |
           docker run -d --name "$CI_NAME-web" --network "$CI_NAME" \
             --memory=256m --memory-swap=256m \
@@ -113,6 +113,15 @@ jobs:
           [ "$CODE" -ne 0 ]
           [ "$(docker exec "$CI_NAME-web" id -u)" != 0 ]
           docker exec "$CI_NAME-web" sh -c 'TZ=Asia/Ho_Chi_Minh date +%z' | grep -q '+0700'
+          # What a plain wget cannot see (the image has no curl, the runner does): HEAD, compression and the method rule,
+          # against the published build (the test host answers some of these differently, see RequestMapTests).
+          IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$CI_NAME-web")
+          req() { curl -s -H 'Host: localhost' "$@"; }
+          [ "$(req -o /dev/null -w '%{http_code}' -I "http://$IP:8080/healthz")" = 200 ]
+          req -H 'Accept-Encoding: gzip' -D "$RUNNER_TEMP/h" -o "$RUNNER_TEMP/b" "http://$IP:8080/css/base.css"
+          grep -qi '^content-encoding: gzip' "$RUNNER_TEMP/h"
+          gzip -dc "$RUNNER_TEMP/b" | grep -q 'box-sizing'
+          [ "$(req -o /dev/null -w '%{http_code}' "http://$IP:8080/cart/add")" = 405 ]
 
       - name: Show the web logs if something above failed
         if: failure()
