@@ -234,6 +234,18 @@
     .occ-tier:target .occ-tier__mark { animation: occ-mark-flash 800ms ease-out; }
 }
 
+/* Loading motion for the ready hampers, the same as on the builder's product cards (tokens.css). A: each photo fades in once.
+   C: when the page opens, the first four cards of every budget rise a little and fade in one after another (a wide screen
+   shows three and a bit; a phone one and a bit); the cards further along the row are off screen and just sit there. */
+@keyframes occ-card-in { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: no-preference) {
+    .hamper__photo { animation: occ-photo-in var(--motion-photo) ease-out; }
+    .hamper:nth-child(-n+4) { animation: occ-card-in var(--motion-enter) ease-out backwards; animation-delay: calc(var(--i, 0) * var(--motion-stagger)); }
+    .hamper:nth-child(2) { --i: 1; }
+    .hamper:nth-child(3) { --i: 2; }
+    .hamper:nth-child(4) { --i: 3; }
+}
+
 @media (min-width: 900px) {
     .occ-frame { height: 400px; }
     .occ-frame__text { padding: var(--space-6); }
