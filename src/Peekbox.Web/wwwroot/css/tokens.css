@@ -160,7 +160,6 @@
   --motion-card: 200ms;            /* a card rising and its photo zooming, on every card with a photo */
   --card-lift: -2px;               /* how far a card rises (translateY) */
   --card-zoom: 1.04;               /* how far its photo grows */
-  --motion-page: 200ms;            /* one page fading into the next (base.css) */
 
   /* Layout: the pages switch to their wide layout at 900px and the header at 1100px. A media query cannot read a
      variable, so those two numbers are written in each file's @media line; change them everywhere at once. */
