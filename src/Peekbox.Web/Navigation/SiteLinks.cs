@@ -19,6 +19,10 @@ public static class SiteLinks
     // The page shown after an unexpected error. Only the exception handler opens it; a direct visit is a 404.
     public const string ErrorPath = "/error";
 
+    // The "page not found" page (F09). Only the status-code middleware opens it, for every unknown address; a direct
+    // visit answers 404 too.
+    public const string NotFoundPath = "/not-found";
+
     public static readonly SiteLink Home = new("home", HomePath, "Trang chủ");
     public static readonly SiteLink Builder = new("builder", BuilderPath, "Tạo hộp quà");
     public static readonly SiteLink About = new("about", "/about", "Giới thiệu");
