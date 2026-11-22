@@ -121,3 +121,15 @@
 .item-share__btn .icon { width: 16px; height: 16px; }
 .item-share__btn:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
 @media (hover: hover) { .item-share__btn:hover { border-color: var(--color-primary); } }
+
+/* F32: "Đã xem gần đây". A row of small cards that scrolls sideways on a narrow screen (the list is made by recent.ts). */
+.recent { padding: var(--space-4); }
+.recent[hidden] { display: none; }
+.recent__title { margin: 0 0 var(--space-3); font-size: var(--text-lg); }
+.recent__list { display: flex; gap: var(--space-3); margin: 0; padding: 0 0 var(--space-1); list-style: none; overflow-x: auto; scroll-snap-type: x proximity; }
+.recent__list > li { flex: none; width: 132px; scroll-snap-align: start; }
+.recent__link { display: flex; flex-direction: column; gap: var(--space-2); height: 100%; color: inherit; text-decoration: none; }
+.recent__link:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.recent__photo { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-border-soft); filter: var(--photo-filter); }
+.recent__name { font-size: var(--text-sm); font-weight: 600; }
+@media (hover: hover) { .recent__link:hover .recent__name { text-decoration: underline; } }

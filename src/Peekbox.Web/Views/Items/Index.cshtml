@@ -23,6 +23,7 @@
 
 @section Scripts {
     <script type="module" src="~/js/share.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/recent.js" asp-append-version="true"></script>
 }
 
 @section Styles {
@@ -112,6 +113,12 @@
             <div><dt>Cập nhật lần cuối</dt><dd>@VnDate.Day(ItemDetails.ReviewedOn)</dd></div>
         </dl>
         <p class="item-about__note meta">Thông tin mẫu theo nhóm món, chưa phải thông tin riêng của sản phẩm này. Xem bao bì khi nhận hàng.</p>
+    </section>
+
+    @* F32: filled by recent.ts from this browser's own list; hidden until it has something to show (no script: stays hidden). *@
+    <section class="card recent" aria-labelledby="da-xem" data-recent data-slug="@item.Slug" data-name="@item.Name" data-image="@item.ImagePath" data-href-prefix="@(SiteLinks.ItemsPath + "/")" hidden>
+        <h2 class="recent__title" id="da-xem">Đã xem gần đây</h2>
+        <ul class="recent__list" data-recent-list></ul>
     </section>
 
     @* Phone: the same budget and add control in a bar at the bottom of the screen (mockup 03, phone). *@
