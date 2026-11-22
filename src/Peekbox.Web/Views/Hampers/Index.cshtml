@@ -13,13 +13,13 @@
 
     var summary = $"{card.Name}: {card.Count} món, {card.Packaging.Name}, {Vnd.Format(card.Quote.TotalVnd)} đã gồm thuế. {card.ForWhom}.";
     var origin = $"{Context.Request.Scheme}://{Context.Request.Host}";
+    ViewData["Description"] = summary;
     ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(
         Model.FromBuilder ? Crumbs.To(SiteLinks.Builder.Label, SiteLinks.Builder.Href + Anchors.Link(Anchors.Suggestions)) : Crumbs.To(occasion.Name, SiteLinks.Occasion(occasion.Id)),
         Crumbs.Here(card.Name));
 }
 
 @section Head {
-    <meta name="description" content="@summary">
     <meta property="og:type" content="website">
     <meta property="og:title" content="@card.Name · Peekbox">
     <meta property="og:description" content="@summary">

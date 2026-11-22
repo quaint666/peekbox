@@ -5,6 +5,7 @@
     var item = Model.Item;
     ViewData["Title"] = item.Name;
     ViewData["Nav"] = SiteLinks.Builder.Key;
+    ViewData["Description"] = item.Description;
     var categoryLink = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString(SiteLinks.Builder.Href, "category", item.CategoryId) + Anchors.Link(Anchors.Items);
     ViewData[Crumbs.ViewDataKey] = Crumbs.Trail(Crumbs.To(SiteLinks.Builder), Crumbs.To(item.CategoryName, categoryLink), Crumbs.Here(item.Name));
     var origin = $"{Context.Request.Scheme}://{Context.Request.Host}";
@@ -13,7 +14,6 @@
 }
 
 @section Head {
-    <meta name="description" content="@item.Description">
     <meta property="og:type" content="website">
     <meta property="og:title" content="@item.Name · Peekbox">
     <meta property="og:description" content="@item.Description">

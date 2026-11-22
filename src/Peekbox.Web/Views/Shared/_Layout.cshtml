@@ -11,7 +11,8 @@
         @* Checkout, the sold-out notice and an order's page: nothing a search engine should list (the order page's address holds its secret token). *@
         <meta name="robots" content="noindex">
     }
-    <title>@(string.IsNullOrEmpty(title) ? "Peekbox" : $"{title} · Peekbox")</title>
+    <title>@(string.IsNullOrEmpty(title) ? $"Peekbox — {Brand.Slogan}" : $"{title} · Peekbox")</title>
+    <meta name="description" content="@(ViewData["Description"] as string ?? Brand.Description)">
     @await RenderSectionAsync("Head", required: false)
     <link rel="icon" type="image/svg+xml" href="~/images/logo/peekbox-mark-sage.svg">
     <link rel="stylesheet" href="~/css/tokens.css" asp-append-version="true">
