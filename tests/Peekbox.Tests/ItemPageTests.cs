@@ -288,4 +288,25 @@ public class ItemPageTests(PeekboxFixture fixture)
         Assert.All(ItemDetails.Categories, id => Assert.False(string.IsNullOrWhiteSpace(ItemDetails.For(id).Allergens + ItemDetails.For(id).Storage)));
         Assert.Equal("Xem trên bao bì khi nhận hàng.", ItemDetails.For("a-new-category").Allergens);
     }
+    [Fact]
+    public async Task The_page_names_its_item_for_the_recently_viewed_strip_and_starts_with_it_hidden()
+    {
+        var html = Text(await new Visitor(fixture.Client(), null).PageAsync());
+
+        // The strip is filled by recent.ts from the browser's own list: the server only says which item this is.
+        Assert.Matches(@"<section [^>]*data-recent[ >][^>]*data-slug=""tra-sen""[^>]*data-name=""Trà sen""[^>]*data-image=""/images/products/[^""]+""[^>]*data-href-prefix=""/items/""[^>]* hidden>", html);
+        Assert.Contains("<h2 class=\"recent__title\" id=\"da-xem\">Đã xem gần đây</h2>", html);
+        Assert.Contains("<ul class=\"recent__list\" data-recent-list></ul>", html);
+        Assert.Matches(@"<script type=""module"" src=""/js/recent(\.[a-z0-9]+)?\.js", html);   // fingerprinted once the site is published
+    }
+
+    [Fact]
+    public async Task A_page_that_is_not_an_item_has_no_recently_viewed_strip()
+    {
+        var response = await new Visitor(fixture.Client(), null).GetAsync("/");
+
+        var html = await response.Content.ReadAsStringAsync();
+        Assert.DoesNotContain("data-recent", html);
+        Assert.DoesNotContain("recent.js", html);
+    }
 }
