@@ -33,7 +33,20 @@ public class ShopInfoTests(PeekboxFixture fixture)
         Assert.Contains("rel=\"noopener\" aria-label=\"Chat qua Zalo (mở trang mới)\">", social);
         Assert.Contains("href=\"https://zalo.me/", social);
         Assert.Contains("không phải cửa hàng thật", html[html.IndexOf("site-footer__notice", StringComparison.Ordinal)..]);
+        Assert.Contains("(môn Phát triển ứng dụng Thương mại điện tử)", html);
         Assert.Contains("<p class=\"site-footer__copy\">© Peekbox. Rõ từng món, trọn tấm lòng.</p>", html);   // the slogan, as Bloomy's "© 2026 Bloomy. Nở trọn yêu thương."
+    }
+
+    [Fact]
+    public async Task The_home_page_title_carries_the_slogan_and_every_page_has_one_description()
+    {
+        var visitor = new Visitor(fixture.Client());
+        var home = await visitor.PageAsync("/");
+        Assert.Contains("<title>Peekbox — Rõ từng món, trọn tấm lòng</title>", home);
+        Assert.Contains("<meta name=\"description\" content=\"Peekbox: ", home);
+
+        var cart = await visitor.PageAsync("/cart");
+        Assert.Equal(1, System.Text.RegularExpressions.Regex.Matches(cart, "<meta name=\"description\"").Count);
     }
 
     [Fact]
