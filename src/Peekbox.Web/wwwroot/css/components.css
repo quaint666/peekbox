@@ -477,3 +477,7 @@ body:has(.float-top:not([hidden])) .contact-panel { bottom: calc(var(--floating-
   text-align: center;
   text-wrap: balance;
 }
+
+/* F10: a part of the page that is being swapped in from the server and is slow (scripts/lib/busy.ts adds data-slow after
+   400 ms): dimmed, with the progress cursor. No animation, so it applies with "reduce motion" too; the page stays usable. */
+[data-slow] { opacity: 0.55; cursor: progress; }

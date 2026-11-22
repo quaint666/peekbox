@@ -31,6 +31,43 @@ describe('checkout.ts', () => {
     expect(button.textContent).toBe('Đặt hàng, trả khi nhận');
   });
 
+  it('a slow fee answer dims the summary until it arrives (and a quick one never does)', async () => {
+    let arrive: (response: Response) => void = () => undefined;
+    vi.spyOn(globalThis, 'fetch').mockReturnValue(new Promise<Response>((resolve) => { arrive = resolve; }));
+    vi.useFakeTimers();
+    try {
+      await load('checkout', html);
+      const summary = document.querySelector('#checkout-summary')!;
+
+      pick('2');
+      expect(summary.getAttribute('aria-busy')).toBe('true');
+      expect(summary.hasAttribute('data-slow')).toBe(false);
+
+      vi.advanceTimersByTime(400);
+      expect(summary.getAttribute('data-slow')).toBe('true');
+
+      arrive(answer(page('new')));
+      await vi.advanceTimersByTimeAsync(0);
+      expect(summary.hasAttribute('data-slow')).toBe(false);
+      expect(summary.hasAttribute('aria-busy')).toBe(false);
+      expect(document.querySelector('#checkout-summary')?.textContent).toBe('new');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('a failed fee request also takes the dimming off', async () => {
+    vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('offline'));
+    await load('checkout', html);
+    const summary = document.querySelector('#checkout-summary')!;
+
+    pick('2');
+    await tick();
+
+    expect(summary.hasAttribute('aria-busy')).toBe(false);
+    expect(summary.hasAttribute('data-slow')).toBe(false);
+  });
+
   it('a picked ward fetches the page with ?ward= and swaps in the server\'s summary and total', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(answer(page('new')));
     await load('checkout', html);
