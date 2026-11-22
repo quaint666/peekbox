@@ -1,0 +1,13 @@
+@model AdminChipViewModel
+<div class="admin-chip">
+    <div class="admin-chip__who">
+        <span class="admin-chip__initials" aria-hidden="true">@Model.Initials</span>
+        <span class="admin-chip__text">
+            <span class="admin-chip__name">@Model.DisplayName</span>
+            <span class="admin-chip__role">@Model.RoleLabel</span>
+        </span>
+    </div>
+    <form method="post" action="@SiteLinks.AdminLogoutPath" asp-antiforgery="true">
+        <button type="submit" class="btn btn--outline admin-logout"><partial name="_Icon" model='"logout"' />Đăng xuất</button>
+    </form>
+</div>

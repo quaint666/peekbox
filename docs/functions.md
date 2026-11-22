@@ -80,8 +80,9 @@ What each part of the site does. The IDs (F01 and so on) are reused in the sitem
 | F54 | About and Commitments, including how the safe expiry rule works | About | M |
 | F55 | Terms and Privacy with a table of contents | Legal | M |
 | **Admin (built after the front end is done; not in the first report)** | | | |
-| F56 | Login with username, password and a 2-step code (to be built later) | Admin | S |
+| F56 | Login with username, password and a 2-step code. Built 2026-11-22: user name and password (5 wrong passwords lock the account for 15 minutes), the 2-step code is a placeholder card on the account page and comes in its own change | Admin | S |
 | F57 | Orders: filter by date, status and search; open an order and change its status. Shows the orders placed on the customer side | Admin | S |
 | F58 | Items and stock: search and status filter, edit form | Admin | S |
 | F59 | Campaigns, delivery cut-offs, coupons, reviews, settings, stats, users, account | Admin | S |
 | F68 | Account chip at the bottom of the admin sidebar (initials, name, role, a bordered "Đăng xuất" button). On a phone it is an initials button in the header that opens a small menu with Tài khoản and Đăng xuất | Admin | S |
+| F69 | Admin roles Owner, Manager and Staff. The role and the on/off flag are read from the database on every admin request, so a changed role or a switched-off person counts at once. The first owner is made at start from settings. Every admin action asks for a role (a test fails for one that does not) | Admin | S |

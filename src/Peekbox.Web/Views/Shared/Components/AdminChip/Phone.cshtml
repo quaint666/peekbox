@@ -1,0 +1,17 @@
+@model AdminChipViewModel
+@* The phone's account menu (mockup state 23): an initials button that opens a small menu with the name, the role, "Tài khoản"
+   and "Đăng xuất". A popover, so it opens and closes without a script (a tap outside or Escape closes it). *@
+<button type="button" class="admin-chip-btn" popovertarget="admin-menu" aria-label="Tài khoản: @Model.DisplayName">@Model.Initials</button>
+<div class="admin-menu" id="admin-menu" popover>
+    <div class="admin-menu__who">
+        <span class="admin-chip__initials admin-chip__initials--lg" aria-hidden="true">@Model.Initials</span>
+        <span class="admin-chip__text">
+            <span class="admin-chip__name">@Model.DisplayName</span>
+            <span class="admin-chip__role">@Model.RoleLabel</span>
+        </span>
+    </div>
+    <a class="admin-menu__link" href="@SiteLinks.AdminAccountPath">Tài khoản</a>
+    <form method="post" action="@SiteLinks.AdminLogoutPath" asp-antiforgery="true">
+        <button type="submit" class="btn btn--outline admin-logout"><partial name="_Icon" model='"logout"' />Đăng xuất</button>
+    </form>
+</div>

@@ -109,6 +109,22 @@ public static class SiteLinks
     // Bloomy, the flower shop of the same team: the occasion pages link to it (decision 2026-11-17).
     public const string Bloomy = "https://bloomy.quaintshomelabdomain.uk";
 
+    // The admin (M6). Not in the shop's menus or footer. /admin goes to the account page for now, the only screen so far.
+    public const string AdminPath = "/admin";
+
+    public const string AdminLoginPath = "/admin/login";
+
+    public const string AdminLogoutPath = "/admin/logout";
+
+    public const string AdminAccountPath = "/admin/account";
+
+    public const string AdminPasswordPath = "/admin/account/password";
+
+    public const string AdminSignOutEverywherePath = "/admin/account/sign-out-everywhere";
+
+    // Signed in, but the role is not enough for the screen.
+    public const string AdminAccessDeniedPath = "/admin/denied";
+
     public static readonly IReadOnlyList<SiteLink> Header = [Home, Builder, Occasions, About, Blog, Track];
     public static readonly IReadOnlyList<SiteLink> FooterExplore = [Builder, About, Blog, Track];
     public static readonly IReadOnlyList<SiteLink> FooterLegal = [Terms, Privacy];

@@ -36,6 +36,11 @@ public class StickyHeaderTests
         var found = 0;
         foreach (var path in Directory.GetFiles(CssFolder, "*.css"))
         {
+            if (Path.GetFileName(path) == "admin.css")
+            {
+                continue;   // the admin has no site header: its sidebar sticks to the very top of the screen
+            }
+
             foreach (Match rule in Regex.Matches(Css(Path.GetFileName(path)), @"([^{}]+)\{([^{}]*position:\s*(?:sticky|fixed)[^{}]*)\}"))
             {
                 var top = Regex.Match(rule.Groups[2].Value, @"(?<![-\w])top:\s*([^;]+);");

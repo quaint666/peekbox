@@ -54,6 +54,12 @@ internal sealed class Visitor(HttpClient client)
         return await SendAsync(new HttpRequestMessage(HttpMethod.Post, path) { Content = new FormUrlEncodedContent(fields) });
     }
 
+    // A request exactly as a test built it (a body that is not a form, a wrong content type); the cookies still go along.
+    public Task<HttpResponseMessage> SendRawAsync(HttpRequestMessage request) => SendAsync(request);
+
+    // The anti-forgery token of the last page read.
+    public string FormToken => _formToken;
+
     private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
     {
         if (_cookies.Count > 0)

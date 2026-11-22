@@ -6,6 +6,9 @@ namespace Peekbox.Web.Formatting;
 public static class VnDate
 {
     // 15/01/2027
+    // The clock time in Vietnam (a fixed +7, there is no daylight saving), as "14:32".
+    public static string Clock(DateTimeOffset moment) => moment.ToOffset(TimeSpan.FromHours(7)).ToString("HH:mm", CultureInfo.InvariantCulture);
+
     public static string Day(DateOnly date) => date.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 
     // 12/2027: the short expiry on an item card that is in date

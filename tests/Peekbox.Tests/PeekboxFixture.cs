@@ -17,6 +17,7 @@ public sealed class PeekboxFixture : IAsyncLifetime
     private readonly string _serverConnection;
     private readonly string _databaseName = $"peekbox_test_{Guid.NewGuid():N}";
     private readonly string _testConnection;
+    private readonly List<string> _extraDatabases = [];
 
     public PeekboxFixture()
     {
@@ -44,6 +45,7 @@ public sealed class PeekboxFixture : IAsyncLifetime
     public async Task InitializeAsync()
     {
         await RunOnServerAsync($"CREATE DATABASE \"{_databaseName}\"");
+        MigrateAndSeed(_testConnection);
         // Every test request comes from the same (empty) address, so the order limit is raised for the whole run;
         // CheckoutTests makes its own app with a limit of 1 to see the "too many tries" page.
         Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder => builder
@@ -51,23 +53,49 @@ public sealed class PeekboxFixture : IAsyncLifetime
             .UseSetting("RateLimits:OrdersPer15Minutes", "100000")
             .UseSetting("RateLimits:TrackPer15Minutes", "100000")
             .UseSetting("RateLimits:NewHampersPer15Minutes", "100000")
+            .UseSetting("RateLimits:AdminLoginFailuresPer15Minutes", "100000")
             // An unpublished app (the test host, dotnet run) gets a GET/HEAD "{**path:file}" fallback from the static-asset
             // development handler, which turns a GET to a POST-only address into the 404 page; the published app has none
             // and answers 405. Off here, so the test host answers as the image does (RequestMapTests).
             .UseSetting("DisableStaticAssetNotFoundRuntimeFallback", "true"));
 
-        using var scope = Factory.Services.CreateScope();
-        // Migrate, not MigrateAsync: the seed is registered with UseSeeding, which is what the dotnet ef tools and
-        // migration bundles run, so the tests exercise the same seed. MigrateAsync would need a second seed (UseAsyncSeeding).
+    }
+
+    // Migrate, not MigrateAsync: the seed is registered with UseSeeding, which is what the dotnet ef tools and migration bundles
+    // run, so the tests exercise the same seed. MigrateAsync would need a second seed (UseAsyncSeeding). Done with a context of
+    // its own, before any app starts: a real start always comes after the migration (the deployment's migrate step), and the
+    // admin's first-owner check (AdminBootstrap) reads the user table when the app starts.
+    private static void MigrateAndSeed(string connection)
+    {
+        var options = new DbContextOptionsBuilder<PeekboxDbContext>().UseNpgsql(connection).UseSeeding((context, _) => SeedData.Run(context)).Options;
+        using var context = new PeekboxDbContext(options);
 #pragma warning disable CA1849
-        scope.ServiceProvider.GetRequiredService<PeekboxDbContext>().Database.Migrate(); // also runs the seed
+        context.Database.Migrate();   // also runs the seed
 #pragma warning restore CA1849
+    }
+
+    // A second, throwaway database, migrated and seeded like the main one but with no admin user (the main one gets users from
+    // other tests). For the tests of the first-owner setup (AdminBootstrap), which only acts on an empty user table. Dropped at
+    // the end of the run. Returns its connection string.
+    public async Task<string> NewMigratedDatabaseAsync()
+    {
+        var name = $"peekbox_test_{Guid.NewGuid():N}";
+        await RunOnServerAsync($"CREATE DATABASE \"{name}\"");
+        _extraDatabases.Add(name);
+        var connection = new NpgsqlConnectionStringBuilder(_serverConnection) { Database = name }.ConnectionString;
+        MigrateAndSeed(connection);
+        return connection;
     }
 
     public async Task DisposeAsync()
     {
         await Factory.DisposeAsync();
         NpgsqlConnection.ClearAllPools();
+        foreach (var name in _extraDatabases)
+        {
+            await RunOnServerAsync($"DROP DATABASE IF EXISTS \"{name}\" WITH (FORCE)");
+        }
+
         await RunOnServerAsync($"DROP DATABASE IF EXISTS \"{_databaseName}\" WITH (FORCE)");
     }
 

@@ -7,6 +7,7 @@ using Peekbox.Web.Content;
 using Peekbox.Web.Data;
 using Peekbox.Web.Navigation;
 using Peekbox.Web.Security;
+using Peekbox.Web.Security.Admin;
 using Peekbox.Web.Services;
 using Peekbox.Web.Services.Email;
 
@@ -103,6 +104,9 @@ builder.Services.AddDbContext<PeekboxDbContext>(options => options
     .UseNpgsql(connectionString)
     .UseSeeding((context, _) => SeedData.Run(context)));
 
+// The admin's sign-in (F56, F69): see Security/Admin/AdminSignInExtensions.cs.
+builder.Services.AddAdminSignIn(builder.Configuration);
+
 var app = builder.Build();
 
 // First of all, so that everything after it (the rate limits, the cookie's Secure flag) sees the visitor's address
@@ -147,6 +151,10 @@ app.Use(async (context, next) =>
 });
 
 app.UseRouting();
+
+// After routing, so the sign-in cookie is read for the endpoint chosen. Only an action marked [Authorize] asks for it.
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapStaticAssets();
 
