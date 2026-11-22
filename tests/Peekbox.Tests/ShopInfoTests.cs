@@ -18,8 +18,21 @@ public class ShopInfoTests(PeekboxFixture fixture)
     {
         var html = Text(await new Visitor(fixture.Client()).PageAsync("/about"));
 
-        Assert.Contains("<a href=\"tel:0900000001\">0900 000 001</a><br><a href=\"mailto:hello@peekbox.example\">hello@peekbox.example</a><br>15 Lê Lợi, phường Sài Gòn, TP.HCM", html);
+        Assert.Contains("<a href=\"tel:0900000001\">0900 000 001</a> <a href=\"mailto:hello@peekbox.example\">hello@peekbox.example</a> <span>15 Lê Lợi, phường Sài Gòn, TP.HCM</span>", html);
         Assert.DoesNotContain("[SỐ ĐIỆN THOẠI]", html);
+    }
+
+    // As Bloomy's footer: two round buttons under the brand (the phone, and Zalo from the same settings) and the course-project notice at the end.
+    [Fact]
+    public async Task The_footer_has_a_phone_button_and_a_Zalo_button_under_the_brand_and_the_project_notice_at_the_end()
+    {
+        var html = Text(await new Visitor(fixture.Client()).PageAsync("/about"));
+        var social = System.Text.RegularExpressions.Regex.Match(html, @"<div class=""site-footer__social"">.*?</div>").Value;
+
+        Assert.Contains("<a href=\"tel:0900000001\" aria-label=\"Gọi điện\">", social);
+        Assert.Contains("rel=\"noopener\" aria-label=\"Chat qua Zalo (mở trang mới)\">", social);
+        Assert.Contains("href=\"https://zalo.me/", social);
+        Assert.Contains("không phải cửa hàng thật", html[html.IndexOf("site-footer__notice", StringComparison.Ordinal)..]);
     }
 
     [Fact]
