@@ -4,6 +4,7 @@
 // box (a moment after the last letter, no Enter needed), and sends the add forms in the background so the page does
 // not jump.
 
+import { markBusy } from './lib/busy.js';
 import { fetchPage } from './lib/page.js';
 import { wireRows, type RowPosition } from './lib/rows.js';
 
@@ -440,7 +441,7 @@ document.addEventListener('submit', (event) => {
   const name = nameOf(slug);
   const before = quantityIn(document, slug);
   sending = true;
-  form.setAttribute('aria-busy', 'true');
+  const done = markBusy(form);
 
   fetchPage(form.action, { method: 'POST', body: new FormData(form, submitter) })
     .then(({ page: fresh }) => {
@@ -456,7 +457,7 @@ document.addEventListener('submit', (event) => {
     })
     .finally(() => {
       sending = false;
-      form.removeAttribute('aria-busy');
+      done();
     });
 });
 
@@ -479,9 +480,10 @@ document.addEventListener('change', (event) => {
   const name = radio.closest('.packaging-option')?.querySelector('.packaging-option__name')?.textContent?.trim() ?? '';
   const body = new FormData(form); // the choice as it is now, not as it is when its turn comes
   const asked = ++packagingAsked;
-  form.setAttribute('aria-busy', 'true');
+  const done = markBusy(form);
   packagingQueue = packagingQueue.then(async () => {
     if (asked !== packagingAsked) {
+      done();
       return; // a newer choice is waiting: this one would only be overwritten
     }
 
@@ -497,9 +499,7 @@ document.addEventListener('change', (event) => {
       // Send it the plain way: the server saves it and the reloaded page shows the choice.
       form.submit();
     } finally {
-      if (asked === packagingAsked) {
-        form.removeAttribute('aria-busy');
-      }
+      done();
     }
   });
 });

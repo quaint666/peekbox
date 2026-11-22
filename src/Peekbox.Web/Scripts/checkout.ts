@@ -3,6 +3,7 @@
 //    it; the browser never adds money up) and the summary and the phone bar's total are swapped in.
 // 2. The "Đặt hàng" buttons name the payment that is picked ("Đặt hàng và thanh toán ZaloPay").
 
+import { markBusy } from './lib/busy.js';
 import { fetchPage } from './lib/page.js';
 
 const ward = document.querySelector<HTMLSelectElement>('#ward');
@@ -25,6 +26,8 @@ async function showFee(): Promise<void> {
   const asked = ++latest;
   const url = new URL(window.location.pathname, window.location.origin);
   if (ward.value) url.searchParams.set('ward', ward.value);
+  const summaryBefore = document.querySelector('#checkout-summary');
+  const done = summaryBefore ? markBusy(summaryBefore) : (): void => undefined;
   try {
     const { page, redirected } = await fetchPage(url, { headers: { Accept: 'text/html' } });
     if (redirected || asked !== latest) return; // a redirect means the box changed: leave the page as it is
@@ -35,6 +38,8 @@ async function showFee(): Promise<void> {
     nameThePayment();
   } catch {
     // offline, too slow or the server is down: the fee shows after "Đặt hàng" instead
+  } finally {
+    done();
   }
 }
 
