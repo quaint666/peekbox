@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Peekbox.Web.Security.Admin;
 
 namespace Peekbox.Web.Data;
 
 // IDataProtectionKeyContext: the keys that sign the anti-forgery tokens and the TempData cookie are kept in this database
 // (see Program.cs), so a new container after a deploy still reads what the old one signed.
-public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbContext(options), IDataProtectionKeyContext
+public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options)
+    : IdentityDbContext<AdminUser, IdentityRole<int>, int>(options), IDataProtectionKeyContext
 {
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
@@ -35,6 +39,10 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // The framework's tables first (users, roles, the link between them, claims, logins, tokens), then ours.
+        base.OnModelCreating(modelBuilder);
+        ConfigureAdminTables(modelBuilder);
+
         // Accent-free search on the builder ("mut" finds "Mứt", "dak lak" finds "Đắk Lắk"). The extension comes with
         // PostgreSQL (on Fedora in the postgresql-contrib package) and a database owner may switch it on.
         modelBuilder.HasPostgresExtension("unaccent");
@@ -196,5 +204,40 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options) : DbCo
             line.HasOne(l => l.Product).WithMany().HasForeignKey(l => l.ProductId).OnDelete(DeleteBehavior.Restrict);
             line.ToTable(table => table.HasCheckConstraint("CK_HamperItems_Quantity", "\"Quantity\" > 0"));
         });
+    }
+    // The admin's sign-in tables (F56, F69). Plain names with an Admin prefix instead of the framework's AspNet* ones; the
+    // three roles are rows of the migration, with fixed ids (AdminRoles.Id), so no seed has to run for a role to exist.
+    // Claims and external logins are not used; they stay because the framework's stores expect the tables.
+    private static void ConfigureAdminTables(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AdminUser>(user =>
+        {
+            user.ToTable("AdminUsers");
+            user.Property(u => u.UserName).HasMaxLength(AdminUser.UserNameMaxLength);
+            user.Property(u => u.NormalizedUserName).HasMaxLength(AdminUser.UserNameMaxLength);
+            user.Property(u => u.DisplayName).HasMaxLength(AdminUser.DisplayNameMaxLength);
+            // The admin signs in by user name only; no email is asked for or kept.
+            user.Property(u => u.Email).HasMaxLength(254);
+        });
+
+        modelBuilder.Entity<IdentityRole<int>>(role =>
+        {
+            role.ToTable("AdminRoles");
+            role.Property(r => r.Name).HasMaxLength(20);
+            role.Property(r => r.NormalizedName).HasMaxLength(20);
+            role.HasData(AdminRoles.All.Select(name => new IdentityRole<int>
+            {
+                Id = AdminRoles.Id(name),
+                Name = name,
+                NormalizedName = name.ToUpperInvariant(),
+                ConcurrencyStamp = $"peekbox-role-{name.ToLowerInvariant()}",   // fixed, so the migration does not change on every build
+            }));
+        });
+
+        modelBuilder.Entity<IdentityUserRole<int>>().ToTable("AdminUserRoles");
+        modelBuilder.Entity<IdentityUserClaim<int>>().ToTable("AdminUserClaims");
+        modelBuilder.Entity<IdentityUserLogin<int>>().ToTable("AdminUserLogins");
+        modelBuilder.Entity<IdentityRoleClaim<int>>().ToTable("AdminRoleClaims");
+        modelBuilder.Entity<IdentityUserToken<int>>().ToTable("AdminUserTokens");   // the 2-step code's key will live here
     }
 }

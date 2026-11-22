@@ -1,0 +1,64 @@
+@using Peekbox.Web.Security.Admin
+@{
+    var title = ViewData["Title"] as string;
+    var bare = ViewData["Bare"] is true;   // the sign-in page: no menu, no chip
+    var current = ViewData["AdminNav"] as string;
+}
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>@(string.IsNullOrEmpty(title) ? "Quản trị" : $"{title} · Quản trị") · Peekbox</title>
+    <link rel="icon" type="image/svg+xml" href="~/images/logo/peekbox-mark-sage.svg">
+    <link rel="stylesheet" href="~/css/tokens.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/base.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/components.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true">
+    @* The admin is light only (design/README.md): the page says so, so the system's dark setting does not change it, and the
+       theme script of the shop is not loaded. *@
+</head>
+<body class="admin">
+    <a class="skip-link" href="#main">Bỏ qua và vào nội dung</a>
+    @if (bare)
+    {
+        <main id="main" class="admin-bare">
+            @RenderBody()
+        </main>
+    }
+    else
+    {
+        var items = AdminNav.For(User);
+        <div class="admin-shell">
+            <header class="admin-bar">
+                <a class="admin-bar__brand" href="@SiteLinks.AdminPath" aria-label="Peekbox, khu vực quản trị">
+                    <img src="~/images/logo/peekbox-logo-sage.svg" alt="" width="110" height="34">
+                </a>
+                @await Component.InvokeAsync("AdminChip", new { variant = "Phone" })
+            </header>
+            <nav class="admin-side" aria-label="Quản trị">
+                <a class="admin-side__brand" href="@SiteLinks.AdminPath" aria-label="Peekbox, khu vực quản trị">
+                    <img src="~/images/logo/peekbox-logo-sage.svg" alt="" width="110" height="34">
+                </a>
+                <ul class="admin-side__list">
+                    @foreach (var item in items)
+                    {
+                        <li><a class="admin-side__link" href="@item.Href" aria-current="@(item.Key == current ? "page" : null)">@item.Label</a></li>
+                    }
+                </ul>
+                @await Component.InvokeAsync("AdminChip", new { variant = "Sidebar" })
+            </nav>
+            <nav class="admin-pills" aria-label="Quản trị, trên điện thoại">
+                @foreach (var item in items)
+                {
+                    <a class="admin-pills__link" href="@item.Href" aria-current="@(item.Key == current ? "page" : null)">@item.Label</a>
+                }
+            </nav>
+            <main id="main" class="admin-main">
+                @RenderBody()
+            </main>
+        </div>
+    }
+</body>
+</html>

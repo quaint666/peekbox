@@ -10,6 +10,8 @@ public class FrameworkDefaultsTests(PeekboxFixture fixture)
 {
     // Every POST in the app. A new one is covered by the global filter without being listed here.
     [Theory]
+    [InlineData("/admin/login")]
+    [InlineData("/admin/logout")]
     [InlineData("/builder")]
     [InlineData("/builder/quantity")]
     [InlineData("/builder/packaging")]

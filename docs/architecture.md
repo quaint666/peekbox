@@ -129,7 +129,7 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
 
 ## 10. Not decided yet
 
-- The admin. Real admin code is written after the front end is done (the framework's own sign-in is the likely choice, not yet checked). The first report covers the front end only.
+- The admin's remaining screens (M6, issue #105). The sign-in is decided and built (decision 2026-11-22: Identity as a library, our own pages, three roles); the orders, items, settings and the other screens follow one at a time, and the 2-step code in its own change. The first report covers the front end only.
 - How an order is paid, and how items are held for an unpaid order.
 - The real email sender (F61): the confirmation email is built and "sent" by a stand-in that only writes it to the log (decision 2026-11-22), so no page says one was sent. Which sender replaces it (SMTP or a provider's API), and its settings, are not decided.
 - How the project is run for the lecturer; the deployed site via Docker comes later.
@@ -140,6 +140,8 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
   - `Banner__Occasion`: the id of the occasion whose season banner shows on the home page and the builder (`tet`, `valentine`, `phu-nu`, `trung-thu`, `20-11` or `giang-sinh`); empty, the default, shows none. A value that is not an occasion stops the app at start. The line itself is the occasion's `banner` in `content/data/hampers.json`. This is the stand-in for the admin's switch.
   - `Shop__Phone`, `Shop__Email`, `Shop__Address`, `Shop__SupportHours`, `Shop__ZaloUrl`: the contact details in the footer, the "Cần giúp?" line and the 404 page. `appsettings.json` has made-up demo values (like Bloomy's); the site refuses to start if one is empty. The admin Settings page replaces this later.
   - `Demo__Enabled`: `true` on a copy people only look at: the checkout shows "Đây là bản xem thử" and takes no order; everything else works.
+  - `Admin__OwnerUserName`, `Admin__OwnerPassword`, `Admin__OwnerDisplayName`: the first admin owner, made at start only while there is no admin user at all (decision 2026-11-22). All three or none: some of them stops the app at start, and so does a password the rules refuse (10 characters at least). None is a warning in the log and nobody can sign in. Once the owner exists they are ignored and the password variable can be removed. **Staging needs them set once, or no one can sign in to the admin.** The password is a secret: never in a file of the repository.
+  - `RateLimits__AdminLoginFailuresPer15Minutes`: how many wrong sign-ins one address may make per 15 minutes (10 in `appsettings.json`); good sign-ins do not count.
   - `GET` or `HEAD /healthz`: 200 `ok` when the database answers, else 503.
 - Decided since: the rate limits (20 orders and 10 order lookups per 15 minutes per address, `RateLimits`, called from the controllers so a refused request still gets its page with a Vietnamese note).
 

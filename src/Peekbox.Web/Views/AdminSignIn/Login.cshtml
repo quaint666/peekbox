@@ -1,0 +1,35 @@
+@model AdminLoginViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Đăng nhập";
+    ViewData["Bare"] = true;
+}
+@* The admin sign-in (F56; mockups 01 and state 15). Username and password only: the 2-step code of the mockup comes with its
+   own change, and a field that accepted any digits would be worse than none. Plain POST, no script. *@
+<div class="admin-login">
+    <header class="admin-login__brand">
+        <img src="~/images/logo/peekbox-logo-sage.svg" alt="Peekbox" width="168" height="52">
+        <p class="admin-login__sub">Khu vực quản trị</p>
+    </header>
+    <form class="card admin-login__card" method="post" action="@SiteLinks.AdminLoginPath" asp-antiforgery="true" novalidate>
+        <h1 class="admin-login__title">Đăng nhập</h1>
+        @if (Model.Notice is not null)
+        {
+            <p class="alert alert--success admin-note" role="status">@Model.Notice</p>
+        }
+        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl">
+        <div class="field">
+            <label class="field__label" for="user-name">Tên đăng nhập</label>
+            <input class="input" id="user-name" name="userName" value="@Model.UserName" autocomplete="username" autocapitalize="none" spellcheck="false" disabled="@Model.Locked" aria-describedby="@(Model.Error is null ? null : "login-error")">
+        </div>
+        <div class="field">
+            <label class="field__label" for="password">Mật khẩu</label>
+            <input class="input" id="password" name="password" type="password" autocomplete="current-password" disabled="@Model.Locked" aria-describedby="@(Model.Error is null ? null : "login-error")">
+        </div>
+        @if (Model.Error is not null)
+        {
+            <p class="alert admin-note" id="login-error" role="alert">@Model.Error</p>
+        }
+        <button type="submit" class="btn btn--primary admin-login__submit" disabled="@Model.Locked">Đăng nhập</button>
+    </form>
+</div>

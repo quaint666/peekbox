@@ -1,0 +1,55 @@
+@using Peekbox.Web.Security.Admin
+@model AdminAccountViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Tài khoản của tôi";
+    ViewData["AdminNav"] = AdminNav.Account.Key;
+}
+@* The account screen (mockup 11): the password, the 2-step code (not built yet, said so), and "sign out of every device". *@
+<h1 class="admin-title">Tài khoản của tôi</h1>
+<p class="admin-lead">@Model.DisplayName · @Model.RoleLabel</p>
+@if (Model.Notice is not null)
+{
+    <p class="alert alert--success admin-note" role="status">@Model.Notice</p>
+}
+<form class="card admin-card" method="post" action="@SiteLinks.AdminPasswordPath" asp-antiforgery="true" novalidate>
+    <h2 class="admin-card__title">Đổi mật khẩu</h2>
+    @* For password managers: the form says whose password it changes. Not shown, not sent. *@
+    <input type="text" class="visually-hidden" value="@Model.UserName" autocomplete="username" tabindex="-1" aria-hidden="true" readonly>
+    <div class="field">
+        <label class="field__label" for="current-password">Mật khẩu hiện tại</label>
+        <input class="input" id="current-password" name="currentPassword" type="password" autocomplete="current-password" aria-invalid="@(Model.PasswordError is null ? null : "true")" aria-describedby="@(Model.PasswordError is null ? null : "password-error")">
+    </div>
+    <div class="admin-card__pair">
+        <div class="field">
+            <label class="field__label" for="new-password">Mật khẩu mới</label>
+            <input class="input" id="new-password" name="newPassword" type="password" autocomplete="new-password" aria-invalid="@(Model.PasswordError is null ? null : "true")" aria-describedby="@(Model.PasswordError is null ? "password-hint" : "password-error")">
+        </div>
+        <div class="field">
+            <label class="field__label" for="confirm-password">Nhập lại mật khẩu mới</label>
+            <input class="input" id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" aria-invalid="@(Model.PasswordError is null ? null : "true")">
+        </div>
+    </div>
+    <p class="admin-hint" id="password-hint">Ít nhất @AdminSignInExtensions.PasswordMinLength ký tự. Dài và khó đoán quan trọng hơn ký tự đặc biệt.</p>
+    @if (Model.PasswordError is not null)
+    {
+        <p class="alert admin-note" id="password-error" role="alert">@Model.PasswordError</p>
+    }
+    <button type="submit" class="btn btn--primary admin-card__submit">Đổi mật khẩu</button>
+</form>
+
+<section class="card admin-card" aria-labelledby="two-step-title">
+    <div class="admin-card__head">
+        <h2 class="admin-card__title" id="two-step-title">Xác thực 2 bước</h2>
+        <span class="badge badge--muted">Chưa có</span>
+    </div>
+    <p class="admin-card__text">Chưa dùng được. Mã xác thực 2 bước từ ứng dụng trên điện thoại sẽ được thêm sau. Hiện đăng nhập chỉ cần tên đăng nhập và mật khẩu.</p>
+</section>
+
+<section class="card admin-card" aria-labelledby="sessions-title">
+    <h2 class="admin-card__title" id="sessions-title">Phiên đăng nhập</h2>
+    <p class="admin-card__text">Đăng xuất khỏi mọi thiết bị nếu bạn nghi ngờ tài khoản bị lộ. Bạn sẽ phải đăng nhập lại.</p>
+    <form method="post" action="@SiteLinks.AdminSignOutEverywherePath" asp-antiforgery="true">
+        <button type="submit" class="btn btn--danger admin-card__submit">Đăng xuất mọi thiết bị</button>
+    </form>
+</section>

@@ -28,6 +28,14 @@ Every address the site answers, with the methods it takes. Any other method on t
 |---|---|---|
 | `/` | `GET,HEAD` | The home page |
 | `/about` | `GET,HEAD` | About and commitments (F54) |
+| `/admin` | `GET` | Goes to the account page (the only admin screen so far). Signed-in staff only |
+| `/admin/account` | `GET,HEAD` | The signed-in person's account: change password, sign out of every device (F68, F59 account). Signed-in staff only |
+| `/admin/account/password` | `POST` | Change the password: the current one is checked and counted, the other sessions end. Signed-in staff only |
+| `/admin/account/sign-out-everywhere` | `POST` | End every session of this account, this one included. Signed-in staff only |
+| `/admin/denied` | `GET` | "You may not open this screen" (403), for a role that is not enough. Signed-in staff only |
+| `/admin/login` | `GET,HEAD` | The admin sign-in page (F56). Anyone |
+| `/admin/login` | `POST` | Sign in with a user name and password; 5 wrong passwords lock the account for 15 minutes; an address may fail only so often (`RateLimits:AdminLoginFailuresPer15Minutes`). Anyone |
+| `/admin/logout` | `POST` | Sign out. Anyone |
 | `/blog` | `GET,HEAD` | The blog list (F52) |
 | `/blog/{slug}` | `GET,HEAD` | One blog post (F53) |
 | `/builder` | `GET,HEAD` | The builder: budget, items, packaging (F13 to F20) |
