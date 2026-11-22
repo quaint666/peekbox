@@ -286,8 +286,14 @@ select.input {
 .site-footer__links { display: flex; flex-direction: column; }
 .site-footer__links a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--footer-text); text-decoration: none; }
 .site-footer a:focus-visible { outline-color: var(--footer-brand); }   /* --color-focus is too dark on the dark footer */
-.site-footer__contact p { margin: 0; line-height: 1.8; }
-.site-footer__contact a { color: var(--footer-text); text-decoration: none; }
+/* The contact rows are spaced like the links of "Khám phá" and "Dịp": each is at least a tap target high. */
+.site-footer__contact { display: flex; flex-direction: column; }
+.site-footer__contact > a, .site-footer__contact > span { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--footer-text); text-decoration: none; }
+/* Two round buttons under the brand, as Bloomy's footer has: the phone and Zalo. */
+.site-footer__social { display: flex; gap: var(--space-3); margin-top: var(--space-3); }
+.site-footer__social a { display: inline-flex; align-items: center; justify-content: center; width: var(--tap-min); height: var(--tap-min); border: 1px solid var(--footer-label); border-radius: 50%; color: var(--footer-text); }
+/* The notice that this is a course project, in the last line of the footer, as on Bloomy. */
+.site-footer__notice { margin-block: 0; padding-block: 0 var(--space-4); text-align: center; font-size: var(--text-xs); line-height: 1.5; color: var(--footer-label); }
 .site-footer__bottom { border-top: 1px solid var(--footer-line); }
 .site-footer__bottom-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: var(--space-4); }
 .site-footer__copy { margin-block: 0; padding-block: var(--space-4); color: var(--footer-label); }
@@ -295,7 +301,8 @@ select.input {
 .site-footer__legal { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-2); color: var(--footer-label); }
 .site-footer__legal a { display: inline-flex; align-items: center; min-height: var(--tap-min); color: var(--footer-text); text-decoration: none; }
 @media (hover: hover) {
-  .site-footer__links a:hover, .site-footer__legal a:hover, .site-footer__contact a:hover { color: var(--footer-brand); }
+  .site-footer__links a:hover, .site-footer__legal a:hover, .site-footer__contact a:hover, .site-footer__social a:hover { color: var(--footer-brand); }
+  .site-footer__social a:hover { border-color: var(--footer-brand); }
 }
 @media (min-width: 900px) {
   .site-footer__main {
@@ -455,6 +462,7 @@ body:has(.float-top:not([hidden])) .contact-panel { bottom: calc(var(--floating-
    wide enough by itself, so the line stays in line with the columns above it. */
 @media (max-width: 1359.98px) {
   .site-footer__bottom-inner { padding-inline-end: calc(20px + 56px + var(--space-3)); }
+  .site-footer__notice { padding-inline-end: calc(20px + 56px + var(--space-3)); }
 }
 
 /* The toast (F08, Views/Shared/_Toast.cshtml, lib/toast.ts): a card at the bottom centre of the screen for a few seconds. Its
