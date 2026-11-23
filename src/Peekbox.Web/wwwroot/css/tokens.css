@@ -42,6 +42,12 @@
   --color-danger: #A32A1E;         /* error text and filled danger buttons */
   --color-field-error: #A32A1E;    /* the message and the border of a form field with an error; dark mode is lighter (issue #44) */
   --color-focus: #3F6B57;
+  /* The admin's order list (design-notes "Table row (admin)", mockup 02): the tint of a row under the mouse, the table header's tint, and the blue of "Đang
+     chuẩn bị". The admin is light only (admin.css; the layout sets data-theme="light"), so there are no dark values. */
+  --color-row-hover: #F1F6F2;
+  --color-table-head: #F1EFE7;     /* the header row of the admin's tables (mockup 02) */
+  --color-status-prep-bg: #E1EAF6;
+  --color-status-prep-text: #1E3D66;
   --color-band: #3F6B57;           /* the wide green band near the end of the home page */
   --photo-filter: none;            /* photos (not the logo or icons) */
 

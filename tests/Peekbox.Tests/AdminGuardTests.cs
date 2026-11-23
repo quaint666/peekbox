@@ -104,6 +104,8 @@ public class AdminGuardTests(PeekboxFixture fixture)
     [InlineData("/admin")]
     [InlineData("/admin/account")]
     [InlineData("/admin/denied")]
+    [InlineData("/admin/orders")]
+    [InlineData("/admin/orders?date=&order=1")]
     public async Task Without_a_sign_in_every_guarded_page_is_a_redirect_never_a_page(string path)
     {
         var response = await fixture.Client().GetAsync(path);
@@ -115,6 +117,7 @@ public class AdminGuardTests(PeekboxFixture fixture)
     [Theory]
     [InlineData("/admin/account/password")]
     [InlineData("/admin/account/sign-out-everywhere")]
+    [InlineData("/admin/orders/1/save")]
     public async Task Without_a_sign_in_a_guarded_form_is_a_redirect_even_with_a_valid_token(string path)
     {
         var visitor = new Visitor(fixture.Client());

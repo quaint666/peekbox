@@ -27,6 +27,8 @@ public class RoutesTests(PeekboxFixture fixture)
         "/admin/login GET,HEAD",
         "/admin/login POST",
         "/admin/logout POST",
+        "/admin/orders GET,HEAD",
+        "/admin/orders/{id:int}/save POST",
         "/blog GET,HEAD",
         "/blog/{slug} GET,HEAD",
         "/builder/review GET,HEAD",

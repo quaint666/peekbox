@@ -48,6 +48,7 @@ builder.Services.AddScoped<ItemCatalog>();
 builder.Services.AddScoped<ReadyHampers>();
 builder.Services.AddSingleton(PaymentStandIn.FromConfiguration(builder.Configuration));
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<AdminOrders>();
 builder.Services.AddSingleton<IEmailSender, LogEmailSender>();
 builder.Services.AddScoped<OrderMailer>();
 builder.Services.AddSingleton(DeliveryLimit.FromConfiguration(builder.Configuration));

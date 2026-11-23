@@ -1,0 +1,91 @@
+@using Peekbox.Web.Data
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model AdminOrdersViewModel
+@{
+    var order = Model.Selected!;
+    var next = Model.NextStatus;
+    var filter = Model.Filter;
+}
+@* One order (mockup 02): who, where, what, how much, and the form that moves it one step forward. *@
+<aside class="card admin-detail" aria-labelledby="detail-title">
+    <div class="admin-detail__head">
+        <h2 class="admin-detail__title" id="detail-title">@order.Number</h2>
+        <p class="admin-detail__when">Giao @OrderPageModel.WhenOf(order)</p>
+    </div>
+    <div class="admin-detail__facts">
+        <p class="admin-detail__line"><span class="admin-detail__label">Người nhận:</span> @order.RecipientName, @OrderPageModel.Phone(order.RecipientPhone)</p>
+        <p class="admin-detail__line"><span class="admin-detail__label">Địa chỉ:</span> @order.Street, @order.WardName</p>
+        <p class="admin-detail__line"><span class="admin-detail__label">Người gửi:</span> @order.SenderName, @OrderPageModel.Phone(order.SenderPhone), @order.SenderEmail</p>
+        <p class="admin-detail__line"><span class="admin-detail__label">Thanh toán:</span> @OrderLabels.PaymentShort(order.PaymentMethod, order.PaymentStatus)</p>
+        @if (order.CardMessage is { } card)
+        {
+            <p class="admin-detail__line"><span class="admin-detail__label">Lời nhắn trên thiệp:</span> <span class="admin-detail__card">@card</span></p>
+        }
+        @if (order.HidePrices)
+        {
+            <p class="admin-detail__line"><span class="admin-detail__label">Gói quà:</span> Ẩn giá bên trong hộp quà</p>
+        }
+    </div>
+
+    <div class="admin-detail__sum">
+        <ul class="admin-lines">
+            @foreach (var line in order.Items)
+            {
+                <li class="admin-lines__row">
+                    <div>
+                        <strong class="admin-lines__name">@line.Name@(line.Quantity > 1 ? $" × {line.Quantity}" : "")</strong>
+                        <span class="admin-lines__meta">@line.Brand · @line.WeightGrams g · @line.Origin · @VnDate.Expiry(line.ExpiryDate)</span>
+                    </div>
+                    <span class="admin-lines__price">@Vnd.Format(line.UnitPriceVnd * line.Quantity)</span>
+                </li>
+            }
+            <li class="admin-lines__row admin-lines__row--plain"><span>@order.PackagingName</span><span class="admin-lines__price">@Vnd.Format(order.PackagingFeeVnd)</span></li>
+            @if (order.CouponCode is not null)
+            {
+                <li class="admin-lines__row admin-lines__row--plain"><span>Mã giảm giá @order.CouponCode</span><span class="admin-lines__price">@("−" + Vnd.Format(order.DiscountVnd))</span></li>
+            }
+        </ul>
+        <p class="admin-detail__total"><span>Tổng (gồm giao hàng @Vnd.Format(order.DeliveryFeeVnd))</span><strong>@Vnd.Format(order.TotalVnd)</strong></p>
+    </div>
+
+    <form class="admin-detail__form" method="post" action="@SiteLinks.AdminOrderSavePath(order.Id)" asp-antiforgery="true">
+        <input type="hidden" name="from" value="@OrderLabels.Key(order.Status)">
+        <input type="hidden" name="filterDate" value="@Model.DateValue">
+        <input type="hidden" name="filterStatus" value="@Model.StatusKey">
+        <input type="hidden" name="filterQ" value="@Model.Search">
+        <div class="field">
+            <label class="field__label" for="order-status">Cập nhật trạng thái</label>
+            <div class="admin-detail__status">
+                <select class="input" id="order-status" name="to" aria-describedby="status-hint" disabled="@(next is null)">
+                    @foreach (var status in Enum.GetValues<OrderStatus>())
+                    {
+                        var reachable = status == order.Status || status == next;
+                        <option value="@OrderLabels.Key(status)" selected="@(status == order.Status)" disabled="@(!reachable)">@OrderLabels.Status(status)@(status == OrderStatus.Cancelled ? " (chưa dùng được)" : "")</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn--primary admin-detail__save">Lưu</button>
+            </div>
+            <p class="admin-hint" id="status-hint">
+                Chuyển lần lượt: @(OrderLabels.Steps).
+                @if (next is null)
+                {
+                    <text>Đơn này đã ở trạng thái cuối, chỉ sửa được mã vận đơn và ghi chú.</text>
+                }
+                else
+                {
+                    <text>Huỷ đơn chưa dùng được ở bản này.</text>
+                }
+            </p>
+        </div>
+        <div class="field">
+            <label class="field__label" for="order-tracking">Mã vận đơn (không bắt buộc)</label>
+            <input class="input" id="order-tracking" name="trackingCode" value="@order.TrackingCode" maxlength="@OrderAdminRules.TrackingCodeMaxLength" autocomplete="off">
+        </div>
+        <div class="field">
+            <label class="field__label" for="order-note">Ghi chú nội bộ</label>
+            <textarea class="input admin-detail__note" id="order-note" name="adminNote" rows="2" maxlength="@OrderAdminRules.AdminNoteMaxLength" aria-describedby="note-hint">@order.AdminNote</textarea>
+            <p class="admin-hint" id="note-hint">Chỉ cửa hàng thấy ghi chú này, khách hàng không thấy.</p>
+        </div>
+    </form>
+</aside>

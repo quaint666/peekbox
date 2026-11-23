@@ -109,8 +109,24 @@ public static class SiteLinks
     // Bloomy, the flower shop of the same team: the occasion pages link to it (decision 2026-11-17).
     public const string Bloomy = "https://bloomy.quaintshomelabdomain.uk";
 
-    // The admin (M6). Not in the shop's menus or footer. /admin goes to the account page for now, the only screen so far.
+    // The admin (M6). Not in the shop's menus or footer. /admin goes to the first screen of the menu, the orders.
     public const string AdminPath = "/admin";
+
+    // F57: the orders of the admin, and the form of one order's panel (status, tracking code, note).
+    public const string AdminOrdersPath = "/admin/orders";
+
+    public static string AdminOrderSavePath(int id) => $"{AdminOrdersPath}/{id}/save";
+
+    // The orders list with its filters and the open order in the address. "date" is always written, even empty (every day), so
+    // that an address without it can mean "today".
+    public static string AdminOrders(DateOnly? date, string? status, string? search, int? order)
+    {
+        var parts = new List<string> { "date=" + (date is { } d ? d.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) : "") };
+        if (!string.IsNullOrEmpty(status)) { parts.Add("status=" + Uri.EscapeDataString(status)); }
+        if (!string.IsNullOrEmpty(search)) { parts.Add("q=" + Uri.EscapeDataString(search)); }
+        if (order is { } o) { parts.Add("order=" + o.ToString(System.Globalization.CultureInfo.InvariantCulture)); }
+        return AdminOrdersPath + "?" + string.Join("&", parts);
+    }
 
     public const string AdminLoginPath = "/admin/login";
 

@@ -475,6 +475,10 @@ namespace Peekbox.Web.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AdminNote")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<string>("CardMessage")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -567,6 +571,10 @@ namespace Peekbox.Web.Migrations
                     b.Property<long>("TotalVnd")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("TrackingCode")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
                     b.Property<int>("WardId")
                         .HasColumnType("integer");
 
@@ -586,11 +594,15 @@ namespace Peekbox.Web.Migrations
 
                     b.ToTable("Orders", t =>
                         {
+                            t.HasCheckConstraint("CK_Orders_AdminNote", "\"AdminNote\" IS NULL OR char_length(\"AdminNote\") BETWEEN 1 AND 500");
+
                             t.HasCheckConstraint("CK_Orders_CardMessage", "\"CardMessage\" IS NULL OR char_length(\"CardMessage\") BETWEEN 1 AND 200");
 
                             t.HasCheckConstraint("CK_Orders_Money", "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND \"DiscountVnd\" >= 0 AND \"DiscountVnd\" <= \"GoodsVnd\" AND \"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\" - \"DiscountVnd\"");
 
                             t.HasCheckConstraint("CK_Orders_Phones", "\"SenderPhone\" ~ '^0[0-9]{9}$' AND \"RecipientPhone\" ~ '^0[0-9]{9}$'");
+
+                            t.HasCheckConstraint("CK_Orders_TrackingCode", "\"TrackingCode\" IS NULL OR char_length(\"TrackingCode\") BETWEEN 1 AND 60");
                         });
                 });
 
