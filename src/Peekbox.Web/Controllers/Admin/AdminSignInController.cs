@@ -124,5 +124,5 @@ public class AdminSignInController(
     private string SafeReturn(string? returnUrl) =>
         !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && returnUrl.StartsWith(SiteLinks.AdminPath + "/", StringComparison.Ordinal)
             ? returnUrl
-            : SiteLinks.AdminAccountPath;
+            : SiteLinks.AdminOrdersPath;
 }

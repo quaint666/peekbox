@@ -11,9 +11,11 @@ public static class AdminNav
 {
     private static readonly IReadOnlyList<string> Everyone = AdminRoles.All;
 
+    public static readonly AdminNavItem Orders = new("orders", "Đơn hàng", SiteLinks.AdminOrdersPath, Everyone);
+
     public static readonly AdminNavItem Account = new("account", "Tài khoản", SiteLinks.AdminAccountPath, Everyone);
 
-    public static readonly IReadOnlyList<AdminNavItem> All = [Account];
+    public static readonly IReadOnlyList<AdminNavItem> All = [Orders, Account];
 
     public static IReadOnlyList<AdminNavItem> For(System.Security.Claims.ClaimsPrincipal user) =>
         All.Where(item => item.Roles.Any(user.IsInRole)).ToList();

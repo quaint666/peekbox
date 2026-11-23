@@ -131,6 +131,8 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options)
             order.Property(o => o.Street).HasMaxLength(300);
             order.Property(o => o.PackagingName).HasMaxLength(100);
             order.Property(o => o.CardMessage).HasMaxLength(CardMessageRules.MaxLength);
+            order.Property(o => o.TrackingCode).HasMaxLength(OrderAdminRules.TrackingCodeMaxLength);
+            order.Property(o => o.AdminNote).HasMaxLength(OrderAdminRules.AdminNoteMaxLength);
             order.Property(o => o.CouponCode).HasMaxLength(Coupon.CodeMaxLength);
             // The admin's day view (M6) lists orders by delivery date; the track page finds one by id and phone.
             order.HasIndex(o => o.DeliveryDate);
@@ -141,6 +143,8 @@ public class PeekboxDbContext(DbContextOptions<PeekboxDbContext> options)
                     "\"GoodsVnd\" >= 0 AND \"PackagingFeeVnd\" >= 0 AND \"DeliveryFeeVnd\" >= 0 AND " +
                     "\"DiscountVnd\" >= 0 AND \"DiscountVnd\" <= \"GoodsVnd\" AND " +
                     "\"TotalVnd\" = \"GoodsVnd\" + \"PackagingFeeVnd\" + \"DeliveryFeeVnd\" - \"DiscountVnd\"");
+                table.HasCheckConstraint("CK_Orders_TrackingCode", "\"TrackingCode\" IS NULL OR char_length(\"TrackingCode\") BETWEEN 1 AND " + OrderAdminRules.TrackingCodeMaxLength);
+                table.HasCheckConstraint("CK_Orders_AdminNote", "\"AdminNote\" IS NULL OR char_length(\"AdminNote\") BETWEEN 1 AND " + OrderAdminRules.AdminNoteMaxLength);
                 table.HasCheckConstraint("CK_Orders_CardMessage", "\"CardMessage\" IS NULL OR char_length(\"CardMessage\") BETWEEN 1 AND " + CardMessageRules.MaxLength);
                 table.HasCheckConstraint("CK_Orders_Phones", "\"SenderPhone\" ~ '^0[0-9]{9}$' AND \"RecipientPhone\" ~ '^0[0-9]{9}$'");
             });

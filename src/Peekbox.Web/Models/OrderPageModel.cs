@@ -11,10 +11,10 @@ public sealed record OrderPageModel(Order Order, IReadOnlyDictionary<int, string
     // The four steps of the strip, in order. A cancelled order has no strip, only "Đã huỷ".
     public static readonly IReadOnlyList<(OrderStatus Status, string Label)> Steps =
     [
-        (OrderStatus.New, "Mới"),
-        (OrderStatus.Preparing, "Đang chuẩn bị"),
-        (OrderStatus.Delivering, "Đang giao"),
-        (OrderStatus.Delivered, "Đã giao"),
+        (OrderStatus.New, OrderLabels.Status(OrderStatus.New)),
+        (OrderStatus.Preparing, OrderLabels.Status(OrderStatus.Preparing)),
+        (OrderStatus.Delivering, OrderLabels.Status(OrderStatus.Delivering)),
+        (OrderStatus.Delivered, OrderLabels.Status(OrderStatus.Delivered)),
     ];
 
     public bool Cancelled => Order.Status == OrderStatus.Cancelled;

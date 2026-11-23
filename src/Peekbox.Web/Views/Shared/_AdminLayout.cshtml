@@ -55,10 +55,11 @@
                     <a class="admin-pills__link" href="@item.Href" aria-current="@(item.Key == current ? "page" : null)">@item.Label</a>
                 }
             </nav>
-            <main id="main" class="admin-main">
+            <main id="main" class="admin-main@(ViewData["Wide"] is true ? " admin-main--wide" : "")">
                 @RenderBody()
             </main>
         </div>
     }
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

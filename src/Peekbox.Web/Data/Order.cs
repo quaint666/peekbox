@@ -63,12 +63,25 @@ public class Order
 
     public long TotalVnd { get; set; }
 
+    // M6 (F57): what staff type on the order. The tracking code of the courier (not required) and a note for the shop only;
+    // neither is shown to a customer. Null when empty.
+    public string? TrackingCode { get; set; }
+
+    public string? AdminNote { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; }
 
     public List<OrderItem> Items { get; set; } = [];
 
     // PEEK000123: what the customer reads and types on the track page.
     public string Number => OrderNumber.Format(Id);
+}
+
+// F57: how long the two things staff type on an order may be, one number for the form, the column and its check.
+public static class OrderAdminRules
+{
+    public const int TrackingCodeMaxLength = 60;
+    public const int AdminNoteMaxLength = 500;
 }
 
 // F43: how long the card message may be, one number for the form, the column and its check.

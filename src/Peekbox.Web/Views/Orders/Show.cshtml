@@ -1,3 +1,5 @@
+@using Peekbox.Web.Data
+@using Peekbox.Web.Services
 @using Peekbox.Web.Formatting
 @model OrderPageModel
 @{
@@ -33,7 +35,7 @@
         <h2 class="order-card__title" id="status-title">Trạng thái đơn hàng</h2>
         @if (Model.Cancelled)
         {
-            <p class="alert order-status__cancelled">Đã huỷ</p>
+            <p class="alert order-status__cancelled">@OrderLabels.Status(OrderStatus.Cancelled)</p>
         }
         else
         {

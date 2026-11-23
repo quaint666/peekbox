@@ -184,7 +184,7 @@ public class AdminSignInTests(PeekboxFixture fixture)
         var response = await visitor.PostAsync("/admin/login", new() { ["userName"] = name.ToUpperInvariant(), ["password"] = AdminTestKit.Password });   // the name is not case sensitive
 
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-        Assert.Equal("/admin/account", response.Headers.Location?.OriginalString);
+        Assert.Equal("/admin/orders", response.Headers.Location?.OriginalString);
         var cookie = Assert.Single(visitor.LastSetCookies, c => c.StartsWith("Peekbox.Admin=", StringComparison.Ordinal));
         Assert.Contains("httponly", cookie, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("samesite=strict", cookie, StringComparison.OrdinalIgnoreCase);
@@ -237,11 +237,11 @@ public class AdminSignInTests(PeekboxFixture fixture)
     [Theory]
     [InlineData("/admin/account", "/admin/account")]
     [InlineData("/admin/orders", "/admin/orders")]
-    [InlineData("https://evil.example/admin/x", "/admin/account")]
-    [InlineData("//evil.example/admin/x", "/admin/account")]
-    [InlineData("/builder", "/admin/account")]
-    [InlineData("/adminx", "/admin/account")]
-    [InlineData("", "/admin/account")]
+    [InlineData("https://evil.example/admin/x", "/admin/orders")]
+    [InlineData("//evil.example/admin/x", "/admin/orders")]
+    [InlineData("/builder", "/admin/orders")]
+    [InlineData("/adminx", "/admin/orders")]
+    [InlineData("", "/admin/orders")]
     public async Task After_signing_in_the_person_goes_on_only_to_an_address_inside_the_admin(string returnUrl, string expected)
     {
         var name = await AdminTestKit.CreateUserAsync(fixture);
@@ -254,14 +254,14 @@ public class AdminSignInTests(PeekboxFixture fixture)
     }
 
     [Fact]
-    public async Task Someone_already_signed_in_is_taken_from_the_sign_in_page_to_the_account_page()
+    public async Task Someone_already_signed_in_is_taken_from_the_sign_in_page_to_the_orders()
     {
         var visitor = await AdminTestKit.SignedInAsync(fixture, await AdminTestKit.CreateUserAsync(fixture));
 
         var response = await visitor.GetAsync("/admin/login");
 
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-        Assert.Equal("/admin/account", response.Headers.Location?.OriginalString);
+        Assert.Equal("/admin/orders", response.Headers.Location?.OriginalString);
     }
 
     [Fact]

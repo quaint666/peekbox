@@ -8,13 +8,13 @@ using Peekbox.Web.Security.Admin;
 namespace Peekbox.Web.Controllers.Admin;
 
 // The signed-in person's own account (F68 and the account screen of F59): change the password, and sign out of every device.
-// The only admin screen so far, so /admin leads here. The 2-step code card of the mockup comes with its own change.
+// /admin leads to the orders. The 2-step code card of the mockup comes with its own change.
 public class AdminAccountController(SignInManager<AdminUser> signIn, UserManager<AdminUser> users, AdminLockout lockout, TimeProvider clock) : AdminControllerBase
 {
     private const string NoticeKey = "adminNotice";
 
     [HttpGet(SiteLinks.AdminPath)]
-    public IActionResult Home() => LocalRedirect(SiteLinks.AdminAccountPath);
+    public IActionResult Home() => LocalRedirect(SiteLinks.AdminOrdersPath);
 
     [HttpGet(SiteLinks.AdminAccountPath)]
     [HttpHead(SiteLinks.AdminAccountPath)]

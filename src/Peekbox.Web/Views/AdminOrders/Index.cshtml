@@ -1,0 +1,134 @@
+@using Peekbox.Web.Data
+@using Peekbox.Web.Formatting
+@using Peekbox.Web.Services
+@model AdminOrdersViewModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Đơn hàng";
+    ViewData["AdminNav"] = AdminNav.Orders.Key;
+    ViewData["Wide"] = true;   // the list and the open order side by side, wider than the account page
+    var filter = Model.Filter;
+    var rows = Model.List.Rows;
+    var selectedId = Model.Selected?.Id;
+}
+@section Scripts {
+    <script type="module" src="~/js/admin-orders.js" asp-append-version="true"></script>
+}
+
+@* The orders of the admin (F57; mockups 02 and state 14). A plain GET form for the filters: it works without a script (the
+   "Lọc" button), and admin-orders.js sends it as soon as a filter changes. *@
+<div class="admin-orders">
+    <div class="admin-orders__head">
+        <h1 class="admin-title">Đơn hàng</h1>
+        @if (Model.List.DayCount is { } count)
+        {
+            <p class="admin-orders__count">Giao ngày @VnDate.Day(filter.Date!.Value): <strong>@count đơn</strong></p>
+        }
+        else
+        {
+            <p class="admin-orders__count">Mọi ngày giao: <strong>@rows.Count đơn@(Model.List.Capped ? "+" : "")</strong></p>
+        }
+    </div>
+
+    @if (Model.Notice is not null)
+    {
+        <p class="alert alert--success admin-note" role="status">@Model.Notice</p>
+    }
+    @if (Model.Error is not null)
+    {
+        <p class="alert admin-note" role="alert">@Model.Error</p>
+    }
+
+    <form class="admin-filters" id="order-filters" method="get" action="@SiteLinks.AdminOrdersPath">
+        @* Enter in the search box presses the first submit button of the form: this hidden one. *@
+        <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Tìm</button>
+        <div class="field admin-filters__date">
+            <label class="field__label" for="filter-date">Ngày giao</label>
+            <input class="input" id="filter-date" name="date" type="date" value="@Model.DateValue">
+        </div>
+        <div class="field admin-filters__status">
+            <label class="field__label" for="filter-status">Trạng thái</label>
+            <select class="input" id="filter-status" name="status">
+                <option value="" selected="@(filter.Status is null)">Tất cả</option>
+                @foreach (var status in Enum.GetValues<OrderStatus>())
+                {
+                    <option value="@OrderLabels.Key(status)" selected="@(filter.Status == status)">@OrderLabels.Status(status)</option>
+                }
+            </select>
+        </div>
+        <div class="field admin-filters__search">
+            <label class="field__label" for="filter-search">Tìm theo mã, tên, số điện thoại</label>
+            <input class="input" id="filter-search" name="q" type="search" value="@Model.Search" maxlength="@AdminOrders.SearchMaxLength" autocomplete="off">
+        </div>
+        <noscript><button type="submit" class="btn btn--outline admin-filters__apply">Lọc</button></noscript>
+    </form>
+
+    <div class="admin-orders__body">
+        @if (rows.Count == 0)
+        {
+            <section class="card admin-empty" aria-labelledby="empty-title">
+                <span class="admin-empty__icon"><img src="~/images/logo/peekbox-mark-sage.svg" alt="" width="40" height="36"></span>
+                @if (!Model.Narrowed && filter.Date is { } day)
+                {
+                    <h2 class="admin-empty__title" id="empty-title">Chưa có đơn giao ngày @VnDate.Day(day)</h2>
+                    <p class="admin-empty__text">Đơn mới sẽ hiện ở đây. Đổi ngày giao hoặc xóa bộ lọc để xem ngày khác.</p>
+                    @if (day != Model.Today)
+                    {
+                        <a class="btn btn--outline" href="@SiteLinks.AdminOrders(Model.Today, null, null, null)">Xem hôm nay</a>
+                    }
+                }
+                else if (Model.Narrowed)
+                {
+                    <h2 class="admin-empty__title" id="empty-title">Không có đơn nào khớp</h2>
+                    <p class="admin-empty__text">Thử đổi trạng thái hoặc từ tìm kiếm.</p>
+                    <a class="btn btn--outline" href="@SiteLinks.AdminOrders(filter.Date, null, null, null)">Xóa bộ lọc</a>
+                }
+                else
+                {
+                    <h2 class="admin-empty__title" id="empty-title">Chưa có đơn hàng nào</h2>
+                    <p class="admin-empty__text">Đơn mới sẽ hiện ở đây.</p>
+                }
+            </section>
+        }
+        else
+        {
+            <div class="card admin-list">
+                <table class="admin-table">
+                    <caption class="visually-hidden">Danh sách đơn hàng</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Mã đơn</th>
+                            <th scope="col">Người nhận</th>
+                            <th scope="col">Số món</th>
+                            <th scope="col" class="admin-table__num">Tổng</th>
+                            <th scope="col">Thanh toán</th>
+                            <th scope="col">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in rows)
+                        {
+                            <tr class="admin-row@(row.Id == selectedId ? " admin-row--open" : "")">
+                                <th scope="row" class="admin-row__code"><a href="@Model.Link(row.Id)" aria-current="@(row.Id == selectedId ? "true" : null)">@row.Number</a></th>
+                                <td class="admin-row__name">@row.RecipientName</td>
+                                <td class="admin-row__items">@row.ItemCount<span class="admin-row__unit"> món</span></td>
+                                <td class="admin-table__num admin-row__total">@Vnd.Format(row.TotalVnd)</td>
+                                <td class="admin-row__pay">@OrderLabels.PaymentShort(row.Method, row.Payment)</td>
+                                <td class="admin-row__status"><span class="badge admin-status admin-status--@OrderLabels.Key(row.Status)">@OrderLabels.Status(row.Status)</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.List.Capped)
+                {
+                    <p class="admin-note admin-list__cap">Chỉ hiện @AdminOrders.ListLimit đơn mới nhất. Thu hẹp ngày giao hoặc bộ lọc để thấy các đơn khác.</p>
+                }
+            </div>
+        }
+
+        @if (Model.Selected is { } order)
+        {
+            <partial name="_Detail" model="Model" />
+        }
+    </div>
+</div>

@@ -22,6 +22,7 @@ Nobody edits `main` directly. Every change goes through a **pull request** (PR),
 - Describe the change in plain words. "Add the budget bar to the builder page" is better than "update".
 - Never put passwords, keys, or other people's personal data in a file. If you did by mistake, tell the owner right away; do not just delete it, because it stays in the history.
 - If a check fails or something looks wrong, ask. Asking early is fine.
+- When you propose something or ask the team to choose, write it the way `.github/ISSUE_TEMPLATE/proposal.md` shows: the general idea first, then small parts, each with what, why, how, what you checked, and the pros and cons. The reader may have been busy with something else; give the context.
 
 ## Decisions
 

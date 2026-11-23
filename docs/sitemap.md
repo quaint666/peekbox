@@ -22,11 +22,12 @@ Peekbox
 ├── Điều khoản và bảo mật .................... /legal
 ├── Tra cứu đơn hàng ......................... /track
 ├── Không tìm thấy trang (404) ............... any unknown address
-└── Quản trị ................................. /admin (goes to the account page for now)
+└── Quản trị ................................. /admin (goes to the orders)
     ├── Đăng nhập ............................ /admin/login
+    ├── Đơn hàng ............................. /admin/orders
     ├── Tài khoản ............................ /admin/account
     ├── Không có quyền (403) ................. /admin/denied
-    └── later: orders, items, campaigns, settings, cutoffs, coupons, reviews, stats, users
+    └── later: items, campaigns, settings, cutoffs, coupons, reviews, stats, users
 ```
 
 **Menus.** Header: Trang chủ, Tạo hộp quà, Dịp, Giới thiệu, Blog, Tra cứu đơn hàng, plus cart and theme. "Dịp" has no page of its own: it goes to `/#cho-tung-dip` (the six cards on the home page), and a menu under it opens on hover or keyboard focus with the six occasion pages (on a phone they are listed under it). On a phone the same links open as a column under the header from the menu button (mockup state 21). Footer: Tạo hộp quà, Giới thiệu, Blog, Tra cứu đơn hàng, the six occasions, and Điều khoản · Chính sách bảo mật in one small line at the bottom. The terms and the privacy link jump to a text on `/legal` (`/legal#dieu-khoan`, `/legal#bao-mat`). "Cam kết" is not a menu item or a footer link: the commitments are a part of the About page (`/about#cam-ket`, linked from the home page's "Xem cam kết" button). The header shows its links in a row from 1100 px wide; below that they are in the menu. In the admin, the sidebar ends with an account chip with the logout button; on a phone it is an initials button that opens a small menu (mockup state 23).

@@ -30,10 +30,14 @@ public class AdminSweepTests(PeekboxFixture fixture)
         "https://evil.example/admin/x",
     ];
 
+    // A route value that is a number is tried with real, missing, negative, too big and not-a-number values.
+    private static readonly string[] OddIds = ["1", "0", "-5", "99999999999", "abc", "1.5"];
+
     private List<(string Pattern, string Method)> AdminRoutes() =>
         fixture.Factory.Services.GetRequiredService<EndpointDataSource>().Endpoints.OfType<RouteEndpoint>()
             .Where(e => ("/" + e.RoutePattern.RawText!.TrimStart('/')).StartsWith("/admin", StringComparison.Ordinal))
             .SelectMany(e => (e.Metadata.GetMetadata<HttpMethodMetadata>()?.HttpMethods ?? ["GET"]).Select(m => ("/" + e.RoutePattern.RawText!.TrimStart('/'), m)))
+            .SelectMany(r => r.Item1.Contains("{id:int}") ? OddIds.Select(id => (r.Item1.Replace("{id:int}", id), r.Item2)) : [r])
             .Distinct()
             .ToList();
 

@@ -71,7 +71,7 @@ public class AdminBootstrapTests(PeekboxFixture fixture)
         var visitor = new Visitor(fixture.Client(factory));
         await visitor.PageAsync("/admin/login");
         var response = await visitor.PostAsync("/admin/login", new() { ["userName"] = "chu-cua-hang", ["password"] = StrongPassword });
-        Assert.Equal("/admin/account", response.Headers.Location?.OriginalString);
+        Assert.Equal("/admin/orders", response.Headers.Location?.OriginalString);
         Assert.Contains("Nguyễn Văn An · Chủ cửa hàng", await visitor.PageAsync("/admin/account"));
     }
 

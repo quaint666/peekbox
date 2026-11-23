@@ -28,7 +28,9 @@ Every address the site answers, with the methods it takes. Any other method on t
 |---|---|---|
 | `/` | `GET,HEAD` | The home page |
 | `/about` | `GET,HEAD` | About and commitments (F54) |
-| `/admin` | `GET` | Goes to the account page (the only admin screen so far). Signed-in staff only |
+| `/admin` | `GET` | Goes to the orders. Signed-in staff only |
+| `/admin/orders` | `GET,HEAD` | The orders of one delivery day (or every day) with filters (`date`, `status`, `q`) and the open order (`order`) (F57). Signed-in staff only |
+| `/admin/orders/{id:int}/save` | `POST` | Move an order one step forward and save its tracking code and note, in one conditional UPDATE (F57). Signed-in staff only |
 | `/admin/account` | `GET,HEAD` | The signed-in person's account: change password, sign out of every device (F68, F59 account). Signed-in staff only |
 | `/admin/account/password` | `POST` | Change the password: the current one is checked and counted, the other sessions end. Signed-in staff only |
 | `/admin/account/sign-out-everywhere` | `POST` | End every session of this account, this one included. Signed-in staff only |
