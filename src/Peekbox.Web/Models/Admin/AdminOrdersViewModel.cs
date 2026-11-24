@@ -22,4 +22,12 @@ public sealed record AdminOrdersViewModel(
     public OrderStatus? NextStatus => Selected is null ? null : AdminOrders.Next(Selected.Status);
 
     public string Link(int? order) => SiteLinks.AdminOrders(Filter.Date, StatusKey, Search, order);
+
+    // The two day chips ("Hôm nay", "Mọi ngày"): links that change only the day. They keep the status and the search, and leave
+    // the open order out, so the first order of the new list opens. Neither chip is current when another day is picked.
+    public string DayLink(DateOnly? day) => SiteLinks.AdminOrders(day, StatusKey, Search, null);
+
+    public bool IsToday => Filter.Date == Today;
+
+    public bool IsEveryDay => Filter.Date is null;
 }

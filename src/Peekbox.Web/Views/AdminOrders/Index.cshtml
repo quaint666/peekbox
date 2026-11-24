@@ -16,7 +16,8 @@
 }
 
 @* The orders of the admin (F57; mockups 02 and state 14). A plain GET form for the filters: it works without a script (the
-   "Lọc" button), and admin-orders.js sends it as soon as a filter changes. *@
+   "Lọc" button), and admin-orders.js sends it as soon as a filter changes. The name cell also holds "· N món" (shown on a phone
+   only, so it flows right after the last word of a name that wraps); the cell of the count is shown from 900 px. *@
 <div class="admin-orders">
     <div class="admin-orders__head">
         <h1 class="admin-title">Đơn hàng</h1>
@@ -42,6 +43,11 @@
     <form class="admin-filters" id="order-filters" method="get" action="@SiteLinks.AdminOrdersPath">
         @* Enter in the search box presses the first submit button of the form: this hidden one. *@
         <button type="submit" class="visually-hidden" tabindex="-1" aria-hidden="true">Tìm</button>
+        @* Two links that change only the day (a plain link: it works without a script). The current one is marked. *@
+        <div class="admin-days" role="group" aria-label="Ngày giao">
+            <a class="admin-days__chip" href="@Model.DayLink(Model.Today)" aria-current="@(Model.IsToday ? "true" : null)">Hôm nay</a>
+            <a class="admin-days__chip" href="@Model.DayLink(null)" aria-current="@(Model.IsEveryDay ? "true" : null)">Mọi ngày</a>
+        </div>
         <div class="field admin-filters__date">
             <label class="field__label" for="filter-date">Ngày giao</label>
             <input class="input" id="filter-date" name="date" type="date" value="@Model.DateValue">
@@ -110,7 +116,7 @@
                         {
                             <tr class="admin-row@(row.Id == selectedId ? " admin-row--open" : "")">
                                 <th scope="row" class="admin-row__code"><a href="@Model.Link(row.Id)" aria-current="@(row.Id == selectedId ? "true" : null)">@row.Number</a></th>
-                                <td class="admin-row__name">@row.RecipientName</td>
+                                <td class="admin-row__name">@row.RecipientName<span class="admin-row__count"> · @row.ItemCount món</span></td>
                                 <td class="admin-row__items">@row.ItemCount<span class="admin-row__unit"> món</span></td>
                                 <td class="admin-table__num admin-row__total">@Vnd.Format(row.TotalVnd)</td>
                                 <td class="admin-row__pay">@OrderLabels.PaymentShort(row.Method, row.Payment)</td>

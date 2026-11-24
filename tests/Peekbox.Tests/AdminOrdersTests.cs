@@ -220,6 +220,41 @@ public class AdminOrdersTests(PeekboxFixture fixture)
         Assert.Matches("<script type=\"module\" src=\"/js/admin-orders[^\"]*\\.js\"", html);   // the file name carries its fingerprint
     }
 
+    // ---- the day chips (issue #105) ----
+
+    private static string Chips(string html) => System.Net.WebUtility.HtmlDecode(Regex.Match(html, @"<div class=""admin-days""[\s\S]*?</div>").Value);
+
+    [Theory]
+    [InlineData("today", "?date={today}", true, false)]
+    [InlineData("no date at all means today", "", true, false)]
+    [InlineData("every day", "?date=", false, true)]
+    [InlineData("another day", "?date={other}", false, false)]
+    public async Task The_day_chips_mark_today_or_every_day_and_neither_for_another_day(string how, string query, bool todayIsCurrent, bool everyDayIsCurrent)
+    {
+        var today = TestDates.TodayInVietnam;
+        var visitor = await OwnerAsync();
+
+        var chips = Chips(await ListAsync(visitor, query.Replace("{today}", Ymd(today)).Replace("{other}", Ymd(today.AddDays(3)))));
+
+        Assert.True(chips.Length > 0, how);
+        Assert.Contains($"href=\"/admin/orders?date={Ymd(today)}\"{(todayIsCurrent ? " aria-current=\"true\"" : "")}>Hôm nay</a>", chips);
+        Assert.Contains($"href=\"/admin/orders?date=\"{(everyDayIsCurrent ? " aria-current=\"true\"" : "")}>Mọi ngày</a>", chips);
+    }
+
+    [Fact]
+    public async Task The_day_chips_keep_the_status_and_the_search_and_leave_the_open_order_out()
+    {
+        var day = AdminOrdersKit.Day();
+        var id = await OrderAsync(fixture, day, recipient: "Giữ Bộ Lọc");
+        var visitor = await OwnerAsync();
+
+        var chips = Chips(await ListAsync(visitor, $"?date={Ymd(day)}&status=new&q=Gi%E1%BB%AF&order={id}"));
+
+        Assert.Contains($"href=\"/admin/orders?date={Ymd(TestDates.TodayInVietnam)}&status=new&q=Gi%E1%BB%AF\"", chips);
+        Assert.Contains("href=\"/admin/orders?date=&status=new&q=Gi%E1%BB%AF\"", chips);
+        Assert.DoesNotContain("order=", chips);
+    }
+
     // ---- what a row and the open order show ----
 
     [Fact]
@@ -234,6 +269,7 @@ public class AdminOrdersTests(PeekboxFixture fixture)
         Assert.Contains($">{PeekNumber(id)}</a>", row);
         Assert.Contains("Hàng Một", System.Net.WebUtility.HtmlDecode(row));
         Assert.Contains("3<span class=\"admin-row__unit\"> món</span>", row);
+        Assert.Contains("<td class=\"admin-row__name\">Hàng Một<span class=\"admin-row__count\"> · 3 món</span></td>", System.Net.WebUtility.HtmlDecode(row));   // the phone's "Name · 3 món", in the same text
         Assert.Contains("admin-status--delivering\">Đang giao</span>", row);
         Assert.Contains("<td class=\"admin-row__pay\">Khi nhận hàng</td>", row);
         Assert.Contains("đ</td>", row);   // the total, in whole dong
