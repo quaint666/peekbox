@@ -118,6 +118,20 @@
 .admin-filters .input { min-height: var(--tap-min); font-size: var(--text-md); }
 .admin-filters__search, .admin-filters__apply { grid-column: 1 / -1; }
 
+/* The day chips (issue 105): "Hôm nay" and "Mọi ngày" are links that change only the day; the current one is tinted. */
+.admin-days { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.admin-days__chip {
+    display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap-min); padding: 0 var(--space-4);
+    border: 1px solid var(--color-border); border-radius: 999px;   /* 999 px: a pill, as .hamper__who */
+    background: var(--color-surface); color: var(--color-text); font-size: var(--text-sm); font-weight: 600; text-decoration: none;
+}
+.admin-days__chip[aria-current='true'] { background: var(--color-tint); border-color: var(--color-primary); color: var(--color-on-tint); }
+.admin-days__chip:active:not([aria-current='true']) { background: var(--color-tint); }
+.admin-days__chip:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+@media (hover: hover) {
+    .admin-days__chip:hover:not([aria-current='true']) { background: var(--color-bg); }
+}
+
 .admin-list { padding: 0; overflow-x: auto; border-radius: var(--radius-md); }
 .admin-list__cap { padding: var(--space-3); border-top: 1px solid var(--color-border-soft); }
 .admin-table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: var(--text-sm); }
@@ -129,6 +143,8 @@
 .admin-row__code { font-weight: 600; }
 .admin-row__code a { color: var(--color-text); text-decoration: none; }
 .admin-row__code a:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+/* "· N món" inside the name cell is for a phone only (see the phone block); nowrap keeps it together with the last word. */
+.admin-row__count { display: none; white-space: nowrap; }
 
 /* Status badges (state colours of the mockup): Mới is the site's green tint, Đang giao its amber, Đã huỷ its red. */
 .admin-status { font-weight: 700; white-space: nowrap; }
@@ -184,12 +200,13 @@
     }
     .admin-row--open { background: var(--color-tint); }
     .admin-table th, .admin-table td { padding: 0; }
-    /* "Name · 3 món" on one line (the mockup), then the payment and the total. */
+    /* "Name · 3 món" in one flow of text (the mockup), then the payment and the total. The count is a span inside the name cell:
+       two grid cells cannot flow as one line, and a name that wraps would leave a gap before a cell of its own. */
     .admin-row__code { grid-column: 1 / 3; grid-row: 1; font-size: var(--text-base); font-weight: 700; }
     .admin-row__status { grid-column: 3; grid-row: 1; justify-self: end; }
-    .admin-row__name { grid-column: 1; grid-row: 2; color: var(--color-muted); line-height: 1.5; }
-    .admin-row__items { grid-column: 2; grid-row: 2; color: var(--color-muted); line-height: 1.5; }
-    .admin-row__items::before { content: '·'; padding: 0 var(--space-1); }
+    .admin-row__name { grid-column: 1 / -1; grid-row: 2; color: var(--color-muted); line-height: 1.5; }
+    .admin-row__items { display: none; }
+    .admin-row__count { display: inline; }
     .admin-row__pay { grid-column: 1 / 3; grid-row: 3; color: var(--color-muted); }
     .admin-row__total { grid-column: 3; grid-row: 3; justify-self: end; font-weight: 700; color: var(--color-text); }
     .admin-row__code a::after { content: ''; position: absolute; inset: 0; }   /* the whole card opens the order */
