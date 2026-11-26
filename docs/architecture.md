@@ -50,7 +50,7 @@ Settled in M0 (the layout below is what exists).
 
 ```
 src/Peekbox.Web/
-  Controllers/      one per area: Home (and the error page), Builder, Items, Occasions, Cart, Checkout, Orders, Track
+  Controllers/      one per area: Home (and the error page), Builder, Items, Occasions, Hampers, Cart, Checkout, Orders, Track, Blog, Pages (about, legal); Admin/ for the admin screens
   Models/           view models, and the posted forms with their checks (CheckoutForm and CheckoutCheck)
   ViewComponents/   a piece of the layout that needs data: the header's cart link, and the six occasion links of the header menu and the footer (from the home content file, so no database)
   Content/          page text read from content/data/ (for example home.json), loaded once at start; read-only
@@ -143,7 +143,7 @@ Checked on a scratch app (PostgreSQL 18, EF Core 10.0.15): a LINQ lambda reaches
   - `Admin__OwnerUserName`, `Admin__OwnerPassword`, `Admin__OwnerDisplayName`: the first admin owner, made at start only while there is no admin user at all (decision 2026-11-22). All three or none: some of them stops the app at start, and so does a password the rules refuse (10 characters at least). None is a warning in the log and nobody can sign in. Once the owner exists they are ignored and the password variable can be removed. **Staging needs them set once, or no one can sign in to the admin.** The password is a secret: never in a file of the repository.
   - `RateLimits__AdminLoginFailuresPer15Minutes`: how many wrong sign-ins one address may make per 15 minutes (10 in `appsettings.json`); good sign-ins do not count.
   - `GET` or `HEAD /healthz`: 200 `ok` when the database answers, else 503.
-- Decided since: the rate limits (20 orders and 10 order lookups per 15 minutes per address, `RateLimits`, called from the controllers so a refused request still gets its page with a Vietnamese note).
+- Decided since: the rate limits (orders, order lookups, new hampers, discount-code tries and failed admin sign-ins, each per 15 minutes per address; the counts are in `appsettings.json` and `docs/api-contract.md`). `RateLimits` uses the framework's own limiter (`System.Threading.RateLimiting`), called from the controllers so a refused request still gets its page with a Vietnamese note.
 
 ## 11. Checked, and not checked yet
 
