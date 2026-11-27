@@ -255,7 +255,8 @@ public class BuilderItemsTests(PeekboxFixture fixture)
         Assert.Equal(27, CardNames(gifts).Count);
         Assert.Contains("Quà không phải đồ ăn: hiện 27 món.", gifts);
         Assert.Equal(27, Regex.Matches(gifts, @"<span class=""item-card__tag item-card__tag--muted"">Không có hạn dùng</span>").Count);
-        Assert.DoesNotContain("HSD", Regex.Match(gifts, @"<ul class=""item-grid""[\s\S]*?</ul>").Value);
+        // The badge's text (">HSD 12/2027<"); a bare "HSD" can turn up inside a random anti-forgery token.
+        Assert.DoesNotContain(">HSD ", Regex.Match(gifts, @"<ul class=""item-grid""[\s\S]*?</ul>").Value);
 
         var byExpiry = CardNames(await PageAsync(token, "?sort=expiry"));
         Assert.Equal(123, byExpiry.Count);
